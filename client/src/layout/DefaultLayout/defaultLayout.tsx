@@ -1,13 +1,14 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
-
-const DefaultLayout = () => {
+interface LayoutProps {
+  children: React.ReactNode;
+}
+const DefaultLayout = ({ children }: LayoutProps) => {
   return (
     <div>
       <Header />
-      <Outlet />
+      <main>{children}</main>
       <Footer />
     </div>
   );
