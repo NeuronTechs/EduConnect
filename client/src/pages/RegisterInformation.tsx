@@ -11,6 +11,7 @@ import logo from "../assets/images/Logo.svg";
 import avatar from "../assets/images/avatar.png";
 import bgSuccession from "../assets/images/Group 37301.svg";
 import React from "react";
+import images from "../assets/images/images";
 const RegisterInformation = () => {
   return (
     <div className="w-screen h-screen grid grid-cols-12 bg-white">
@@ -128,9 +129,9 @@ export function StepperWithContent() {
                 className="w-full h-full object-cover"
               />
             </div>
-            <Button size="sm" variant="outlined">
+            <button className="bg-gray-200 px-3 py-2 rounded-md">
               Tải Hình ảnh
-            </Button>
+            </button>
           </div>
           <div className="form w-full">
             <div className="grid grid-cols-2 gap-3 gap-y-5">
@@ -141,7 +142,7 @@ export function StepperWithContent() {
                 <input
                   type="text"
                   name="Họ và Tên Đệm"
-                  className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
+                  className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-400 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
                   placeholder="Họ và Tên Đệm"
                 />
               </div>
@@ -152,7 +153,7 @@ export function StepperWithContent() {
                 <input
                   type="text"
                   name="Tên"
-                  className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
+                  className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-400 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
                   placeholder="Tên"
                 />
               </div>
@@ -163,7 +164,7 @@ export function StepperWithContent() {
                 <input
                   type="email"
                   name="email"
-                  className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
+                  className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-400 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
                   placeholder="robert.langster@gmail.com"
                 />
               </div>
@@ -174,7 +175,7 @@ export function StepperWithContent() {
                 <input
                   type="number"
                   name="phone"
-                  className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
+                  className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-400 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
                   // placeholder="robert.langster@gmail.com"
                 />
               </div>
@@ -206,7 +207,7 @@ export function StepperWithContent() {
                 <input
                   type="date"
                   name="date"
-                  className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
+                  className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-400 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
                   placeholder="robert.langster@gmail.com"
                 />
               </div>
@@ -218,7 +219,7 @@ export function StepperWithContent() {
                 <input
                   type="text"
                   name="address"
-                  className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
+                  className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-400 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
                   placeholder="ĐỊa Chỉ"
                 />
               </div>
@@ -257,7 +258,7 @@ export function StepperWithContent() {
                 <input
                   type="text"
                   name="Tình độ học vấn"
-                  className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
+                  className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-400 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
                   placeholder="Tình độ học vấn"
                 />
               </div>
@@ -268,7 +269,7 @@ export function StepperWithContent() {
                 <input
                   type="text"
                   name="Ngành học"
-                  className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
+                  className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-400 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
                   placeholder="Ngành học"
                 />
               </div>
@@ -279,7 +280,7 @@ export function StepperWithContent() {
                 <input
                   type="text"
                   name="schoole"
-                  className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
+                  className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-400 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
                   placeholder="Trường"
                 />
               </div>
@@ -292,7 +293,7 @@ export function StepperWithContent() {
                 <input
                   type="date"
                   name="date"
-                  className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
+                  className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-400 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
                   placeholder="robert.langster@gmail.com"
                 />
               </div>
@@ -304,7 +305,7 @@ export function StepperWithContent() {
                 <input
                   type="text"
                   name="address"
-                  className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
+                  className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-400 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
                   placeholder="ĐỊa Chỉ"
                 />
               </div>
@@ -324,19 +325,30 @@ export function StepperWithContent() {
           </p>
         </div>
       )}
-      <div className="mt-5 flex justify-between">
-        <Button onClick={handlePrev} disabled={isFirstStep} color="blue">
+      <div className="mt-5 flex justify-between gap-5">
+        <button
+          onClick={handlePrev}
+          disabled={isFirstStep}
+          className="w-full border px-4 py-2 rounded-lg border-gray-500 text-gray-500 text-center active:bg-gray-200"
+        >
           Quay Lại
-        </Button>
+        </button>
         {activeStep !== 2 && (
-          <Button onClick={handleNext} disabled={isLastStep} color="blue">
+          <button
+            onClick={handleNext}
+            disabled={isLastStep}
+            className="w-full border px-4 py-2 rounded-lg  text-white text-center bg-gradient-to-r from-[#3B82F6] from-0% via-[#928290] via-57% to-[#FA8315] to-90% transition-all ease-in-out  duration-500 hover:from-0% hover:via-60% hover:to-100% "
+          >
             Tiếp Theo
-          </Button>
+          </button>
         )}
         {activeStep === 2 && (
-          <Button onClick={handleUpload} color="blue">
+          <button
+            onClick={handleUpload}
+            className="w-full border px-4 py-2 rounded-lg  text-white text-center bg-gradient-to-r from-[#3B82F6] from-0% via-[#928290] via-57% to-[#FA8315] to-90% hover:from-0% hover:via-60% hover:to-100% transition-all ease-in-out  duration-500"
+          >
             xác nhận thông tin
-          </Button>
+          </button>
         )}
       </div>
     </div>
