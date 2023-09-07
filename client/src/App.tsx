@@ -1,17 +1,18 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import DefaultLayout from "./layout/DefaultLayout/defaultLayout";
-import Home from "./pages/Home";
 import { setupInterceptor } from "./utils/interceptor";
+import RegisterInformation from "./pages/RegisterInformation";
 function App() {
   setupInterceptor();
   return (
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/" element={<DefaultLayout />}>
-            <Route index element={<Home />} />
-          </Route>
+          <Route
+            path="/register-information"
+            element={<RegisterInformation />}
+          ></Route>
         </Routes>
       </div>
     </Router>
