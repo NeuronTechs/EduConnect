@@ -7,11 +7,12 @@ import {
   HandWaving,
   LinkedinLogo,
 } from "@phosphor-icons/react";
+import { Link } from "react-router-dom";
 const Login = () => {
   return (
     <div className="flex h-[100vh]">
       <div
-        className="flex-initial w-[1126px] flex items-center "
+        className="flex-initial  w-full flex items-center "
         style={{
           backgroundImage: `url(${bg})`,
           backgroundSize: "cover",
@@ -80,9 +81,11 @@ const Login = () => {
             <button className="bg-gradient-to-r from-orange-500 to-blue-500 w-[170px] h-10 text-white rounded-lg">
               <strong> Login</strong>
             </button>
-            <button className=" w-[170px] h-10 border-2 border-slate-950 rounded-lg">
-              <strong> Sign Up</strong>
-            </button>
+            <Link to="/signUp">
+              <button className=" w-[170px] h-10 border-2 border-slate-950 rounded-lg">
+                <strong> Sign Up</strong>
+              </button>
+            </Link>
           </div>
 
           <div className="flex flex-col w-9/12 items-center mt-10">
