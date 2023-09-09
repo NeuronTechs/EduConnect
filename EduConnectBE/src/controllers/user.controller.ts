@@ -1,11 +1,14 @@
 import jwt from "jsonwebtoken";
 import UserService from "../services/user.service";
 import e, { Request, Response, NextFunction } from "express";
-import { User, registerResponse } from "../constant/user";
+import { User, informationResponse, registerResponse } from "../constant/user";
 import bcrypt from "bcrypt";
 
 let refreshTokens: string[] = [];
-const generateAccessToken = (userId: number | undefined, role: string | null | undefined): string => {
+const generateAccessToken = (
+  userId: number | undefined,
+  role: string | null | undefined
+): string => {
   return jwt.sign(
     {
       userId: userId,
@@ -15,7 +18,10 @@ const generateAccessToken = (userId: number | undefined, role: string | null | u
     { expiresIn: "60s" }
   );
 };
-const generatefreshToken = (userId: number | undefined, role: string | null | undefined): string => {
+const generatefreshToken = (
+  userId: number | undefined,
+  role: string | null | undefined
+): string => {
   return jwt.sign(
     {
       userId: userId,
@@ -80,7 +86,7 @@ const register = async (req: Request, res: Response) => {
           const { password, ...others } = result.data;
           res.status(200).json({
             status: 200,
-            data: {...others, accessToken},
+            data: { ...others, accessToken },
             message: result?.message,
           });
         }
@@ -224,8 +230,80 @@ const logout = async (req: Request, res: Response) => {
 };
 
 const updateInformation = async (req: Request, res: Response) => {
-  UserService.updateInformation();
-  res.status(200).json("ok");
+  try {
+    if (
+      !req.body?.userId ||
+      !req.body?.role ||
+      !req.body?.fullName ||
+      !req.body?.avatar ||
+      !req.body?.phone ||
+      !req.body?.email ||
+      !req.body?.address ||
+      !req.body?.birthday ||
+      !req.body?.educational_level ||
+      !req.body?.major ||
+      !req.body?.course ||
+      !req.body?.school ||
+      !req.body?.address_school
+    ) {
+      res.status(400).json({
+        status: 400,
+        data: {},
+        message:
+          "userId, role, fullName, avatar, phone, email, address, birthday, educational_level, major, course, school and address_school is require!",
+      });
+    } else {
+      const {
+        userId,
+        role,
+        fullName,
+        avatar,
+        phone,
+        email,
+        address,
+        birthday,
+        educational_level,
+        major,
+        course,
+        school,
+        address_school,
+      } = req.body;
+      let result: informationResponse;
+      result = await UserService.updateInformation({
+        userId,
+        role,
+        fullName,
+        avatar,
+        phone,
+        email,
+        address,
+        birthday,
+        educational_level,
+        major,
+        course,
+        school,
+        address_school,
+      });
+
+      if (result?.status) {
+        res.status(200).json({
+          status: 200,
+          message: result?.message,
+        });
+      } else {
+        res.status(400).json({
+          status: 400,
+          message: result?.message,
+        });
+      }
+    }
+  } catch (error) {
+    res.status(500).json({
+      status: 500,
+      data: {},
+      message: error,
+    });
+  }
 };
 
 export default {
