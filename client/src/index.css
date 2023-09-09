@@ -3,6 +3,6 @@
 @tailwind utilities;
 @layer components {
   .button-logo {
-    @apply flex items-center w-[120px] h-9 border-[1px] border-slate-600 text-slate-600 rounded-md text-sm;
+    @apply flex items-center w-[120px] h-9 border-[1px] border-gray-600 text-gray-600 rounded-md text-sm;
   }
 }
