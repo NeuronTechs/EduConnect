@@ -5,6 +5,7 @@ import { User, Auth } from "../../type";
 
 export interface AuthState {
   currentUser: User | null;
+  token: string | null | undefined;
   loading: boolean;
   error: string | undefined;
   isError: boolean;
@@ -13,6 +14,7 @@ export interface AuthState {
 const initialState: AuthState = {
   currentUser: null,
   loading: false,
+  token: null,
   error: undefined,
   isError: false,
 };
