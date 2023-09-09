@@ -2,8 +2,7 @@ import mysql from "mysql";
 import env from "./environment";
 
 export default {
-  connectionDB: 
-  mysql.createConnection({
+  connectionDB: mysql.createConnection({
     host: env.HOST,
     user: env.USER,
     password: env.PASSWORD,

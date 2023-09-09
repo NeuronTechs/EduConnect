@@ -1,5 +1,10 @@
 import db from "../config/connectDB";
-import { User, registerResponse } from "../constant/user";
+import {
+  User,
+  informationDataUpdate,
+  informationResponse,
+  registerResponse,
+} from "../constant/user";
 
 const login = async (username: string): Promise<User[]> => {
   try {
@@ -77,7 +82,7 @@ const register = async (
               avatar: null,
               phone: null,
               email: email,
-              password: password
+              password: password,
             };
             resolve({
               status: true,
@@ -99,8 +104,149 @@ const register = async (
   }
 };
 
-const updateInformation = async () => {
-  console.log("update");
+const updateUser = async (
+  userId: number,
+  role: string,
+  fullName: string,
+  avatar: string,
+  phone: string,
+  email: string,
+  birthday: string,
+  address: string
+): Promise<informationResponse> => {
+  try {
+    const newUser =
+      "UPDATE `user` SET `fullName` = ?, `role` = ?, `avatar` = ?, `phone` = ?, `email` = ?, `birthday` = ?, `address` = ?, `updatedAt` = ? WHERE (`userId` = ?)";
+    const updatedAt = new Date();
+    const timeUpdate = updatedAt.toISOString().slice(0, 19).replace("T", " ");
+    return new Promise((resolve, reject) => {
+      db.connectionDB.query(
+        newUser,
+        [
+          fullName,
+          role,
+          avatar,
+          phone,
+          email,
+          birthday,
+          address,
+          timeUpdate,
+          userId,
+        ],
+        (error, users, fields) => {
+          if (error) {
+            reject({
+              status: false,
+              message: error,
+            });
+            return;
+          }
+          resolve({
+            status: true,
+            message: "Update information user success",
+          });
+        }
+      );
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+const updateInformation = async (
+  data: informationDataUpdate
+): Promise<informationResponse> => {
+  try {
+    if (data?.role === "teacher") {
+      const update: informationResponse = await updateUser(
+        data?.userId,
+        data?.role,
+        data?.fullName,
+        data?.avatar,
+        data?.phone,
+        data?.email,
+        data?.birthday,
+        data?.address
+      );
+      if (update.status) {
+        const newQuery =
+          "INSERT INTO `teacher` (`userId`, `educational_level`, `major`, `course`, `school`, `address_school`) VALUES (?,?,?,?,?,?);";
+        return new Promise((resolve, reject) => {
+          db.connectionDB.query(
+            newQuery,
+            [
+              data?.userId,
+              data?.educational_level,
+              data?.major,
+              data?.course,
+              data?.school,
+              data?.address_school,
+            ],
+            (error, users, fields) => {
+              if (error) {
+                reject({
+                  status: false,
+                  message: error,
+                });
+                return;
+              }
+              resolve({
+                status: true,
+                message: "Update information success",
+              });
+            }
+          );
+        });
+      } else {
+        return update;
+      }
+    } else {
+      const update: informationResponse = await updateUser(
+        data?.userId,
+        data?.role,
+        data?.fullName,
+        data?.avatar,
+        data?.phone,
+        data?.email,
+        data?.birthday,
+        data?.address
+      );
+      if (update.status) {
+        const newQuery =
+          "INSERT INTO `student` (`userId`, `educational_level`, `major`, `course`, `school`, `address_school`) VALUES (?,?,?,?,?,?);";
+        return new Promise((resolve, reject) => {
+          db.connectionDB.query(
+            newQuery,
+            [
+              data?.userId,
+              data?.educational_level,
+              data?.major,
+              data?.course,
+              data?.school,
+              data?.address_school,
+            ],
+            (error, users, fields) => {
+              if (error) {
+                reject({
+                  status: false,
+                  message: error,
+                });
+                return;
+              }
+              resolve({
+                status: true,
+                message: "Update information success",
+              });
+            }
+          );
+        });
+      } else {
+        return update;
+      }
+    }
+  } catch (error) {
+    throw error;
+  }
 };
 
 export default {

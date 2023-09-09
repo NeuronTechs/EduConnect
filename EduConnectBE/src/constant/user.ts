@@ -16,3 +16,25 @@ export interface registerResponse {
   data: User | null;
   message: string;
 }
+
+export interface informationDataUpdate {
+  userId: number;
+  role: string;
+  fullName: string;
+  avatar: string;
+  phone: string;
+  email: string;
+  address: string;
+  birthday: string;
+  educational_level: string | null;
+  major: string | null;
+  course: string | null;
+  school: string | null;
+  address_school: string | null;
+}
+
+export interface informationResponse {
+  status: boolean;
+  data?: informationDataUpdate | null;
+  message: string;
+}
