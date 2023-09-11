@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { login, test } from "../features/auth/authSlice";
+import { Auth } from "../type";
+import { AppDispatch } from "../redux/store";
 import bg from "../../public/bgLogin.png";
 import {
   Books,
@@ -7,8 +11,19 @@ import {
   HandWaving,
   LinkedinLogo,
 } from "@phosphor-icons/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const Login = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const loginHandler = async () => {
+    const auth: Auth = { username: username, password: password };
+    const loginSuccess = await dispatch(login(auth));
+    if (loginSuccess.type === "auth/login/fulfilled") {
+      navigate("/");
+    }
+  };
   return (
     <div className="flex h-[100vh]">
       <div
@@ -53,6 +68,10 @@ const Login = () => {
             <h6>Email</h6>
             <input
               type="text"
+              value={username}
+              onChange={(e) => {
+                setUsername(e.target.value);
+              }}
               className="border-2 border-slate-500 rounded-md w-[350px] h-[40px] pl-3"
             />
           </div>
@@ -61,6 +80,10 @@ const Login = () => {
             <h6>Password</h6>
             <input
               type="password"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
               className="border-2 border-slate-500 rounded-md w-[350px] h-[40px] pl-3 pr-3"
             />
           </div>
@@ -78,7 +101,10 @@ const Login = () => {
           </div>
 
           <div className="flex space-x-5 mt-5">
-            <button className="bg-gradient-to-r from-orange-500 to-blue-500 w-[170px] h-10 text-white rounded-lg">
+            <button
+              onClick={loginHandler}
+              className="bg-gradient-to-r from-orange-500 to-blue-500 w-[170px] h-10 text-white rounded-lg"
+            >
               <strong> Login</strong>
             </button>
             <Link to="/signUp">

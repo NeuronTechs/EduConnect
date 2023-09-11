@@ -5,7 +5,10 @@ import { User, registerResponse } from "../constant/user";
 import bcrypt from "bcrypt";
 
 let refreshTokens: string[] = [];
-const generateAccessToken = (userId: number | undefined, role: string | null | undefined): string => {
+const generateAccessToken = (
+  userId: number | undefined,
+  role: string | null | undefined
+): string => {
   return jwt.sign(
     {
       userId: userId,
@@ -15,7 +18,10 @@ const generateAccessToken = (userId: number | undefined, role: string | null | u
     { expiresIn: "60s" }
   );
 };
-const generatefreshToken = (userId: number | undefined, role: string | null | undefined): string => {
+const generatefreshToken = (
+  userId: number | undefined,
+  role: string | null | undefined
+): string => {
   return jwt.sign(
     {
       userId: userId,
@@ -80,7 +86,7 @@ const register = async (req: Request, res: Response) => {
           const { password, ...others } = result.data;
           res.status(200).json({
             status: 200,
-            data: {...others, accessToken},
+            data: { ...others, accessToken },
             message: result?.message,
           });
         }

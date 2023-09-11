@@ -1,5 +1,12 @@
 import { AxiosError } from "axios";
+import { useSelector } from "react-redux";
+import { User } from "../type";
 import instance from "./httpRequest";
+interface State {
+  auth: {
+    currentUser: User | null;
+  };
+}
 interface RequestPromise {
   resolve: (token: string) => void;
   reject: (error: AxiosError) => void;
@@ -7,6 +14,7 @@ interface RequestPromise {
 export const setupInterceptor = (): void => {
   let isRefreshing = false;
   let failedQueue: RequestPromise[] = [];
+
   const processQueue = (error?: AxiosError | null, token?: string | null) => {
     failedQueue.forEach((prom) => {
       if (error) {
@@ -20,7 +28,16 @@ export const setupInterceptor = (): void => {
   };
   instance.interceptors.request.use(
     (config) => {
-      const token = localStorage.getItem("token");
+      if (
+        config.url?.includes("user/login") ||
+        config.url?.includes("user/refresh")
+      ) {
+        return config;
+      }
+      const currentUser: User | null = useSelector(
+        (state: State) => state.auth.currentUser
+      );
+      const token = currentUser?.accessToken;
       console.log(token);
 
       if (token) {
@@ -47,9 +64,7 @@ export const setupInterceptor = (): void => {
           isRefreshing = true;
 
           return instance
-            .post("/refresh", {
-              refreshToken: localStorage.getItem("refreshToken"),
-            })
+            .post("/user/refresh")
             .then((response) => {
               localStorage.setItem("accessToken", response.data.accessToken);
               localStorage.setItem("refreshToken", response.data.refreshToken);

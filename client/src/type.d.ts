@@ -4,19 +4,14 @@ export interface Auth {
 }
 
 export interface User {
-  data: {
-    username: string;
-    password: string;
-    createdAt: string;
-    updatedAt: string;
-    email: string;
-    mobile: string;
-    lastLogin: date;
-    intro: string;
-    profile: string;
-    authGoogleId: string;
-    authGithubId: string;
-    authType: string;
-    accessToken: string;
-  };
+  userId: string | null;
+  username: string | null;
+  role: string | null;
+  fullName: string | null;
+  createdAt: string | null;
+  updatedAt: string | null;
+  avatar: string | null;
+  phone: string | null;
+  email: string | null;
+  accessToken: string | null;
 }

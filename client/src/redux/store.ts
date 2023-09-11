@@ -22,7 +22,7 @@ export default configureStore({
   reducer: { auth: authSlice },
 });
 // auth: authReducer
-const rootReducer = combineReducers({ authSlice });
+const rootReducer = combineReducers({ auth: authSlice });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
   reducer: persistedReducer,

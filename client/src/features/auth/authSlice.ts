@@ -5,7 +5,6 @@ import { User, Auth } from "../../type";
 
 export interface AuthState {
   currentUser: User | null;
-  token: string | null | undefined;
   loading: boolean;
   error: string | undefined;
   isError: boolean;
@@ -14,7 +13,6 @@ export interface AuthState {
 const initialState: AuthState = {
   currentUser: null,
   loading: false,
-  token: null,
   error: undefined,
   isError: false,
 };
@@ -59,9 +57,10 @@ export const authSlice = createSlice({
 
     builder.addCase(login.fulfilled, (state, action) => {
       state.loading = false;
+      // console.log(action.payload);
+
       state.currentUser = action.payload;
-      const dataObj = action.payload as User;
-      localStorage.setItem("token", dataObj.data.accessToken);
+      
     });
 
     builder.addCase(test.pending, (state) => {

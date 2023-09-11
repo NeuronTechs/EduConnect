@@ -1,7 +1,7 @@
 import axios from "axios";
 import { AxiosRequestHeaders } from "axios";
 const instance = axios.create({
-  baseURL: "http://localhost:3240/v1",
+  baseURL: "http://localhost:3000/v1",
   withCredentials: false,
   headers: {
     "Content-Type": "application/json",
