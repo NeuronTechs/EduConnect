@@ -121,6 +121,7 @@ type propsContentStepper = {
   register: UseFormRegister<IFormInput>;
 };
 const ContentStepper = (props: propsContentStepper): React.ReactElement => {
+  // const [imageAvatar, setImageAvatar] = React.useState();
   return (
     <div className="w-full">
       {props.activeStep === 0 && (
@@ -372,17 +373,17 @@ export function StepperWithContent() {
 
   const {
     register,
-    setValue,
-    handleSubmit,
+    // setValue,
+    // handleSubmit,
     watch,
-    formState: { errors },
+    // formState: { errors },
   } = useForm<IFormInput>();
   console.log(watch());
   const handleNext = () => !isLastStep && setActiveStep((cur) => cur + 1);
   const handlePrev = () => !isFirstStep && setActiveStep((cur) => cur - 1);
   const handleUpload = () => {};
 
-  const onSubmit = handleSubmit((data) => console.log(data));
+  // const onSubmit = handleSubmit((data) => console.log(data));
   return (
     <>
       <div className="w-full px-16 py-4">
