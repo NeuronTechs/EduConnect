@@ -38,3 +38,25 @@ export interface informationResponse {
   data?: informationDataUpdate | null;
   message: string;
 }
+
+export interface isValidEmailRequest {
+  email: string;
+  token: string;
+}
+
+export interface isValidEmailResponse {
+  status: boolean;
+  data?: string | null;
+  message: string;
+}
+
+export interface resetPasswordRequest {
+  newPassword: string;
+  token: string;
+}
+
+export interface resetPasswordResponse {
+  status: boolean;
+  data?: string | null;
+  message: string;
+}
