@@ -1,20 +1,36 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header/Header";
 import Sidebar from "../../components/Sidebar";
+import { useOnClickOutside } from "../../hooks/useOnClickOutside";
 interface LayoutProps {
   children: React.ReactNode;
 }
 const DefaultLayout = ({ children }: LayoutProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const ref = useRef(null);
+
+  const handleClickOutside = () => {
+    // Your custom logic here
+    setIsOpen(false);
+  };
+
+  // const handleClickInside = () => {
+  //   // Your custom logic here
+  //   console.log("clicked inside");
+  // };
+
+  useOnClickOutside(ref, handleClickOutside);
   return (
     <div className="relative h-screen w-screen overflow-hidden">
-      <Sidebar isOpen={true} />
+      <Sidebar ref={ref} isOpen={isOpen} setIsOpen={setIsOpen} />
       <div
-        className={`container h-full  w-full xl:ml-[250px] ml-0 transition-all delay-200`}
+        className={`h-full w-full xl:pl-[250px] pl-0 transition-all delay-200`}
       >
-        {/* <Header />
-        <main className="xl:w-full w-screen">{children}</main>
-        <Footer /> */}
+        <Header setIsOpen={setIsOpen} />
+        <main className="w-full h-full">{children}</main>
+        <Footer />
       </div>
     </div>
   );
