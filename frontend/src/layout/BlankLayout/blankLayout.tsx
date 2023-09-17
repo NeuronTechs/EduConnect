@@ -5,8 +5,8 @@ interface LayoutProps {
 }
 const BlankLayout = ({ children }: LayoutProps) => {
   return (
-    <div>
-      <main>{children}</main>
+    <div className="w-screen h-screen">
+      <main className="h-full w-full">{children}</main>
     </div>
   );
 };

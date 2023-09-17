@@ -5,7 +5,7 @@ import MessageHeader from "./MessageHeader";
 
 const Header = () => {
   return (
-    <div className="w-full h-[80px] bg-white shadow-sm flex items-center justify-between px-3 py-2 ">
+    <div className="xl:w-full sm:w-screen h-[80px] bg-white shadow-sm flex items-center justify-between px-3 py-2 ">
       <div className="left">
         <SearchHeader />
       </div>
