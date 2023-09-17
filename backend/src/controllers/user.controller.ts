@@ -1,8 +1,10 @@
+
 import jwt from "jsonwebtoken";
 import UserService from "../services/user.service";
 import e, { Request, Response, NextFunction } from "express";
 import { User, informationResponse, registerResponse } from "../constant/user";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 
 let refreshTokens: string[] = [];
 const generateAccessToken = (
@@ -306,10 +308,66 @@ const updateInformation = async (req: Request, res: Response) => {
   }
 };
 
+const isValidEmail = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+    const token: string = crypto.randomBytes(20).toString("hex");
+    const isValidEmail = await UserService.isValidEmail({ email, token });
+    if (isValidEmail?.status) {
+      res.status(200).json({
+        status: 200,
+        message: isValidEmail?.message,
+      });
+    } else {
+      res.status(404).json({
+        status: 404,
+        message: isValidEmail?.message,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      status: 500,
+      data: {},
+      message: error,
+    });
+  }
+};
+
+const resetPassword = async (req: Request, res: Response) => {
+  try {
+    const { token, newPassword } = req.body;
+    const salt = await bcrypt.genSalt(10);
+    const passwordHashed = await bcrypt.hash(newPassword, salt);
+    const resetPass = await UserService.resetPassword({
+      newPassword: passwordHashed,
+      token,
+    });
+    if (resetPass?.status) {
+      res.status(200).json({
+        status: 200,
+        message: resetPass.message,
+      });
+    } else {
+      res.status(404).json({
+        status: 404,
+        message: resetPass.message,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      status: 500,
+      data: {},
+      message: error,
+    });
+  }
+};
+
 export default {
   login,
   refreshToken,
   logout,
   register,
   updateInformation,
+  isValidEmail,
+  resetPassword,
 };

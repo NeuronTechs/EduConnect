@@ -1,3 +1,4 @@
+
 export interface User {
   userId: number;
   username: string;
@@ -36,5 +37,27 @@ export interface informationDataUpdate {
 export interface informationResponse {
   status: boolean;
   data?: informationDataUpdate | null;
+  message: string;
+}
+
+export interface isValidEmailRequest {
+  email: string;
+  token: string;
+}
+
+export interface isValidEmailResponse {
+  status: boolean;
+  data?: string | null;
+  message: string;
+}
+
+export interface resetPasswordRequest {
+  newPassword: string;
+  token: string;
+}
+
+export interface resetPasswordResponse {
+  status: boolean;
+  data?: string | null;
   message: string;
 }

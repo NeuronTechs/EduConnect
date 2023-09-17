@@ -1,10 +1,25 @@
+
 import db from "../config/connectDB";
 import {
   User,
   informationDataUpdate,
   informationResponse,
+  isValidEmailRequest,
+  isValidEmailResponse,
   registerResponse,
+  resetPasswordRequest,
+  resetPasswordResponse,
 } from "../constant/user";
+import nodemailer from "nodemailer";
+import { convertTimestampToDateTime } from "../constant/utils";
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "dinhhieunguyen07@gmail.com",
+    pass: "vpqndesrvqdkrqws",
+  },
+});
 
 const login = async (username: string): Promise<User[]> => {
   try {
@@ -57,8 +72,7 @@ const register = async (
   try {
     let data: User[];
     data = await getUserName(username, email);
-    const now = new Date();
-    const nowString = now.toISOString().slice(0, 19).replace("T", " ");
+    const nowString = convertTimestampToDateTime();
     const insertNewUser =
       "INSERT INTO `user` (`username`, `password`,`email`,`createdAt`, `updatedAt`, `fullName`) VALUES (?,?,?,?,?,?)";
     return new Promise((resolve, reject) => {
@@ -117,8 +131,7 @@ const updateUser = async (
   try {
     const newUser =
       "UPDATE `user` SET `fullName` = ?, `role` = ?, `avatar` = ?, `phone` = ?, `email` = ?, `birthday` = ?, `address` = ?, `updatedAt` = ? WHERE (`userId` = ?)";
-    const updatedAt = new Date();
-    const timeUpdate = updatedAt.toISOString().slice(0, 19).replace("T", " ");
+    const timeUpdate = convertTimestampToDateTime();
     return new Promise((resolve, reject) => {
       db.connectionDB.query(
         newUser,
@@ -249,8 +262,154 @@ const updateInformation = async (
   }
 };
 
+const checkExistUser = async (email: string): Promise<User[]> => {
+  try {
+    const query = "SELECT * FROM user WHERE email = ?";
+    return new Promise((resolve, reject) => {
+      db.connectionDB.query(query, [email], (error, users, fields) => {
+        if (error) {
+          reject(error);
+          return;
+        }
+        resolve(users);
+      });
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+const isValidEmail = async (
+  data: isValidEmailRequest
+): Promise<isValidEmailResponse> => {
+  try {
+    const { email, token } = data;
+    const user = await checkExistUser(email);
+    if (user?.length === 0) {
+      return {
+        status: false,
+        message: "User not exist!",
+      };
+    } else {
+      const expirationTimestamp = convertTimestampToDateTime();
+      const query =
+        "INSERT INTO password_reset_tokens (email, token, expires_at) VALUES (?, ?, ?)";
+      return new Promise((resolve, reject) => {
+        db.connectionDB.query(
+          query,
+          [email, token, expirationTimestamp],
+          (error, result, fields) => {
+            if (error) {
+              reject({
+                status: false,
+                message: error,
+              });
+              return;
+            } else {
+              const resetLink: string = `https://yourwebsite.com/reset-password?token=${token}`;
+              // Send reset email
+              transporter.sendMail(
+                {
+                  to: email,
+                  subject: "Password Reset Request",
+                  html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>`,
+                },
+                (emailErr) => {
+                  if (emailErr) {
+                    reject({
+                      status: false,
+                      message: emailErr,
+                    });
+                  }
+                  resolve({
+                    status: true,
+                    message: "Password reset email sent.",
+                  });
+                }
+              );
+            }
+          }
+        );
+      });
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+const resetPassword = async (
+  data: resetPasswordRequest
+): Promise<resetPasswordResponse> => {
+  try {
+    const { token, newPassword } = data;
+    const query: string =
+      "SELECT * FROM password_reset_tokens WHERE token = ? AND expires_at < NOW()";
+    return new Promise((resolve, reject) => {
+      db.connectionDB.query(query, [token], (error, results, fields) => {
+        if (error) {
+          reject({
+            status: false,
+            message: error,
+          });
+          return;
+        } else {
+          if (results.length === 0) {
+            reject({
+              status: false,
+              message: "Invalid or expired token.",
+            });
+            return;
+          } else {
+            const updatedAt = convertTimestampToDateTime();
+            const updateQuery: string =
+              "UPDATE user SET password = ?, updatedAt = ? WHERE email = ?";
+            db.connectionDB.query(
+              updateQuery,
+              [newPassword, updatedAt, results[0]?.email],
+              (error, results, fields) => {
+                if (error) {
+                  reject({
+                    status: false,
+                    message: error,
+                  });
+                  return;
+                } else {
+                  const deleteQuery: string =
+                    "DELETE FROM password_reset_tokens WHERE token = ?";
+                  db.connectionDB.query(
+                    deleteQuery,
+                    [token],
+                    (error, results, fields) => {
+                      if (error) {
+                        reject({
+                          status: false,
+                          message: error,
+                        });
+                        return;
+                      } else {
+                        resolve({
+                          status: true,
+                          message: results[0]?.email,
+                        });
+                      }
+                    }
+                  );
+                }
+              }
+            );
+          }
+        }
+      });
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
 export default {
   login,
   register,
   updateInformation,
+  isValidEmail,
+  resetPassword,
 };
