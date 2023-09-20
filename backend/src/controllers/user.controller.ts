@@ -1,18 +1,18 @@
 import jwt from "jsonwebtoken";
 import UserService from "../services/user.service";
-import e, { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import { User, informationResponse, registerResponse } from "../constant/user";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 
 let refreshTokens: string[] = [];
 const generateAccessToken = (
-  userId: number | undefined,
+  username: string | undefined,
   role: string | null | undefined
 ): string => {
   return jwt.sign(
     {
-      userId: userId,
+      userId: username,
       role: role,
     },
     "educonnect",
@@ -20,12 +20,12 @@ const generateAccessToken = (
   );
 };
 const generatefreshToken = (
-  userId: number | undefined,
+  username: string | undefined,
   role: string | null | undefined
 ): string => {
   return jwt.sign(
     {
-      userId: userId,
+      userId: username,
       role: role,
     },
     "educonnect",
@@ -68,11 +68,11 @@ const register = async (req: Request, res: Response) => {
 
       if (result?.status) {
         const accessToken: string = generateAccessToken(
-          result?.data?.userId,
+          result?.data?.username,
           result?.data?.role
         );
         const refreshToken: string = generatefreshToken(
-          result?.data?.userId,
+          result?.data?.username,
           result?.data?.role
         );
         refreshTokens.push(refreshToken);
@@ -124,11 +124,11 @@ const login = async (req: Request, res: Response) => {
         if (result.length > 0) {
           if (await isValidPassword(password, result[0]?.password)) {
             const accessToken: string = generateAccessToken(
-              result[0]?.userId,
+              result[0]?.username,
               result[0]?.role
             );
             const refreshToken: string = generatefreshToken(
-              result[0]?.userId,
+              result[0]?.username,
               result[0]?.role
             );
             refreshTokens.push(refreshToken);
@@ -233,7 +233,7 @@ const logout = async (req: Request, res: Response) => {
 const updateInformation = async (req: Request, res: Response) => {
   try {
     if (
-      !req.body?.userId ||
+      !req.body?.username ||
       !req.body?.role ||
       !req.body?.fullName ||
       !req.body?.avatar ||
@@ -251,11 +251,11 @@ const updateInformation = async (req: Request, res: Response) => {
         status: 400,
         data: {},
         message:
-          "userId, role, fullName, avatar, phone, email, address, birthday, educational_level, major, course, school and address_school is require!",
+          "username, role, fullName, avatar, phone, email, address, birthday, educational_level, major, course, school and address_school is require!",
       });
     } else {
       const {
-        userId,
+        username,
         role,
         fullName,
         avatar,
@@ -271,7 +271,7 @@ const updateInformation = async (req: Request, res: Response) => {
       } = req.body;
       let result: informationResponse;
       result = await UserService.updateInformation({
-        userId,
+        username,
         role,
         fullName,
         avatar,

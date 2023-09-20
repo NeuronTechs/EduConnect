@@ -20,13 +20,13 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const login = async (username: string): Promise<User[]> => {
+const login = (username: string): Promise<any> => {
   try {
     const query = "SELECT * FROM user WHERE username = ?";
     return new Promise((resolve, reject) => {
-      db.connectionDB.query(query, [username], (error, results, fields) => {
-        if (error) {
-          reject(error);
+      db.connectionDB.query(query, [username], function (err, results) {
+        if (err) {
+          reject(err);
           return;
         } else {
           resolve(results);
@@ -38,10 +38,7 @@ const login = async (username: string): Promise<User[]> => {
   }
 };
 
-const getUserName = async (
-  username: string,
-  email: string
-): Promise<User[]> => {
+const getUserName = async (username: string, email: string): Promise<any> => {
   try {
     const newUser = "SELECT * FROM user where username = ? or email = ?";
     return new Promise((resolve, reject) => {
@@ -73,7 +70,7 @@ const register = async (
     data = await getUserName(username, email);
     const nowString = convertTimestampToDateTime();
     const insertNewUser =
-      "INSERT INTO `user` (`username`, `password`,`email`,`createdAt`, `updatedAt`, `fullName`) VALUES (?,?,?,?,?,?)";
+      "INSERT INTO `user` (`username`, `password`,`email`,`createdAt`, `updatedAt`, `full_name`) VALUES (?,?,?,?,?,?)";
     return new Promise((resolve, reject) => {
       if (data?.length === 0) {
         db.connectionDB.query(
@@ -86,7 +83,6 @@ const register = async (
             }
             let user: User;
             user = {
-              userId: results?.insertId,
               username: username,
               role: null,
               fullName: fullName,
@@ -118,7 +114,7 @@ const register = async (
 };
 
 const updateUser = async (
-  userId: number,
+  username: string,
   role: string,
   fullName: string,
   avatar: string,
@@ -129,7 +125,7 @@ const updateUser = async (
 ): Promise<informationResponse> => {
   try {
     const newUser =
-      "UPDATE `user` SET `fullName` = ?, `role` = ?, `avatar` = ?, `phone` = ?, `email` = ?, `birthday` = ?, `address` = ?, `updatedAt` = ? WHERE (`userId` = ?)";
+      "UPDATE `user` SET `full_name` = ?, `role` = ?, `avatar` = ?, `phone` = ?, `email` = ?, `birthday` = ?, `address` = ?, `updatedAt` = ? WHERE (`username` = ?)";
     const timeUpdate = convertTimestampToDateTime();
     return new Promise((resolve, reject) => {
       db.connectionDB.query(
@@ -143,7 +139,7 @@ const updateUser = async (
           birthday,
           address,
           timeUpdate,
-          userId,
+          username,
         ],
         (error, users, fields) => {
           if (error) {
@@ -171,7 +167,7 @@ const updateInformation = async (
   try {
     if (data?.role === "teacher") {
       const update: informationResponse = await updateUser(
-        data?.userId,
+        data?.username,
         data?.role,
         data?.fullName,
         data?.avatar,
@@ -181,13 +177,15 @@ const updateInformation = async (
         data?.address
       );
       if (update.status) {
+        const student_id = "st_" + data?.username;
         const newQuery =
-          "INSERT INTO `teacher` (`userId`, `educational_level`, `major`, `course`, `school`, `address_school`) VALUES (?,?,?,?,?,?);";
+          "INSERT INTO `teacher` (`student_id`,`username`, `educational_level`, `major`, `course`, `school`, `address_school`) VALUES (?,?,?,?,?,?,?);";
         return new Promise((resolve, reject) => {
           db.connectionDB.query(
             newQuery,
             [
-              data?.userId,
+              student_id,
+              data?.username,
               data?.educational_level,
               data?.major,
               data?.course,
@@ -214,7 +212,7 @@ const updateInformation = async (
       }
     } else {
       const update: informationResponse = await updateUser(
-        data?.userId,
+        data?.username,
         data?.role,
         data?.fullName,
         data?.avatar,
@@ -224,13 +222,15 @@ const updateInformation = async (
         data?.address
       );
       if (update.status) {
+        const teacher_id = "te_" + data?.username;
         const newQuery =
-          "INSERT INTO `student` (`userId`, `educational_level`, `major`, `course`, `school`, `address_school`) VALUES (?,?,?,?,?,?);";
+          "INSERT INTO `student` (`teacher_id`,`username`, `educational_level`, `major`, `course`, `school`, `address_school`) VALUES (?,?,?,?,?,?,?);";
         return new Promise((resolve, reject) => {
           db.connectionDB.query(
             newQuery,
             [
-              data?.userId,
+              teacher_id,
+              data?.username,
               data?.educational_level,
               data?.major,
               data?.course,
@@ -261,7 +261,7 @@ const updateInformation = async (
   }
 };
 
-const checkExistUser = async (email: string): Promise<User[]> => {
+const checkExistUser = async (email: string): Promise<any> => {
   try {
     const query = "SELECT * FROM user WHERE email = ?";
     return new Promise((resolve, reject) => {
@@ -344,7 +344,7 @@ const resetPassword = async (
     const query: string =
       "SELECT * FROM password_reset_tokens WHERE token = ? AND expires_at < NOW()";
     return new Promise((resolve, reject) => {
-      db.connectionDB.query(query, [token], (error, results, fields) => {
+      db.connectionDB.query(query, [token], (error, results) => {
         if (error) {
           reject({
             status: false,
@@ -352,19 +352,24 @@ const resetPassword = async (
           });
           return;
         } else {
-          if (results.length === 0) {
+          if (Array.isArray(results) && results.length === 0) {
             reject({
               status: false,
               message: "Invalid or expired token.",
             });
             return;
-          } else {
+          } else if (Array.isArray(results) && results.length !== 0) {
             const updatedAt = convertTimestampToDateTime();
             const updateQuery: string =
               "UPDATE user SET password = ?, updatedAt = ? WHERE email = ?";
+            const email = results.map((item: any) => {
+              return {
+                email: item.email,
+              };
+            });
             db.connectionDB.query(
               updateQuery,
-              [newPassword, updatedAt, results[0]?.email],
+              [newPassword, updatedAt, email[0].email],
               (error, results, fields) => {
                 if (error) {
                   reject({
@@ -388,7 +393,7 @@ const resetPassword = async (
                       } else {
                         resolve({
                           status: true,
-                          message: results[0]?.email,
+                          message: "Reset password success",
                         });
                       }
                     }
