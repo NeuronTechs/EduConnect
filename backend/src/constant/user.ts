@@ -1,6 +1,4 @@
-
 export interface User {
-  userId: number;
   username: string;
   password: string;
   role: string | null;
@@ -19,7 +17,7 @@ export interface registerResponse {
 }
 
 export interface informationDataUpdate {
-  userId: number;
+  username: string;
   role: string;
   fullName: string;
   avatar: string;
