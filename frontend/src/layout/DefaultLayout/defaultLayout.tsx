@@ -29,7 +29,7 @@ const DefaultLayout = ({ children }: LayoutProps) => {
         className={`h-full w-full xl:pl-[250px] pl-0 transition-all delay-200`}
       >
         <Header setIsOpen={setIsOpen} />
-        <main className="w-full h-full">{children}</main>
+        <main className="w-full h-[calc(100vh-80px)]">{children}</main>
         <Footer />
       </div>
     </div>

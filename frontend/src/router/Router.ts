@@ -2,6 +2,7 @@ import BlankLayout from "../layout/BlankLayout/blankLayout";
 import DefaultLayout from "../layout/DefaultLayout/defaultLayout";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
+import OverviewCourse from "../pages/OverviewCourse";
 import RegisterInformation from "../pages/RegisterInformation";
 import SignUp from "../pages/SignUp";
 
@@ -14,6 +15,11 @@ const publicRoutes = [
     path: "/register-information",
     component: RegisterInformation,
     layout: BlankLayout,
+  },
+  {
+    path: "/course/:id",
+    component: OverviewCourse,
+    layout: DefaultLayout,
   },
 ];
 const privateRoutes = [{ path: "/", component: Home }];
