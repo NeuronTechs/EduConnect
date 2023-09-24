@@ -20,7 +20,7 @@ const Header = (props: propsHeader): React.ReactElement => {
         </div>
         <SearchHeader />
       </div>
-      <div className="right flex gap-3">
+      <div className="right flex gap-3 items-center">
         <NotificationHeader />
         <MessageHeader />
         <AccountHeader />
