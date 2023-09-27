@@ -11,6 +11,13 @@ interface RequestPromise {
   resolve: (token: string) => void;
   reject: (error: AxiosError) => void;
 }
+const UseCurrentUser = () => {
+  const currentUser: User | null = useSelector(
+    (state: State) => state.auth.currentUser
+  );
+  return currentUser;
+};
+
 export const setupInterceptor = (): void => {
   let isRefreshing = false;
   let failedQueue: RequestPromise[] = [];
@@ -26,17 +33,17 @@ export const setupInterceptor = (): void => {
 
     failedQueue = [];
   };
+  const currentUser = UseCurrentUser();
   instance.interceptors.request.use(
     (config) => {
       if (
         config.url?.includes("user/login") ||
-        config.url?.includes("user/refresh")
+        config.url?.includes("user/refresh") ||
+        config.url?.includes("user/register")
       ) {
         return config;
       }
-      const currentUser: User | null = useSelector(
-        (state: State) => state.auth.currentUser
-      );
+
       const token = currentUser?.accessToken;
       console.log(token);
 
@@ -53,6 +60,8 @@ export const setupInterceptor = (): void => {
   instance.interceptors.response.use(
     (response) => response,
     (error) => {
+      console.log(error);
+
       const {
         config,
         response: { status },

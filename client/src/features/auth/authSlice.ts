@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import * as authApi from "../../api/authApi/authApi";
 
-import { User, Auth } from "../../type";
+import { User, Auth, signupState } from "../../type";
 
 export interface AuthState {
   currentUser: User | null;
@@ -23,6 +23,18 @@ export const login = createAsyncThunk<User, Auth>(
     const res = await authApi.loginPass({
       username: params.username,
       password: params.password,
+    });
+    return res;
+  }
+);
+export const signup = createAsyncThunk(
+  "auth/signup",
+  async (params: signupState) => {
+    const res = await authApi.signup({
+      username: params.username,
+      password: params.password,
+      email: params.email,
+      fullname: params.fullname,
     });
     return res;
   }
@@ -60,20 +72,19 @@ export const authSlice = createSlice({
       // console.log(action.payload);
 
       state.currentUser = action.payload;
-      
     });
 
-    builder.addCase(test.pending, (state) => {
+    builder.addCase(signup.pending, (state) => {
       state.loading = true;
     });
 
-    builder.addCase(test.rejected, (state, action) => {
+    builder.addCase(signup.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message;
       state.isError = true;
     });
 
-    builder.addCase(test.fulfilled, (state, action) => {
+    builder.addCase(signup.fulfilled, (state, action) => {
       state.loading = false;
       console.log(action.payload);
 
