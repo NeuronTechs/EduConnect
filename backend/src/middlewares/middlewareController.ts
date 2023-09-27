@@ -9,8 +9,7 @@ declare global {
 }
 const middlewareController = {
   verifyToken: (req: Request, res: Response, next: NextFunction) => {
-    const token = req.headers?.token as string | undefined
-    console.log(req.headers)
+    const token = req.headers?.token as string | undefined;
     if (token) {
       const accessToken = token.split(" ")[1];
       jwt.verify(
@@ -19,9 +18,10 @@ const middlewareController = {
         (error: jwt.VerifyErrors | null, user: any) => {
           if (error) {
             res.status(403).json("Token in valid");
+          } else {
+            req.user = user;
+            next();
           }
-          req.user = user;
-          next();
         }
       );
     } else {

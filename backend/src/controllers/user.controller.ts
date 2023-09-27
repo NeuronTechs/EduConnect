@@ -1,17 +1,18 @@
 import jwt from "jsonwebtoken";
 import UserService from "../services/user.service";
-import e, { Request, Response, NextFunction } from "express";
-import { User, registerResponse } from "../constant/user";
+import { Request, Response } from "express";
+import { User, informationResponse, registerResponse } from "../constant/user";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 
 let refreshTokens: string[] = [];
 const generateAccessToken = (
-  userId: number | undefined,
+  username: string | undefined,
   role: string | null | undefined
 ): string => {
   return jwt.sign(
     {
-      userId: userId,
+      userId: username,
       role: role,
     },
     "educonnect",
@@ -19,12 +20,12 @@ const generateAccessToken = (
   );
 };
 const generatefreshToken = (
-  userId: number | undefined,
+  username: string | undefined,
   role: string | null | undefined
 ): string => {
   return jwt.sign(
     {
-      userId: userId,
+      userId: username,
       role: role,
     },
     "educonnect",
@@ -67,11 +68,11 @@ const register = async (req: Request, res: Response) => {
 
       if (result?.status) {
         const accessToken: string = generateAccessToken(
-          result?.data?.userId,
+          result?.data?.username,
           result?.data?.role
         );
         const refreshToken: string = generatefreshToken(
-          result?.data?.userId,
+          result?.data?.username,
           result?.data?.role
         );
         refreshTokens.push(refreshToken);
@@ -123,11 +124,11 @@ const login = async (req: Request, res: Response) => {
         if (result.length > 0) {
           if (await isValidPassword(password, result[0]?.password)) {
             const accessToken: string = generateAccessToken(
-              result[0]?.userId,
+              result[0]?.username,
               result[0]?.role
             );
             const refreshToken: string = generatefreshToken(
-              result[0]?.userId,
+              result[0]?.username,
               result[0]?.role
             );
             refreshTokens.push(refreshToken);
@@ -230,8 +231,134 @@ const logout = async (req: Request, res: Response) => {
 };
 
 const updateInformation = async (req: Request, res: Response) => {
-  UserService.updateInformation();
-  res.status(200).json("ok");
+  try {
+    if (
+      !req.body?.username ||
+      !req.body?.role ||
+      !req.body?.fullName ||
+      !req.body?.avatar ||
+      !req.body?.phone ||
+      !req.body?.email ||
+      !req.body?.address ||
+      !req.body?.birthday ||
+      !req.body?.educational_level ||
+      !req.body?.major ||
+      !req.body?.course ||
+      !req.body?.school ||
+      !req.body?.address_school
+    ) {
+      res.status(400).json({
+        status: 400,
+        data: {},
+        message:
+          "username, role, fullName, avatar, phone, email, address, birthday, educational_level, major, course, school and address_school is require!",
+      });
+    } else {
+      const {
+        username,
+        role,
+        fullName,
+        avatar,
+        phone,
+        email,
+        address,
+        birthday,
+        educational_level,
+        major,
+        course,
+        school,
+        address_school,
+      } = req.body;
+      let result: informationResponse;
+      result = await UserService.updateInformation({
+        username,
+        role,
+        fullName,
+        avatar,
+        phone,
+        email,
+        address,
+        birthday,
+        educational_level,
+        major,
+        course,
+        school,
+        address_school,
+      });
+
+      if (result?.status) {
+        res.status(200).json({
+          status: 200,
+          message: result?.message,
+        });
+      } else {
+        res.status(400).json({
+          status: 400,
+          message: result?.message,
+        });
+      }
+    }
+  } catch (error) {
+    res.status(500).json({
+      status: 500,
+      data: {},
+      message: error,
+    });
+  }
+};
+
+const isValidEmail = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+    const token: string = crypto.randomBytes(20).toString("hex");
+    const isValidEmail = await UserService.isValidEmail({ email, token });
+    if (isValidEmail?.status) {
+      res.status(200).json({
+        status: 200,
+        message: isValidEmail?.message,
+      });
+    } else {
+      res.status(404).json({
+        status: 404,
+        message: isValidEmail?.message,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      status: 500,
+      data: {},
+      message: error,
+    });
+  }
+};
+
+const resetPassword = async (req: Request, res: Response) => {
+  try {
+    const { token, newPassword } = req.body;
+    const salt = await bcrypt.genSalt(10);
+    const passwordHashed = await bcrypt.hash(newPassword, salt);
+    const resetPass = await UserService.resetPassword({
+      newPassword: passwordHashed,
+      token,
+    });
+    if (resetPass?.status) {
+      res.status(200).json({
+        status: 200,
+        message: resetPass.message,
+      });
+    } else {
+      res.status(404).json({
+        status: 404,
+        message: resetPass.message,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      status: 500,
+      data: {},
+      message: error,
+    });
+  }
 };
 
 export default {
@@ -240,4 +367,6 @@ export default {
   logout,
   register,
   updateInformation,
+  isValidEmail,
+  resetPassword,
 };
