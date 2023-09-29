@@ -1,9 +1,11 @@
 import BlankLayout from "../layout/BlankLayout/blankLayout";
 import DefaultLayout from "../layout/DefaultLayout/defaultLayout";
+import CategoryFilter from "../pages/CategoryFilter";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
 import OverviewCourse from "../pages/OverviewCourse";
 import RegisterInformation from "../pages/RegisterInformation";
+import Search from "../pages/Search";
 import SignUp from "../pages/SignUp";
 
 const publicRoutes = [
@@ -19,6 +21,16 @@ const publicRoutes = [
   {
     path: "/course/:id",
     component: OverviewCourse,
+    layout: DefaultLayout,
+  },
+  {
+    path: "/category-filter",
+    component: CategoryFilter,
+    layout: DefaultLayout,
+  },
+  {
+    path: "/search",
+    component: Search,
     layout: DefaultLayout,
   },
 ];
