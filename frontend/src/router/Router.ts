@@ -1,5 +1,7 @@
 import BlankLayout from "../layout/BlankLayout/blankLayout";
 import DefaultLayout from "../layout/DefaultLayout/defaultLayout";
+import Checkout from "../pages/Checkout";
+import CoursesCart from "../pages/CoursesCart";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
 import OverviewCourse from "../pages/OverviewCourse";
@@ -20,6 +22,16 @@ const publicRoutes = [
     path: "/course/:id",
     component: OverviewCourse,
     layout: DefaultLayout,
+  },
+  {
+    path: "/coursescart",
+    component: CoursesCart,
+    layout: BlankLayout,
+  },
+  {
+    path: "/checkout",
+    component: Checkout,
+    layout: BlankLayout,
   },
 ];
 const privateRoutes = [{ path: "/", component: Home }];

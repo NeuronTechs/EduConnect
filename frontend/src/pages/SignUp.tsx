@@ -1,5 +1,4 @@
 import { Books } from "@phosphor-icons/react";
-import React from "react";
 import { Link } from "react-router-dom";
 import bg from "../../public/bgLogin.png";
 const SignUp = () => {

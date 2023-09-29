@@ -10,6 +10,7 @@ import {
 import Overview from "./Tabs/Overview";
 import Reviews from "./Tabs/Reviews";
 import Instructor from "./Tabs/Instructor";
+import { formatCurrency } from "../../utils/const";
 
 const data = {
   image:
@@ -50,6 +51,7 @@ const DetailCourse = () => {
       ) : (
         <div className="my-3 w-full h-[200px] ">
           <img
+            loading="lazy"
             className="h-full w-full rounded-lg object-cover object-center"
             src={data?.image}
             alt="image course"
@@ -58,7 +60,7 @@ const DetailCourse = () => {
       )}
       <div className="flex items-center justify-between my-5">
         <div className="flex">
-          <Avatar src={data?.avatar} alt="avatar" />
+          <Avatar src={data?.avatar} alt="avatar" loading="lazy" />
           <div className="mx-3">
             <p className="font-semibold">{data?.teacher}</p>
             <p>{data?.position}</p>
@@ -73,8 +75,10 @@ const DetailCourse = () => {
         <div className="text-blue-300">
           {data?.discount ? (
             <>
-              <p className="line-through">{data?.price}VND</p>
-              <p className="font-semibold text-blue-500">{data?.discount}VND</p>
+              <p className="line-through">{formatCurrency(data?.price)}</p>
+              <p className="font-semibold text-blue-500">
+                {formatCurrency(data?.discount)}
+              </p>
             </>
           ) : (
             <p>{data?.price}VND</p>
