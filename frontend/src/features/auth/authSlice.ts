@@ -47,8 +47,9 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    refetchToken: (state, action: PayloadAction<User>) => {
-      state.currentUser = action.payload;
+    refetchToken: (state, action: PayloadAction<string>) => {
+      if (state.currentUser !== null)
+        state.currentUser.accessToken = action.payload;
     },
     resetStoreAuth: (state) => {
       state.currentUser = null;

@@ -4,6 +4,7 @@ import logoMain from "./images/Logo.svg";
 import successInfo from "./images/successInfo.svg";
 import bgCourse from "./images/bgcourse.png";
 import categoryItem from "./images/categoryitem.png";
+import task from "./images/task.png";
 const assets = {
   // working
   // step 2: import the image
@@ -14,6 +15,7 @@ const assets = {
     successInfo: successInfo,
     bgCourse: bgCourse,
     categoryItem: categoryItem,
+    task: task,
   },
   icons: {},
   fonts: {},

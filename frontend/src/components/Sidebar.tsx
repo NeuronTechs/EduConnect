@@ -11,7 +11,7 @@ const Sidebar = React.forwardRef<Ref, Props>(
   (props, ref): React.ReactElement => {
     return (
       <div
-        className={`w-[250px] h-screen shadow-sm z-50 bg-white fixed top-0 left-0 xl:translate-x-0 ${
+        className={`w-[180px] h-screen shadow-sm z-50 bg-white fixed top-0 left-0 xl:translate-x-0 ${
           props.isOpen ? "-translate-x-0" : "-translate-x-[250px]"
         } transition-all delay-200 flex flex-col px-2 py-4`}
         ref={ref}

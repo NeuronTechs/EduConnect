@@ -9,14 +9,14 @@ export interface signupState {
   fullname: string;
 }
 export interface User {
-  userId: string | null;
-  username: string | null;
-  role: string | null;
-  fullName: string | null;
-  createdAt: string | null;
-  updatedAt: string | null;
-  avatar: string | null;
-  phone: string | null;
-  email: string | null;
-  accessToken: string | null;
+  userId: string;
+  username: string;
+  role: string;
+  fullName: string;
+  createdAt: string;
+  updatedAt: string;
+  avatar: string;
+  phone: string;
+  email: string;
+  accessToken: string;
 }
