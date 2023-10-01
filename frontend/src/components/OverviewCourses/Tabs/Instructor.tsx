@@ -6,6 +6,7 @@ const Instructor = () => {
     <div className="w-full h-full">
       <div className="flex items-center justify-start">
         <Avatar
+          loading="lazy"
           className="w-[80px] h-[80px]"
           src="https://cache.lovethispic.com/uploaded_images/327102-Rose-In-Grayscale.jpeg"
           alt="avatar"

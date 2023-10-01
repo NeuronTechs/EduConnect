@@ -66,6 +66,7 @@ const Reviews = () => {
         <div className="flex items-start w-full my-3">
           <div className="w-[20%] flex justify-center items-start">
             <Avatar
+              loading="lazy"
               className="w-[50px] h-[50px]"
               src="https://cache.lovethispic.com/uploaded_images/327102-Rose-In-Grayscale.jpeg"
               alt="avatar"
@@ -87,6 +88,7 @@ const Reviews = () => {
         <div className="flex items-start w-full my-3">
           <div className="w-[20%] flex justify-center items-start">
             <Avatar
+              loading="lazy"
               className="w-[50px] h-[50px]"
               src="https://cache.lovethispic.com/uploaded_images/327102-Rose-In-Grayscale.jpeg"
               alt="avatar"
