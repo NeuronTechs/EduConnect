@@ -1,5 +1,3 @@
-import React, { useState } from "react";
-import bg from "../../public/bgLogin.png";
 import {
   Books,
   FacebookLogo,
@@ -8,13 +6,14 @@ import {
   LinkedinLogo,
 } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
+import assets from "../assets";
 const Login = () => {
   return (
     <div className="flex h-[100vh]">
       <div
         className="flex-initial  w-full flex items-center "
         style={{
-          backgroundImage: `url(${bg})`,
+          backgroundImage: `url(${assets.images.backgroundLogin})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}

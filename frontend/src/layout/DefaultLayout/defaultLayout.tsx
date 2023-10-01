@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import Footer from "../../components/Footer";
+// import Footer from "../../components/Footer";
 import Header from "../../components/Header/Header";
 import Sidebar from "../../components/Sidebar";
 import { useOnClickOutside } from "../../hooks/useOnClickOutside";
@@ -29,8 +29,10 @@ const DefaultLayout = ({ children }: LayoutProps) => {
         className={`h-full w-full xl:pl-[250px] pl-0 transition-all delay-200`}
       >
         <Header setIsOpen={setIsOpen} />
-        <main className="w-full h-[calc(100vh-80px)]">{children}</main>
-        <Footer />
+        <main className="w-full h-[calc(100%-80px)] bg-[#F1F5F9] overflow-auto pb-4 px-4 py-6">
+          {children}
+        </main>
+        {/* <Footer /> */}
       </div>
     </div>
   );
