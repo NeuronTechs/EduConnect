@@ -2,10 +2,11 @@ import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useDebounce } from "../../hooks/useDebounce ";
 import { searchService } from "@/api";
+import { useNavigate } from "react-router-dom";
 
-type Inputs = {
-  data: string;
-};
+interface Inputs {
+  dataInput: string;
+}
 const SearchHeader = (): React.ReactElement => {
   // const [dataSearch, setDataSearch] = React.useState<string>("");
   const {
@@ -14,11 +15,16 @@ const SearchHeader = (): React.ReactElement => {
     watch,
     // formState: { errors },
   } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const navigate = useNavigate();
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    if (!data) return;
+    navigate(`/search?query=${encodeURIComponent(data.dataInput)}`);
+    // inputRef.current.blur();
+  };
 
-  const debouncedValue = useDebounce<string>(watch("data"), 500);
+  const debouncedValue = useDebounce<string>(watch("dataInput"), 500);
   React.useEffect(() => {
-    console.log(debouncedValue);
+    // console.log(debouncedValue);
     if (debouncedValue !== undefined) {
       const callApi = async () => {
         try {
@@ -58,7 +64,7 @@ const SearchHeader = (): React.ReactElement => {
           </svg>
         </div>
         <input
-          {...register("data")}
+          {...register("dataInput")}
           type="search"
           id="search"
           className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
