@@ -11,7 +11,7 @@ import Notification from "./Notification";
 import Privacy from "./Privacy";
 const ProfileSetting = () => {
   return (
-    <div className="w-[75%] h-[90vh] bg-white shadow-2xl p-10 m-5 mt-5 rounded-xl">
+    <div className="w-full xl:w-[75%] h-[90vh] bg-white shadow-2xl p-10 m-5 mt-5 rounded-xl">
       <Tabs value="PublicProfile">
         <TabsHeader>
           <Tab key={"PublicProfile"} value={"PublicProfile"}>

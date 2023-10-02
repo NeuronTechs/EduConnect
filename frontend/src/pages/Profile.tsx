@@ -4,7 +4,7 @@ import ProfileSetting from "../components/Profile/ProfileSetting";
 
 const Profile = () => {
   return (
-    <div className="flex w-full space-x-5">
+    <div className="block xl:flex w-full space-x-5">
       <ProfileInfo />
       <ProfileSetting />
     </div>

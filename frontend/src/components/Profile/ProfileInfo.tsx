@@ -3,7 +3,7 @@ import assets from "../../assets";
 
 const ProfileInfo = () => {
   return (
-    <div className="w-[35%]  h-[90vh]  bg-white shadow-2xl p-10 m-5 mt-5 rounded-xl ">
+    <div className="w-full  xl:w-[35%]  h-[90vh]  bg-white shadow-2xl p-10 m-5 mt-5 rounded-xl ">
       <div className="flex flex-col justify-center items-center">
         <div className="relative w-full flex items-center justify-center mb-4">
           <img src={assets.images.task} alt="" className="h-[60px]" />
