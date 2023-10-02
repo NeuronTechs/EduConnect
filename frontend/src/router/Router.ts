@@ -4,6 +4,7 @@ import Home from "../pages/Home";
 import Login from "../pages/Login";
 import MyCourse from "../pages/MyCourse";
 import OverviewCourse from "../pages/OverviewCourse";
+import Profile from "../pages/Profile";
 import RegisterInformation from "../pages/RegisterInformation";
 import SignUp from "../pages/SignUp";
 
@@ -23,6 +24,7 @@ const publicRoutes = [
     layout: DefaultLayout,
   },
   { path: "/myCourse", component: MyCourse, layout: DefaultLayout },
+  { path: "/profile", component: Profile, layout: DefaultLayout },
 ];
 const privateRoutes = [{ path: "/", component: Home }];
 export { publicRoutes, privateRoutes };
