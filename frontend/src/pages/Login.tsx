@@ -27,7 +27,7 @@ const Login = () => {
   return (
     <div className="flex h-[100vh]">
       <div
-        className="flex-initial  w-full flex items-center "
+        className="flex-initial  w-full hidden xl:flex items-center "
         style={{
           backgroundImage: `url(${bg})`,
           backgroundSize: "cover",
@@ -48,7 +48,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-      <div className="flex-initial w-[794px] flex flex-col ml-[7rem] ">
+      <div className="flex-initial w-[794px] flex flex-col ml-[7rem] items-center xl:items-start">
         <div className="flex mt-10 mb-10 text-2xl space-x-5">
           <Books size={32} /> <h1>EduConnect</h1>
         </div>

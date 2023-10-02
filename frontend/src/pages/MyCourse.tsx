@@ -14,7 +14,7 @@ const MyCourse = () => {
         </div>
       </div>
       <div className="flex">
-        <div className="flex flex-col w-[80%] gap-10">
+        <div className="flex flex-col w-full  xl:w-[80%] gap-10">
           <img
             src={assets.images.backgroundLogin}
             alt=""
@@ -41,7 +41,7 @@ const MyCourse = () => {
             </div>
           </div>
         </div>
-        <div className="w-[20%] ">
+        <div className="w-[20%] hidden xl:block">
           <Calendar />
           <Task />
         </div>

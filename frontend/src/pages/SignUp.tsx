@@ -123,7 +123,7 @@ const SignUp = () => {
       </div>
 
       <div
-        className="flex-initial  w-full flex items-center "
+        className="flex-initial  w-full  items-center hidden xl:flex"
         style={{
           backgroundImage: `url(${bg})`,
           backgroundSize: "cover",
