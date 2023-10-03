@@ -6,7 +6,7 @@ import {
   SealCheck,
   UsersThree,
 } from "@phosphor-icons/react";
-import { typeCourse } from "../types/type";
+import { ICourse } from "../types/type";
 import { Link } from "react-router-dom";
 
 function RatedIcon() {
@@ -45,7 +45,7 @@ function UnratedIcon() {
 }
 
 interface props {
-  data: typeCourse;
+  data: ICourse;
 }
 const Course = (props: props): React.ReactElement => {
   return (

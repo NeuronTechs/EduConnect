@@ -3,8 +3,13 @@ import ListCourse from "../components/Home/ListCourse";
 import { dataCategory, dataCourse, dataTeacher } from "../types/constans";
 import ListTeacher from "../components/Home/ListTeacher";
 import ListCategory from "../components/Home/ListCategory";
+import { useSearchParams } from "react-router-dom";
 
 const Search = (): React.ReactElement => {
+  const [searchParams] = useSearchParams();
+  React.useEffect(() => {
+    console.log(searchParams.get("query"));
+  }, [searchParams]);
   return (
     <div className="flex flex-col space-y-5 py-2 px-4">
       <div className="w-full bg-white shadow-sm flex items-center px-4 py-4">

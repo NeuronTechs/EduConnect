@@ -1,4 +1,4 @@
-export interface typeCourse {
+export interface ICourse {
   id: string;
   thumbnail: string;
   title: string;
@@ -12,14 +12,14 @@ export interface typeCourse {
   numberSecurity: number;
 }
 
-export interface typeCategory {
+export interface ICategory {
   id: string;
   title: string;
   numberCourse: number;
   images: string;
 }
 
-export interface typeTeacher {
+export interface ITeacher {
   id: string;
   name: string;
   subject: string;
