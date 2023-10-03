@@ -1,6 +1,6 @@
-import { typeCategory, typeCourse, typeTeacher } from "./type";
+import { ICategory, ICourse, ITeacher } from "./type";
 
-export const dataCourse: typeCourse[] = [
+export const dataCourse: ICourse[] = [
   {
     id: "fgsjalnjasds",
     thumbnail:
@@ -77,7 +77,7 @@ export const dataCourse: typeCourse[] = [
     numberSecurity: 15,
   },
 ];
-export const dataCategory: typeCategory[] = [
+export const dataCategory: ICategory[] = [
   {
     id: "dasdaasasfs",
     title: "Ui/UX thiết kế",
@@ -121,7 +121,7 @@ export const dataCategory: typeCategory[] = [
       "https://img.freepik.com/premium-vector/3d-ux-design-website-icon-vector-isolated-white-background-3d-ux-ui-concept-cartoon-minimal-style-3d-icon-vector-render-illustration_726846-5949.jpg?w=740",
   },
 ];
-export const dataTeacher: typeTeacher[] = [
+export const dataTeacher: ITeacher[] = [
   {
     id: "sdafasdasd",
     name: "Jionson whet",
@@ -177,3 +177,8 @@ export const dataTeacher: typeTeacher[] = [
       "https://img.freepik.com/free-psd/3d-illustration-person-with-glasses_23-2149436189.jpg?w=740&t=st=1695714524~exp=1695715124~hmac=64ab9d506508ce1a882b2430829b777866f686b8a3dd3598da16318a8a3e6d17",
   },
 ];
+
+export const dataSearch = {
+  keywords: ["ux/ui library", "javascript", "c++ master", "fullstack"],
+  course: dataCourse,
+};

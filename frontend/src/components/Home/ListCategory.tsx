@@ -1,9 +1,9 @@
 import React from "react";
 import CategoryItem from "../CategoryItem";
-import { typeCategory } from "../../types/type";
+import { ICategory } from "../../types/type";
 import ListCategoryLoading from "../Loading/ListCategoryLoading";
 interface props {
-  data: typeCategory[];
+  data: ICategory[];
   title: string;
   isLoading: boolean;
 }

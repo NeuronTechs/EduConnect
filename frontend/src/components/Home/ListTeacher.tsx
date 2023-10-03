@@ -1,9 +1,9 @@
 import React from "react";
 import TeacherItem from "../TeacherItem";
-import { typeTeacher } from "../../types/type";
+import { ITeacher } from "../../types/type";
 import ListTeacherLoading from "../Loading/ListTeacherLoading";
 interface props {
-  data: typeTeacher[];
+  data: ITeacher[];
   title: string;
   isLoading: boolean;
 }

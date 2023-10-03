@@ -1,7 +1,7 @@
 import React from "react";
-import { typeCategory } from "../types/type";
+import { ICategory } from "../types/type";
 interface props {
-  data: typeCategory;
+  data: ICategory;
 }
 const CategoryItem = (props: props): React.ReactElement => {
   return (

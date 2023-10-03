@@ -3,9 +3,9 @@ import {
   DotsThreeOutlineVertical,
   EnvelopeSimpleOpen,
 } from "@phosphor-icons/react";
-import { typeTeacher } from "../types/type";
+import { ITeacher } from "../types/type";
 interface props {
-  data: typeTeacher;
+  data: ITeacher;
 }
 const TeacherItem = (props: props): React.ReactElement => {
   return (

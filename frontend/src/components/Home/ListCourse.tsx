@@ -1,9 +1,9 @@
 import React from "react";
 import Course from "../Course";
-import { typeCourse } from "../../types/type";
+import { ICourse } from "../../types/type";
 import ListCourseLoading from "../Loading/ListCourseLoading";
 interface props {
-  data: typeCourse[];
+  data: ICourse[];
   title: string;
   isLoading: boolean;
 }
