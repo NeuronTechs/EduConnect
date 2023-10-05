@@ -3,6 +3,7 @@ import Card from "../components/MyCourse/Card";
 import assets from "../assets";
 import Calendar from "../components/MyCourse/Calendar";
 import Task from "../components/MyCourse/Task";
+import ListCourse from "@/components/MyCourse/ListCourse";
 
 const MyCourse = () => {
   return (
@@ -14,7 +15,7 @@ const MyCourse = () => {
         </div>
       </div>
       <div className="flex">
-        <div className="flex flex-col w-full  xl:w-[80%] gap-10">
+        <div className="flex flex-col w-full  xl:w-[80%] gap-10 font-bold">
           <img
             src={assets.images.backgroundLogin}
             alt=""
@@ -22,26 +23,24 @@ const MyCourse = () => {
           />
           <div>
             <strong> Your Recent</strong>
-            <div className="grid grid-cols-4 ">
-              <Card></Card>
-              <Card></Card>
-              <Card></Card>
-              <Card></Card>
-            </div>
+            <ListCourse
+              isLoading={true}
+              data={"hehe"}
+              title={"Giáo Viên Nỗi Bật"}
+            />
           </div>
           <div>
-            <div>
+            <div className="mb-5">
               <strong> Your Course</strong>
-              <div className="grid grid-cols-4 ">
-                <Card></Card>
-                <Card></Card>
-                <Card></Card>
-                <Card></Card>
-              </div>
+              <ListCourse
+                isLoading={true}
+                data={"hehe"}
+                title={"Giáo Viên Nỗi Bật"}
+              />
             </div>
           </div>
         </div>
-        <div className="w-[20%] hidden xl:block">
+        <div className="w-[20%] hidden xl:block ">
           <Calendar />
           <Task />
         </div>

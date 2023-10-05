@@ -1,3 +1,4 @@
+import { Checkbox } from "@material-tailwind/react";
 import React from "react";
 
 const Notification = () => {
@@ -9,15 +10,15 @@ const Notification = () => {
       </div>
       <div className="font-bold text-black text-sm flex flex-col gap-5 mt-10">
         <h1> I want to receive:</h1>
-        <div className="w-full border-[0.5px] border-black flex space-x-5 items-center p-[7px]">
-          <input type="checkbox" />
+        <div className="w-full   flex space-x-5 items-center p-[7px]">
+          <Checkbox crossOrigin={""} color="blue" defaultChecked />
           <h1>
             Promotions, course recommendations, and helpful resource form
             EduConnect
           </h1>
         </div>
-        <div className="w-full border-[0.5px] border-black flex space-x-5 items-center p-[7px]">
-          <input type="checkbox" />
+        <div className="w-full   flex space-x-5 items-center p-[7px]">
+          <Checkbox crossOrigin={""} color="blue" defaultChecked />
           <div>
             <h1>
               Announcements form instructors whose course(s) I'm enrolled in
@@ -30,8 +31,8 @@ const Notification = () => {
           </div>
         </div>
 
-        <div className="w-full border-[0.5px] border-black flex space-x-5 items-center p-[7px] mt-10">
-          <input type="checkbox" />
+        <div className="w-full   flex space-x-5 items-center p-[7px] mt-10">
+          <Checkbox crossOrigin={""} color="blue" defaultChecked />
           <div>
             <h1>Don't send me any promotional emails</h1>
             <h2 className="font-light">
@@ -40,7 +41,7 @@ const Notification = () => {
             </h2>
           </div>
         </div>
-        <button className="w-44 h-10 bg-gray-900 text-white rounded-lg ">
+        <button className="w-44 h-10 bg-blue-500 text-white rounded-lg ">
           Save
         </button>
       </div>

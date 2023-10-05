@@ -29,7 +29,7 @@ const DefaultLayout = ({ children }: LayoutProps) => {
         className={`h-full w-full xl:pl-[180px] pl-0 transition-all delay-200`}
       >
         <Header setIsOpen={setIsOpen} />
-        <main className="w-full h-[calc(100%-80px)] bg-[#F1F5F9] overflow-auto pb-4">
+        <main className="w-full h-[calc(100%-80px)] bg-[#F1F5F9] overflow-auto pb-4 px-4 py-6">
           {children}
         </main>
         {/* <Footer /> */}

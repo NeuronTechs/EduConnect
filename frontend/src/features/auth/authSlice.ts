@@ -27,6 +27,15 @@ export const login = createAsyncThunk<User, Auth>(
     return res;
   }
 );
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const logoutThunk = createAsyncThunk<any>(
+  "auth/logout",
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async () => {
+    const res = await authApi.logout();
+    return res;
+  }
+);
 export const signup = createAsyncThunk(
   "auth/signup",
   async (params: signupState) => {
@@ -47,9 +56,8 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    refetchToken: (state, action: PayloadAction<string>) => {
-      if (state.currentUser !== null)
-        state.currentUser.accessToken = action.payload;
+    refetchTokenStore: (state, action: PayloadAction<User>) => {
+      state.currentUser = action.payload;
     },
     resetStoreAuth: (state) => {
       state.currentUser = null;
@@ -58,6 +66,7 @@ export const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    // login password
     builder.addCase(login.pending, (state) => {
       state.loading = true;
     });
@@ -75,7 +84,13 @@ export const authSlice = createSlice({
       state.currentUser = action.payload;
     });
 
-    builder.addCase(signup.pending, (state) => {
+    builder.addCase(logoutThunk.fulfilled, (state) => {
+      state.loading = false;
+      state.currentUser = null;
+      state.error = "";
+    });
+    // test login
+    builder.addCase(test.pending, (state) => {
       state.loading = true;
     });
 
@@ -88,12 +103,11 @@ export const authSlice = createSlice({
     builder.addCase(signup.fulfilled, (state, action) => {
       state.loading = false;
       console.log(action.payload);
-
       // state.currentUser = action.payload;
     });
   },
 });
 
-export const { refetchToken, resetStoreAuth } = authSlice.actions;
+export const { refetchTokenStore, resetStoreAuth } = authSlice.actions;
 
 export default authSlice.reducer;

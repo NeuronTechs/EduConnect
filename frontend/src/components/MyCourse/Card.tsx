@@ -3,7 +3,7 @@ import React from "react";
 import assets from "../../assets";
 const Card = () => {
   return (
-    <div className="rounded-2xl bg-white p-2 flex flex-col gap-4 shadow-sm w-[180px]  ">
+    <div className="rounded-2xl bg-white p-2 flex flex-col gap-4 shadow-sm w-[200px] min-w-[150]  ">
       <div className="w-full">
         <img
           src={assets.images.bgCourse}
@@ -23,26 +23,24 @@ const Card = () => {
           </div>
         </div>
       </div>
-      <div className="flex justify-between text-gray-900 font-medium">
+      <div className="flex justify-between text-gray-500 leading-3 font-semibold">
         <div className="flex justify-center items-center">
-          <Book size={20} /> 1
+          <Book size={15} className="mr-2" /> 1
         </div>
         <div className="flex justify-center items-center">
-          <ShieldCheck size={20} /> 2
+          <ShieldCheck size={15} className="mr-2" /> 2
         </div>
         <div className="flex justify-center items-center">
-          <UsersFour size={20} /> 3
+          <UsersFour size={15} className="mr-2" /> 3
         </div>
       </div>
-      <div className="w-full bg-gray-300 rounded-lg h-3">
+      <div className="w-full bg-gray-300 rounded-lg h-1">
         <div
-          className="bg-gray-800 p-0.5 text-center text-[10px] font-light leading-none text-primary-100 rounded-lg"
+          className="bg-gray-600 h-1 p-0.5 text-center text-[10px] font-light leading-none text-primary-100 rounded-lg"
           style={{ width: "40%" }}
-        >
-          25%
-        </div>
+        ></div>
       </div>
-      <div className="flex justify-between text-xs text-gray-500">
+      <div className="flex justify-between text-[11px] text-gray-500">
         <h6>Complete 60%</h6>
         <h6>Days: 15/24</h6>
       </div>

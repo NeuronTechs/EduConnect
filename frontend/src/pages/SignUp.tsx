@@ -125,7 +125,7 @@ const SignUp = () => {
       <div
         className="flex-initial  w-full  items-center hidden xl:flex"
         style={{
-          backgroundImage: `url(${bg})`,
+          backgroundImage: `url(${assets.images.backgroundLogin})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}

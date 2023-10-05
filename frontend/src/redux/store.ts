@@ -11,18 +11,19 @@ import {
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import authSlice from "../features/auth/authSlice";
+import cartSlice from "../features/cart/cartSlice";
 const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  blacklist: ["comment", "post", "message", "bookmark"],
+  blacklist: ["cart"],
 };
 
 export default configureStore({
-  reducer: { auth: authSlice },
+  reducer: { auth: authSlice, cart: cartSlice },
 });
 // auth: authReducer
-const rootReducer = combineReducers({ auth: authSlice });
+const rootReducer = combineReducers({ authSlice, cartSlice });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
   reducer: persistedReducer,

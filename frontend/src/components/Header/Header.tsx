@@ -4,6 +4,7 @@ import AccountHeader from "./AccountHeader";
 import MessageHeader from "./MessageHeader";
 import { List } from "@phosphor-icons/react";
 import React from "react";
+import CourseCart from "./CourseCart";
 interface propsHeader {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -23,6 +24,7 @@ const Header = (props: propsHeader): React.ReactElement => {
       <div className="right flex gap-3 items-center">
         <NotificationHeader />
         <MessageHeader />
+        <CourseCart />
         <AccountHeader />
       </div>
     </div>

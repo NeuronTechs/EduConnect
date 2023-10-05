@@ -1,5 +1,4 @@
 import React from "react";
-import assets from "../assets";
 import { Rating } from "@material-tailwind/react";
 import {
   ArrowRight,
@@ -7,6 +6,8 @@ import {
   SealCheck,
   UsersThree,
 } from "@phosphor-icons/react";
+import { ICourse } from "../types/type";
+import { Link } from "react-router-dom";
 
 function RatedIcon() {
   return (
@@ -42,13 +43,17 @@ function UnratedIcon() {
     </svg>
   );
 }
-const Course = () => {
+
+interface props {
+  data: ICourse;
+}
+const Course = (props: props): React.ReactElement => {
   return (
-    <div className="rounded-2xl bg-white p-2 flex flex-col gap-2 shadow-sm min-w-[250px]">
-      <div className="w-full">
+    <div className="rounded-2xl bg-white p-2 flex flex-col gap-2 shadow-sm w-[250px]">
+      <div className="w-full max-h-[150px]">
         <img
-          src={assets.images.bgCourse}
-          alt=""
+          src={props.data.thumbnail}
+          alt={props.data.title}
           className="w-full h-full object-fill rounded-2xl"
         />
       </div>
@@ -56,18 +61,26 @@ const Course = () => {
         {/* content */}
         <div className="w-full flex justify-between">
           <div className="flex flex-col">
-            <h5 className="text-lg font-semibold text-black">HTML leaning</h5>
-            <p className="text-xs font-normal text-gray-600">Jionson whet</p>
+            <h5 className="text-lg font-semibold text-black">
+              {props.data.title}
+            </h5>
+            <p className="text-xs font-normal text-gray-600">
+              {props.data.teacher}
+            </p>
           </div>
-          <div className="rounded-full h-[40px] w-[40px]">
-            <img src={assets.images.avatar1} alt="" />
+          <div className="rounded-full h-[40px] w-[40px] overflow-hidden">
+            <img
+              src={props.data.avatarTeacher}
+              alt={props.data.teacher}
+              className="w-full h-full object-cover"
+            />
           </div>
         </div>
         {/* rating */}
         <div className="w-full flex justify-between">
           <div className="flex gap-1 items-center">
             <Rating
-              value={3}
+              value={props.data.rating}
               readonly
               ratedIcon={<RatedIcon />}
               unratedIcon={<UnratedIcon />}
@@ -75,9 +88,11 @@ const Course = () => {
             <p className="text-xs font-medium">5</p>
           </div>
           <div className="flex flex-col">
-            <p className="text-xs text-black font-extralight">150.000 VND</p>
+            <p className="text-xs text-black font-extralight">
+              {`${props.data.priceOfficial} VND`}
+            </p>
             <p className="text-xs text-gray-500 font-extralight line-through">
-              200.000 VND
+              {`${props.data.originalPrice} VND`}
             </p>
           </div>
         </div>
@@ -87,27 +102,35 @@ const Course = () => {
             <div>
               <FolderPlus size={15} />
             </div>
-            <p className="text-xs font-bold leading-3">15</p>
+            <p className="text-xs font-bold leading-3">
+              {props.data.numberLesson}
+            </p>
           </div>
           <div className="flex items-center gap-1 p-1 ">
             <div>
               <SealCheck size={15} />
             </div>
-            <p className="text-xs font-bold leading-3">10</p>
+            <p className="text-xs font-bold leading-3">
+              {props.data.numberSecurity}
+            </p>
           </div>
           <div className="flex items-center gap-1 p-1 ">
             <div>
               <UsersThree size={15} />
             </div>
-            <p className="text-xs font-bold leading-3">20</p>
+            <p className="text-xs font-bold leading-3">
+              {props.data.numberStudent}
+            </p>
           </div>
         </div>
         {/* button */}
         <div className="flex w-full justify-end ">
-          <div className="flex gap-1 bg-blue-300 rounded-3xl items-center justify-center px-4 py-2 text-white">
-            <p className="text-base">Xem</p>
-            <ArrowRight size={20} />
-          </div>
+          <Link to={`/course`}>
+            <div className="flex gap-1 bg-blue-300 rounded-3xl items-center justify-center px-4 py-2 text-white">
+              <p className="text-base">Xem</p>
+              <ArrowRight size={20} />
+            </div>
+          </Link>
         </div>
       </div>
     </div>

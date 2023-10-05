@@ -29,7 +29,7 @@ const Login = () => {
       <div
         className="flex-initial  w-full hidden xl:flex items-center "
         style={{
-          backgroundImage: `url(${bg})`,
+          backgroundImage: `url(${assets.images.backgroundLogin})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
