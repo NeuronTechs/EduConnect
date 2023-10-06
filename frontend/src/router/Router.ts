@@ -11,6 +11,7 @@ import Profile from "../pages/Profile";
 import RegisterInformation from "../pages/RegisterInformation";
 import Search from "../pages/Search";
 import SignUp from "../pages/SignUp";
+import Course from "@/pages/Course";
 
 const publicRoutes = [
   { path: "/", component: Home, layout: DefaultLayout },
@@ -25,6 +26,11 @@ const publicRoutes = [
   {
     path: "/course/:id",
     component: OverviewCourse,
+    layout: DefaultLayout,
+  },
+  {
+    path: "/course/learn/:id",
+    component: Course,
     layout: DefaultLayout,
   },
   { path: "/myCourse", component: MyCourse, layout: DefaultLayout },
