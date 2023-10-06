@@ -4,7 +4,7 @@ interface props {
 }
 const ListCategoryLoading = (props: props): React.ReactElement => {
   return (
-    <div className={`grid grid-cols-4 gap-10 ${props.className}`}>
+    <div className={`grid grid-cols-4 gap-5 ${props.className}`}>
       <CardCategoryLoading />
       <CardCategoryLoading />
       <CardCategoryLoading />
@@ -22,11 +22,11 @@ const CardCategoryLoading = (): React.ReactElement => {
   return (
     <div
       role="status"
-      className="space-y-8 animate-pulse md:space-y-0 md:space-x-4 md:flex md:items-center w-full"
+      className="animate-pulse md:space-y-0 md:space-x-4 md:flex items-center w-full bg-white px-3 py-4 rounded-md"
     >
-      <div className="w-full">
-        <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"></div>
-        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[480px] mb-2.5"></div>
+      <div className="w-full space-y-3 flex flex-col">
+        <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700  "></div>
+        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700  "></div>
       </div>
       <div className="flex items-center justify-center w-10 h-10 bg-gray-300 rounded sm:w-10 dark:bg-gray-700">
         <svg

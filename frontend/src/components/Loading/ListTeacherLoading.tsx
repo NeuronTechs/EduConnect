@@ -1,8 +1,9 @@
 import React from "react";
 
-const ListTeacherLoading = () => {
+const ListTeacherLoading = (props: { numberShow: number }) => {
   return (
-    <div className=" flex justify-between w-full">
+    <div className={`grid grid-cols-${props.numberShow} gap-3 w-full`}>
+      <CardTeacherLoading />
       <CardTeacherLoading />
       <CardTeacherLoading />
       <CardTeacherLoading />
@@ -18,7 +19,7 @@ const CardTeacherLoading = () => {
   return (
     <div
       role="status"
-      className="animate-pulse bg-white rounded-xl px-3 py-4 max-w-[250px]"
+      className=" col-span-1 w-full animate-pulse bg-white rounded-xl px-3 py-4"
     >
       <div className="flex w-full space-x-4 mb-4">
         <div>

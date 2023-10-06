@@ -1,3 +1,4 @@
+import TeacherCategory from "@/pages/TeacherCategory";
 import BlankLayout from "../layout/BlankLayout/blankLayout";
 import DefaultLayout from "../layout/DefaultLayout/defaultLayout";
 import Checkout from "../pages/Checkout";
@@ -9,12 +10,17 @@ import OverviewCourse from "../pages/OverviewCourse";
 import RegisterInformation from "../pages/RegisterInformation";
 import Search from "../pages/Search";
 import SignUp from "../pages/SignUp";
-
-const publicRoutes = [
+import { FC } from "react";
+interface IRouter {
+  path: string;
+  component: FC;
+  layout: FC<never>;
+}
+const publicRoutes: IRouter[] = [
   { path: "/", component: Home, layout: DefaultLayout },
   { path: "/login", component: Login, layout: BlankLayout },
   { path: "/signUp", component: SignUp, layout: BlankLayout },
-  { path: "/login", component: Home, layout: null },
+  { path: "/login", component: Home, layout: BlankLayout },
   {
     path: "/register-information",
     component: RegisterInformation,
@@ -43,6 +49,11 @@ const publicRoutes = [
   {
     path: "/search",
     component: Search,
+    layout: DefaultLayout,
+  },
+  {
+    path: "/teacher-category",
+    component: TeacherCategory,
     layout: DefaultLayout,
   },
 ];
