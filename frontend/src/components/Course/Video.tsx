@@ -52,6 +52,14 @@ const Video = () => {
       >
         Your browser does not support the video tag.
       </video>
+      {!isPlaying && (
+        <div
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full bg-gray-800 p-5 text-white cursor-pointer opacity-70"
+          onClick={handlePlay}
+        >
+          <Play size={32} />
+        </div>
+      )}
       <div className=" absolute opacity-0 flex justify-between items-center text-white hover:opacity-50 w-full h-[50px] bg-black  bottom-0">
         <div className=" ml-5 flex space-x-5 font-bold items-center justify-center">
           <div className="cursor-pointer" onClick={handlePlay}>
@@ -75,7 +83,16 @@ const Video = () => {
               ))}
             </MenuList>
           </Menu>
-          <FastForward size={25} className="cursor-pointer" />
+          <FastForward
+            size={25}
+            onClick={() => {
+              if (videoRef.current) {
+                setCurrentTime(currentTime + 5);
+                videoRef.current.currentTime += 5;
+              }
+            }}
+            className="cursor-pointer"
+          />
           <h6>
             {currentTime} /{" "}
             {videoRef.current && videoRef.current.duration.toFixed(0)}

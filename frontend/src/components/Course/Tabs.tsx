@@ -8,6 +8,7 @@ import {
 import React from "react";
 import Overview from "../OverviewCourses/Tabs/Overview";
 import Reviews from "../OverviewCourses/Tabs/Reviews";
+import Modules from "./Modules";
 
 const TabsInfo = () => {
   const [activeTab, setActiveTab] = React.useState("Overview");
