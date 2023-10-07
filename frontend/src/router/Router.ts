@@ -9,6 +9,9 @@ import OverviewCourse from "../pages/OverviewCourse";
 import RegisterInformation from "../pages/RegisterInformation";
 import Search from "../pages/Search";
 import SignUp from "../pages/SignUp";
+import Dashboard from "@/pages/Dashboard";
+import Payout from "@/pages/Payout";
+import ListStudent from "@/pages/ListStudent";
 
 const publicRoutes = [
   { path: "/", component: Home, layout: DefaultLayout },
@@ -43,6 +46,21 @@ const publicRoutes = [
   {
     path: "/search",
     component: Search,
+    layout: DefaultLayout,
+  },
+  {
+    path: "/teacher/dashboard",
+    component: Dashboard,
+    layout: DefaultLayout,
+  },
+  {
+    path: "/teacher/payout",
+    component: Payout,
+    layout: DefaultLayout,
+  },
+  {
+    path: "/teacher/liststudent",
+    component: ListStudent,
     layout: DefaultLayout,
   },
 ];

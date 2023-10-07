@@ -20,7 +20,7 @@ const OverviewCourse = () => {
           <a href="/course">Course</a>
         </Breadcrumbs>
       </div>
-      <div className="flex flex-row justify-center items-start px-4 h-full">
+      <div className="flex flex-col lg:flex lg:flex-row lg:justify-center lg:items-start lg:px-4 h-full">
         <DetailCourse />
         <BuyCourse />
       </div>

@@ -19,7 +19,7 @@ const Instructor = () => {
               <Star size={20} color="#e58b24" weight="fill" />
               4.5
             </p>
-            <p className="flex items-center justify-start mr-5">
+            <p className="hidden lg:display lg:flex items-center justify-start mr-5">
               <User size={20} />
               362 học sinh
             </p>

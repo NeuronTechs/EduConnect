@@ -40,8 +40,8 @@ const BuyCourse = () => {
     await dispatch(addToCart(dataCart));
   };
   return (
-    <div className="w-[30%] px-3">
-      <div className="w-full h-[200px] my-3">
+    <div className="w-full lg:w-[30%] px-3">
+      <div className="hidden lg:display w-full h-[200px] my-3">
         <img
           loading="lazy"
           className="h-full w-full rounded-lg object-cover object-center"

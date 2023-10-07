@@ -5,12 +5,17 @@ const Reviews = () => {
   const [rated, setRated] = useState<number>(0);
   return (
     <div className="w-full h-full">
-      <div className="my-3">
-        <h1 className="font-semibold">Phản hồi của học sinh</h1>
-        <div className="my-3 flex">
+      <div className="mb-3">
+        <h1 className="font-semibold">Phản hồi</h1>
+        <div className="my-3 flex lg:flex-row flex-col items-center">
           <div className="my-3 flex flex-col items-center justify-center w-[20%]">
             <p className="font-semibold text-[40px]">5</p>
-            <Rating value={5} readonly />
+            <Rating
+              value={5}
+              readonly
+              unratedColor="amber"
+              ratedColor="amber"
+            />
           </div>
           <div className="w-[80%] flex flex-col items-center justify-center">
             <div className="flex items-center justify-between w-full">
@@ -19,7 +24,12 @@ const Reviews = () => {
                 value={100}
                 className="border-2 border-gray-900/10 bg-blue-100 w-[500px]"
               />
-              <Rating value={4} readonly />
+              <Rating
+                value={4}
+                readonly
+                unratedColor="amber"
+                ratedColor="amber"
+              />
               <p>75%</p>
             </div>
             <div className="flex items-center justify-between w-full">
@@ -28,7 +38,12 @@ const Reviews = () => {
                 value={75}
                 className="border-2 border-gray-900/10 bg-blue-100 w-[500px]"
               />
-              <Rating value={3} readonly />
+              <Rating
+                value={3}
+                readonly
+                unratedColor="amber"
+                ratedColor="amber"
+              />
               <p>25%</p>
             </div>
             <div className="flex items-center justify-between w-full">
@@ -37,7 +52,12 @@ const Reviews = () => {
                 value={50}
                 className="border-2 border-gray-900/10 bg-blue-100 w-[500px]"
               />
-              <Rating value={2} readonly />
+              <Rating
+                value={2}
+                readonly
+                unratedColor="amber"
+                ratedColor="amber"
+              />
               <p>0%</p>
             </div>
             <div className="flex items-center justify-between w-full">
@@ -46,7 +66,12 @@ const Reviews = () => {
                 value={25}
                 className="border-2 border-gray-900/10 bg-blue-100 w-[500px]"
               />
-              <Rating value={1} readonly />
+              <Rating
+                value={1}
+                readonly
+                unratedColor="amber"
+                ratedColor="amber"
+              />
               <p>0%</p>
             </div>
             <div className="flex items-center justify-between w-full">
@@ -55,7 +80,12 @@ const Reviews = () => {
                 value={0}
                 className="border-2 border-gray-900/10 bg-blue-100 w-[500px]"
               />
-              <Rating value={0} readonly />
+              <Rating
+                value={0}
+                readonly
+                unratedColor="amber"
+                ratedColor="amber"
+              />
               <p>0%</p>
             </div>
           </div>
@@ -77,7 +107,12 @@ const Reviews = () => {
               <h1 className="font-semibold mr-3">Josn siion</h1>
               <p>3 3 ngày trước</p>
             </div>
-            <Rating value={3} readonly />
+            <Rating
+              value={3}
+              readonly
+              unratedColor="amber"
+              ratedColor="amber"
+            />
             <h1 className="font-semibold mr-3">Khóa học rất tốt</h1>
             <p>
               Khóa học này rất hữu ích rất thích hợp cho những người mới học như
@@ -99,7 +134,12 @@ const Reviews = () => {
               <h1 className="font-semibold mr-3">Josn siion</h1>
               <p>3 ngày trước</p>
             </div>
-            <Rating value={3} readonly />
+            <Rating
+              value={3}
+              readonly
+              unratedColor="amber"
+              ratedColor="amber"
+            />
             <h1 className="font-semibold mr-3">Khóa học rất tốt</h1>
             <p>
               Khóa học này rất hữu ích rất thích hợp cho những người mới học như
@@ -121,7 +161,12 @@ const Reviews = () => {
               Bạn thấy khóa học này như thế nào?
             </p>
             <div className="flex items-center gap-2">
-              <Rating value={4} onChange={(value) => setRated(value)} />
+              <Rating
+                value={4}
+                onChange={(value) => setRated(value)}
+                unratedColor="amber"
+                ratedColor="amber"
+              />
               <Typography color="blue-gray" className="font-medium">
                 {rated}.0 Rated
               </Typography>
