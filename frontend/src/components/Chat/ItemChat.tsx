@@ -1,7 +1,7 @@
 import assets from "@/assets";
 import { CheckCircle } from "@phosphor-icons/react";
 import React from "react";
-import FileMessage from "./FileMessage";
+import FileMessage from "./MediaChat/FileMessage";
 // import MediaMessage from "./MediaMessage";
 
 interface IProps {}
