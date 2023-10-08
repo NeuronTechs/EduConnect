@@ -21,37 +21,37 @@ export type Ref = HTMLDivElement;
 const ITEM_SIDEBAR = [
   {
     title: "Trang Chủ",
-    icon: <House size={32} />,
+    icon: <House size={25} />,
     to: "/",
   },
   {
     title: "Khoá Học Của Tôi",
-    icon: <BookOpenText size={32} />,
+    icon: <BookOpenText size={25} />,
     to: "/my-course",
   },
   {
     title: "schedule",
-    icon: <Calendar size={32} />,
+    icon: <Calendar size={25} />,
     to: "/schedule",
   },
   {
     title: "Notification",
-    icon: <Notification size={32} />,
+    icon: <Notification size={25} />,
     to: "/notification",
   },
   {
     title: "chat",
-    icon: <Chat size={32} />,
+    icon: <Chat size={25} />,
     to: "/chat",
   },
   {
     title: "Profile",
-    icon: <UserCircle size={32} />,
+    icon: <UserCircle size={25} />,
     to: "/profile",
   },
   {
     title: "Setting",
-    icon: <Gear size={32} />,
+    icon: <Gear size={25} />,
     to: "/setting",
   },
 ];
