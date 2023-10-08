@@ -125,7 +125,7 @@ const Course = (props: props): React.ReactElement => {
         </div>
         {/* button */}
         <div className="flex w-full justify-end ">
-          <Link to={`/course`}>
+          <Link to={`/course/${props.data.id}`}>
             <div className="flex gap-1 bg-blue-300 rounded-3xl items-center justify-center px-4 py-2 text-white">
               <p className="text-base">Xem</p>
               <ArrowRight size={20} />

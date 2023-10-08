@@ -44,15 +44,15 @@ const Home = () => {
   return (
     <div className="flex flex-col w-full  gap-5">
       <TabHome />
-      <Banner isLoading={true} />
+      <Banner isLoading={false} />
       <ListCourse
-        isLoading={true}
+        isLoading={false}
         data={dataCourse}
         title={"Khoá Học Nỗi Bật"}
       />
-      <ListCategory isLoading={true} data={dataCategory} title={"Thể Loại"} />
+      <ListCategory isLoading={false} data={dataCategory} title={"Thể Loại"} />
       <ListTeacher
-        isLoading={true}
+        isLoading={false}
         data={dataTeacher}
         title={"Giáo Viên Nỗi Bật"}
       />
