@@ -3,7 +3,7 @@ import {
   AccordionHeader,
   AccordionBody,
 } from "@material-tailwind/react";
-import { PlayCircle } from "@phosphor-icons/react";
+import { BookOpenText, Clock, PlayCircle } from "@phosphor-icons/react";
 import React, { useState } from "react";
 
 interface IconProps {
@@ -42,20 +42,25 @@ const Module = (props: moduleProps) => {
     <div className="my-1  p-2 rounded-sm">
       <Accordion open={open === true} icon={<Icon open={open} />}>
         <AccordionHeader onClick={() => handleOpen()}>
-          <div className="flex flex-col justify-between items-start opacity-100">
-            <div className="text-[16px]">{props.title}</div>
-            <div className="text-[13px] font-normal">
-              {props.time} phút để hoàn thành
+          <div className="flex flex-col items-start opacity-100 gap-2">
+            <div className="text-[14px] text-black font-bold">
+              {props.title}
+            </div>
+            <div className="flex items-center text-[10px] space-x-3">
+              <BookOpenText size={20} />
+              <p>15 Bài</p>
+              <Clock size={20} />
+              <p>60 phút</p>
             </div>
           </div>
         </AccordionHeader>
         <AccordionBody>
           <ul>
-            <li className="flex items-center justify-start text-[15px]">
+            <li className="flex items-center justify-start text-[15px] cursor-pointer">
               <PlayCircle size={16} className="mr-3" />
               1. Mô hình Client - Server là gì?
             </li>
-            <li className="flex items-center justify-start">
+            <li className="flex items-center justify-start cursor-pointer">
               <PlayCircle size={16} className="mr-3" />
               2. Domain là gì? Tên miền là gì?
             </li>
@@ -72,15 +77,15 @@ const Modules = () => {
       <h1 className="text-xl font-bold">Course Content</h1>
       <p className="text-xs text-gray-500">Lecture (15) / Total (5,5 hrs)</p>
       <div className="mt-5">
-        <Module isOpen={false} title="Bài 1" time={15} />
-        <Module isOpen={false} title="Bài 2" time={15} />
-        <Module isOpen={false} title="Bài 3" time={15} />
-        <Module isOpen={false} title="Bài 4" time={15} />
-        <Module isOpen={false} title="Bài 5" time={15} />
-        <Module isOpen={false} title="Bài 6" time={15} />
-        <Module isOpen={false} title="Bài 7" time={15} />
-        <Module isOpen={false} title="Bài 8" time={15} />
-        <Module isOpen={false} title="Bài 9" time={15} />
+        <Module isOpen={false} title=" 1. Tiêu đề chương" time={15} />
+        <Module isOpen={false} title=" 2. Tiêu đề chương" time={15} />
+        <Module isOpen={false} title=" 3. Tiêu đề chương" time={15} />
+        <Module isOpen={false} title=" 4. Tiêu đề chương" time={15} />
+        <Module isOpen={false} title=" 5. Tiêu đề chương" time={15} />
+        <Module isOpen={false} title=" 6. Tiêu đề chương" time={15} />
+        <Module isOpen={false} title=" 7. Tiêu đề chương" time={15} />
+        <Module isOpen={false} title=" 8. Tiêu đề chương" time={15} />
+        <Module isOpen={false} title=" 9. Tiêu đề chương" time={15} />
       </div>
     </div>
   );
