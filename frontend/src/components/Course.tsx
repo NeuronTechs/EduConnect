@@ -6,7 +6,7 @@ import {
   SealCheck,
   UsersThree,
 } from "@phosphor-icons/react";
-import { typeCourse } from "../types/type";
+import { ICourse } from "../types/type";
 import { Link } from "react-router-dom";
 
 function RatedIcon() {
@@ -45,11 +45,11 @@ function UnratedIcon() {
 }
 
 interface props {
-  data: typeCourse;
+  data: ICourse;
 }
 const Course = (props: props): React.ReactElement => {
   return (
-    <div className="rounded-2xl bg-white p-2 flex flex-col gap-2 shadow-sm w-[250px]">
+    <div className="rounded-2xl bg-white p-2 flex flex-col gap-2 shadow-sm w-full">
       <div className="w-full max-h-[150px]">
         <img
           src={props.data.thumbnail}
@@ -61,14 +61,14 @@ const Course = (props: props): React.ReactElement => {
         {/* content */}
         <div className="w-full flex justify-between">
           <div className="flex flex-col">
-            <h5 className="text-lg font-semibold text-black">
+            <h5 className="xl:text-lg lg:text-base md:text-sm font-semibold text-black">
               {props.data.title}
             </h5>
             <p className="text-xs font-normal text-gray-600">
               {props.data.teacher}
             </p>
           </div>
-          <div className="rounded-full h-[40px] w-[40px] overflow-hidden">
+          <div className="rounded-full md:h-[40px] md:w-[40px] h-[30px] w-[30px] overflow-hidden">
             <img
               src={props.data.avatarTeacher}
               alt={props.data.teacher}
@@ -77,7 +77,7 @@ const Course = (props: props): React.ReactElement => {
           </div>
         </div>
         {/* rating */}
-        <div className="w-full flex justify-between">
+        <div className="w-full flex justify-between flex-col gap-3">
           <div className="flex gap-1 items-center">
             <Rating
               value={props.data.rating}
@@ -125,7 +125,7 @@ const Course = (props: props): React.ReactElement => {
         </div>
         {/* button */}
         <div className="flex w-full justify-end ">
-          <Link to={`/course`}>
+          <Link to={`/course/${props.data.id}`}>
             <div className="flex gap-1 bg-blue-300 rounded-3xl items-center justify-center px-4 py-2 text-white">
               <p className="text-base">Xem</p>
               <ArrowRight size={20} />

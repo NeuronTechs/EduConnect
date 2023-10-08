@@ -8,8 +8,11 @@ import {
 import DefaultLayout from "./layout/DefaultLayout/defaultLayout";
 import { setupInterceptor } from "./utils/interceptor";
 import { publicRoutes } from "./router/Router";
+import { AppDispatch, store } from "./redux/store";
+import { useDispatch } from "react-redux";
 function App() {
-  setupInterceptor();
+  const dispatch = useDispatch<AppDispatch>();
+  setupInterceptor(store, dispatch);
   const routerCheck = publicRoutes;
   return (
     <Router>

@@ -29,6 +29,15 @@ export const login = createAsyncThunk<User, Auth>(
     return res;
   }
 );
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const logoutThunk = createAsyncThunk<any>(
+  "auth/logout",
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async () => {
+    const res = await authApi.logout();
+    return res;
+  }
+);
 export const test = createAsyncThunk("auth/test", async () => {
   const res = await authApi.test();
   return res;
@@ -37,7 +46,7 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    refetchToken: (state, action: PayloadAction<User>) => {
+    refetchTokenStore: (state, action: PayloadAction<User>) => {
       state.currentUser = action.payload;
     },
     resetStoreAuth: (state) => {
@@ -47,6 +56,7 @@ export const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    // login password
     builder.addCase(login.pending, (state) => {
       state.loading = true;
     });
@@ -63,7 +73,25 @@ export const authSlice = createSlice({
       const dataObj = action.payload as User;
       localStorage.setItem("token", dataObj.data.accessToken);
     });
+    // logout
+    builder.addCase(logoutThunk.pending, (state) => {
+      state.loading = true;
+    });
 
+    builder.addCase(logoutThunk.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+      state.isError = true;
+    });
+
+    builder.addCase(logoutThunk.fulfilled, (state) => {
+      state.loading = false;
+      state.currentUser = null;
+      state.token = null;
+      state.isError = false;
+      state.error = "";
+    });
+    // test login
     builder.addCase(test.pending, (state) => {
       state.loading = true;
     });
@@ -77,12 +105,11 @@ export const authSlice = createSlice({
     builder.addCase(test.fulfilled, (state, action) => {
       state.loading = false;
       console.log(action.payload);
-
       // state.currentUser = action.payload;
     });
   },
 });
 
-export const { refetchToken, resetStoreAuth } = authSlice.actions;
+export const { refetchTokenStore, resetStoreAuth } = authSlice.actions;
 
 export default authSlice.reducer;

@@ -45,7 +45,7 @@ const DetailCourse = () => {
     },
   ];
   return (
-    <div className="w-full lg:w-[70%] h-auto">
+    <div className="w-full lg:w-[70%] h-auto bg-white">
       {data?.image === "" ? (
         <div className="my-3 bg-gray-400 w-full h-[150px] rounded-lg"></div>
       ) : (
@@ -58,7 +58,7 @@ const DetailCourse = () => {
           />
         </div>
       )}
-      <div className="flex flex-col lg:flex lg:items-center lg:justify-between my-5">
+      <div className="flex flex-col lg:flex lg:flex-row lg:items-center lg:justify-between my-5">
         <div className="flex">
           <Avatar src={data?.avatar} alt="avatar" loading="lazy" />
           <div className="mx-3">
@@ -72,12 +72,12 @@ const DetailCourse = () => {
               unratedColor="amber"
               ratedColor="amber"
             />
-            <p className="hidden lg:display text-[14px] ml-1 italic font-normal">
+            <p className="hidden lg:block text-[14px] ml-1 italic font-normal">
               {data.numberReview} đánh giá
             </p>
           </div>
         </div>
-        <div className="hidden lg:display text-blue-300">
+        <div className="hidden lg:block text-blue-300">
           {data?.discount ? (
             <>
               <p className="line-through">{formatCurrency(data?.price)}</p>

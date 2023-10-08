@@ -11,7 +11,7 @@ const CourseCart = () => {
   const cartCurrent = useSelector((state: RootState) => state);
 
   const handleRedirectCart = () => {
-    navigate("/coursescart");
+    navigate("/courses-cart");
   };
 
   return (

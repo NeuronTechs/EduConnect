@@ -1,6 +1,6 @@
-import { typeCategory, typeCourse, typeTeacher } from "./type";
+import { ICategory, ICourse, ITeacher } from "./type";
 
-export const dataCourse: typeCourse[] = [
+export const dataCourse: ICourse[] = [
   {
     id: "fgsjalnjasds",
     thumbnail:
@@ -77,7 +77,7 @@ export const dataCourse: typeCourse[] = [
     numberSecurity: 15,
   },
 ];
-export const dataCategory: typeCategory[] = [
+export const dataCategory: ICategory[] = [
   {
     id: "dasdaasasfs",
     title: "Ui/UX thiết kế",
@@ -121,59 +121,94 @@ export const dataCategory: typeCategory[] = [
       "https://img.freepik.com/premium-vector/3d-ux-design-website-icon-vector-isolated-white-background-3d-ux-ui-concept-cartoon-minimal-style-3d-icon-vector-render-illustration_726846-5949.jpg?w=740",
   },
 ];
-export const dataTeacher: typeTeacher[] = [
+export const dataTeacher: ITeacher[] = [
+  {
+    id: "sdafadasdasdasd",
+    name: "Jionson whet",
+    subject: "Ui/UX thiết kế",
+    totalCourse: 23,
+    totalStudent: 15,
+    avatar:
+      "https://img.freepik.com/free-psd/3d-illustration-person-with-glasses_23-2149436189.jpg?w=740&t=st=1695714524~exp=1695715124~hmac=64ab9d506508ce1a882b2430829b777866f686b8a3dd3598da16318a8a3e6d17",
+    position: "Teacher",
+    school: "ABC School",
+    scoreReview: 4.5,
+    totalReview: 20,
+    introduce:
+      "I am a professional UI/UX designer with 10 years of experience.",
+    linkWeb: "https://jionsonwhet.com",
+    email: "jionsonwhet@gmail.com",
+    phone: "123-456-7890",
+    linkFacebook: "",
+    linkYoutube: "",
+    linkLinkedin: "",
+  },
   {
     id: "sdafasdasd",
     name: "Jionson whet",
     subject: "Ui/UX thiết kế",
-    numberCourser: 23,
-    numberStudent: 15,
+    totalCourse: 23,
+    totalStudent: 15,
     avatar:
       "https://img.freepik.com/free-psd/3d-illustration-person-with-glasses_23-2149436189.jpg?w=740&t=st=1695714524~exp=1695715124~hmac=64ab9d506508ce1a882b2430829b777866f686b8a3dd3598da16318a8a3e6d17",
-  },
-  {
-    id: "sdafadasdsdasd",
-    name: "Jionson whet",
-    subject: "Ui/UX thiết kế",
-    numberCourser: 23,
-    numberStudent: 15,
-    avatar:
-      "https://img.freepik.com/free-psd/3d-illustration-person-with-glasses_23-2149436189.jpg?w=740&t=st=1695714524~exp=1695715124~hmac=64ab9d506508ce1a882b2430829b777866f686b8a3dd3598da16318a8a3e6d17",
+    position: "Teacher",
+    school: "ABC School",
+    scoreReview: 4.5,
+    totalReview: 20,
+    introduce:
+      "I am a professional UI/UX designer with 10 years of experience.",
+    linkWeb: "https://jionsonwhet.com",
+    email: "jionsonwhet@gmail.com",
+    phone: "123-456-7890",
+    linkFacebook: "",
+    linkYoutube: "",
+    linkLinkedin: "",
   },
   {
     id: "sdafadasdasdasd",
     name: "Jionson whet",
     subject: "Ui/UX thiết kế",
-    numberCourser: 23,
-    numberStudent: 15,
+    totalCourse: 23,
+    totalStudent: 15,
     avatar:
       "https://img.freepik.com/free-psd/3d-illustration-person-with-glasses_23-2149436189.jpg?w=740&t=st=1695714524~exp=1695715124~hmac=64ab9d506508ce1a882b2430829b777866f686b8a3dd3598da16318a8a3e6d17",
+    position: "Teacher",
+    school: "ABC School",
+    scoreReview: 4.5,
+    totalReview: 20,
+    introduce:
+      "I am a professional UI/UX designer with 10 years of experience.",
+    linkWeb: "https://jionsonwhet.com",
+    email: "jionsonwhet@gmail.com",
+    phone: "123-456-7890",
+    linkFacebook: "",
+    linkYoutube: "",
+    linkLinkedin: "",
   },
   {
-    id: "sdafaskyuyhfdasd",
+    id: "sdafasdasd",
     name: "Jionson whet",
     subject: "Ui/UX thiết kế",
-    numberCourser: 23,
-    numberStudent: 15,
+    totalCourse: 23,
+    totalStudent: 15,
     avatar:
       "https://img.freepik.com/free-psd/3d-illustration-person-with-glasses_23-2149436189.jpg?w=740&t=st=1695714524~exp=1695715124~hmac=64ab9d506508ce1a882b2430829b777866f686b8a3dd3598da16318a8a3e6d17",
-  },
-  {
-    id: "afasdwadaasda",
-    name: "Jionson whet",
-    subject: "Ui/UX thiết kế",
-    numberCourser: 23,
-    numberStudent: 15,
-    avatar:
-      "https://img.freepik.com/free-psd/3d-illustration-person-with-glasses_23-2149436189.jpg?w=740&t=st=1695714524~exp=1695715124~hmac=64ab9d506508ce1a882b2430829b777866f686b8a3dd3598da16318a8a3e6d17",
-  },
-  {
-    id: "afasddaswadaasda",
-    name: "Jionson whet",
-    subject: "Ui/UX thiết kế",
-    numberCourser: 23,
-    numberStudent: 15,
-    avatar:
-      "https://img.freepik.com/free-psd/3d-illustration-person-with-glasses_23-2149436189.jpg?w=740&t=st=1695714524~exp=1695715124~hmac=64ab9d506508ce1a882b2430829b777866f686b8a3dd3598da16318a8a3e6d17",
+    position: "Teacher",
+    school: "ABC School",
+    scoreReview: 4.5,
+    totalReview: 20,
+    introduce:
+      "I am a professional UI/UX designer with 10 years of experience.",
+    linkWeb: "https://jionsonwhet.com",
+    email: "jionsonwhet@gmail.com",
+    phone: "123-456-7890",
+    linkFacebook: "",
+    linkYoutube: "",
+    linkLinkedin: "",
   },
 ];
+
+export const dataSearch = {
+  keywords: ["ux/ui library", "javascript", "c++ master", "fullstack"],
+  course: dataCourse,
+};

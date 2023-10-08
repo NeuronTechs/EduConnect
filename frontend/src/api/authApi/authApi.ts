@@ -23,3 +23,13 @@ export const test = async () => {
     return Promise.reject(error);
   }
 };
+
+export const logout = async () => {
+  try {
+    const res = await httpRequest.get("/user/listServerOfUser");
+    console.log(res);
+    return res?.result;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};

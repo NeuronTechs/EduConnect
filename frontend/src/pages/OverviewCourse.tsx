@@ -4,7 +4,7 @@ import BuyCourse from "../components/OverviewCourses/BuyCourse";
 
 const OverviewCourse = () => {
   return (
-    <div className="flex flex-col w-auto overflow-y-auto h-full">
+    <div className="flex flex-col w-auto overflow-y-auto h-full bg-white">
       <div>
         <Breadcrumbs>
           <a href="/" className="opacity-60">
