@@ -11,49 +11,55 @@ import RegisterInformation from "../pages/RegisterInformation";
 import Search from "../pages/Search";
 import SignUp from "../pages/SignUp";
 import { FC } from "react";
+import Chat from "@/pages/Chat";
+import { configRouter } from "@/configs/router";
 interface IRouter {
   path: string;
   component: FC;
   layout: FC<never>;
 }
 const publicRoutes: IRouter[] = [
-  { path: "/", component: Home, layout: DefaultLayout },
-  { path: "/login", component: Login, layout: BlankLayout },
-  { path: "/signUp", component: SignUp, layout: BlankLayout },
-  { path: "/login", component: Home, layout: BlankLayout },
+  { path: configRouter.login, component: Login, layout: BlankLayout },
+  { path: configRouter.signUp, component: SignUp, layout: BlankLayout },
+  { path: configRouter.home, component: Home, layout: DefaultLayout },
   {
-    path: "/register-information",
+    path: configRouter.registerInformation,
     component: RegisterInformation,
     layout: BlankLayout,
   },
   {
-    path: "/course/:id",
+    path: configRouter.course,
     component: OverviewCourse,
     layout: DefaultLayout,
   },
   {
-    path: "/coursescart",
+    path: configRouter.coursesCart,
     component: CoursesCart,
     layout: BlankLayout,
   },
   {
-    path: "/checkout",
+    path: configRouter.checkout,
     component: Checkout,
     layout: BlankLayout,
   },
   {
-    path: "/category-filter",
+    path: configRouter.categoryFilter,
     component: CategoryFilter,
     layout: DefaultLayout,
   },
   {
-    path: "/search",
+    path: configRouter.search,
     component: Search,
     layout: DefaultLayout,
   },
   {
-    path: "/teacher-category",
+    path: configRouter.teacherCategory,
     component: TeacherCategory,
+    layout: DefaultLayout,
+  },
+  {
+    path: configRouter.chat,
+    component: Chat,
     layout: DefaultLayout,
   },
 ];

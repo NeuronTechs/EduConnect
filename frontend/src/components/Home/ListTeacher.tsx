@@ -20,11 +20,11 @@ const ListTeacher = (props: props): React.ReactElement => {
             <ListTeacherLoading numberShow={6} />
           </>
         ) : (
-          <>
+          <div className="grid grid-cols-6 gap-3">
             {props.data.map((teacher) => {
               return <TeacherItem data={teacher} key={teacher.id} />;
             })}
-          </>
+          </div>
         )}
       </div>
     </div>

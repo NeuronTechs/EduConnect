@@ -2,9 +2,12 @@ import React from "react";
 import ListCourse from "../Home/ListCourse";
 import { dataCourse } from "@/types/constans";
 import assets from "@/assets";
-
-const TabsTeacherCategory = () => {
+interface IProps {
+  idTeacher: string | undefined;
+}
+const TabsTeacherCategory = (props: IProps) => {
   const [currentTabIndex, setCurrentTabIndex] = React.useState<number>(0);
+
   return (
     <div className="flex flex-col px-4 py-2 space-y-4 bg-white rounded-sm">
       <TabsControl
