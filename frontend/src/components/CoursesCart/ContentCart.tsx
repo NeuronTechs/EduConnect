@@ -10,19 +10,19 @@ import {
   DialogFooter,
 } from "@material-tailwind/react";
 import { formatCurrency } from "../../utils/const";
-import { AppDispatch } from "../../redux/store";
+import { AppDispatch, RootState } from "../../redux/store";
 import { Cart, removeToCart } from "../../features/cart/cartSlice";
 
 const ContentCart = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [totals, setTotals] = useState<number>(0);
   const navigate = useNavigate();
-  const cartCurrent = useSelector((state: any) => state);
+  const cartCurrent: RootState = useSelector((state: RootState) => state);
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     cartCurrent?.cartSlice?.cartCurrent?.map((data: any) => {
-      setTotals((prev) => prev + data?.price);
+      setTotals((prev) => prev + data?.discount);
     });
   }, [cartCurrent]);
 
@@ -46,12 +46,12 @@ const ContentCart = () => {
   };
 
   return (
-    <div className="mt-3 mx-20 px-6">
+    <div className="mt-3 xl:mx-20 px-6">
       {cartCurrent?.cartSlice?.cartCurrent?.length !== 0 ? (
         <div>
           <h1 className="font-semibold text-[30px] my-3 w-full">Giỏ hàng</h1>
-          <div className="flex justify-between w-full">
-            <div className="w-[70%]">
+          <div className="lg:flex lg:justify-between w-full">
+            <div className="w-full lg:w-[70%]">
               <h1 className="font-semibold text-[15px] my-3 border border-b-gray-400 pb-1 w-full">
                 {cartCurrent?.cartSlice?.cartCurrent?.length} khóa học trong giỏ
                 hàng
@@ -59,7 +59,7 @@ const ContentCart = () => {
               {cartCurrent?.cartSlice?.cartCurrent?.map(
                 (data: any, index: any) => (
                   <div className="my-3 w-full" key={index}>
-                    <div className="flex-1 grid grid-cols-[120px_auto_100px_40px] justify-stretch items-center my-3">
+                    <div className="flex-1 grid grid-cols-[80px_auto_40px] md:grid-cols-[120px_auto_100px_40px] justify-stretch items-center my-3">
                       <img
                         className="w-full h-[80px] object-cover p-1"
                         src={data.image}
@@ -75,7 +75,7 @@ const ContentCart = () => {
                         </p>
                         <p className="my-1 truncate">{data.teacher}</p>
                       </div>
-                      <div>
+                      <div className="hidden md:block">
                         <p className="text-[14px] text-blue-600 line-through">
                           {formatCurrency(data?.price)}
                         </p>
@@ -120,7 +120,7 @@ const ContentCart = () => {
                 )
               )}
             </div>
-            <div className="w-[30%] px-5">
+            <div className="w-full my-5 lg:my-0 lg:w-[30%] lg:px-5">
               <div className="font-semibold text-[15px] my-3 pb-1 ">
                 Thông tin đơn hàng
               </div>
@@ -139,14 +139,14 @@ const ContentCart = () => {
                   {formatCurrency(0)}
                 </div>
               </div>
-              <div className="flex items-center justify-between my-5 mx-2">
+              <div className="flex items-center justify-between my-5 mx-2 w-full">
                 <input
                   type="text"
-                  className="outline-none border border-gray-400 p-2 rounded-md hover:border-blue-300 active:border-blue-300 focus:border-blue-300"
+                  className="w-[60%] outline-none border border-gray-400 p-2 rounded-md hover:border-blue-300 active:border-blue-300 focus:border-blue-300"
                   placeholder="Mã giảm giá (Chỉ áp dụng một lần)"
                 />
-                <button className="bg-blue-500 text-white py-2 px-3 rounded-md">
-                  ÁP DỤNG
+                <button className=" w-[35%] bg-blue-500 text-white py-2 px-3 rounded-md">
+                  Áp dụng
                 </button>
               </div>
               <div className="flex items-start justify-between my-2">

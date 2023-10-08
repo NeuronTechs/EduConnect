@@ -13,6 +13,9 @@ import SignUp from "../pages/SignUp";
 import { FC } from "react";
 import Chat from "@/pages/Chat";
 import { configRouter } from "@/configs/router";
+import Dashboard from "@/pages/Dashboard";
+import Payout from "@/pages/Payout";
+import ListStudent from "@/pages/ListStudent";
 interface IRouter {
   path: string;
   component: FC;
@@ -60,6 +63,21 @@ const publicRoutes: IRouter[] = [
   {
     path: configRouter.chat,
     component: Chat,
+    layout: DefaultLayout,
+  },
+  {
+    path: configRouter.dashboard,
+    component: Dashboard,
+    layout: DefaultLayout,
+  },
+  {
+    path: configRouter.payout,
+    component: Payout,
+    layout: DefaultLayout,
+  },
+  {
+    path: configRouter.liststudent,
+    component: ListStudent,
     layout: DefaultLayout,
   },
 ];

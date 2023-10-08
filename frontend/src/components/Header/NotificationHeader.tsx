@@ -44,7 +44,7 @@ const NotificationHeader = () => {
     >
       <Bell size={22} />
       {isHovered && (
-        <div className="absolute w-[400px] h-[500px] right-0 z-1 bg-white p-3 border border-[#ccc] rounded-sm shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)] overflow-y-auto">
+        <div className="absolute w-[400px] h-[400px] right-0 z-1 bg-white p-3 border border-[#ccc] rounded-sm shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)] overflow-y-auto">
           <div className="mb-3 font-semibold text-[14px]">Thông báo</div>
           {fakeData?.length !== 0 ? (
             fakeData.map((data, index) => (

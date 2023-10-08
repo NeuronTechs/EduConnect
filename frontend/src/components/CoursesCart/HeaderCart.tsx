@@ -26,7 +26,7 @@ const HeaderCart = () => {
       <div className="w-[500px]">
         <SearchHeader />
       </div>
-      <div className="flex gap-3 pr-3">
+      <div className="flex items-center justify-center gap-3 pr-3">
         <NotificationHeader />
         <MessageHeader />
         <CourseCart />
