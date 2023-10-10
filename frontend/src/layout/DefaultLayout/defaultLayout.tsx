@@ -26,7 +26,7 @@ const DefaultLayout = ({ children }: LayoutProps) => {
     <div className="relative h-screen w-screen overflow-hidden">
       <Sidebar ref={ref} isOpen={isOpen} setIsOpen={setIsOpen} />
       <div
-        className={`h-full w-full xl:pl-[250px] pl-0 transition-all delay-200`}
+        className={`h-full w-full xl:pl-[180px] pl-0 transition-all delay-200`}
       >
         <Header setIsOpen={setIsOpen} />
         <main className="w-full h-[calc(100%-80px)] bg-[#F1F5F9] overflow-auto pb-4 px-4 py-4">

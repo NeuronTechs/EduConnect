@@ -13,4 +13,7 @@ export const configRouter = {
   dashboard: "/teacher/dashboard",
   payout: "/teacher/payout",
   liststudent: "/teacher/liststudent",
+  myCourse: "/myCourse",
+  learning: "/course/learn/:id",
+  profile: "/profile",
 };
