@@ -8,7 +8,7 @@ const Course = () => {
   return (
     <div className="flex flex-col w-full  py-2 gap-5 ">
       <div className=" grid grid-cols-4 space-x-2 ">
-        <div className="col-span-4 lg:col-span-3 h-[100vh] lg:overflow-y-auto scrollbar-hide">
+        <div className="col-span-4 lg:col-span-3 h-auto lg:h-screen lg:overflow-y-auto scrollbar-hide">
           <Video />
           <TabsInfo />
         </div>

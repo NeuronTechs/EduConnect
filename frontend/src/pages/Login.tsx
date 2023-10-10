@@ -12,6 +12,7 @@ import {
   LinkedinLogo,
 } from "@phosphor-icons/react";
 import { Link, useNavigate } from "react-router-dom";
+import assets from "@/assets";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

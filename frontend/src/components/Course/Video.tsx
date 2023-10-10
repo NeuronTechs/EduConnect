@@ -107,7 +107,6 @@ const Video = () => {
                   : 0
               }
               onChange={(e) => {
-                console.log(e.target.value);
                 if (videoRef.current) {
                   const time = Number(e.target.value);
                   const s = (time / 100) * videoRef.current.duration;

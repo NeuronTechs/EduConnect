@@ -24,7 +24,7 @@ const MyCourse = () => {
           <div>
             <strong> Your Recent</strong>
             <ListCourse
-              isLoading={true}
+              isLoading={false}
               data={"hehe"}
               title={"Giáo Viên Nỗi Bật"}
             />
@@ -33,7 +33,7 @@ const MyCourse = () => {
             <div className="mb-5">
               <strong> Your Course</strong>
               <ListCourse
-                isLoading={true}
+                isLoading={false}
                 data={"hehe"}
                 title={"Giáo Viên Nỗi Bật"}
               />

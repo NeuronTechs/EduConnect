@@ -22,7 +22,12 @@ const Comment = (props: commentProps) => {
             <h1 className="font-semibold mr-3">Josn siion</h1>
           </div>
           <div className="flex items-center space-x-4">
-            <Rating value={3} readonly />
+            <Rating
+              value={3}
+              unratedColor="amber"
+              ratedColor="amber"
+              readonly
+            />
             <p className="opacity-80">3 3 ngày trước</p>
           </div>
           <p className="text-sm">{props.content}</p>
@@ -56,9 +61,14 @@ const Reviews = () => {
         <h1 className="font-semibold text-xl">Phản hồi của học sinh</h1>
         <div className="my-3 flex space-x-8">
           <div className="my-3 flex flex-col items-center justify-center w-[20%]">
-            <p className="font-semibold text-6xl text-yellow-600">5</p>
-            <Rating value={5} readonly />
-            <p className="text-sm text-yellow-600">Điểm khóa học</p>
+            <p className="font-semibold text-6xl ">5</p>
+            <Rating
+              unratedColor="amber"
+              ratedColor="amber"
+              value={5}
+              readonly
+            />
+            <p className="text-sm ">Điểm khóa học</p>
           </div>
           <div className="w-[80%] flex flex-col items-center justify-center">
             <div className="flex items-center justify-between w-full space-x-3">
@@ -68,7 +78,12 @@ const Reviews = () => {
                 className="border-2 border-gray-900/10 bg-blue-100 w-[70%]"
               />
               <div className="flex w-[30%] space-x-2">
-                <Rating value={5} readonly />
+                <Rating
+                  unratedColor="amber"
+                  ratedColor="amber"
+                  value={5}
+                  readonly
+                />
                 <p>75%</p>
               </div>
             </div>
@@ -79,7 +94,12 @@ const Reviews = () => {
                 className="border-2 border-gray-900/10 bg-blue-100 w-[70%]"
               />
               <div className="flex w-[30%] space-x-2">
-                <Rating value={4} readonly />
+                <Rating
+                  unratedColor="amber"
+                  ratedColor="amber"
+                  value={4}
+                  readonly
+                />
                 <p>75%</p>
               </div>
             </div>
@@ -90,7 +110,12 @@ const Reviews = () => {
                 className="border-2 border-gray-900/10 bg-blue-100 w-[70%]"
               />
               <div className="flex w-[30%] space-x-2">
-                <Rating value={3} readonly />
+                <Rating
+                  unratedColor="amber"
+                  ratedColor="amber"
+                  value={3}
+                  readonly
+                />
                 <p>75%</p>
               </div>
             </div>
@@ -101,7 +126,12 @@ const Reviews = () => {
                 className="border-2 border-gray-900/10 bg-blue-100 w-[70%]"
               />
               <div className="flex w-[30%] space-x-2">
-                <Rating value={2} readonly />
+                <Rating
+                  unratedColor="amber"
+                  ratedColor="amber"
+                  value={2}
+                  readonly
+                />
                 <p>75%</p>
               </div>
             </div>
@@ -112,7 +142,12 @@ const Reviews = () => {
                 className="border-2 border-gray-900/10 bg-blue-100 w-[70%]"
               />
               <div className="flex w-[30%] space-x-2">
-                <Rating value={1} readonly />
+                <Rating
+                  unratedColor="amber"
+                  ratedColor="amber"
+                  value={1}
+                  readonly
+                />
                 <p>5%</p>
               </div>
             </div>
@@ -139,7 +174,12 @@ const Reviews = () => {
               Bạn thấy khóa học này như thế nào?
             </p>
             <div className="flex items-center gap-2">
-              <Rating value={4} onChange={(value) => setRated(value)} />
+              <Rating
+                value={4}
+                onChange={(value) => setRated(value)}
+                unratedColor="amber"
+                ratedColor="amber"
+              />
               <Typography color="blue-gray" className="font-medium">
                 {rated}.0 Rated
               </Typography>

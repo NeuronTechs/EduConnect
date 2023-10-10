@@ -3,14 +3,15 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { formatCurrency } from "../../utils/const";
+import { RootState } from "@/redux/store";
 
 const CourseCart = () => {
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const navigate = useNavigate();
-  const cartCurrent = useSelector((state: any) => state);
+  const cartCurrent = useSelector((state: RootState) => state);
 
   const handleRedirectCart = () => {
-    navigate("/coursescart");
+    navigate("/courses-cart");
   };
 
   return (

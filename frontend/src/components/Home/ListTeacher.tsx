@@ -17,14 +17,14 @@ const ListTeacher = (props: props): React.ReactElement => {
       <div className="flex justify-between px-3 py-1">
         {props.isLoading ? (
           <>
-            <ListTeacherLoading />
+            <ListTeacherLoading numberShow={6} />
           </>
         ) : (
-          <>
+          <div className="grid grid-cols-6 gap-3">
             {props.data.map((teacher) => {
               return <TeacherItem data={teacher} key={teacher.id} />;
             })}
-          </>
+          </div>
         )}
       </div>
     </div>

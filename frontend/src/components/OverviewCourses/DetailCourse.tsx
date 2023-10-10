@@ -45,7 +45,7 @@ const DetailCourse = () => {
     },
   ];
   return (
-    <div className="w-[70%] h-full">
+    <div className="w-full lg:w-[70%] h-auto bg-white">
       {data?.image === "" ? (
         <div className="my-3 bg-gray-400 w-full h-[150px] rounded-lg"></div>
       ) : (
@@ -58,7 +58,7 @@ const DetailCourse = () => {
           />
         </div>
       )}
-      <div className="flex items-center justify-between my-5">
+      <div className="flex flex-col lg:flex lg:flex-row lg:items-center lg:justify-between my-5">
         <div className="flex">
           <Avatar src={data?.avatar} alt="avatar" loading="lazy" />
           <div className="mx-3">
@@ -66,13 +66,18 @@ const DetailCourse = () => {
             <p>{data?.position}</p>
           </div>
           <div className="flex items-center">
-            <Rating value={data?.start} readonly />
-            <p className="text-[14px] ml-1 italic font-normal">
+            <Rating
+              value={data?.start}
+              readonly
+              unratedColor="amber"
+              ratedColor="amber"
+            />
+            <p className="hidden lg:block text-[14px] ml-1 italic font-normal">
               {data.numberReview} đánh giá
             </p>
           </div>
         </div>
-        <div className="text-blue-300">
+        <div className="hidden lg:block text-blue-300">
           {data?.discount ? (
             <>
               <p className="line-through">{formatCurrency(data?.price)}</p>
@@ -86,10 +91,12 @@ const DetailCourse = () => {
         </div>
       </div>
       <div className="my-3">
-        <h1 className="my-2 font-semibold text-[24px]">{data?.courseName}</h1>
+        <h1 className="my-2 font-semibold text-[20px] lg:text-[24px]">
+          {data?.courseName}
+        </h1>
         <Tabs value={activeTab}>
           <TabsHeader
-            className="rounded-none border-b border-blue-gray-50 bg-transparent p-0 w-[50%] my-3"
+            className="rounded-none border-b border-blue-gray-50 bg-transparent p-0 w-[100%] my-3"
             indicatorProps={{
               className:
                 "bg-transparent border-b-2 border-blue-300 shadow-none rounded-none",

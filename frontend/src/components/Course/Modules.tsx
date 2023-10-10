@@ -39,7 +39,7 @@ const Module = (props: moduleProps) => {
 
   const handleOpen = () => setOpen(!open);
   return (
-    <div className="my-1  p-2 rounded-sm">
+    <div className="mb-1  p-2 rounded-sm">
       <Accordion open={open === true} icon={<Icon open={open} />}>
         <AccordionHeader onClick={() => handleOpen()}>
           <div className="flex flex-col items-start opacity-100 gap-2">
@@ -73,7 +73,7 @@ const Module = (props: moduleProps) => {
 
 const Modules = () => {
   return (
-    <div className=" col-span-4 lg:col-span-1 pl-2  h-[100vh] lg:overflow-y-auto">
+    <div className=" col-span-4 lg:col-span-1 pl-2 h-auto lg:h-screen lg:overflow-y-auto ">
       <h1 className="text-xl font-bold">Course Content</h1>
       <p className="text-xs text-gray-500">Lecture (15) / Total (5,5 hrs)</p>
       <div className="mt-5">

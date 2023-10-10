@@ -22,8 +22,19 @@ export interface ICategory {
 export interface ITeacher {
   id: string;
   name: string;
-  subject: string;
-  numberCourser: number;
-  numberStudent: number;
+  email: string;
+  phone: string;
   avatar: string;
+  position: string;
+  school: string;
+  totalStudent: number;
+  scoreReview: number;
+  totalReview: number;
+  totalCourse: number;
+  subject: string;
+  introduce: string;
+  linkWeb: string;
+  linkFacebook: string;
+  linkYoutube: string;
+  linkLinkedin: string;
 }

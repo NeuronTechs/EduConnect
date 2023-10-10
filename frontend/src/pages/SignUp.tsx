@@ -1,3 +1,4 @@
+import assets from "@/assets";
 import { Books } from "@phosphor-icons/react";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";

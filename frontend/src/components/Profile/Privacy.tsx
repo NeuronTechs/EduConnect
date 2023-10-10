@@ -25,7 +25,7 @@ const Privacy = () => {
           crossOrigin={""}
         />
       </div>
-      <button className="w-44 h-10 bg-gray-900 text-white rounded-lg mt-10">
+      <button className="w-44 h-10 bg-blue-400 text-white rounded-lg mt-10">
         Save
       </button>
     </div>
