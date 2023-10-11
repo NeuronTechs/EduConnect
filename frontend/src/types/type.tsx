@@ -38,3 +38,44 @@ export interface ITeacher {
   linkYoutube: string;
   linkLinkedin: string;
 }
+
+export interface IConventionChat {
+  id: string;
+  avatar: string;
+  name: string;
+  lastMessage: string;
+  lastTime: string;
+  isOnline: boolean;
+  chatNew: number;
+}
+// export interface IMediaLink {
+//   link: string;
+//   type: "video" | "image" | "file" | "audio";
+// }
+export interface IMessage {
+  id: string | number;
+  avatar: string;
+  name: string;
+  time: number;
+  seeMessage: string[];
+  message: string;
+  images?: {
+    src: string;
+    alt?: string;
+  }[];
+  videos?: {
+    src: string;
+    alt?: string;
+  }[];
+  audios?: {
+    src: string;
+    name: string;
+    duration: number;
+  }[];
+  files?: {
+    src: string;
+    name: string;
+    size: number;
+  }[];
+  isLoading?: boolean;
+}
