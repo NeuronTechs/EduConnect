@@ -30,27 +30,27 @@ const ITEM_SIDEBAR = [
     to: "/my-course",
   },
   {
-    title: "schedule",
+    title: "kế hoạch",
     icon: <Calendar size={25} />,
     to: "/schedule",
   },
   {
-    title: "Notification",
+    title: "Thông báo",
     icon: <Notification size={25} />,
     to: "/notification",
   },
   {
-    title: "chat",
+    title: "Tin Nhắn",
     icon: <Chat size={25} />,
     to: "/chat",
   },
   {
-    title: "Profile",
+    title: "Hồ sơ",
     icon: <UserCircle size={25} />,
     to: "/profile",
   },
   {
-    title: "Setting",
+    title: "Cài đặt",
     icon: <Gear size={25} />,
     to: "/setting",
   },
