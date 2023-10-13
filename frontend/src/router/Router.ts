@@ -6,7 +6,9 @@ import CoursesCart from "../pages/CoursesCart";
 import CategoryFilter from "../pages/CategoryFilter";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
+import MyCourse from "../pages/MyCourse";
 import OverviewCourse from "../pages/OverviewCourse";
+import Profile from "../pages/Profile";
 import RegisterInformation from "../pages/RegisterInformation";
 import Search from "../pages/Search";
 import SignUp from "../pages/SignUp";
@@ -15,6 +17,7 @@ import Chat from "@/pages/Chat";
 import { configRouter } from "@/configs/router";
 import Payout from "@/pages/Payout";
 import ListStudent from "@/pages/ListStudent";
+import Course from "@/pages/Course";
 import DashboardTeacher from "@/pages/DashboardTeacher";
 import DashboardAdmin from "@/pages/DashboardAdmin";
 import ReportSale from "@/pages/ReportSale";
@@ -38,6 +41,13 @@ const publicRoutes: IRouter[] = [
     component: OverviewCourse,
     layout: DefaultLayout,
   },
+  {
+    path: configRouter.learning,
+    component: Course,
+    layout: DefaultLayout,
+  },
+  { path: configRouter.myCourse, component: MyCourse, layout: DefaultLayout },
+  { path: configRouter.profile, component: Profile, layout: DefaultLayout },
   {
     path: configRouter.coursesCart,
     component: CoursesCart,

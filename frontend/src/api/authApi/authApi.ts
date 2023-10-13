@@ -1,16 +1,30 @@
-import { Auth } from "../../type";
+import { Auth, signupState } from "../../type";
 import * as httpRequest from "../../utils/httpRequest";
 
 export const loginPass = async (params: Auth) => {
   try {
     console.log(params);
-    const res = await httpRequest.post("/auth/login", {
-      email: params.username,
+    const res = await httpRequest.post("/user/login", {
+      username: params.username,
       password: params.password,
     });
-    return res?.result;
+    return res?.data;
   } catch (error) {
     console.log(error);
+    return Promise.reject(error);
+  }
+};
+export const signup = async (params: signupState) => {
+  try {
+    const res = await httpRequest.post("/user/register", {
+      username: params.username,
+      email: params.email,
+      password: params.password,
+      fullName: params.fullname,
+    });
+
+    return res?.data;
+  } catch (error) {
     return Promise.reject(error);
   }
 };

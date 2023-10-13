@@ -5,6 +5,8 @@ import successInfo from "./images/successInfo.svg";
 import bgCourse from "./images/bgcourse.png";
 import categoryItem from "./images/categoryitem.png";
 import audio1 from "./audio/ambient-piano-logo-165357.mp3";
+import task from "./images/task.png";
+import cameraLogo from "./images/cameraLogo.jpg";
 const assets = {
   // working
   // step 2: import the image
@@ -15,10 +17,13 @@ const assets = {
     successInfo: successInfo,
     bgCourse: bgCourse,
     categoryItem: categoryItem,
+    task: task,
+    cameraLogo: cameraLogo,
   },
   audios: {
     audio1: audio1,
   },
+  
   icons: {},
   fonts: {},
 };

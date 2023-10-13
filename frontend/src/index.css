@@ -5,4 +5,14 @@
   .button-logo {
     @apply flex items-center w-[120px] h-9 border-[1px] border-gray-600 text-gray-600 rounded-md text-sm;
   }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  ::-webkit-scrollbar {
+    width: 0px;
+  }
 }

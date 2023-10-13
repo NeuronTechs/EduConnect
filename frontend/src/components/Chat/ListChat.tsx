@@ -1,9 +1,24 @@
 import assets from "@/assets";
+import { IConventionChat } from "@/types/type";
 import { MagnifyingGlass } from "@phosphor-icons/react";
 import React from "react";
-
-const ListChat = () => {
+interface IProps {
+  data: IConventionChat[];
+  setDataChat: React.Dispatch<React.SetStateAction<IConventionChat[]>>;
+  currentConventionId: string | number;
+  setCurrentConventionId: React.Dispatch<React.SetStateAction<string>>;
+}
+const ListChat = (props: IProps) => {
   const [currentTabIndex, setCurrentTabIndex] = React.useState<number>(0);
+  React.useEffect(() => {
+    try {
+      // props.setCurrentConventionId(props.data[0].id);
+      console.log("new convention");
+    } catch (error) {
+      // props.setCurrentConventionId("");
+    }
+    // props.setDataChat({ ...props.data });
+  }, [currentTabIndex]);
   return (
     <div className="flex flex-col items-center justify-start bg-white rounded-md h-full overflow-hidden pb-2">
       <div className="h-auto">
@@ -12,7 +27,7 @@ const ListChat = () => {
         </div>
         {/* search contact */}
         <div className="w-full px-2 py-3">
-          <div className="h-[50px] flex items-center bg-gray-200 rounded-md px-4 py-2 justify-between gap-2 ">
+          <div className="h-[50px] flex items-center bg-blue-100 rounded-md px-4 py-2 justify-between gap-2 ">
             <input
               type="text"
               className="text-xs font-medium placeholder:text-gray-400 w-full h-full px-2 bg-transparent focus:ring-gray-200 focus:border-gray-200 border-none "
@@ -32,14 +47,16 @@ const ListChat = () => {
           // list chat
           currentTabIndex === 0 && (
             <div className="h-full w-full flex flex-col px-2 overflow-auto gap-2  ">
-              <ItemConventionChat />
-              <ItemConventionChat />
-              <ItemConventionChat />
-              <ItemConventionChat />
-              <ItemConventionChat />
-              <ItemConventionChat />
-              <ItemConventionChat />
-              <ItemConventionChat />
+              {props.data.map((item, index) => {
+                return (
+                  <ItemConventionChat
+                    currentConventionId={props.currentConventionId}
+                    setCurrentConventionId={props.setCurrentConventionId}
+                    data={item}
+                    key={index}
+                  />
+                );
+              })}
             </div>
           )
         }
@@ -47,28 +64,32 @@ const ListChat = () => {
       <>
         {currentTabIndex === 1 && (
           <div className="h-full w-full flex flex-col px-2 overflow-auto gap-2  ">
-            <ItemConventionChat />
-            <ItemConventionChat />
-            <ItemConventionChat />
-            <ItemConventionChat />
-            <ItemConventionChat />
-            <ItemConventionChat />
-            <ItemConventionChat />
-            <ItemConventionChat />
+            {props.data.map((item, index) => {
+              return (
+                <ItemConventionChat
+                  currentConventionId={props.currentConventionId}
+                  setCurrentConventionId={props.setCurrentConventionId}
+                  data={item}
+                  key={index}
+                />
+              );
+            })}
           </div>
         )}
       </>
       <>
         {currentTabIndex === 2 && (
           <div className="h-full w-full flex flex-col px-2 overflow-auto gap-2  ">
-            <ItemConventionChat />
-            <ItemConventionChat />
-            <ItemConventionChat />
-            <ItemConventionChat />
-            <ItemConventionChat />
-            <ItemConventionChat />
-            <ItemConventionChat />
-            <ItemConventionChat />
+            {props.data.map((item, index) => {
+              return (
+                <ItemConventionChat
+                  currentConventionId={props.currentConventionId}
+                  setCurrentConventionId={props.setCurrentConventionId}
+                  data={item}
+                  key={index}
+                />
+              );
+            })}
           </div>
         )}
       </>
@@ -77,6 +98,7 @@ const ListChat = () => {
 };
 
 export default ListChat;
+
 const TabListContact = (props: {
   setCurrentTabIndex: (data: number) => void;
   currentTabIndex: number;
@@ -117,26 +139,59 @@ const TabListContact = (props: {
   );
 };
 
-const ItemConventionChat = (): React.ReactElement => {
+const ItemConventionChat = (props: {
+  data: IConventionChat;
+  currentConventionId: string | number;
+  setCurrentConventionId: (data: string) => void;
+}): React.ReactElement => {
   return (
-    <div className="bg-gray-100 flex items-center justify-between p-2.5 gap-2 rounded-md hover:bg-gray-200 ">
-      <div className="flex items-center space-x-3 w-full">
-        <div className="h-[40px] w-[40px]">
-          <img src={assets.images.avatar1} alt="" />
+    <div
+      className={`${
+        props.currentConventionId === props.data.id
+          ? "bg-blue-100 hover:bg-blue-200"
+          : "bg-gray-100 hover:bg-gray-200"
+      } flex items-center justify-between p-2.5 gap-2 rounded-md cursor-pointer`}
+      onClick={() => props.setCurrentConventionId(props.data.id)}
+    >
+      <div className="flex items-center gap-2 w-full">
+        {/* avatar */}
+        <div className="h-[40px] w-[40px] rounded-full overflow-hidden">
+          <img
+            src={props.data.avatar ? props.data.avatar : assets.images.avatar1}
+            alt=""
+            className="w-full h-full object-cover"
+          />
         </div>
-        <div className="flex flex-col justify-start gap-2">
-          <h5 className="text-xs font-medium text-black overflow-hidden text-ellipsis">
-            Nguyen van tu
+        {/* content message */}
+        <div className="flex-1 flex flex-col justify-start gap-2 overflow-hidden ">
+          <h5
+            className={`text-xs font-bold text-black whitespace-nowrap w-full overflow-hidden text-ellipsis`}
+          >
+            {props.data.name}
           </h5>
-          <p className="text-xs font-medium text-gray-500 overflow-hidden text-ellipsis">
-            How many thing?
+          <p
+            className={`text-xs font-medium ${
+              props.data.chatNew > 0 ? "text-gray-500" : "text-gray-800"
+            }  whitespace-nowrap w-full overflow-hidden text-ellipsis`}
+          >
+            {props.data.lastMessage}
           </p>
         </div>
-      </div>
-      <div className="flex flex-col gap-2 items-end justify-end">
-        <p className="text-xs font-normal text-gray-500">10:30</p>
-        <div className="rounded-full p-1 bg-blue-500 text-white flex items-center justify-center h-4  w-auto text-xs font-normal">
-          5
+        {/* time check new message */}
+        <div className="flex flex-col gap-2 items-end justify-end">
+          <p className={`text-xs font-normal text-gray-500}`}>
+            {props.data.lastTime}
+          </p>
+
+          {props.data.chatNew > 0 ? (
+            <div className="rounded-full p-1 bg-blue-500 text-white flex items-center justify-center h-4  w-auto text-xs font-normal">
+              {props.data.chatNew}
+            </div>
+          ) : (
+            <div className="rounded-full p-1 bg-transparent text-transparent flex items-center justify-center h-4  w-auto text-xs font-normal">
+              {" "}
+            </div>
+          )}
         </div>
       </div>
     </div>

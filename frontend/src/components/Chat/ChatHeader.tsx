@@ -1,17 +1,31 @@
 import assets from "@/assets";
+import { IConventionChat } from "@/types/type";
 import { Camera, DotsThreeOutlineVertical, Phone } from "@phosphor-icons/react";
 import React from "react";
-
-const ChatHeader = (): React.ReactElement => {
+interface IProps {
+  data: IConventionChat;
+}
+const ChatHeader = (props: IProps): React.ReactElement => {
   return (
     <div className="bg-white rounded-md h-[70px] flex justify-between items-center px-4 py-2.5">
       <div className=" flex gap-2">
-        <div className="w-[50px] h-[50px] rounded-full overflow-hidden">
-          <img src={assets.images.avatar1} alt="" />
+        <div className="relative">
+          <div className="w-[50px] h-[50px] rounded-full overflow-hidden ">
+            <img
+              src={
+                props.data.avatar ? props.data.avatar : assets.images.avatar1
+              }
+              alt=""
+            />
+          </div>
+          <span className="bottom-0 left-9 absolute  w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
         </div>
+
         <div className="space-y-2">
-          <h5 className="text-base font-semibold">Nguyen van tu</h5>
-          <p className="text-xs font-normal text-gray-400">Trực tuyến</p>
+          <h5 className="text-base font-semibold">{props.data.name}</h5>
+          <p className="text-xs font-normal text-gray-400">
+            {props.data.isOnline ? "online" : "offline"}
+          </p>
         </div>
       </div>
       <div className="flex items-center gap-2">

@@ -30,27 +30,27 @@ const ITEM_SIDEBAR = [
     to: "/my-course",
   },
   {
-    title: "schedule",
+    title: "kế hoạch",
     icon: <Calendar size={25} />,
     to: "/schedule",
   },
   {
-    title: "Notification",
+    title: "Thông báo",
     icon: <Notification size={25} />,
     to: "/notification",
   },
   {
-    title: "chat",
+    title: "Tin Nhắn",
     icon: <Chat size={25} />,
     to: "/chat",
   },
   {
-    title: "Profile",
+    title: "Hồ sơ",
     icon: <UserCircle size={25} />,
     to: "/profile",
   },
   {
-    title: "Setting",
+    title: "Cài đặt",
     icon: <Gear size={25} />,
     to: "/setting",
   },
@@ -85,7 +85,7 @@ const Sidebar = React.forwardRef<Ref, Props>(
   (props, ref): React.ReactElement => {
     return (
       <div
-        className={`w-[250px] h-screen shadow-sm z-50 bg-white fixed top-0 left-0 xl:translate-x-0 ${
+        className={`w-[180px] h-screen shadow-sm z-50 bg-white fixed top-0 left-0 xl:translate-x-0 ${
           props.isOpen ? "-translate-x-0" : "-translate-x-[250px]"
         } transition-all delay-200 flex flex-col px-2 py-4 gap-3`}
         ref={ref}
