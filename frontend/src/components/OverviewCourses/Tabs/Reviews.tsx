@@ -1,11 +1,14 @@
 import { Avatar, Progress, Rating, Typography } from "@material-tailwind/react";
 import { ThumbsDown, ThumbsUp } from "@phosphor-icons/react";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 
 type commentProps = {
   content: string;
 };
 const Comment = (props: commentProps) => {
+  const location = useLocation();
+  const hiddenRating = location.pathname.match("learn") !== null ? true : false;
   return (
     <div className="flex flex-col items-start gap-4 my-5">
       <div className="flex items-start px-10 w-full my-3 space-x-10">
@@ -18,17 +21,19 @@ const Comment = (props: commentProps) => {
           />
         </div>
         <div className=" text-xs flex flex-col gap-2">
-          <div className="">
+          <div className="flex items-center">
             <h1 className="font-semibold mr-3">Josn siion</h1>
+            <p className="opacity-80">3 ngày trước</p>
           </div>
           <div className="flex items-center space-x-4">
-            <Rating
-              value={3}
-              unratedColor="amber"
-              ratedColor="amber"
-              readonly
-            />
-            <p className="opacity-80">3 3 ngày trước</p>
+            {!hiddenRating && (
+              <Rating
+                value={3}
+                unratedColor="amber"
+                ratedColor="amber"
+                readonly
+              />
+            )}
           </div>
           <p className="text-sm">{props.content}</p>
           <div className="font-semibold opacity-80 mt-2">

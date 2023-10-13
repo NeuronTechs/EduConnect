@@ -49,13 +49,13 @@ const Login = () => {
           </div>
         </div>
       </div>
-      <div className="flex-initial w-[794px] flex flex-col ml-[7rem] items-center xl:items-start">
-        <div className="flex mt-10 mb-10 text-2xl space-x-5">
+      <div className="flex-initial w-[794px] flex flex-col  ml-[7rem] items-center  xl:items-start">
+        <div className="flex mt-10 mb-10 text-2xl space-x-5 ">
           <Books size={32} /> <h1>EduConnect</h1>
         </div>
 
         <div className="mb-12">
-          <div className="flex">
+          <div className="flex justify-center xl:justify-start">
             <h1 className="text-2xl">
               <strong> Hey, Hello</strong>
             </h1>
@@ -78,7 +78,7 @@ const Login = () => {
           </div>
 
           <div>
-            <h6>Password</h6>
+            <h6>Mật khẩu</h6>
             <input
               type="password"
               value={password}
@@ -96,9 +96,9 @@ const Login = () => {
                 className="w-4 h-4 bg-gradient-to-r from-blue-500 to-purple-500"
                 id="RememberCheck"
               />
-              <label htmlFor="RememberCheck">Remember me</label>
+              <label htmlFor="RememberCheck">Ghi nhớ đăng nhập</label>
             </div>
-            <h6 className="underline">Forgot password?</h6>
+            <h6 className="underline">Quên mật khẩu?</h6>
           </div>
 
           <div className="flex space-x-5 mt-5">
@@ -106,17 +106,17 @@ const Login = () => {
               onClick={loginHandler}
               className="bg-gradient-to-r from-orange-500 to-blue-500 w-[170px] h-10 text-white rounded-lg"
             >
-              <strong> Login</strong>
+              <strong> Đăng nhập</strong>
             </button>
             <Link to="/signUp">
-              <button className=" w-[170px] h-10 border-2 border-slate-950 rounded-lg">
-                <strong> Sign Up</strong>
+              <button className=" w-[170px] h-10 border-2 border-gray-500  rounded-lg shadow-xl">
+                <strong> Đăng ký</strong>
               </button>
             </Link>
           </div>
 
-          <div className="flex flex-col w-9/12 items-center mt-10">
-            <h6>Or, Login With</h6>
+          <div className="flex flex-col w-9/12 items-center mt-10 ml-5">
+            <h6>Hoặc, Đăng nhập với</h6>
             <div className="flex space-x-3 mt-2">
               <button className="button-logo">
                 <FacebookLogo size={32} />

@@ -6,7 +6,7 @@ import CoursesCart from "../pages/CoursesCart";
 import CategoryFilter from "../pages/CategoryFilter";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
-import MyCourse from "../pages/MyCourse";
+import MyCourse from "../pages/MyCourse/MyCourse";
 import OverviewCourse from "../pages/OverviewCourse";
 import Profile from "../pages/Profile";
 import RegisterInformation from "../pages/RegisterInformation";
@@ -22,6 +22,7 @@ import DashboardTeacher from "@/pages/DashboardTeacher";
 import DashboardAdmin from "@/pages/DashboardAdmin";
 import ReportSale from "@/pages/ReportSale";
 import ReportMember from "@/pages/ReportMember";
+import StudentList from "@/pages/Admin/StudentList";
 interface IRouter {
   path: string;
   component: FC;
@@ -47,6 +48,7 @@ const publicRoutes: IRouter[] = [
     layout: DefaultLayout,
   },
   { path: configRouter.myCourse, component: MyCourse, layout: DefaultLayout },
+
   { path: configRouter.profile, component: Profile, layout: DefaultLayout },
   {
     path: configRouter.coursesCart,
@@ -106,6 +108,11 @@ const publicRoutes: IRouter[] = [
   {
     path: configRouter.reportMember,
     component: ReportMember,
+    layout: DefaultLayout,
+  },
+  {
+    path: configRouter.adminListStudent,
+    component: StudentList,
     layout: DefaultLayout,
   },
 ];

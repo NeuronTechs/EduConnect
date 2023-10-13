@@ -72,6 +72,7 @@ const Video = () => {
             <MenuList className="bg-black text-white w-20">
               {speedRate.map((rate) => (
                 <MenuItem
+                  key={rate}
                   onClick={() => {
                     if (videoRef.current) {
                       videoRef.current.playbackRate = rate;

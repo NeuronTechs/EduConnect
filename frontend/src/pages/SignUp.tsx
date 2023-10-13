@@ -41,12 +41,12 @@ const SignUp = () => {
         </div>
         <div className="flex flex-col items-center w-full mt-20">
           <h1 className="text-base">
-            <strong> Sign up and start learning </strong>
+            <strong>Đăng ký để bắt đầu Học tập </strong>
           </h1>
           <div className="text-sm">
             {/* email  */}
             <div className="mb-2">
-              <h6>Username</h6>
+              <h6>Tên người dùng</h6>
               <input
                 type="text"
                 value={username}
@@ -70,7 +70,7 @@ const SignUp = () => {
             {/* phone and gender  */}
 
             <div className="mb-2 mt-2">
-              <h6>Password</h6>
+              <h6>Mật khẩu</h6>
               <input
                 type="password"
                 value={password}
@@ -82,7 +82,7 @@ const SignUp = () => {
             </div>
             {/* address  */}
             <div className="mb-2 mt-2">
-              <h6>Re-Password</h6>
+              <h6>Nhập lại mật khẩu</h6>
               <input
                 type="password"
                 value={rePassword}
@@ -103,7 +103,8 @@ const SignUp = () => {
                 id="RememberCheck"
               />
               <label htmlFor="" className="text-xs ml-8 mt-3">
-                By signing up, you agree to our Terms of Use and Privacy Policy.
+                Đồng ý với Điều khoản sử dụng và Chính sách quyền riêng tư của
+                chúng tôi.
               </label>
             </div>
             <div className="flex space-x-5 mt-20 text-xs">
@@ -114,7 +115,7 @@ const SignUp = () => {
                 <strong> SignUp</strong>
               </button>
               <Link to="/login">
-                <button className=" w-[195px] h-10 border-2 border-slate-600 rounded-lg">
+                <button className=" w-[195px] h-10 border-2 border-gray-500 rounded-lg">
                   <strong> Back to Login</strong>
                 </button>
               </Link>

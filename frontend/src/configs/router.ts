@@ -19,4 +19,6 @@ export const configRouter = {
   dashboardAdmin: "/admin/dashboard",
   reportSale: "/admin/reportsale",
   reportMember: "/admin/reportmember",
+  adminListStudent: "/admin/list-student",
+  myCourseDetails: "/myCourse/:id",
 };

@@ -26,7 +26,6 @@ function Calendar() {
     array.push(items);
     setDays(array);
   }, [month]);
-  console.log(month);
 
   return (
     <>
@@ -143,9 +142,9 @@ function Calendar() {
                   </tr>
                 </thead>
                 <tbody>
-                  {days.map((week) => {
+                  {days.map((week, index) => {
                     return (
-                      <tr>
+                      <tr key={index}>
                         {week.map((day) => {
                           if (day === 0)
                             return (
@@ -155,7 +154,7 @@ function Calendar() {
                             );
                           else if (day === date.getDate())
                             return (
-                              <td>
+                              <td key={day}>
                                 <div className="w-full h-full">
                                   <div className="flex items-center justify-center w-full rounded-full cursor-pointer">
                                     <p className="text-xs  w-6 h-6 mt-5 flex items-center justify-center font-medium text-white bg-indigo-700 rounded-full">
@@ -167,7 +166,7 @@ function Calendar() {
                             );
                           else
                             return (
-                              <td className="pt-6">
+                              <td key={day} className="pt-6">
                                 <div
                                   className="px-1 py-1 cursor-pointer flex w-full justify-center"
                                   onClick={() => {
