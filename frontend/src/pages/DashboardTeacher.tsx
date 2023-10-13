@@ -55,7 +55,7 @@ const TABLE_ROWS = [
     price: 400000,
   },
 ];
-const Dashboard = () => {
+const DashboardTeacher = () => {
   const nav = useNavigate();
   const handleRedirectCourse = () => {
     nav("/course/123");
@@ -64,7 +64,7 @@ const Dashboard = () => {
     <div className="w-full h-full">
       {/* statistic */}
       <div className="sm:flex sm:items-center sm:justify-between md:mx-5 text-center">
-        <div className="p-5">
+        <div className="p-5 w-[30%] bg-white">
           <h1 className="font-semibold text-[14px] text-[#685F78] mb-4 uppercase">
             Doanh thu
           </h1>
@@ -75,7 +75,7 @@ const Dashboard = () => {
             Thu nhập trong tháng này
           </p>
         </div>
-        <div className="p-5">
+        <div className="p-5 w-[30%] bg-white">
           <h1 className="font-semibold text-[14px] text-[#685F78] mb-4 uppercase">
             Học viên
           </h1>
@@ -86,7 +86,7 @@ const Dashboard = () => {
             Mới trong tháng này
           </p>
         </div>
-        <div className="p-5">
+        <div className="p-5 w-[30%] bg-white">
           <h1 className="font-semibold text-[14px] text-[#685F78] mb-4 uppercase">
             Đánh giá khóa học
           </h1>
@@ -97,7 +97,7 @@ const Dashboard = () => {
         </div>
       </div>
       {/* line chart */}
-      <div className="my-3 md:mx-5 md:p-5">
+      <div className="my-3 md:mx-5 md:p-5 bg-white">
         <p className="font-semibold text-[14px] text-[#685F78] mb-4 uppercase">
           Thu nhập
         </p>
@@ -117,7 +117,7 @@ const Dashboard = () => {
         </div>
       </div>
       {/* column chart */}
-      <div className="my-3 md:mx-5 md:p-5">
+      <div className="my-3 md:mx-5 md:p-5 bg-white">
         <p className="font-semibold text-[14px] text-[#685F78] mb-4 uppercase">
           Đặt hàng
         </p>
@@ -160,10 +160,10 @@ const Dashboard = () => {
                 {TABLE_ROWS.map(({ course, size, price }, index) => {
                   const isLast = index === TABLE_ROWS.length - 1;
                   const classes = isLast
-                    ? "p-4"
-                    : "p-4 border-b border-blue-gray-50";
+                    ? "p-4 bg-white"
+                    : "p-4 border-b border-blue-gray-50 bg-white";
                   return (
-                    <tr key={course.name}>
+                    <tr key={course.name} className="bg-white">
                       <td className={classes}>
                         <div className="flex items-center">
                           <img
@@ -210,4 +210,4 @@ const Dashboard = () => {
     </div>
   );
 };
-export default Dashboard;
+export default DashboardTeacher;

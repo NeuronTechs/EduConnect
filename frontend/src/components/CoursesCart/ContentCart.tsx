@@ -12,6 +12,7 @@ import {
 import { formatCurrency } from "../../utils/const";
 import { AppDispatch, RootState } from "../../redux/store";
 import { Cart, removeToCart } from "../../features/cart/cartSlice";
+import { configRouter } from "@/configs/router";
 
 const ContentCart = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -27,11 +28,11 @@ const ContentCart = () => {
   }, [cartCurrent]);
 
   const handleRedirectHomePage = () => {
-    navigate("/");
+    navigate(configRouter.home);
   };
 
   const handleRedirectCheckoutPage = () => {
-    navigate("/checkout");
+    navigate(configRouter.checkout);
   };
 
   const handleRedirectCourse = (id: string) => {
@@ -52,7 +53,7 @@ const ContentCart = () => {
           <h1 className="font-semibold text-[30px] my-3 w-full">Giỏ hàng</h1>
           <div className="lg:flex lg:justify-between w-full">
             <div className="w-full lg:w-[70%]">
-              <h1 className="font-semibold text-[15px] my-3 border border-b-gray-400 pb-1 w-full">
+              <h1 className="font-semibold text-[15px] my-3 border-b border-b-gray-400 pb-1 w-full">
                 {cartCurrent?.cartSlice?.cartCurrent?.length} khóa học trong giỏ
                 hàng
               </h1>

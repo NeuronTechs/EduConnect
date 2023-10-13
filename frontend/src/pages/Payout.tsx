@@ -10,9 +10,18 @@ import {
   IconButton,
 } from "@material-tailwind/react";
 import { useState } from "react";
+import { CSVLink } from "react-csv";
 import { ArrowDown } from "@phosphor-icons/react";
 const TABLE_HEAD = ["ID", "Số tiền", "Ngày", "Trạng thái", "Tài khoản"];
-
+const headers = [
+  { label: "ID", key: "id" },
+  { label: "Số tiền", key: "amount" },
+  { label: "Ngày", key: "date" },
+  { label: "Trạng thái", key: "status" },
+  { label: "Loại thẻ", key: "account" },
+  { label: "Số tài khoản", key: "accountNumber" },
+  { label: "Ngày hết hạn", key: "expiry" },
+];
 const TABLE_ROWS = [
   {
     id: "1",
@@ -74,6 +83,7 @@ const Payout = () => {
   const handlePageActive = (page: number) => {
     setPageActive(page);
   };
+
   return (
     <div>
       <Card className="h-full w-full">
@@ -85,9 +95,15 @@ const Payout = () => {
               </Typography>
             </div>
             <div className="flex w-full shrink-0 gap-2 md:w-max">
-              <Button className="flex items-center gap-3" size="sm">
+              <CSVLink
+                data={TABLE_ROWS}
+                headers={headers}
+                filename={"report_payout.csv"}
+                className="flex items-center gap-3 bg-gray-800 text-white px-3 py-2 rounded-md"
+                target="_blank"
+              >
                 <ArrowDown strokeWidth={2} className="h-4 w-4" /> Tải xuống
-              </Button>
+              </CSVLink>
             </div>
           </div>
         </CardHeader>
