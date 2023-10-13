@@ -1,7 +1,7 @@
 import { PauseCircle, PlayCircle } from "@phosphor-icons/react";
 import React from "react";
 
-const MediaMessage = () => {
+const MediaMessage = (props: { data: { src: string; alt?: string }[] }) => {
   return (
     <div className="grid grid-cols-2 gap-2 ">
       <CardVideo />

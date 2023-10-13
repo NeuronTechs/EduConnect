@@ -1,5 +1,4 @@
 import { Avatar, Rating } from "@material-tailwind/react";
-import { useState } from "react";
 import {
   Tabs,
   TabsHeader,
@@ -25,31 +24,33 @@ const data = {
   discount: 200000,
   courseName: "Reactjs cơ bản cho người mới bắt đầu",
 };
+
+const dataTab = [
+  {
+    label: "Tổng quan",
+    value: "Tổng quan",
+    desc: <Overview />,
+  },
+  {
+    label: "Đánh giá",
+    value: "Đánh giá",
+    desc: <Reviews />,
+  },
+  {
+    label: "Giáo viên",
+    value: "Giáo viên",
+    desc: <Instructor />,
+  },
+];
+
 const DetailCourse = () => {
-  const [activeTab, setActiveTab] = useState<string>("Tổng quan");
-  const dataTab = [
-    {
-      label: "Tổng quan",
-      value: "Tổng quan",
-      desc: <Overview />,
-    },
-    {
-      label: "Đánh giá",
-      value: "Đánh giá",
-      desc: <Reviews />,
-    },
-    {
-      label: "Giáo viên",
-      value: "Giáo viên",
-      desc: <Instructor />,
-    },
-  ];
   return (
-    <div className="w-full lg:w-[70%] h-auto bg-white">
+    <div className="w-full lg:w-[70%] lg:p-[10px] h-auto bg-white">
+      {/* image */}
       {data?.image === "" ? (
-        <div className="my-3 bg-gray-400 w-full h-[150px] rounded-lg"></div>
+        <div className="my-3 bg-gray-400 w-full h-[200px] rounded-lg"></div>
       ) : (
-        <div className="my-3 w-full h-[200px] ">
+        <div className="my-3 w-full lg:h-[200px] p-[0_10px]">
           <img
             loading="lazy"
             className="h-full w-full rounded-lg object-cover object-center"
@@ -58,7 +59,8 @@ const DetailCourse = () => {
           />
         </div>
       )}
-      <div className="flex flex-col lg:flex lg:flex-row lg:items-center lg:justify-between my-5">
+      {/* Infor course */}
+      <div className="flex flex-col lg:flex lg:flex-row lg:items-center lg:justify-between p-[10px] h-[50px]">
         <div className="flex">
           <Avatar src={data?.avatar} alt="avatar" loading="lazy" />
           <div className="mx-3">
@@ -90,24 +92,25 @@ const DetailCourse = () => {
           )}
         </div>
       </div>
-      <div className="my-3">
-        <h1 className="my-2 font-semibold text-[20px] lg:text-[24px]">
+      {/* Overview */}
+      <div className="p-[10px]">
+        <h1 className="font-semibold text-[20px] lg:text-[24px]">
           {data?.courseName}
         </h1>
-        <Tabs value={activeTab}>
+      </div>
+      <div>
+        <Tabs value="Tổng quan" className="w-full">
           <TabsHeader
-            className="rounded-none border-b border-blue-gray-50 bg-transparent p-0 w-[100%] my-3"
+            className="bg-gray-200 p-[8px_20px] rounded"
             indicatorProps={{
-              className:
-                "bg-transparent border-b-2 border-blue-300 shadow-none rounded-none",
+              className: "bg-blue-400 rounded-md !text-white",
             }}
           >
             {dataTab.map(({ label, value }) => (
               <Tab
                 key={value}
                 value={value}
-                onClick={() => setActiveTab(value)}
-                className={activeTab === value ? "font-semibold" : ""}
+                className="w-[100px] rounded-md mx-1 bg-white text-gray-700 "
               >
                 {label}
               </Tab>
@@ -115,7 +118,7 @@ const DetailCourse = () => {
           </TabsHeader>
           <TabsBody>
             {dataTab.map(({ value, desc }) => (
-              <TabPanel key={value} value={value} className="text-black">
+              <TabPanel key={value} value={value} className="p-0">
                 {desc}
               </TabPanel>
             ))}
