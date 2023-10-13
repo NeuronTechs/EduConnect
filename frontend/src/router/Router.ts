@@ -13,9 +13,12 @@ import SignUp from "../pages/SignUp";
 import { FC } from "react";
 import Chat from "@/pages/Chat";
 import { configRouter } from "@/configs/router";
-import Dashboard from "@/pages/Dashboard";
 import Payout from "@/pages/Payout";
 import ListStudent from "@/pages/ListStudent";
+import DashboardTeacher from "@/pages/DashboardTeacher";
+import DashboardAdmin from "@/pages/DashboardAdmin";
+import ReportSale from "@/pages/ReportSale";
+import ReportMember from "@/pages/ReportMember";
 interface IRouter {
   path: string;
   component: FC;
@@ -66,8 +69,8 @@ const publicRoutes: IRouter[] = [
     layout: DefaultLayout,
   },
   {
-    path: configRouter.dashboard,
-    component: Dashboard,
+    path: configRouter.dashboardTeacher,
+    component: DashboardTeacher,
     layout: DefaultLayout,
   },
   {
@@ -78,6 +81,21 @@ const publicRoutes: IRouter[] = [
   {
     path: configRouter.liststudent,
     component: ListStudent,
+    layout: DefaultLayout,
+  },
+  {
+    path: configRouter.dashboardAdmin,
+    component: DashboardAdmin,
+    layout: DefaultLayout,
+  },
+  {
+    path: configRouter.reportSale,
+    component: ReportSale,
+    layout: DefaultLayout,
+  },
+  {
+    path: configRouter.reportMember,
+    component: ReportMember,
     layout: DefaultLayout,
   },
 ];

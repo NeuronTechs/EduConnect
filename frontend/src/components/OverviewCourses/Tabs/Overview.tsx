@@ -38,18 +38,18 @@ const Overview = () => {
   const handleOpen = (value: number) => setOpen(open === value ? 0 : value);
   return (
     <div className="w-full">
-      <div className="mb-3">
-        <h1 className="font-semibold mb-3">Nội dung khóa học</h1>
-        <p className="mb-3">
+      <div className="p-[10px]">
+        <h1 className="font-semibold">Nội dung khóa học</h1>
+        <p className="p-[5px_10px]">
           Để có cái nhìn tổng quan về ngành IT - Lập trình web các bạn nên xem
           các videos tại khóa này trước nhé.
         </p>
-        <p className="mb-3">
+        <p className="p-[5px_10px]">
           <span className="font-semibold">4</span> chương •{" "}
           <span className="font-semibold">11</span> bài học • Thời lượng{" "}
           <span className="font-semibold">03 giờ 25 phút</span>
         </p>
-        <div className="w-full px-3 mb-3">
+        <div className="w-full px-3 p-[5px_10px]">
           <Accordion open={open === 1} icon={<Icon id={1} open={open} />}>
             <AccordionHeader onClick={() => handleOpen(1)}>
               <div className="flex flex-col justify-between items-start opacity-100">
@@ -140,9 +140,10 @@ const Overview = () => {
           </Accordion>
         </div>
       </div>
-      <div className="mb-3">
+      {/* Bạn sẽ học được gì? */}
+      <div className="p-[10px]">
         <h1 className="font-semibold">Bạn sẽ học được gì?</h1>
-        <ul className="flex flex-wrap">
+        <ul className="flex flex-col lg:flex-row flex-wrap p-[5px_10px]">
           <li className="flex items-center justify-start basis-1/2">
             <CheckCircle size={16} className="mr-3" />
             Các kiến thức cơ bản, nền móng của ngành IT
@@ -169,9 +170,10 @@ const Overview = () => {
           </li>
         </ul>
       </div>
-      <div className="mb-3">
+      {/* Yêu cầu */}
+      <div className="p-[10px] gap-2">
         <h1 className="font-semibold">Yêu cầu</h1>
-        <ul>
+        <ul className="p-[5px_10px]">
           <li className="flex items-center justify-start basis-1/2">
             <MinusCircle weight="fill" size={16} className="mr-3" />
             Các kiến thức cơ bản, nền móng của ngành IT

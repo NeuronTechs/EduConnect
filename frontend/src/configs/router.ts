@@ -10,7 +10,10 @@ export const configRouter = {
   search: "/search",
   teacherCategory: "/teacher-category/:id",
   chat: "/chat",
-  dashboard: "/teacher/dashboard",
+  dashboardTeacher: "/teacher/dashboard",
   payout: "/teacher/payout",
   liststudent: "/teacher/liststudent",
+  dashboardAdmin: "/admin/dashboard",
+  reportSale: "/admin/reportsale",
+  reportMember: "/admin/reportmember",
 };
