@@ -1,12 +1,18 @@
+import { ICourse } from "@/types/type";
 import { Book, ShieldCheck, UsersFour } from "@phosphor-icons/react";
 import React from "react";
-import assets from "../../assets";
-const Card = () => {
+import { useNavigate } from "react-router-dom";
+
+type props = {
+  data: ICourse;
+};
+const Card = (props: props) => {
+  const navigate = useNavigate();
   return (
     <div className="rounded-2xl bg-white p-2 flex flex-col gap-4 shadow-sm w-[200px] min-w-[150]  ">
       <div className="w-full">
         <img
-          src={assets.images.bgCourse}
+          src={props.data.thumbnail}
           alt=""
           className="w-full h-[100px] object-fill rounded-2xl"
         />
@@ -15,11 +21,20 @@ const Card = () => {
         {/* content */}
         <div className="w-full flex justify-between">
           <div className="flex flex-col">
-            <h5 className="text-sm font-semibold text-black">HTML leaning</h5>
-            <p className="text-xs font-normal text-gray-600">Jionson whet</p>
+            <h5
+              className="text-sm font-semibold text-black cursor-pointer"
+              onClick={() => {
+                navigate("/myCourse/" + props.data.id);
+              }}
+            >
+              {props.data.title}
+            </h5>
+            <p className="text-xs font-normal text-gray-600">
+              {props.data.teacher}
+            </p>
           </div>
           <div className="rounded-full h-[35px] w-[35px]">
-            <img src={assets.images.avatar1} alt="" />
+            <img src={props.data.avatarTeacher} alt="" />
           </div>
         </div>
       </div>

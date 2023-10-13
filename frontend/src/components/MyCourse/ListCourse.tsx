@@ -3,29 +3,23 @@ import React from "react";
 import ListCourseLoading from "../Loading/ListCourseLoading";
 import Card from "./Card";
 interface props {
-  data: string;
-  title: string;
+  data: ICourse[];
   isLoading: boolean;
 }
 const ListCourse = (props: props): React.ReactElement => {
+  console.log(props.data);
+
   return (
     <>
       {props.isLoading ? (
         <ListCourseLoading numberShow={3}></ListCourseLoading>
       ) : (
         <div className="grid grid-cols-4 ">
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
+          {props.data.map((data) => {
+            return <Card data={data} />;
+          })}
         </div>
       )}
-      {/* {props.isLoading?(<Card></Card>
-        <Card></Card>
-        <Card></Card>
-        <Card></Card>):<ListCourseLoading numberShow={5} />} */}
     </>
   );
 };

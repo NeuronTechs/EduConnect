@@ -16,4 +16,6 @@ export const configRouter = {
   myCourse: "/myCourse",
   learning: "/course/learn/:id",
   profile: "/profile",
+  adminListStudent: "/admin/list-student",
+  myCourseDetails: "/myCourse/:id",
 };

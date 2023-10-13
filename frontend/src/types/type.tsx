@@ -38,3 +38,58 @@ export interface ITeacher {
   linkYoutube: string;
   linkLinkedin: string;
 }
+
+export interface IModules {
+  id: string;
+  title: string;
+  numberLesson: number;
+  course_id: string;
+  totalTime: number;
+  createdAt: Date;
+  updateAt: Date;
+}
+
+export interface ILesson {
+  id: string;
+  title: string;
+  thumbnail: string;
+  description: string;
+  video_url: string;
+  courseId: string;
+  categoryId: string;
+  moduleId: string;
+  totalTime: number;
+  totalReview: number;
+  createdAt: Date;
+  updateAt: Date;
+}
+
+export interface IDiscuss {
+  id: string;
+  lesson_id: string;
+  content: string;
+  user_id: string;
+  createdAt: Date;
+  updateAt: Date;
+}
+export interface ITask {
+  id: string;
+  title: string;
+  content: string;
+  course_id: string;
+  start: Date;
+  end: Date;
+  createdAt: Date;
+  updateAt: Date;
+}
+
+export interface IStudent {
+  id: string;
+  education_level: string;
+  major: string;
+  school: string;
+  username: string;
+  email: string;
+  createdAt: Date;
+  updateAt: Date;
+}

@@ -34,7 +34,7 @@ const Icon = ({ open }: IconProps) => {
     </svg>
   );
 };
-const Module = (props: moduleProps) => {
+const Lesson = (props: moduleProps) => {
   const [open, setOpen] = useState<boolean>(props.isOpen);
 
   const handleOpen = () => setOpen(!open);
@@ -74,18 +74,18 @@ const Module = (props: moduleProps) => {
 const Modules = () => {
   return (
     <div className=" col-span-4 lg:col-span-1 pl-2 h-auto lg:h-screen lg:overflow-y-auto ">
-      <h1 className="text-xl font-bold">Course Content</h1>
+      <h1 className="text-xl font-bold">Nội dung khóa học</h1>
       <p className="text-xs text-gray-500">Lecture (15) / Total (5,5 hrs)</p>
       <div className="mt-5">
-        <Module isOpen={false} title=" 1. Tiêu đề chương" time={15} />
-        <Module isOpen={false} title=" 2. Tiêu đề chương" time={15} />
-        <Module isOpen={false} title=" 3. Tiêu đề chương" time={15} />
-        <Module isOpen={false} title=" 4. Tiêu đề chương" time={15} />
-        <Module isOpen={false} title=" 5. Tiêu đề chương" time={15} />
-        <Module isOpen={false} title=" 6. Tiêu đề chương" time={15} />
-        <Module isOpen={false} title=" 7. Tiêu đề chương" time={15} />
-        <Module isOpen={false} title=" 8. Tiêu đề chương" time={15} />
-        <Module isOpen={false} title=" 9. Tiêu đề chương" time={15} />
+        <Lesson isOpen={false} title=" 1. Tiêu đề chương" time={15} />
+        <Lesson isOpen={false} title=" 2. Tiêu đề chương" time={15} />
+        <Lesson isOpen={false} title=" 3. Tiêu đề chương" time={15} />
+        <Lesson isOpen={false} title=" 4. Tiêu đề chương" time={15} />
+        <Lesson isOpen={false} title=" 5. Tiêu đề chương" time={15} />
+        <Lesson isOpen={false} title=" 6. Tiêu đề chương" time={15} />
+        <Lesson isOpen={false} title=" 7. Tiêu đề chương" time={15} />
+        <Lesson isOpen={false} title=" 8. Tiêu đề chương" time={15} />
+        <Lesson isOpen={false} title=" 9. Tiêu đề chương" time={15} />
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { ICategory, ICourse, ITeacher } from "./type";
+import { ICategory, ICourse, IStudent, ITeacher } from "./type";
 
 export const dataCourse: ICourse[] = [
   {
@@ -48,21 +48,6 @@ export const dataCourse: ICourse[] = [
   },
   {
     id: "fgsjalnjasdsa",
-    thumbnail:
-      "https://images.pexels.com/photos/3806753/pexels-photo-3806753.jpeg?auto=compress&cs=tinysrgb&w=1600",
-    title: "HTML leaning",
-    teacher: "Jionson whet",
-    avatarTeacher:
-      "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436180.jpg?w=740&t=st=1695713066~exp=1695713666~hmac=f87d62b1534e3e2205803c7aa2b17765e6e6c2091e6fbc023c6630a185b13050",
-    rating: 4,
-    priceOfficial: "150.000",
-    originalPrice: "200.000",
-    numberLesson: 15,
-    numberStudent: 15,
-    numberSecurity: 15,
-  },
-  {
-    id: "fgsjadasdjasdsa",
     thumbnail:
       "https://images.pexels.com/photos/3806753/pexels-photo-3806753.jpeg?auto=compress&cs=tinysrgb&w=1600",
     title: "HTML leaning",
@@ -207,7 +192,58 @@ export const dataTeacher: ITeacher[] = [
     linkLinkedin: "",
   },
 ];
-
+export const dataStudent: IStudent[] = [
+  {
+    id: "1231",
+    education_level: "12",
+    major: "IT",
+    school: "HCMUTE",
+    username: "zimb240",
+    email: "zimb240@gmail.com",
+    createdAt: new Date(),
+    updateAt: new Date(),
+  },
+  {
+    id: "1232",
+    education_level: "12",
+    major: "IT",
+    school: "HCMUTE",
+    username: "zimb240",
+    email: "zimb240@gmail.com",
+    createdAt: new Date(),
+    updateAt: new Date(),
+  },
+  {
+    id: "1233",
+    education_level: "12",
+    major: "IT",
+    school: "HCMUTE",
+    username: "zimb240",
+    email: "zimb240@gmail.com",
+    createdAt: new Date(),
+    updateAt: new Date(),
+  },
+  {
+    id: "1234",
+    education_level: "12",
+    major: "IT",
+    school: "HCMUTE",
+    username: "zimb240",
+    email: "zimb240@gmail.com",
+    createdAt: new Date(),
+    updateAt: new Date(),
+  },
+  {
+    id: "1235",
+    education_level: "12",
+    major: "IT",
+    school: "HCMUTE",
+    username: "zimb240",
+    email: "zimb240@gmail.com",
+    createdAt: new Date(),
+    updateAt: new Date(),
+  },
+];
 export const dataSearch = {
   keywords: ["ux/ui library", "javascript", "c++ master", "fullstack"],
   course: dataCourse,

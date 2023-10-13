@@ -1,9 +1,10 @@
 import React from "react";
-import Card from "../components/MyCourse/Card";
-import assets from "../assets";
-import Calendar from "../components/MyCourse/Calendar";
-import Task from "../components/MyCourse/Task";
+import Card from "../../components/MyCourse/Card";
+import assets from "../../assets";
+import Calendar from "../../components/MyCourse/Calendar";
+import Task from "../../components/MyCourse/Task";
 import ListCourse from "@/components/MyCourse/ListCourse";
+import { dataCourse } from "@/types/constans";
 
 const MyCourse = () => {
   return (
@@ -22,21 +23,13 @@ const MyCourse = () => {
             className="w-[99%] h-[200px] object-fill "
           />
           <div>
-            <strong> Your Recent</strong>
-            <ListCourse
-              isLoading={false}
-              data={"hehe"}
-              title={"Giáo Viên Nỗi Bật"}
-            />
+            <strong> Các khóa học gần đây</strong>
+            <ListCourse isLoading={false} data={dataCourse} />
           </div>
           <div>
             <div className="mb-5">
-              <strong> Your Course</strong>
-              <ListCourse
-                isLoading={false}
-                data={"hehe"}
-                title={"Giáo Viên Nỗi Bật"}
-              />
+              <strong> Các khóa học của bạn</strong>
+              <ListCourse isLoading={false} data={dataCourse} />
             </div>
           </div>
         </div>
