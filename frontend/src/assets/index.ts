@@ -5,6 +5,7 @@ import successInfo from "./images/successInfo.svg";
 import bgCourse from "./images/bgcourse.png";
 import categoryItem from "./images/categoryitem.png";
 import audio1 from "./audio/ambient-piano-logo-165357.mp3";
+import avatarBlack from "./images/blank-profile.png";
 const assets = {
   // working
   // step 2: import the image
@@ -15,6 +16,7 @@ const assets = {
     successInfo: successInfo,
     bgCourse: bgCourse,
     categoryItem: categoryItem,
+    avatarBlack: avatarBlack,
   },
   audios: {
     audio1: audio1,

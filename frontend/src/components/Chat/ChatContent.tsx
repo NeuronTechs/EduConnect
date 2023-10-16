@@ -22,12 +22,13 @@ interface IGroupedMessages {
   [key: string]: IMessage[];
 }
 const ChatContent = (props: IProps): React.ReactElement => {
-  const { register, watch, handleSubmit } = useForm<IDataInput>({
+  const { register, handleSubmit } = useForm<IDataInput>({
     defaultValues: { dataInput: "" },
   });
   const [dataMessageConvention, setDataMessageConvention] = React.useState<
     IMessage[]
   >([]);
+  // get data message convention
   React.useEffect(() => {
     setDataMessageConvention([
       {
@@ -72,6 +73,7 @@ const ChatContent = (props: IProps): React.ReactElement => {
       },
     ]);
   }, []);
+  // add new message
   const handlerAddNewMessage = (data: IDataInput) => {
     if (data.dataInput.trim() === "") return;
     // add message
@@ -82,8 +84,6 @@ const ChatContent = (props: IProps): React.ReactElement => {
       name: "nguyen Van A",
       time: new Date().getTime(),
       seeMessage: [],
-      type: "text",
-      media: [],
       isLoading: true, // set loading to true initially
     };
     setDataMessageConvention((prev) => [...prev, { ...newMessage }]);
@@ -97,6 +97,7 @@ const ChatContent = (props: IProps): React.ReactElement => {
     }, 5000);
     // END: timeout-example
   };
+
   // ground message date time
   const groupedMessages: IGroupedMessages = dataMessageConvention.reduce(
     (acc, message) => {
@@ -173,7 +174,16 @@ const ChatContentMain = (props: { groupedMessages: IGroupedMessages }) => {
   );
 };
 const TypingMessage = () => {
-  return <div className="p-2">Typing</div>;
+  return (
+    <div className="p-2 animate-pulse flex items-center gap-3 ">
+      <div className="flex space-x-2">
+        <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+        <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+        <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+      </div>
+      <p className="text-xs text-gray-400">ai đó đang nhập</p>
+    </div>
+  );
 };
 const DividerTime = (props: { title: string }) => {
   return (

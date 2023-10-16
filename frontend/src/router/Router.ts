@@ -1,6 +1,10 @@
-import TeacherCategory from "@/pages/TeacherCategory";
+import { FC } from "react";
+// layout
 import BlankLayout from "../layout/BlankLayout/blankLayout";
 import DefaultLayout from "../layout/DefaultLayout/defaultLayout";
+import { configRouter } from "@/configs/router";
+// pages
+import TeacherCategory from "@/pages/TeacherCategory";
 import Checkout from "../pages/Checkout";
 import CoursesCart from "../pages/CoursesCart";
 import CategoryFilter from "../pages/CategoryFilter";
@@ -10,12 +14,13 @@ import OverviewCourse from "../pages/OverviewCourse";
 import RegisterInformation from "../pages/RegisterInformation";
 import Search from "../pages/Search";
 import SignUp from "../pages/SignUp";
-import { FC } from "react";
 import Chat from "@/pages/Chat";
-import { configRouter } from "@/configs/router";
 import Dashboard from "@/pages/Dashboard";
 import Payout from "@/pages/Payout";
 import ListStudent from "@/pages/ListStudent";
+import CourseMyTeacher from "@/pages/CourseMyTeacher";
+import CreateCourseTeacher from "@/pages/CreateCourseTeacher";
+
 interface IRouter {
   path: string;
   component: FC;
@@ -78,6 +83,16 @@ const publicRoutes: IRouter[] = [
   {
     path: configRouter.liststudent,
     component: ListStudent,
+    layout: DefaultLayout,
+  },
+  {
+    path: configRouter.courseMyTeacher,
+    component: CourseMyTeacher,
+    layout: DefaultLayout,
+  },
+  {
+    path: configRouter.createCourse,
+    component: CreateCourseTeacher,
     layout: DefaultLayout,
   },
 ];
