@@ -6,7 +6,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    image: neurontechs/educonnect-server
+    image: tumolaha/educonnect-server
     container_name: educonnect-server
     command: npm run dev
     volumes:
@@ -33,7 +33,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    image: neurontechs/educonnect-client
+    image: tumolaha/educonnect-client
     container_name: educonnect-client
     volumes:
       - ./frontend:/usr/src/app
@@ -42,7 +42,7 @@ services:
     depends_on:
       - backend
     ports:
-      - "3001:3001"
+      - "80:3001"
     networks:
       - app-network
 

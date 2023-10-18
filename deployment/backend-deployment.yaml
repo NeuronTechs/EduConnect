@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: educonnect-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: educonnect-server
+  template:
+    metadata:
+      labels:
+        app: educonnect-server
+    spec:
+      nodeSelector:
+        "kubernetes.io/os": linux
+      containers:
+        - name: educonnect-server
+          image: tumolaha/educonnect-server
+          envFrom:
+            - configMapRef:
+                name: app-config
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          ports:
+            - containerPort: 3000
