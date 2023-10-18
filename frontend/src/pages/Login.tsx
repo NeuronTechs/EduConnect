@@ -1,3 +1,9 @@
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { login, test } from "../features/auth/authSlice";
+import { Auth } from "../type";
+import { AppDispatch } from "../redux/store";
+import bg from "../../public/bgLogin.png";
 import {
   Books,
   FacebookLogo,
@@ -5,13 +11,24 @@ import {
   HandWaving,
   LinkedinLogo,
 } from "@phosphor-icons/react";
-import { Link } from "react-router-dom";
-import assets from "../assets";
+import { Link, useNavigate } from "react-router-dom";
+import assets from "@/assets";
 const Login = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const loginHandler = async () => {
+    const auth: Auth = { username: username, password: password };
+    const loginSuccess = await dispatch(login(auth));
+    if (loginSuccess.type === "auth/login/fulfilled") {
+      navigate("/");
+    }
+  };
   return (
     <div className="flex h-[100vh]">
       <div
-        className="flex-initial  w-full flex items-center "
+        className="flex-initial  w-full hidden xl:flex items-center "
         style={{
           backgroundImage: `url(${assets.images.backgroundLogin})`,
           backgroundSize: "cover",
@@ -32,13 +49,13 @@ const Login = () => {
           </div>
         </div>
       </div>
-      <div className="flex-initial w-[794px] flex flex-col ml-[7rem] ">
-        <div className="flex mt-10 mb-10 text-2xl space-x-5">
+      <div className="flex-initial w-[794px] flex flex-col  ml-[7rem] items-center  xl:items-start">
+        <div className="flex mt-10 mb-10 text-2xl space-x-5 ">
           <Books size={32} /> <h1>EduConnect</h1>
         </div>
 
         <div className="mb-12">
-          <div className="flex">
+          <div className="flex justify-center xl:justify-start">
             <h1 className="text-2xl">
               <strong> Hey, Hello</strong>
             </h1>
@@ -52,14 +69,22 @@ const Login = () => {
             <h6>Email</h6>
             <input
               type="text"
+              value={username}
+              onChange={(e) => {
+                setUsername(e.target.value);
+              }}
               className="border-2 border-slate-500 rounded-md w-[350px] h-[40px] pl-3"
             />
           </div>
 
           <div>
-            <h6>Password</h6>
+            <h6>Mật khẩu</h6>
             <input
               type="password"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
               className="border-2 border-slate-500 rounded-md w-[350px] h-[40px] pl-3 pr-3"
             />
           </div>
@@ -71,24 +96,27 @@ const Login = () => {
                 className="w-4 h-4 bg-gradient-to-r from-blue-500 to-purple-500"
                 id="RememberCheck"
               />
-              <label htmlFor="RememberCheck">Remember me</label>
+              <label htmlFor="RememberCheck">Ghi nhớ đăng nhập</label>
             </div>
-            <h6 className="underline">Forgot password?</h6>
+            <h6 className="underline">Quên mật khẩu?</h6>
           </div>
 
           <div className="flex space-x-5 mt-5">
-            <button className="bg-gradient-to-r from-orange-500 to-blue-500 w-[170px] h-10 text-white rounded-lg">
-              <strong> Login</strong>
+            <button
+              onClick={loginHandler}
+              className="bg-gradient-to-r from-orange-500 to-blue-500 w-[170px] h-10 text-white rounded-lg"
+            >
+              <strong> Đăng nhập</strong>
             </button>
             <Link to="/signUp">
-              <button className=" w-[170px] h-10 border-2 border-slate-950 rounded-lg">
-                <strong> Sign Up</strong>
+              <button className=" w-[170px] h-10 border-2 border-gray-500  rounded-lg shadow-xl">
+                <strong> Đăng ký</strong>
               </button>
             </Link>
           </div>
 
-          <div className="flex flex-col w-9/12 items-center mt-10">
-            <h6>Or, Login With</h6>
+          <div className="flex flex-col w-9/12 items-center mt-10 ml-5">
+            <h6>Hoặc, Đăng nhập với</h6>
             <div className="flex space-x-3 mt-2">
               <button className="button-logo">
                 <FacebookLogo size={32} />

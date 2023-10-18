@@ -1,7 +1,38 @@
+import assets from "@/assets";
 import { Books } from "@phosphor-icons/react";
-import { Link } from "react-router-dom";
-import assets from "../assets";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import bg from "../../public/bgLogin.png";
+import { signup } from "../features/auth/authSlice";
+import { AppDispatch } from "../redux/store";
+import { signupState } from "../type";
 const SignUp = () => {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rePassword, setRePassword] = useState("");
+  const [fitPassword, setFitPassword] = useState(true);
+  const fullName = "asd";
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const signupHandler = async () => {
+    if (password === rePassword) {
+      setFitPassword(true);
+      const signupValue: signupState = {
+        username: username,
+        email: email,
+        password: password,
+        fullname: fullName,
+      };
+      const signupStatus = await dispatch(signup(signupValue));
+      if (signupStatus.type === "auth/signup/fulfilled") {
+        navigate("/");
+      }
+    } else {
+      setFitPassword(false);
+    }
+  };
   return (
     <div className="flex h-[100vh]">
       <div className="flex-initial w-[794px] flex flex-col ">
@@ -10,14 +41,18 @@ const SignUp = () => {
         </div>
         <div className="flex flex-col items-center w-full mt-20">
           <h1 className="text-base">
-            <strong> Sign up and start learning </strong>
+            <strong>Đăng ký để bắt đầu Học tập </strong>
           </h1>
           <div className="text-sm">
             {/* email  */}
             <div className="mb-2">
-              <h6>Username</h6>
+              <h6>Tên người dùng</h6>
               <input
                 type="text"
+                value={username}
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                }}
                 className="border-[1px] border-slate-600 rounded-md w-full h-[35px] pl-3"
               />
             </div>
@@ -25,24 +60,39 @@ const SignUp = () => {
               <h6>Email</h6>
               <input
                 type="text"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
                 className="border-[1px] border-slate-600 rounded-md w-full h-[35px] pl-3"
               />
             </div>
             {/* phone and gender  */}
 
             <div className="mb-2 mt-2">
-              <h6>Password</h6>
+              <h6>Mật khẩu</h6>
               <input
-                type="text"
+                type="password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
                 className="border-[1px] border-slate-600 rounded-md w-full h-[35px] pl-3"
               />
             </div>
             {/* address  */}
             <div className="mb-2 mt-2">
-              <h6>Re-Password</h6>
+              <h6>Nhập lại mật khẩu</h6>
               <input
-                type="text"
-                className="border-[1px] border-slate-600 rounded-md w-full h-[35px] pl-3"
+                type="password"
+                value={rePassword}
+                onChange={(e) => {
+                  setRePassword(e.target.value);
+                }}
+                className={
+                  (fitPassword ? "border-slate-600 " : "border-red-500") +
+                  " border-[1px] rounded-md w-full h-[35px] pl-3 "
+                }
               />
             </div>
             {/* submit  */}
@@ -53,15 +103,19 @@ const SignUp = () => {
                 id="RememberCheck"
               />
               <label htmlFor="" className="text-xs ml-8 mt-3">
-                By signing up, you agree to our Terms of Use and Privacy Policy.
+                Đồng ý với Điều khoản sử dụng và Chính sách quyền riêng tư của
+                chúng tôi.
               </label>
             </div>
             <div className="flex space-x-5 mt-20 text-xs">
-              <button className="bg-gradient-to-r from-orange-500 to-blue-500 w-[195px] h-10 text-white rounded-lg">
+              <button
+                onClick={signupHandler}
+                className="bg-gradient-to-r from-orange-500 to-blue-500 w-[195px] h-10 text-white rounded-lg"
+              >
                 <strong> SignUp</strong>
               </button>
               <Link to="/login">
-                <button className=" w-[195px] h-10 border-2 border-slate-600 rounded-lg">
+                <button className=" w-[195px] h-10 border-2 border-gray-500 rounded-lg">
                   <strong> Back to Login</strong>
                 </button>
               </Link>
@@ -71,7 +125,7 @@ const SignUp = () => {
       </div>
 
       <div
-        className="flex-initial  w-full flex items-center "
+        className="flex-initial  w-full  items-center hidden xl:flex"
         style={{
           backgroundImage: `url(${assets.images.backgroundLogin})`,
           backgroundSize: "cover",

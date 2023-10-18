@@ -105,7 +105,7 @@ const ListStudent = () => {
     <div className="w-full space-y-4">
       {/* filter */}
       <div className="py-2 w-full flex flex-col justify-end md:flex-row space-x-2">
-        <div className="px-3 py-2 bg-white text-black shadow-sm flex items-center justify-end gap-2 rounded-md">
+        <div className="px-3 py-1 bg-white text-black shadow-sm flex items-center justify-end gap-2 rounded-md">
           <p className="text-md text-gray-500 font-light">Lọc theo: </p>
           <div className="text-sm font-medium">
             <div className="rounded-full px-2 py-1"></div>
@@ -156,7 +156,7 @@ const ListStudent = () => {
               ).map((student, index) => (
                 <div
                   key={index}
-                  className="w-full md:w-[33%] flex flex-col items-center justify-center"
+                  className="w-full md:w-[31%] mx-3 my-3 rounded-md p-[10px] flex flex-col items-center justify-center bg-white"
                 >
                   <img
                     className="w-[120px] h-[120px] object-cover"
@@ -187,7 +187,7 @@ const ListStudent = () => {
             : ListStudents.map((student, index) => (
                 <div
                   key={index}
-                  className="w-full md:w-[33%] flex flex-col items-center justify-center"
+                  className="w-full md:w-[31%] mx-3 my-3 rounded-md p-[10px] flex flex-col items-center justify-center bg-white"
                 >
                   <img
                     className="w-[120px] h-[120px] object-cover"
@@ -244,8 +244,8 @@ const ListStudent = () => {
                     ).map((student, index) => {
                       const isLast = index === ListStudents.length - 1;
                       const classes = isLast
-                        ? "p-4"
-                        : "p-4 border-b border-blue-gray-50";
+                        ? "p-4 bg-white"
+                        : "p-4 border-b border-blue-gray-50 bg-white";
                       return (
                         <tr key={index}>
                           <td className={classes}>
@@ -290,8 +290,8 @@ const ListStudent = () => {
                   : ListStudents.map((student, index) => {
                       const isLast = index === ListStudents.length - 1;
                       const classes = isLast
-                        ? "p-4"
-                        : "p-4 border-b border-blue-gray-50";
+                        ? "p-4 bg-white"
+                        : "p-4 border-b border-blue-gray-50 bg-white";
                       return (
                         <tr key={index}>
                           <td className={classes}>
