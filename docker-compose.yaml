@@ -1,35 +1,57 @@
-version: "3.8"
+version: "3.9"
+
 services:
-  nginx:
-    image: nginx
-    domainname: "educonnect"
-    ports:
-      - "80:80"
-  mysql:
-    image: "mysql"
-    volumes:
-      - data:/data/db
   backend:
-    build: ./backend
-    ports:
-      - "80:80"
+    restart: always
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: tumolaha/educonnect-server
+    container_name: educonnect-server
+    command: npm run dev
     volumes:
-      - logs:/app/logs
-      - ./backend:/app
-      - /app/node_modules
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "8080:3000"
     depends_on:
       - mysql
-  frontend:
-    build: ./frontend
-    ports:
-      - "3000:3000"
+    env_file: ./backend/.env
+    environment:
+      - NODE_ENV=development
+    networks:
+      - app-network
+  mysql:
+    image: mysql:latest
     volumes:
-      - ./frontend/src:/app/src
-    stdin_open: true
-    tty: true
+      - data-volume:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: tumolaha/educonnect-client
+    container_name: educonnect-client
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: always
     depends_on:
       - backend
+    ports:
+      - "80:3001"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
-  data:
-  logs:
+  data-volume:
+  node_modules:
+  web-root:
+    driver: local
