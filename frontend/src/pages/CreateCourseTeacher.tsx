@@ -1,4 +1,4 @@
-import CreateCourseContent from "@/components/CreateCourse/CreateCourseContent";
+import CreateCourseContainer from "@/components/CreateCourse/CreateCourseContainer";
 // import CreateCourseTitle from "@/components/CreateCourse/CreateCourseTitle";
 import React from "react";
 
@@ -7,7 +7,7 @@ const CreateCourseTeacher = (): React.ReactElement => {
   return (
     <div className=" w-full h-full space-y-4">
       {/* <CreateCourseTitle /> */}
-      <CreateCourseContent />
+      <CreateCourseContainer />
     </div>
   );
 };

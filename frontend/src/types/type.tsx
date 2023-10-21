@@ -134,3 +134,14 @@ export interface IStudent {
   createdAt: Date;
   updateAt: Date;
 }
+
+export interface ISectionInfo {
+  id: number;
+  title: string;
+  lessons: number[];
+}
+export interface ILessonInfo {
+  id: number;
+  title: string;
+  type?: string;
+}
