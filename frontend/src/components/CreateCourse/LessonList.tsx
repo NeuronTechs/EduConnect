@@ -12,27 +12,23 @@ import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { insertArrayElements } from "@/utils/utils";
+import { ILessonInfo } from "@/types/type";
 
-interface ILesson {
-  id: number;
-  title: string;
-  type?: string;
-}
-
-const lessons: ILesson[] = [
+const lessons: ILessonInfo[] = [
   { id: 1, title: "Lesson 1", type: "video" },
   { id: 2, title: "Lesson 2", type: "quiz" },
   { id: 3, title: "Lesson 3", type: "document" },
 ];
 const LessonList = () => {
-  const [lessonList, setLessonList] = React.useState<ILesson[]>(lessons);
+  const [lessonList, setLessonList] = React.useState<ILessonInfo[]>(lessons);
   const handlerDragEnd = ({ active, over }: DragEndEvent) => {
     if (over) {
       const overIndex = lessonList.findIndex(
-        (lesson: ILesson) => lesson.id === parseInt(over.id?.toString(), 10)
+        (lesson: ILessonInfo) => lesson.id === parseInt(over.id?.toString(), 10)
       );
       const activeIndex = lessonList.findIndex(
-        (lesson: ILesson) => lesson.id === parseInt(active.id?.toString(), 10)
+        (lesson: ILessonInfo) =>
+          lesson.id === parseInt(active.id?.toString(), 10)
       );
 
       // insertArrayElements<T>(arr: T[], dragIndex: number, hoverIndex: number): T[]
@@ -57,12 +53,12 @@ const LessonList = () => {
 
 export default LessonList;
 
-interface ILessonItem {
-  data: ILesson;
+interface ILessonInfoItem {
+  data: ILessonInfo;
   content?: string;
   type?: string;
 }
-const LessonItem = (props: ILessonItem) => {
+const LessonItem = (props: ILessonInfoItem) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: props.data.id });
   const style = {

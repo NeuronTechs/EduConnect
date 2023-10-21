@@ -14,21 +14,20 @@ import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { insertArrayElements } from "@/utils/utils";
 import { Collapse } from "@material-tailwind/react";
+import { ISectionInfo } from "@/types/type";
 
 // type
-interface ISection {
-  id: number;
-  title: string;
-  lessons: number[];
-}
-const sections: ISection[] = [
+
+const sections: ISectionInfo[] = [
   { id: 1, title: "Section 1", lessons: [1, 2, 3] },
   { id: 2, title: "Section 2", lessons: [4, 5, 6] },
   { id: 3, title: "Section 3", lessons: [7, 8, 9] },
 ];
 // fake data generator
-const SectionList = (): React.ReactElement => {
-  const [dataSection, setDataSection] = React.useState<ISection[]>([]);
+const SectionList = (props: {
+  setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+}): React.ReactElement => {
+  const [dataSection, setDataSection] = React.useState<ISectionInfo[]>([]);
   React.useEffect(() => {
     setDataSection(sections);
   }, []);
@@ -50,19 +49,28 @@ const SectionList = (): React.ReactElement => {
     }
   };
 
+  const handlerAddNewSection = () => {};
+
   return (
     <div className="h-full px-1 py-2 flex flex-col items-stretch">
       <div className="flex-1 w-full overflow-auto space-y-2">
         <DndContext onDragEnd={handleDragEnd}>
           <SortableContext items={dataSection}>
             {dataSection.map((item) => (
-              <ItemSection key={item.id} data={item} />
+              <ItemSection
+                key={item.id}
+                data={item}
+                setIsOpenModal={props.setIsOpenModal}
+              />
             ))}
           </SortableContext>
         </DndContext>
       </div>
       <div className="w-full flex items-center justify-center">
-        <button className="px-2 py-1 flex items-center justify-center gap text-sm font-bold text-white bg-blue-400 hover:bg-blue-500 rounded-md">
+        <button
+          onClick={handlerAddNewSection}
+          className="px-2 py-1 flex items-center justify-center gap text-sm font-bold text-white bg-blue-400 hover:bg-blue-500 rounded-md"
+        >
           <PlusCircle size={32} /> Thêm phần khoá học
         </button>
       </div>
@@ -72,10 +80,13 @@ const SectionList = (): React.ReactElement => {
 
 export default SectionList;
 
-const ItemSection = (props: { data: ISection }): React.ReactElement => {
+const ItemSection = (props: {
+  data: ISectionInfo;
+  setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+}): React.ReactElement => {
   const [isHovered, setIsHovered] = React.useState(false);
   const [isEditing, setIsEditing] = React.useState(false);
-  const [open, setOpen] = React.useState<boolean>(true);
+  const [open, setOpen] = React.useState<boolean>(false);
 
   const toggleOpen = () => setOpen((cur) => !cur);
 
@@ -100,6 +111,10 @@ const ItemSection = (props: { data: ISection }): React.ReactElement => {
 
   const handleTitleBlur = () => {
     setIsEditing(false);
+  };
+
+  const handleNewLessonClick = () => {
+    props.setIsOpenModal(true);
   };
   return (
     <div
@@ -161,7 +176,10 @@ const ItemSection = (props: { data: ISection }): React.ReactElement => {
           <LessonList />
           <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700"></hr>
           <div className="flex p-1 justify-between">
-            <button className="text-blue-500 bg-blue-100 text-xs font-bold px-4 py-1.5 flex items-center justify-center space-x-2 cursor-pointer hover:bg-blue-200 rounded-md">
+            <button
+              onClick={handleNewLessonClick}
+              className="text-blue-500 bg-blue-100 text-xs font-bold px-4 py-1.5 flex items-center justify-center space-x-2 cursor-pointer hover:bg-blue-200 rounded-md"
+            >
               <PlusCircle size={20} />
               <p>thêm bài giảng</p>
             </button>
