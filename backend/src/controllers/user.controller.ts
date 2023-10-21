@@ -16,7 +16,7 @@ const generateAccessToken = (
       role: role,
     },
     "educonnect",
-    { expiresIn: "60s" }
+    { expiresIn: "600s" }
   );
 };
 const generatefreshToken = (

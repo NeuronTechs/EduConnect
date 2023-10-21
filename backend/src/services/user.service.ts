@@ -165,7 +165,7 @@ const updateInformation = async (
   data: informationDataUpdate
 ): Promise<informationResponse> => {
   try {
-    if (data?.role === "teacher") {
+    if (data?.role === "student") {
       const update: informationResponse = await updateUser(
         data?.username,
         data?.role,
@@ -179,7 +179,7 @@ const updateInformation = async (
       if (update.status) {
         const student_id = "st_" + data?.username;
         const newQuery =
-          "INSERT INTO `teacher` (`student_id`,`username`, `educational_level`, `major`, `course`, `school`, `address_school`) VALUES (?,?,?,?,?,?,?);";
+          "INSERT INTO `student` (`student_id`,`username`, `educational_level`, `major`, `course`, `school`, `address_school`) VALUES (?,?,?,?,?,?,?);";
         return new Promise((resolve, reject) => {
           db.connectionDB.query(
             newQuery,
@@ -224,7 +224,7 @@ const updateInformation = async (
       if (update.status) {
         const teacher_id = "te_" + data?.username;
         const newQuery =
-          "INSERT INTO `student` (`teacher_id`,`username`, `educational_level`, `major`, `course`, `school`, `address_school`) VALUES (?,?,?,?,?,?,?);";
+          "INSERT INTO `teacher` (`teacher_id`,`username`, `educational_level`, `major`, `course`, `school`, `address_school`) VALUES (?,?,?,?,?,?,?);";
         return new Promise((resolve, reject) => {
           db.connectionDB.query(
             newQuery,

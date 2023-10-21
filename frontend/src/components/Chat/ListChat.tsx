@@ -2,6 +2,7 @@ import assets from "@/assets";
 import { IConventionChat } from "@/types/type";
 import { MagnifyingGlass } from "@phosphor-icons/react";
 import React from "react";
+import ImageWithError from "../ImageWithError";
 interface IProps {
   data: IConventionChat[];
   setDataChat: React.Dispatch<React.SetStateAction<IConventionChat[]>>;
@@ -155,12 +156,14 @@ const ItemConventionChat = (props: {
     >
       <div className="flex items-center gap-2 w-full">
         {/* avatar */}
-        <div className="h-[40px] w-[40px] rounded-full overflow-hidden">
-          <img
-            src={props.data.avatar ? props.data.avatar : assets.images.avatar1}
+        <div className="h-[40px] w-[40px] rounded-full relative">
+          <ImageWithError
+            src={props.data.avatar}
             alt=""
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover rounded-full"
+            fallbackSrc={assets.images.avatarBlack}
           />
+          <span className="bottom-0 left-7 absolute  w-3 h-3 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
         </div>
         {/* content message */}
         <div className="flex-1 flex flex-col justify-start gap-2 overflow-hidden ">
@@ -171,7 +174,7 @@ const ItemConventionChat = (props: {
           </h5>
           <p
             className={`text-xs font-medium ${
-              props.data.chatNew > 0 ? "text-gray-500" : "text-gray-800"
+              props.data.chatNew === 0 ? "text-gray-400" : "text-gray-800"
             }  whitespace-nowrap w-full overflow-hidden text-ellipsis`}
           >
             {props.data.lastMessage}
