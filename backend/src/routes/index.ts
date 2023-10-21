@@ -1,7 +1,15 @@
 import express from "express";
 import userRoutes from "./user.route";
 import cartRoutes from "./cart.route";
+const courseRouter = require("./course.route");
+import sessionRouter from "./session.route";
+import lectureRouter from "./lecture.route";
+import orderItemRouter from "./order_items.route";
 const router = express.Router();
 router.use("/user", userRoutes);
+router.use("/course", courseRouter);
+router.use("/session", sessionRouter);
+router.use("/lecture", lectureRouter);
+router.use("/order", orderItemRouter);
 router.use("/cart", cartRoutes);
 export default router;

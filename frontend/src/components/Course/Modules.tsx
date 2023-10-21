@@ -1,9 +1,21 @@
+import { ILesson } from "@/types/type";
 import {
   Accordion,
   AccordionHeader,
   AccordionBody,
+  Menu,
+  MenuHandler,
+  MenuList,
+  MenuItem,
 } from "@material-tailwind/react";
-import { BookOpenText, Clock, PlayCircle } from "@phosphor-icons/react";
+import {
+  ArchiveBox,
+  ArrowDown,
+  BookOpenText,
+  Clock,
+  Folder,
+  MonitorPlay,
+} from "@phosphor-icons/react";
 import React, { useState } from "react";
 
 interface IconProps {
@@ -34,6 +46,67 @@ const Icon = ({ open }: IconProps) => {
     </svg>
   );
 };
+const lessons: ILesson[] = [
+  {
+    id: "1",
+    title: "Introduction to React",
+    thumbnail: "https://example.com/react-thumbnail.jpg",
+    description: "Learn the basics of React",
+    video_url: "https://example.com/react-intro.mp4",
+    courseId: "1",
+    categoryId: "1",
+    moduleId: "1",
+    totalTime: 60,
+    totalReview: 10,
+    createdAt: new Date("2021-01-01"),
+    updateAt: new Date("2021-01-02"),
+  },
+  {
+    id: "2",
+    title: "React Components",
+    thumbnail: "https://example.com/react-components-thumbnail.jpg",
+    description: "Learn about React components",
+    video_url: "https://example.com/react-components.mp4",
+    courseId: "1",
+    categoryId: "1",
+    moduleId: "1",
+    totalTime: 90,
+    totalReview: 5,
+    createdAt: new Date("2021-01-03"),
+    updateAt: new Date("2021-01-04"),
+  },
+  // Add more lessons here
+];
+const LessonCard = (props: ILesson) => {
+  return (
+    <>
+      <div className="flex flex-col items-start justify-center text-[15px] cursor-pointer py-2  ">
+        <div className="flex">{props.id + ". " + props.title}</div>
+        <div className="flex justify-between mt-2 items-center">
+          <div className="flex items-center space-x-2">
+            <MonitorPlay size={16} />
+            <p> {props.totalTime + " phút"}</p>
+          </div>
+
+          <Menu>
+            <MenuHandler>
+              <div className="w-27 h-6 border-[0.5px] border-black flex justify-between items-center ml-15 text-black p-1">
+                <Folder size={16} /> <p className="text-sm">Resource</p>{" "}
+                <ArrowDown size={16} />
+              </div>
+            </MenuHandler>
+            <MenuList className="text-black">
+              <MenuItem className="flex gap-2">
+                <ArchiveBox size={16} /> Menu Item 1
+              </MenuItem>
+            </MenuList>
+          </Menu>
+        </div>
+      </div>
+    </>
+  );
+};
+
 const Lesson = (props: moduleProps) => {
   const [open, setOpen] = useState<boolean>(props.isOpen);
 
@@ -56,14 +129,13 @@ const Lesson = (props: moduleProps) => {
         </AccordionHeader>
         <AccordionBody>
           <ul>
-            <li className="flex items-center justify-start text-[15px] cursor-pointer">
-              <PlayCircle size={16} className="mr-3" />
-              1. Mô hình Client - Server là gì?
-            </li>
-            <li className="flex items-center justify-start cursor-pointer">
-              <PlayCircle size={16} className="mr-3" />
-              2. Domain là gì? Tên miền là gì?
-            </li>
+            {lessons.map((lesson) => {
+              return (
+                <li>
+                  <LessonCard {...lesson} />
+                </li>
+              );
+            })}
           </ul>
         </AccordionBody>
       </Accordion>
