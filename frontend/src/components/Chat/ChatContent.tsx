@@ -161,7 +161,7 @@ const ChatContentMain = (props: { groupedMessages: IGroupedMessages }) => {
   return (
     <div className="flex flex-col items-start justify-start gap-2.5">
       {Object.entries(props.groupedMessages).map(([date, messages]) => (
-        <div key={date}>
+        <div key={date} className="w-full">
           <DividerTime title={date} />
           {/* render message */}
           {messages.map((message: IMessage) => (

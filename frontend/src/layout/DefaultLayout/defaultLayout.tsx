@@ -23,11 +23,9 @@ const DefaultLayout = ({ children }: LayoutProps) => {
 
   useOnClickOutside(ref, handleClickOutside);
   return (
-    <div className="relative h-screen w-screen overflow-hidden">
+    <div className="relative h-screen w-screen overflow-hidden flex">
       <Sidebar ref={ref} isOpen={isOpen} setIsOpen={setIsOpen} />
-      <div
-        className={`h-full w-full xl:pl-[180px] pl-0 transition-all delay-200`}
-      >
+      <div className={`h-full w-full  pl-0 transition-all delay-200`}>
         <Header setIsOpen={setIsOpen} />
         <main className="w-full h-[calc(100%-80px)] bg-[#F1F5F9] overflow-auto md:pb-4 md:px-4 md:py-4">
           {children}

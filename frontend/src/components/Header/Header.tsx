@@ -11,8 +11,8 @@ interface propsHeader {
 const Header = (props: propsHeader): React.ReactElement => {
   return (
     <div className="w-full h-[80px] bg-white shadow-sm flex items-center justify-between px-3 py-2 ">
-      <div className="left flex space-x-3">
-        <div className="rounded-full bg-gray-200 p-2 xl:hidden flex transition-all delay-200">
+      <div className="left flex space-x-3 items-center">
+        <div className="rounded-full bg-gray-200 p-2  flex transition-all delay-200 items-center justify-center h-auto">
           <List
             size={25}
             className="text-gray-500"
