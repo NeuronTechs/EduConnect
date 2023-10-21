@@ -118,22 +118,34 @@ const getCourseByTeacherId = async (
     });
   });
 };
-const getTopTenCoursesByTotalSales = async () => {
-  const sql = `
-        SELECT course.*, SUM(order_item.quantity) AS total_sales
-        FROM course
-        JOIN order_item ON course.id = order_item.course_id
-        GROUP BY course.id
-        ORDER BY total_sales DESC
-        LIMIT 10
-    `;
-  return await db.connectionDB.query(sql, (err, result) => {
-    if (err) {
-      console.log(err);
-      return err;
-    } else {
-      return result;
-    }
+
+const getCourseByStudentId = async (
+  student_id: string
+): Promise<dataListResponse<ICourse>> => {
+  const sql = `SELECT * FROM course WHERE course_id IN (SELECT course_id FROM order_items WHERE student_id = ?)`;
+  return new Promise<dataListResponse<ICourse>>((resolve, reject) => {
+    db.connectionDB.query(sql, [student_id], (err, result) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve({ status: 200, data: result as ICourse[], message: "Success" });
+    });
+  });
+};
+
+const getCourseByTopicId = async (
+  category_id: string
+): Promise<dataListResponse<ICourse>> => {
+  const sql = `SELECT * FROM course WHERE topic_id = ?`;
+  return new Promise<dataListResponse<ICourse>>((resolve, reject) => {
+    db.connectionDB.query(sql, [category_id], (err, result) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve({ status: 200, data: result as ICourse[], message: "Success" });
+    });
   });
 };
 
@@ -144,5 +156,5 @@ export default {
   updateById,
   deleteById,
   getCourseByTeacherId,
-  getTopTenCoursesByTotalSales,
+  getCourseByStudentId,
 };
