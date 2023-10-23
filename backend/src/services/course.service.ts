@@ -1,12 +1,14 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import db from "../config/connectDB";
 import { generateRandomString } from "../config/randomString";
-import { ICourse } from "../constant/course";
+import { ICourse, ICourseDetail } from "../constant/course";
 import {
   dataListResponse,
   dataResponse,
   updateResponse,
 } from "../constant/type";
+import { log } from "util";
+import { ISession } from "../constant/session";
 
 const create = async (data: ICourse): Promise<dataResponse<ICourse>> => {
   data.course_id = generateRandomString();
@@ -149,6 +151,86 @@ const getCourseByTopicId = async (
   });
 };
 
+// get course details with session and lecture of session
+// Define a function that retrieves course details for a given course ID
+const getCourseDetails = async (
+  course_id: string
+): Promise<dataResponse<ICourseDetail>> => {
+  // Define the SQL query to retrieve course details
+  const sql = `SELECT c.course_id ,c.title as course_name,c.description as course_description,s.session_id, s.name AS session_name, l.lecture_id, l.name AS lecture_name, l.description, l.source, l.type
+  FROM Session s
+  JOIN Lecture l ON s.session_id = l.session_id
+  JOIN Course c ON s.course_id = c.course_id
+  WHERE s.course_id = ?
+  ORDER BY s.session_id, l.lecture_id; `;
+
+  // Execute the SQL query and return a Promise that resolves to the course details
+  return new Promise<dataResponse<ICourseDetail>>((resolve, reject) => {
+    db.connectionDB.query(sql, [course_id], (err, result: RowDataPacket[]) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      // Parse the query result and create an ICourseDetail object
+      const resultData: ICourseDetail = {
+        course_id: result[0].course_id,
+        title: result[0].course_name,
+        description: result[0].course_description,
+        sessions: [],
+      };
+
+      // Iterate over the query result and group lectures by session
+      let sample = {
+        session_id: result[0].session_id,
+        session_name: result[0].session_name,
+      };
+      let lectures: any[] = [];
+      for (const item of result) {
+        if (sample.session_id === item.session_id) {
+          lectures.push({ ...item });
+        } else {
+          const { session_id, session_name } = sample;
+          const temp: ISession = {
+            session_id,
+            name: session_name,
+            course_id: resultData.course_id,
+            lectures,
+          };
+          resultData.sessions.push(temp);
+          lectures = [];
+          sample.session_id = item.session_id;
+          sample.session_name = item.session_name;
+          lectures.push({
+            lecture_id: item.lecture_id,
+            lecture_name: item.lecture_name,
+            description: item.description,
+            source: item.source,
+            type: item.type,
+          });
+        }
+      }
+
+      // Add the last session to the ICourseDetail object
+      const { session_id, session_name } = sample;
+      const temp: ISession = {
+        session_id,
+        name: session_name,
+        course_id: resultData.course_id,
+        lectures,
+      };
+      resultData.sessions.push(temp);
+
+      // Return the course details as a dataResponse object
+      resolve({
+        status: 200,
+        data: resultData as ICourseDetail,
+        message: "Success",
+      });
+    });
+  });
+};
+
 export default {
   create,
   getAll,
@@ -157,4 +239,5 @@ export default {
   deleteById,
   getCourseByTeacherId,
   getCourseByStudentId,
+  getCourseDetails,
 };

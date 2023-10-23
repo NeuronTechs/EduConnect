@@ -3,11 +3,11 @@ import * as httpRequest from "../../utils/httpRequest";
 
 export const loginPass = async (params: Auth) => {
   try {
-    console.log(params);
     const res = await httpRequest.post("/user/login", {
       username: params.username,
       password: params.password,
     });
+    console.log(res);
     return res?.data;
   } catch (error) {
     console.log(error);

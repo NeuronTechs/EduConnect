@@ -34,17 +34,18 @@ const handlerRequest = async (
   store: Store,
   dispatch: AppDispatch
 ) => {
-  // console.log(config);
+  console.log(config);
   if (
-    config.url?.includes("auth/login") ||
-    config.url?.includes("auth/refresh") ||
-    config.url?.includes("auth/login/success")
+    config.url?.includes("user/login") ||
+    config.url?.includes("user/refresh") ||
+    config.url?.includes("user/login/success")
   ) {
     return config;
   }
+
   const user: User = store.getState().authSlice?.currentUser;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const accessToken: any = jwtDecode(user.data.accessToken);
+  const accessToken: any = jwtDecode(user?.accessToken);
   // store.dispatch(refetchTokenStore(accessToken));
   if (accessToken) {
     if (accessToken?.exp < getTimeNow()) {
@@ -54,12 +55,8 @@ const handlerRequest = async (
           const data = await refetchToken();
           if (data) {
             // save redux access token new request
-            const dataTemplate: User = {
-              data: {
-                ...user.data,
-                accessToken: data.accessToken,
-              },
-            };
+            const dataTemplate: User = user;
+            dataTemplate.accessToken = data.accessToken;
             dispatch(refetchTokenStore(dataTemplate));
             // add token header
             config.headers.Authorization = "Bearer " + data;
@@ -81,12 +78,8 @@ const handlerRequest = async (
         const data = await refetchToken();
         if (data) {
           // save redux access token new request
-          const dataTemplate: User = {
-            data: {
-              ...user.data,
-              accessToken: data.accessToken,
-            },
-          };
+          const dataTemplate: User = user;
+          dataTemplate.accessToken = data.accessToken;
           store.dispatch(refetchTokenStore(dataTemplate));
           // add token header
           config.headers.Authorization = "Bearer " + data;
