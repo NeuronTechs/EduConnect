@@ -5,6 +5,7 @@ import ListCourse from "../components/Home/ListCourse";
 import ListTeacher from "../components/Home/ListTeacher";
 import { Link, useLocation } from "react-router-dom";
 import { dataCategory, dataCourse, dataTeacher } from "../types/constans";
+import instance from "@/utils/httpRequest";
 const TabHome = (): React.ReactElement => {
   const location = useLocation();
   const tabData = [
@@ -41,6 +42,17 @@ const TabHome = (): React.ReactElement => {
 export { TabHome };
 
 const Home = () => {
+  React.useEffect(() => {
+    const callApi = async () => {
+      try {
+        const data = await instance.get("/courses");
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    callApi();
+  }, []);
   return (
     <div className="flex flex-col w-full  gap-5">
       <TabHome />
