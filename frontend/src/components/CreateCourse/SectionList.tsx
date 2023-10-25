@@ -15,60 +15,55 @@ import { CSS } from "@dnd-kit/utilities";
 import { insertArrayElements } from "@/utils/utils";
 import { Collapse } from "@material-tailwind/react";
 import { ISectionInfo } from "@/types/type";
+import {
+  CreateCourseContext,
+  ICreateCourseContext,
+} from "@/context/CreateCourseContext";
 
-// type
-
-const sections: ISectionInfo[] = [
-  { id: 1, title: "Section 1", lessons: [1, 2, 3] },
-  { id: 2, title: "Section 2", lessons: [4, 5, 6] },
-  { id: 3, title: "Section 3", lessons: [7, 8, 9] },
-];
 // fake data generator
 const SectionList = (props: {
   setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setIdSectionCreate: React.Dispatch<React.SetStateAction<string>>;
 }): React.ReactElement => {
-  const [dataSection, setDataSection] = React.useState<ISectionInfo[]>([]);
-  React.useEffect(() => {
-    setDataSection(sections);
-  }, []);
+  const { dataSection, setDataSection, handleAddNewSection } =
+    React.useContext(CreateCourseContext);
 
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
     if (over && dataSection.length > 0) {
       const overIndex = dataSection.findIndex(
-        (section: ISection) => section.id === parseInt(over.id?.toString(), 10)
+        (section: ISectionInfo) => section.id === over.id?.toString()
       );
       const activeIndex = dataSection.findIndex(
-        (section: ISection) =>
-          section.id === parseInt(active.id?.toString(), 10)
+        (section: ISectionInfo) => section.id === active.id?.toString()
       );
       console.log(activeIndex, overIndex);
       const newList = insertArrayElements(dataSection, activeIndex, overIndex);
-      console.log(newList);
       setDataSection(newList);
-      console.log(dataSection);
     }
   };
-
-  const handlerAddNewSection = () => {};
 
   return (
     <div className="h-full px-1 py-2 flex flex-col items-stretch">
       <div className="flex-1 w-full overflow-auto space-y-2">
         <DndContext onDragEnd={handleDragEnd}>
           <SortableContext items={dataSection}>
-            {dataSection.map((item) => (
-              <ItemSection
-                key={item.id}
-                data={item}
-                setIsOpenModal={props.setIsOpenModal}
-              />
-            ))}
+            {dataSection.map((item) => {
+              return (
+                <ItemSection
+                  key={item.id}
+                  setIsOpenModal={props.setIsOpenModal}
+                  setIdSectionCreate={props.setIdSectionCreate}
+                  // data section
+                  data={item}
+                />
+              );
+            })}
           </SortableContext>
         </DndContext>
       </div>
       <div className="w-full flex items-center justify-center">
         <button
-          onClick={handlerAddNewSection}
+          onClick={handleAddNewSection}
           className="px-2 py-1 flex items-center justify-center gap text-sm font-bold text-white bg-blue-400 hover:bg-blue-500 rounded-md"
         >
           <PlusCircle size={32} /> Thêm phần khoá học
@@ -81,12 +76,18 @@ const SectionList = (props: {
 export default SectionList;
 
 const ItemSection = (props: {
-  data: ISectionInfo;
   setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setIdSectionCreate: React.Dispatch<React.SetStateAction<string>>;
+
+  data: ISectionInfo;
 }): React.ReactElement => {
   const [isHovered, setIsHovered] = React.useState(false);
   const [isEditing, setIsEditing] = React.useState(false);
   const [open, setOpen] = React.useState<boolean>(false);
+
+  const { handleDeleteSection } = React.useContext(
+    CreateCourseContext
+  ) as ICreateCourseContext;
 
   const toggleOpen = () => setOpen((cur) => !cur);
 
@@ -114,8 +115,10 @@ const ItemSection = (props: {
   };
 
   const handleNewLessonClick = () => {
+    props.setIdSectionCreate(props.data.id);
     props.setIsOpenModal(true);
   };
+
   return (
     <div
       className="w-full bg-white  rounded-sm"
@@ -155,7 +158,10 @@ const ItemSection = (props: {
         </div>
         <div className="flex gap-2">
           {isHovered && (
-            <div className="bg-blue-gray-50 p-1 rounded-full text-gray-700 cursor-pointer">
+            <div
+              className="bg-blue-gray-50 p-1 rounded-full text-gray-700 cursor-pointer"
+              onClick={() => handleDeleteSection(props.data.id)}
+            >
               <Trash size={15} />
             </div>
           )}
@@ -171,9 +177,10 @@ const ItemSection = (props: {
         </div>
       </div>
       <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700"></hr>
+      {/* children list */}
       <Collapse open={open}>
         <div className="flex flex-col w-full">
-          <LessonList />
+          <LessonList data={props.data} />
           <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700"></hr>
           <div className="flex p-1 justify-between">
             <button
