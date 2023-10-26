@@ -1,6 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+a {
+  text-decoration: none;
+}
 @layer components {
   .button-logo {
     @apply flex items-center w-[120px] h-9 border-[1px] border-gray-600 text-gray-600 rounded-md text-sm;

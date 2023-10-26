@@ -9,8 +9,12 @@ const instance = axios.create({
 });
 
 export const get = async (path: string, options = {}) => {
-  const response = await instance.get(path, options);
-  return response.data;
+  try {
+    const response = await instance.get(path, options);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
 };
 
 export const post = async (
@@ -18,11 +22,15 @@ export const post = async (
   options = {},
   header?: AxiosRequestHeaders
 ) => {
-  const response = await instance.post(path, options, {
-    headers: header,
-  });
+  try {
+    const response = await instance.post(path, options, {
+      headers: header,
+    });
 
-  return response.data;
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
 };
 
 export const put = async (
@@ -30,10 +38,14 @@ export const put = async (
   options = {},
   header: AxiosRequestHeaders
 ) => {
-  const response = await instance.put(path, options, {
-    headers: header,
-  });
-  return response.data;
+  try {
+    const response = await instance.put(path, options, {
+      headers: header,
+    });
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
 };
 
 export default instance;

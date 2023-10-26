@@ -129,7 +129,7 @@ export const dataTeacher: ITeacher[] = [
     linkLinkedin: "",
   },
   {
-    id: "sdafasdasd",
+    id: "dasdasd3rsfwe",
     name: "Jionson whet",
     subject: "Ui/UX thiết kế",
     totalCourse: 23,
@@ -150,7 +150,7 @@ export const dataTeacher: ITeacher[] = [
     linkLinkedin: "",
   },
   {
-    id: "sdafadasdasdasd",
+    id: "htdsdfer",
     name: "Jionson whet",
     subject: "Ui/UX thiết kế",
     totalCourse: 23,
@@ -171,7 +171,7 @@ export const dataTeacher: ITeacher[] = [
     linkLinkedin: "",
   },
   {
-    id: "sdafasdasd",
+    id: "gyikttgf",
     name: "Jionson whet",
     subject: "Ui/UX thiết kế",
     totalCourse: 23,

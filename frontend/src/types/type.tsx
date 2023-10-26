@@ -136,12 +136,14 @@ export interface IStudent {
 }
 
 export interface ISectionInfo {
-  id: number;
+  id: string;
   title: string;
-  lessons: number[];
+  lessons: ILessonInfo[];
 }
 export interface ILessonInfo {
-  id: number;
+  id: string;
   title: string;
   type?: string;
+  idSection: string;
+  draff?: boolean;
 }

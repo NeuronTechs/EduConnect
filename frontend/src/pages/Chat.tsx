@@ -1,6 +1,5 @@
 import ChatContent from "@/components/Chat/ChatContent";
 import ListChat from "@/components/Chat/ListChat";
-import { IMessage } from "@/types/type";
 import React from "react";
 
 const dataChatConvention = [
