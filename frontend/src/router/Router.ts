@@ -143,4 +143,6 @@ const publicRoutes: IRouter[] = [
   },
 ];
 const privateRoutes = [{ path: "/", component: Home }];
-export { publicRoutes, privateRoutes };
+const adminRoutes = [{ path: "/", component: Home }];
+const teacherRoutes = [{ path: "/", component: Home }];
+export { publicRoutes, privateRoutes, adminRoutes, teacherRoutes };
