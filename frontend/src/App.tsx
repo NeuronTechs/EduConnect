@@ -7,16 +7,30 @@ import {
 } from "react-router-dom";
 import DefaultLayout from "./layout/DefaultLayout/defaultLayout";
 import { setupInterceptor } from "./utils/interceptor";
-import { publicRoutes } from "./router/Router";
+import { adminRoutes, publicRoutes } from "./router/Router";
 import { AppDispatch, store } from "./redux/store";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { configRouter } from "./configs/router";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 function App() {
   const dispatch = useDispatch<AppDispatch>();
   setupInterceptor(store, dispatch);
-  const routerCheck = publicRoutes;
+  let routerCheck;
+  const useCurrentUser = useSelector(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (state: any) => state.authSlice.currentUser
+  );
+  routerCheck = publicRoutes;
+  if (useCurrentUser?.role === "admin") {
+    routerCheck = adminRoutes;
+  }
+  if (useCurrentUser?.role === "user") {
+    routerCheck = publicRoutes;
+  }
+  if (useCurrentUser?.role === "teacher") {
+    routerCheck = publicRoutes;
+  }
   return (
     <Router>
       <div className="App">
