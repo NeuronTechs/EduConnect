@@ -1,8 +1,9 @@
-import { getCourseByStudentId } from "@/api/courseApi/courseApi";
-import { ICourse } from "@/types/type";
+import * as courseApi from "../../api/courseApi/courseApi";
+import { ICourse, ILecture } from "@/types/type";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export interface CourseState {
+  currentLecture: ILecture | null;
   currentCourse: ICourse | null;
   loading: boolean;
   error: string | undefined;
@@ -11,6 +12,7 @@ export interface CourseState {
 
 const initialState: CourseState = {
   currentCourse: null,
+  currentLecture: null,
   loading: false,
   error: undefined,
   isError: false,
@@ -19,9 +21,9 @@ const initialState: CourseState = {
 export const getCourseDetails = createAsyncThunk<ICourse, string>(
   "course/getCourseDetails",
   async (params: string) => {
-    const res = await getCourseByStudentId(params);
-    const data = await res.json();
-    return data;
+    const res = await courseApi.getCourseDetails(params);
+    console.log(res);
+    return res;
   }
 );
 
@@ -30,10 +32,14 @@ export const courseSlice = createSlice({
   initialState,
   reducers: {
     resetStoreCourse: (state) => {
+      state.currentLecture = null;
       state.currentCourse = null;
       state.loading = false;
       state.error = undefined;
       state.isError = false;
+    },
+    selectLecture: (state, action) => {
+      state.currentLecture = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -43,6 +49,8 @@ export const courseSlice = createSlice({
     builder.addCase(getCourseDetails.fulfilled, (state, action) => {
       state.loading = false;
       state.currentCourse = action.payload;
+      state.error = undefined;
+      state.isError = false;
     });
     builder.addCase(getCourseDetails.rejected, (state, action) => {
       state.loading = false;
@@ -51,5 +59,5 @@ export const courseSlice = createSlice({
     });
   },
 });
-
+export const { resetStoreCourse, selectLecture } = courseSlice.actions;
 export default courseSlice.reducer;

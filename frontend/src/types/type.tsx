@@ -1,3 +1,12 @@
+import { AuthState } from "@/features/auth/authSlice";
+import { CartState } from "@/features/cart/cartSlice";
+import { CourseState } from "@/features/course/courseSlice";
+
+export interface SliceState {
+  authSlice: AuthState;
+  courseSlice: CourseState;
+  cartSlice: CartState;
+}
 export interface ICourse {
   course_id: string;
   title: string;
@@ -22,7 +31,7 @@ export interface ISession {
 
 export interface ILecture {
   lecture_id: string;
-  name: string;
+  lecture_name: string;
   description: string;
   source: string;
   session_id: string;

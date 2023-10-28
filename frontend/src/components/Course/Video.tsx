@@ -6,7 +6,7 @@ import {
   Play,
   SpeakerSimpleHigh,
 } from "@phosphor-icons/react";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Menu,
   MenuHandler,
@@ -14,7 +14,11 @@ import {
   MenuItem,
   Slider,
 } from "@material-tailwind/react";
-const Video = () => {
+import { ILecture } from "@/types/type";
+interface Props {
+  currentLecture: ILecture | null;
+}
+const Video = ({ currentLecture }: Props) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -39,16 +43,22 @@ const Video = () => {
     }
     return 0;
   };
+  useEffect(() => {
+    videoRef?.current?.play();
+    setIsPlaying(true);
+  }, [currentLecture]);
+
   return (
-    <div className=" h-[70vh] pt-0 relative shadow-xl ">
+    <div className=" h-[75vh] pt-0 relative shadow-xl ">
       <video
-        src="https://rr2---sn-npoldn7e.c.drive.google.com/videoplayback?expire=1698241103&ei=H_A4ZYTdFZHEp84PvPCb-Aw&ip=1.53.54.7&id=a34d9ec668cbdcc8&itag=59&source=webdrive&requiressl=yes&xpc=EghotM6WJ3oBAQ==&mh=b4&mm=32&mn=sn-npoldn7e&ms=su&mv=m&mvi=2&pl=24&ttl=transient&susc=dr&driveid=1JeUL9_WoyqSf47Q8oRIdSiEZ0UP-zm8D&app=explorer&eaua=MLbuuyQ8g5M&mime=video/mp4&vprv=1&prv=1&dur=96.130&lmt=1565861727151593&mt=1698229975&subapp=DRIVE_WEB_FILE_VIEWER&sparams=expire,ei,ip,id,itag,source,requiressl,xpc,ttl,susc,driveid,app,eaua,mime,vprv,prv,dur,lmt&sig=AGM4YrMwRAIgATP7EHL494YI6Z2I4i4hmhySS2upSwJJN-RvW3_7zgkCIFU_ldByGlS8kkANBgnbUgAAh4eyEuNNyxJp6vLHwOa3&lsparams=mh,mm,mn,ms,mv,mvi,pl&lsig=AK1ks_kwRgIhANIvSX9twVBXbXFuM67H934ZVGkuYspgQxEAqzcKWThuAiEAlfBREvoPqY2d0Y79QKW94f0FhPruL2ZHCDJYi80a1EY=&cpn=3vCBkhZEpThfUDoJ&c=WEB_EMBEDDED_PLAYER&cver=1.20231022.00.01"
+        src={currentLecture?.source}
         className=" w-full aspect-video rounded-lg "
         ref={videoRef}
         onClick={handlePlay}
         onTimeUpdate={() => {
           setCurrentTime(getCurrentTime());
         }}
+        autoPlay
       >
         Your browser does not support the video tag.
       </video>

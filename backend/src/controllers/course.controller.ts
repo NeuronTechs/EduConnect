@@ -72,7 +72,7 @@ const getCourseByTeacherId = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const courses = await CourseService.getCourseByTeacherId(id);
-    res.status(courses.status).json({ courses });
+    res.status(courses.status).json({ data: courses });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
@@ -82,7 +82,7 @@ const getCourseByStudentId = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const courses = await CourseService.getCourseByStudentId(id);
-    res.status(courses.status).json({ courses });
+    res.status(courses.status).json({ data: courses });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
@@ -91,7 +91,7 @@ const getCourseDetails = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const courses = await CourseService.getCourseDetails(id);
-    res.status(courses.status).json({ courses });
+    res.status(courses.status).json({ data: courses });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }

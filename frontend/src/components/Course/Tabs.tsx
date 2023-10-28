@@ -9,13 +9,16 @@ import React from "react";
 import Overview from "../OverviewCourses/Tabs/Overview";
 import Reviews from "../OverviewCourses/Tabs/Reviews";
 import Modules from "./Modules";
-
-const TabsInfo = () => {
+import { ILecture } from "@/types/type";
+interface Props {
+  currentLecture: ILecture | null;
+}
+const TabsInfo = ({ currentLecture }: Props) => {
   const [activeTab, setActiveTab] = React.useState("Overview");
   const tabHeaders = ["Overview", "Reviews"];
   return (
     <div className="mt-7 w-[90%] ">
-      <h1 className="text-xl font-bold">Introduction Figma Basic to Advance</h1>
+      <h1 className="text-xl font-bold">{currentLecture?.lecture_name}</h1>
       <div className="flex space-x-4 text-xs text-gray-500">
         <p className="cursor-pointer">Vũ Thanh Sang </p>
         <span>|</span>
