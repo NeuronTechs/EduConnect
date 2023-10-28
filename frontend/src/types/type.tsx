@@ -1,17 +1,33 @@
 export interface ICourse {
-  id: string;
-  thumbnail: string;
+  course_id: string;
   title: string;
-  teacher: string;
-  avatarTeacher: string;
-  rating: number;
-  priceOfficial: string;
-  originalPrice: string;
-  numberLesson: number;
-  numberStudent: number;
-  numberSecurity: number;
+  description: string;
+  teacher_id: string;
+  price: number;
+  discount: number;
+  image: string;
+  topic_id: string;
+  total_hours: number;
+  createdAt: string;
+  updatedAt: string;
+  sessions: ISession[] | null;
 }
 
+export interface ISession {
+  session_id: string;
+  course_id: string;
+  name: string;
+  lectures: ILecture[] | null;
+}
+
+export interface ILecture {
+  lecture_id: string;
+  name: string;
+  description: string;
+  source: string;
+  session_id: string;
+  type: string;
+}
 export interface ICategory {
   id: string;
   title: string;

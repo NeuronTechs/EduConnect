@@ -12,6 +12,7 @@ import {
 import storage from "redux-persist/lib/storage";
 import authSlice from "../features/auth/authSlice";
 import cartSlice from "../features/cart/cartSlice";
+import courseSlice from "@/features/course/courseSlice";
 const persistConfig = {
   key: "root",
   version: 1,
@@ -20,10 +21,10 @@ const persistConfig = {
 };
 
 export default configureStore({
-  reducer: { auth: authSlice, cart: cartSlice },
+  reducer: { auth: authSlice, cart: cartSlice, course: courseSlice },
 });
 // auth: authReducer
-const rootReducer = combineReducers({ authSlice, cartSlice });
+const rootReducer = combineReducers({ authSlice, cartSlice, courseSlice });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
   reducer: persistedReducer,

@@ -34,11 +34,11 @@ const handlerRequest = async (
   store: Store,
   dispatch: AppDispatch
 ) => {
-  console.log(config);
   if (
     config.url?.includes("user/login") ||
     config.url?.includes("user/refresh") ||
-    config.url?.includes("user/login/success")
+    config.url?.includes("user/login/success") ||
+    config.url?.includes("user/register")
   ) {
     return config;
   }

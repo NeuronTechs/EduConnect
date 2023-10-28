@@ -22,7 +22,7 @@ export const post = async (
     headers: header,
   });
 
-  return response.data;
+  return response?.data;
 };
 
 export const put = async (
