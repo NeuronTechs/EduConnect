@@ -5,7 +5,6 @@ import {
 import { Video } from "@phosphor-icons/react";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { TabInfoLesson } from "./CreateVideo/TabInfoLesson";
 import TextEditor from "./TextEditor/TextEditor";
 
 interface IInputTitle {
@@ -59,9 +58,10 @@ const CreateLessonVideo = () => {
           <select
             id="Source_type"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="John"
           >
-            <option selected>HTML (MP4)</option>
+            <option selected value={"default"}>
+              HTML (MP4)
+            </option>
             <option value="US">youtube</option>
             <option value="CA">Vimeo</option>
             <option value="FR">Embed</option>

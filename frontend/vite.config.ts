@@ -5,6 +5,14 @@ import path from "path";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  optimizeDeps: {
+    include: ["ckeditor5/build/ckeditor"],
+  },
+  build: {
+    commonjsOptions: {
+      include: ["ckeditor5/build/ckeditor"],
+    },
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src/"),
