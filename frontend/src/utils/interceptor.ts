@@ -1,4 +1,4 @@
-import { AxiosError, InternalAxiosRequestConfig } from "axios";
+import { AxiosError } from "axios";
 import * as httpRequest from "./httpRequest";
 import jwtDecode from "jwt-decode";
 import { Store } from "@reduxjs/toolkit";
@@ -6,6 +6,20 @@ import { logoutThunk, refetchTokenStore } from "@/features/auth/authSlice";
 import { User } from "@/type";
 import { AppDispatch } from "@/redux/store";
 
+interface IAccessToken {
+  exp: number;
+  iat: number;
+  userId: string;
+  username: string;
+  role: string;
+  fullName: string;
+  createdAt: string;
+  updatedAt: string;
+  avatar: string;
+  phone: string;
+  email: string;
+  accessToken: string;
+}
 const getTimeNow = (): number => {
   const date = new Date();
   const formattedDate = date.toLocaleString("en-US", {
@@ -18,105 +32,94 @@ const getTimeNow = (): number => {
 // api call to get access token new
 const refetchToken = async () => {
   try {
-    const data = httpRequest.get("auth/refetchToken", {
+    const data = await httpRequest.get("user/refreshtoken", {
       headers: { withCredentials: true },
     });
     return data;
   } catch (error) {
-    Promise.reject(error);
+    return Promise.reject(error);
   }
-};
-
-// config error before call api method
-const handlerRequest = async (
-  config: InternalAxiosRequestConfig<unknown>,
-  isRefreshing: boolean,
-  store: Store,
-  dispatch: AppDispatch
-) => {
-  if (
-    config.url?.includes("user/login") ||
-    config.url?.includes("user/refresh") ||
-    config.url?.includes("user/login/success") ||
-    config.url?.includes("user/register")
-  ) {
-    return config;
-  }
-
-  const user: User = store.getState().authSlice?.currentUser;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const accessToken: any = jwtDecode(user?.accessToken);
-  // store.dispatch(refetchTokenStore(accessToken));
-  if (accessToken) {
-    if (accessToken?.exp < getTimeNow()) {
-      if (!isRefreshing) {
-        isRefreshing = true;
-        try {
-          const data = await refetchToken();
-          if (data) {
-            // save redux access token new request
-            const dataTemplate: User = user;
-            dataTemplate.accessToken = data.accessToken;
-            dispatch(refetchTokenStore(dataTemplate));
-            // add token header
-            config.headers.Authorization = "Bearer " + data;
-          }
-        } catch (error) {
-          console.log(error);
-        }
-        isRefreshing = false;
-        return config;
-      }
-    }
-    config.headers.Authorization = "Bearer " + accessToken;
-    return config;
-  } else {
-    console.log("request api token", accessToken);
-    if (!isRefreshing) {
-      isRefreshing = true;
-      try {
-        const data = await refetchToken();
-        if (data) {
-          // save redux access token new request
-          const dataTemplate: User = user;
-          dataTemplate.accessToken = data.accessToken;
-          store.dispatch(refetchTokenStore(dataTemplate));
-          // add token header
-          config.headers.Authorization = "Bearer " + data;
-        }
-      } catch (error) {
-        Promise.reject(error);
-      }
-      isRefreshing = false;
-    }
-  }
-
-  return config;
-};
-// config error before call api method
-const handlerResponse = (
-  error: AxiosError,
-  dispatch: AppDispatch,
-  isRefreshing: boolean
-) => {
-  const { config, status } = error;
-  const originalRequest = config;
-  // logout system
-  if (status === 401 && originalRequest?.url?.includes("auth/refresh")) {
-    if (!isRefreshing) {
-      dispatch(logoutThunk());
-    }
-  }
-  return Promise.reject(error);
 };
 
 // interceptor setup
 export const setupInterceptor = (store: Store, dispatch: AppDispatch): void => {
-  const isRefreshing: boolean = false;
-
+  let isRefreshing: boolean = false;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let refreshPromise: Promise<any> | null = null;
   //           isRefreshing = true;
+  refreshPromise = null;
+  isRefreshing = false;
+
+  // handle request call aceess token
   httpRequest.default.interceptors.request.use(
-    (config) => handlerRequest(config, isRefreshing, store, dispatch),
+    async (config) => {
+      if (config.url?.includes("user/refreshtoken")) {
+        return config;
+      }
+
+      if (config.url?.includes("user/logout")) {
+        return config;
+      }
+
+      if (config.url?.includes("user/register")) {
+        return config;
+      }
+      const user: User = store.getState().authSlice?.currentUser;
+
+      // store.dispatch(refetchTokenStore(accessToken));
+      if (user?.accessToken) {
+        const accessToken: IAccessToken = jwtDecode(user?.accessToken);
+        if (accessToken?.exp < getTimeNow()) {
+          if (!isRefreshing) {
+            isRefreshing = true;
+            try {
+              if (!refreshPromise) {
+                refreshPromise = refetchToken();
+              }
+              const data = await refreshPromise;
+              if (data) {
+                const dataTemplate: User = {
+                  ...user,
+                  accessToken: data.accessToken,
+                };
+                dispatch(refetchTokenStore(dataTemplate));
+                config.headers.Authorization = "Bearer " + data;
+              }
+            } catch (error) {
+              console.log(error);
+            }
+            isRefreshing = false;
+            refreshPromise = null;
+            return config;
+          }
+        }
+        config.headers.Authorization = "Bearer " + accessToken;
+      } else {
+        if (!isRefreshing) {
+          isRefreshing = true;
+          try {
+            if (!refreshPromise) {
+              refreshPromise = refetchToken();
+            }
+            const data = await refreshPromise;
+            if (data) {
+              const dataTemplate: User = {
+                ...user,
+                accessToken: data.accessToken,
+              };
+              store.dispatch(refetchTokenStore(dataTemplate));
+              config.headers.Authorization = "Bearer " + data;
+            }
+          } catch (error) {
+            Promise.reject(error);
+          }
+          isRefreshing = false;
+          refreshPromise = null;
+        }
+      }
+
+      return config;
+    },
     (error: AxiosError): Promise<AxiosError> => {
       return Promise.reject(error);
     }
@@ -124,7 +127,20 @@ export const setupInterceptor = (store: Store, dispatch: AppDispatch): void => {
   httpRequest.default.interceptors.response.use(
     (response) => response,
     async (error: AxiosError) => {
-      handlerResponse(error, dispatch, isRefreshing);
+      const { config, status } = error;
+      const originalRequest = config;
+      // logout system
+      if (
+        status === 401 &&
+        originalRequest?.url?.includes("user/refreshtoken")
+      ) {
+        if (!isRefreshing) {
+          isRefreshing = true;
+          dispatch(logoutThunk());
+        }
+        isRefreshing = false;
+      }
+      return Promise.reject(error);
     }
   );
 };

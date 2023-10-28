@@ -150,3 +150,16 @@ export interface IStudent {
   createdAt: Date;
   updateAt: Date;
 }
+
+export interface ISectionInfo {
+  id: string;
+  title: string;
+  lessons: ILessonInfo[];
+}
+export interface ILessonInfo {
+  id: string;
+  title: string;
+  type?: string;
+  idSection: string;
+  draff?: boolean;
+}

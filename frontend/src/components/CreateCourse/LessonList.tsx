@@ -11,33 +11,36 @@ import {
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+// logic main
 import { insertArrayElements } from "@/utils/utils";
+import { ILessonInfo, ISectionInfo } from "@/types/type";
+import {
+  CreateCourseContext,
+  ICreateCourseContext,
+} from "@/context/CreateCourseContext";
 
-interface ILesson {
-  id: number;
-  title: string;
-  type?: string;
+interface ILessonList {
+  data: ISectionInfo;
 }
-
-const lessons: ILesson[] = [
-  { id: 1, title: "Lesson 1", type: "video" },
-  { id: 2, title: "Lesson 2", type: "quiz" },
-  { id: 3, title: "Lesson 3", type: "document" },
-];
-const LessonList = () => {
-  const [lessonList, setLessonList] = React.useState<ILesson[]>(lessons);
+const LessonList = (props: ILessonList): React.ReactElement => {
+  const { handleEditSection } = React.useContext(
+    CreateCourseContext
+  ) as ICreateCourseContext;
   const handlerDragEnd = ({ active, over }: DragEndEvent) => {
+    const dataList = props.data.lessons;
     if (over) {
-      const overIndex = lessonList.findIndex(
-        (lesson: ILesson) => lesson.id === parseInt(over.id?.toString(), 10)
+      const overIndex = dataList.findIndex(
+        (lesson: ILessonInfo) => lesson.id === over.id?.toString()
       );
-      const activeIndex = lessonList.findIndex(
-        (lesson: ILesson) => lesson.id === parseInt(active.id?.toString(), 10)
+      const activeIndex = dataList.findIndex(
+        (lesson: ILessonInfo) => lesson.id === active.id?.toString()
       );
 
       // insertArrayElements<T>(arr: T[], dragIndex: number, hoverIndex: number): T[]
-      const newList = insertArrayElements(lessonList, activeIndex, overIndex);
-      setLessonList(newList);
+      const newList = insertArrayElements(dataList, activeIndex, overIndex);
+      const sectionNew = { ...props.data, lessons: newList };
+      handleEditSection(props.data.id, sectionNew);
+      // setDataSection(newSectionList);
     }
     //
   };
@@ -45,8 +48,8 @@ const LessonList = () => {
   return (
     <div className="flex flex-col items-center justify-start py-2 w-full overflow-hidden">
       <DndContext onDragEnd={handlerDragEnd}>
-        <SortableContext items={lessonList}>
-          {lessonList.map((item) => (
+        <SortableContext items={props.data.lessons}>
+          {props.data.lessons.map((item) => (
             <LessonItem key={item.id} data={item} type={item.type} />
           ))}
         </SortableContext>
@@ -57,19 +60,22 @@ const LessonList = () => {
 
 export default LessonList;
 
-interface ILessonItem {
-  data: ILesson;
+interface ILessonInfoItem {
+  data: ILessonInfo;
   content?: string;
   type?: string;
 }
-const LessonItem = (props: ILessonItem) => {
+const LessonItem = (props: ILessonInfoItem) => {
+  const { handleDeleteLesson, selectLesson, handlerSelectLesson } =
+    React.useContext(CreateCourseContext) as ICreateCourseContext;
+
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: props.data.id });
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
   };
-  const active = false;
+  const active = selectLesson?.id === props.data.id;
 
   return (
     <div
@@ -77,8 +83,9 @@ const LessonItem = (props: ILessonItem) => {
       style={style}
       {...attributes}
       className={`w-full flex justify-between items-center p-2 gap-2 hover:bg-gray-100 ${
-        active ? "border border-blue-400" : "border- border-transparent"
+        active ? "border border-blue-400" : "border border-transparent"
       } rounded-md`}
+      onClick={() => handlerSelectLesson(props.data)}
     >
       <div className="w-full flex gap-2 overflow-hidden items-center">
         <div className="flex items-center justify-center gap-1">
@@ -108,7 +115,12 @@ const LessonItem = (props: ILessonItem) => {
         <div className="bg-blue-gray-50 p-1 rounded-full text-gray-700 cursor-pointer">
           <CaretCircleDown size={15} />
         </div>
-        <div className="bg-blue-gray-50 p-1 rounded-full text-gray-700 cursor-pointer">
+        <div
+          className="bg-blue-gray-50 p-1 rounded-full text-gray-700 cursor-pointer"
+          onClick={() =>
+            handleDeleteLesson(props.data.idSection, props.data.id)
+          }
+        >
           <Trash size={15} />
         </div>
       </div>
