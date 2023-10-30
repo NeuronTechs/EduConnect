@@ -19,10 +19,6 @@ export default function TextEditor() {
         data={editorData}
         onChange={handleEditorChange}
       />
-      <div
-        className="mt-10"
-        dangerouslySetInnerHTML={{ __html: editorData }}
-      ></div>
     </div>
   );
 }
