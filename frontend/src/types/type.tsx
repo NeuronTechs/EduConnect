@@ -21,7 +21,17 @@ export interface ICourse {
   updatedAt: string;
   sessions: ISession[] | null;
 }
-
+export interface IComment {
+  comment_id: string;
+  content: string;
+  student_id: string;
+  lecture_id: string;
+  createdAt: string;
+  resource: string | null;
+  timestamp: string;
+  username: string;
+  avatar: string;
+}
 export interface ISession {
   session_id: string;
   course_id: string;
@@ -36,6 +46,7 @@ export interface ILecture {
   source: string;
   session_id: string;
   type: string;
+  comments: IComment[] | null;
 }
 export interface ICategory {
   id: string;

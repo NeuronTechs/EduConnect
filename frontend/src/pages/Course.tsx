@@ -1,7 +1,7 @@
 import TabsInfo from "@/components/Course/Tabs";
 import Modules from "@/components/Course/Modules";
 import Video from "@/components/Course/Video";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getCourseDetails } from "@/features/course/courseSlice";
@@ -11,17 +11,24 @@ const Course = () => {
   const { id } = useParams();
   const dispatch = useDispatch<AppDispatch>();
   const currentCourse = useSelector((state: SliceState) => state.courseSlice);
-  console.log(currentCourse);
+  const [currentTime, setCurrentTime] = useState(0);
 
   useEffect(() => {
     if (id !== undefined) dispatch(getCourseDetails(id));
   }, [dispatch, id]);
   return (
-    <div className="flex flex-col w-full  py-2 gap-5 ">
+    <div className="flex flex-col w-full  gap-5 ml-2">
       <div className=" grid grid-cols-4 space-x-2 ">
         <div className="col-span-4 lg:col-span-3 h-auto lg:h-screen lg:overflow-y-auto scrollbar-hide">
-          <Video currentLecture={currentCourse.currentLecture} />
-          <TabsInfo currentLecture={currentCourse.currentLecture} />
+          <Video
+            currentLecture={currentCourse.currentLecture}
+            currentTime={currentTime}
+            setCurrentTime={setCurrentTime}
+          />
+          <TabsInfo
+            currentLecture={currentCourse.currentLecture}
+            setCurrentTime={setCurrentTime}
+          />
         </div>
         <Modules currentCourse={currentCourse.currentCourse} />
       </div>

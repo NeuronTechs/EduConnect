@@ -17,10 +17,11 @@ import {
 import { ILecture } from "@/types/type";
 interface Props {
   currentLecture: ILecture | null;
+  currentTime: number;
+  setCurrentTime: React.Dispatch<React.SetStateAction<number>>;
 }
-const Video = ({ currentLecture }: Props) => {
+const Video = ({ currentLecture, currentTime, setCurrentTime }: Props) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
   const speedRate = [];
   for (let index = 0.5; index <= 2; index = index + 0.25) {
@@ -49,10 +50,10 @@ const Video = ({ currentLecture }: Props) => {
   }, [currentLecture]);
 
   return (
-    <div className=" h-[75vh] pt-0 relative shadow-xl ">
+    <div className=" h-[75vh] pt-2 relative shadow-xl ">
       <video
         src={currentLecture?.source}
-        className=" w-full aspect-video rounded-lg "
+        className=" w-full aspect-video rounded-lg bg-gray-900"
         ref={videoRef}
         onClick={handlePlay}
         onTimeUpdate={() => {

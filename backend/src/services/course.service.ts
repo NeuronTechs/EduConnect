@@ -157,7 +157,7 @@ const getCourseDetails = async (
   course_id: string
 ): Promise<dataResponse<ICourseDetail>> => {
   // Define the SQL query to retrieve course details
-  const sql = `SELECT c.course_id ,c.title as course_name,c.description as course_description,s.session_id, s.name AS session_name, l.lecture_id, l.name AS lecture_name, l.description, l.source, l.type
+  const sql = `SELECT c.course_id ,c.title as course_name,c.description as course_description,s.session_id, s.name AS session_name, l.lecture_id, l.name AS lecture_name, l.description, l.source, l.type, l.duration
   FROM Session s
   JOIN Lecture l ON s.session_id = l.session_id
   JOIN Course c ON s.course_id = c.course_id

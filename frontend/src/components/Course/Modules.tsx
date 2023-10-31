@@ -62,7 +62,7 @@ const LectureCard = (props: ILecture) => {
   return (
     <>
       <div
-        className="flex flex-col items-start justify-center text-[15px] cursor-pointer py-2 "
+        className="flex flex-col items-start justify-center text-[12px] cursor-pointer py-2 px-2 font-bold text-sm hover:bg-gray-100 rounded-md"
         onClick={handleSelect}
       >
         <div className="flex">
@@ -76,7 +76,7 @@ const LectureCard = (props: ILecture) => {
 
           <Menu>
             <MenuHandler>
-              <div className="w-27 h-6 border-[0.5px] border-black flex justify-between items-center ml-15 text-black p-1">
+              <div className="w-27 h-6 border-[0.5px] border-black hidden justify-between items-center ml-15 text-black p-1">
                 <Folder size={16} /> <p className="text-sm">Resource</p>{" "}
                 <ArrowDown size={16} />
               </div>
@@ -88,6 +88,7 @@ const LectureCard = (props: ILecture) => {
             </MenuList>
           </Menu>
         </div>
+        <div className="w-10/12 mt-4 h-[1px] bg-gray-300"></div>
       </div>
     </>
   );
@@ -98,10 +99,10 @@ const Session = (props: LectureProps) => {
 
   const handleOpen = () => setOpen(!open);
   return (
-    <div className="mb-1  p-2 rounded-sm">
+    <div className="  rounded-sm ">
       <Accordion open={open === true} icon={<Icon open={open} />}>
         <AccordionHeader onClick={() => handleOpen()}>
-          <div className="flex flex-col items-start opacity-100 gap-2">
+          <div className="flex flex-col items-start opacity-100 gap-2 w-full">
             <div className="text-[14px] text-black font-bold">
               {props.title}
             </div>
@@ -130,10 +131,8 @@ const Session = (props: LectureProps) => {
 };
 
 const Modules = ({ currentCourse }: Props) => {
-  console.log(currentCourse);
-
   return (
-    <div className=" col-span-4 lg:col-span-1 pl-2 h-auto lg:h-screen lg:overflow-y-auto ">
+    <div className=" col-span-4 lg:col-span-1  p-4  mt-2  shadow-xl  border-l-2 border-gray-350 lg:h-[95vh] bg-white  lg:overflow-y-auto ">
       <h1 className="text-xl font-bold">Nội dung khóa học</h1>
       <p className="text-xs text-gray-500">Lecture (15) / Total (5,5 hrs)</p>
       <div className="mt-5">
