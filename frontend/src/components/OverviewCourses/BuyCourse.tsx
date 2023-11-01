@@ -52,9 +52,9 @@ const BuyCourse = () => {
       </div>
       {/* Thông tin khóa học */}
       <div className="p-[10px]">
-        <h1 className="border-b border-b-solid border-b-orange-200 font-semibold p-[20px_0px]">
+        <h2 className="border-b border-b-solid border-b-orange-200 font-semibold p-[20px_0px]">
           Thông tin khóa học
-        </h1>
+        </h2>
         <ul>
           <li className="flex items-center justify-between border-b border-b-solid border-b-gray-400 p-[5px] ">
             <div className="flex items-center justify-between my-3">
@@ -131,9 +131,9 @@ const BuyCourse = () => {
       </div>
       {/* Khóa học đề xuất */}
       <div className="p-[10px]">
-        <h1 className="border-b border-b-solid border-b-orange-200 font-semibold pb-1">
+        <h2 className="border-b border-b-solid border-b-orange-200 font-semibold pb-1">
           Khóa học đề xuất
-        </h1>
+        </h2>
       </div>
     </div>
   );

@@ -5,13 +5,14 @@ import { useLocation } from "react-router-dom";
 
 type commentProps = {
   content: string;
+  title: String;
 };
 const Comment = (props: commentProps) => {
   const location = useLocation();
   const hiddenRating = location.pathname.match("learn") !== null ? true : false;
   return (
-    <div className="flex flex-col items-start gap-4 my-5">
-      <div className="flex items-start px-10 w-full my-3 space-x-10">
+    <div className="w-full flex flex-col items-start gap-4 my-3">
+      <div className="flex items-start px-3 w-full my-3 space-x-10">
         <div className=" flex justify-center items-center">
           <Avatar
             loading="lazy"
@@ -22,7 +23,7 @@ const Comment = (props: commentProps) => {
         </div>
         <div className=" text-xs flex flex-col gap-2">
           <div className="flex items-center">
-            <h1 className="font-semibold mr-3">Josn siion</h1>
+            <h3 className="font-semibold mr-3">Josn siion</h3>
             <p className="opacity-80">3 ngày trước</p>
           </div>
           <div className="flex items-center space-x-4">
@@ -32,9 +33,11 @@ const Comment = (props: commentProps) => {
                 unratedColor="amber"
                 ratedColor="amber"
                 readonly
+                className=""
               />
             )}
           </div>
+          <p className="font-semibold text-[16px]">{props.title}</p>
           <p className="text-sm">{props.content}</p>
           <div className="font-semibold opacity-80 mt-2">
             <p>Nhận xét này có hữu ích không</p>
@@ -47,13 +50,12 @@ const Comment = (props: commentProps) => {
                 className="rounded-full cursor-pointer border-[2px] border-black text-black p-1"
                 size={32}
               />
-              <p className="underline cursor-pointer">Báo cáo</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="w-10/12  h-[1px] bg-gray-300"></div>
+      <div className="w-full h-[1px] bg-gray-300"></div>
     </div>
   );
 };
@@ -61,7 +63,8 @@ const Comment = (props: commentProps) => {
 const Reviews = () => {
   const [rated, setRated] = useState<number>(0);
   return (
-    <div className="w-[95%] h-full">
+    <div className="w-full h-full">
+      {/* rating */}
       <div className="my-3">
         <h1 className="font-semibold text-xl">Phản hồi của học sinh</h1>
         <div className="my-3 flex space-x-8">
@@ -159,28 +162,29 @@ const Reviews = () => {
           </div>
         </div>
       </div>
-      <div className="my-10 w-full">
-        <h1 className="font-semibold text-xl mb-10">Đánh giá</h1>
-        <Comment content="Khóa Học hay vl" />
-        <Comment content="Khóa Học hay vl 2" />
-        <Comment content="Khóa Học hay vl 3" />
-        <div className="flex items-center justify-center border">
-          <button className="italic text-blue-500 w-[170px] border border-b-blue-300">
+      {/* list comment */}
+      <div className="my-3 w-full">
+        <h1 className="font-semibold text-xl mb-3">Đánh giá</h1>
+        <Comment content="Comment 1" title="Comment 1" />
+        <Comment content="Comment 2" title="Comment 2" />
+        <Comment content="Comment 3" title="Comment 3" />
+        <div className="flex items-center justify-center">
+          <button className="italic text-blue-500 w-[170px]">
             Xem tất cả nhận xét
           </button>
         </div>
       </div>
-
-      <div className="my-10">
-        <h1 className="font-semibold">Viết đánh giá</h1>
-        <div className="px-3 flex flex-col gap-5">
-          <div className="my-3">
+      {/* comment */}
+      <div className="my-3">
+        <h1 className="font-semibold text-xl">Viết đánh giá</h1>
+        <div className="px-3 my-3 flex flex-col gap-5">
+          <div className="my-1">
             <p className="font-semibold text-[14px]">
               Bạn thấy khóa học này như thế nào?
             </p>
             <div className="flex items-center gap-2">
               <Rating
-                value={4}
+                value={0}
                 onChange={(value) => setRated(value)}
                 unratedColor="amber"
                 ratedColor="amber"
@@ -190,7 +194,7 @@ const Reviews = () => {
               </Typography>
             </div>
           </div>
-          <div className="my-3">
+          <div className="mb-1">
             <p className="font-semibold text-[14px]">Tiêu đề</p>
             <input
               type="text"
@@ -198,16 +202,15 @@ const Reviews = () => {
               className="w-full p-3 outline-none rounded-lg border border-blue-200 hover:border-blue-400"
             />
           </div>
-          <div className="my-3">
+          <div className="mb-1">
             <p className="font-semibold text-[14px]">Nội dung</p>
-            <input
-              type="text"
+            <textarea
               placeholder="Nhập nội dung đánh giá"
-              className="w-full p-3 outline-none rounded-lg border border-blue-200 hover:border-blue-400"
+              className="w-full min-h-[50px] max-h-[150px] p-3 outline-none rounded-lg border border-blue-200 hover:border-blue-400"
             />
           </div>
           <div>
-            <button className="border text-white w-[70%] py-2 rounded-lg bg-blue-300 my-3">
+            <button className="border text-white px-3 py-2 rounded-lg bg-blue-400">
               Gửi đánh giá
             </button>
           </div>
