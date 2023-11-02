@@ -10,8 +10,6 @@ import { ResultSetHeader } from "mysql2";
 
 const create = async (data: ISession): Promise<dataResponse<ISession>> => {
   data.session_id = generateRandomString();
-  data.createdAt = new Date();
-  data.updatedAt = new Date();
   const sql = `INSERT INTO session SET ?`;
   return new Promise<dataResponse<ISession>>((resolve, rejects) => {
     db.connectionDB.query(sql, data, (err, result) => {

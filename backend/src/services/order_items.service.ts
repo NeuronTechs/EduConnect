@@ -116,6 +116,22 @@ const getByOrderItemId = async (
   });
 };
 
+const getCourseMostBuy = async (): Promise<dataListResponse<IOderItem>> => {
+  const sql = `SELECT c.*, COUNT(o.course_id) AS count
+  FROM order_items o
+  JOIN course c ON c.course_id = o.course_id
+  GROUP BY c.course_id
+  ORDER BY count DESC`;
+  return new Promise<dataListResponse<IOderItem>>((resolve, reject) => {
+    db.connectionDB.query(sql, (err, result) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve({ status: 200, data: result as IOderItem[], message: "Success" });
+    });
+  });
+};
 export default {
   create,
   updateById,
@@ -123,4 +139,5 @@ export default {
   getByStudentId,
   getByCourseId,
   getByOrderItemId,
+  getCourseMostBuy,
 };

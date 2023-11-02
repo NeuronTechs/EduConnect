@@ -10,4 +10,8 @@ router.route("/:id").delete(courseController.deleteById);
 router
   .route("/courses-by-teacher/:id")
   .get(courseController.getCourseByTeacherId);
+router
+  .route("/courses-by-student/:id")
+  .get(courseController.getCourseByStudentId);
+router.route("/course-details/:id").get(courseController.getCourseDetails);
 module.exports = router;

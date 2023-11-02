@@ -1,3 +1,5 @@
+import { ISession } from "./session";
+
 export interface ICourse {
   course_id: string;
   title: string;
@@ -10,4 +12,11 @@ export interface ICourse {
   total_hours: number;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface ICourseDetail {
+  course_id: string;
+  title: string;
+  description: string;
+  sessions: ISession[];
 }

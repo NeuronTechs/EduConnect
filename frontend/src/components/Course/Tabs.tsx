@@ -7,15 +7,18 @@ import {
 } from "@material-tailwind/react";
 import React from "react";
 import Overview from "../OverviewCourses/Tabs/Overview";
-import Reviews from "../OverviewCourses/Tabs/Reviews";
-import Modules from "./Modules";
-
-const TabsInfo = () => {
+import { ILecture } from "@/types/type";
+import Comments from "./Comments";
+interface Props {
+  currentLecture: ILecture | null;
+  setCurrentTime: React.Dispatch<React.SetStateAction<number>>;
+}
+const TabsInfo = ({ currentLecture, setCurrentTime }: Props) => {
   const [activeTab, setActiveTab] = React.useState("Overview");
   const tabHeaders = ["Overview", "Reviews"];
   return (
-    <div className="mt-7 w-[90%] ">
-      <h1 className="text-xl font-bold">Introduction Figma Basic to Advance</h1>
+    <div className="w-[100%] bg-white p-3 pt-5 rounded-lg shadow-xl">
+      <h1 className="text-xl font-bold">{currentLecture?.lecture_name}</h1>
       <div className="flex space-x-4 text-xs text-gray-500">
         <p className="cursor-pointer">Vũ Thanh Sang </p>
         <span>|</span>
@@ -55,7 +58,7 @@ const TabsInfo = () => {
             </TabPanel>
 
             <TabPanel key={"Reviews"} value={"Reviews"}>
-              <Reviews />
+              <Comments setCurrentTime={setCurrentTime} />
             </TabPanel>
           </TabsBody>
         </Tabs>

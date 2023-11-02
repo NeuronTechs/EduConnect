@@ -90,7 +90,7 @@ export const authSlice = createSlice({
       state.error = "";
     });
     // test login
-    builder.addCase(test.pending, (state) => {
+    builder.addCase(signup.pending, (state) => {
       state.loading = true;
     });
 
