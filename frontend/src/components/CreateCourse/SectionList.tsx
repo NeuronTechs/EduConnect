@@ -83,7 +83,7 @@ const ItemSection = (props: {
 }): React.ReactElement => {
   const [isHovered, setIsHovered] = React.useState(false);
   const [isEditing, setIsEditing] = React.useState(false);
-  const [open, setOpen] = React.useState<boolean>(false);
+  const [open, setOpen] = React.useState<boolean>(true);
 
   const { handleDeleteSection } = React.useContext(
     CreateCourseContext
