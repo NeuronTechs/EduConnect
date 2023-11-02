@@ -5,6 +5,7 @@ import { Avatar } from "@material-tailwind/react";
 import { ThumbsDown, ThumbsUp } from "@phosphor-icons/react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import WYSIWYGEditor from "./WYSIWYGEditor";
 interface commentProps {
   comment: IComment;
   setCurrentTime: React.Dispatch<React.SetStateAction<number>>;
@@ -28,7 +29,7 @@ const Comment = ({ comment, setCurrentTime }: commentProps) => {
         </div>
         <div className=" text-sm flex flex-col gap-2">
           <div className="flex items-center gap-2">
-            <h1 className="font-semibold mr-3">{comment.username}</h1>
+            <h1 className="font-semibold mr-3 text-sm">{comment.username}</h1>
             <p className="opacity-80">3 ngày trước</p>
           </div>
           <div className="flex space-x-5">
@@ -86,25 +87,7 @@ const Comments = ({ setCurrentTime }: Props) => {
         <h1 className="font-semibold text-xl">Phản hồi của học sinh</h1>
       </div>
       <div className="my-10 w-full">
-        <div className="my-10">
-          <h1 className="font-semibold">Viết đánh giá</h1>
-          <div className="px-3 flex flex-col gap-5">
-            <div className="my-3">
-              <p className="font-semibold text-[14px]">Tiêu đề</p>
-              <input
-                type="text"
-                placeholder="Nhập tiêu đề"
-                className="w-full p-3 outline-none rounded-lg border border-blue-200 hover:border-blue-400"
-              />
-            </div>
-
-            <div>
-              <button className="border text-white w-[70%] py-2 rounded-lg bg-blue-300 my-3">
-                Gửi đánh giá
-              </button>
-            </div>
-          </div>
-        </div>
+        <WYSIWYGEditor />
         {/* <h1 className="font-semibold text-xl mb-10">Đánh giá</h1> */}
         {currentCourse?.comments?.map((comment) => {
           return <Comment comment={comment} setCurrentTime={setCurrentTime} />;

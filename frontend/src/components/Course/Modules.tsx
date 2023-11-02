@@ -132,7 +132,7 @@ const Session = (props: LectureProps) => {
 
 const Modules = ({ currentCourse }: Props) => {
   return (
-    <div className=" col-span-4 lg:col-span-1  p-4  mt-2  shadow-xl  border-l-2 border-gray-350 lg:h-[95vh] bg-white  lg:overflow-y-auto ">
+    <div className=" col-span-4 lg:col-span-1  p-4  mt-2  shadow-xl  border-l-2 border-gray-350 lg:h-[90vh] bg-white  lg:overflow-y-auto ">
       <h1 className="text-xl font-bold">Nội dung khóa học</h1>
       <p className="text-xs text-gray-500">Lecture (15) / Total (5,5 hrs)</p>
       <div className="mt-5">
