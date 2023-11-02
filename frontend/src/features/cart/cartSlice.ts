@@ -1,13 +1,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import * as cartApi from "../../api/cartApi/cartApi";
 
 export interface Cart {
-  id_course?: string | undefined;
-  image: string | undefined;
-  name: string | undefined;
-  teacher: string | undefined;
-  star?: number | undefined;
+  cart_id?: string | undefined;
+  course_id?: string | undefined;
+  teacher_id?: string | undefined;
+  username?: string | undefined;
+  full_name: string | undefined;
   discount?: number | undefined;
   price: number | undefined;
+  title: string | undefined;
+  image: string | undefined;
 }
 
 export interface CartState {
@@ -21,6 +24,11 @@ const initialState: CartState = {
   loading: false,
   error: false,
 };
+
+export const getCarts = createAsyncThunk<Cart>("/cart/getcart", async () => {
+  const res = await cartApi.getCarts("00657");
+  return res;
+});
 
 export const addToCart = createAsyncThunk<Cart, Cart>(
   "course/123",
@@ -47,6 +55,20 @@ export const cartSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(getCarts.pending, (state) => {
+      state.loading = true;
+    });
+
+    builder.addCase(getCarts.rejected, (state) => {
+      state.loading = false;
+      state.error = true;
+    });
+
+    builder.addCase(getCarts.fulfilled, (state, action) => {
+      state.loading = false;
+      state.cartCurrent = [...[], action.payload];
+    });
+
     builder.addCase(addToCart.pending, (state) => {
       state.loading = true;
     });
@@ -73,7 +95,7 @@ export const cartSlice = createSlice({
     builder.addCase(removeToCart.fulfilled, (state, action) => {
       state.loading = false;
       state.cartCurrent = (state.cartCurrent || [])?.filter(
-        (data) => data?.id_course !== action.payload?.id_course
+        (data) => data?.course_id !== action.payload?.course_id
       );
     });
   },

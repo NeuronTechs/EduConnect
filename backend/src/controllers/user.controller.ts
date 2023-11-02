@@ -76,7 +76,7 @@ const register = async (req: Request, res: Response) => {
           result?.data?.role
         );
         refreshTokens.push(refreshToken);
-        res.setHeader("token", "Bearer " + accessToken);
+        res.setHeader("authorization", "Bearer " + accessToken);
         res.cookie("refreshToken", refreshToken, {
           httpOnly: true,
           secure: false,
@@ -132,7 +132,8 @@ const login = async (req: Request, res: Response) => {
               result[0]?.role
             );
             refreshTokens.push(refreshToken);
-            res.setHeader("token", "Bearer " + accessToken);
+            res.setHeader("authorization", "Bearer " + accessToken);
+            console.log("header: " + req.headers?.authorization);
             res.cookie("refreshToken", refreshToken, {
               httpOnly: true,
               secure: false,
@@ -195,7 +196,11 @@ const login = async (req: Request, res: Response) => {
 const refreshToken = async (req: Request, res: Response) => {
   const cookiesHeader = req.headers.cookie;
   if (cookiesHeader) {
-    const refreshToken = cookiesHeader.replace("refreshToken=", "");
+    const index = cookiesHeader.indexOf(";");
+    // const refreshToken = cookiesHeader.substring(0, index);
+    const refreshToken = cookiesHeader
+      .substring(0, index)
+      .replace("refreshToken=", "");
     if (!refreshTokens.includes(refreshToken)) {
       return res.status(403).json("refresh token is not valid");
     } else {

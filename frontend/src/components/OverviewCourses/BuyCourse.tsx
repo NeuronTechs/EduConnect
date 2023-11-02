@@ -26,7 +26,7 @@ const BuyCourse = () => {
   };
   const handleAddToCart = async () => {
     let dataCart: Cart = {
-      id_course: generateRandomString(),
+      course_id: generateRandomString(),
       image:
         "https://th.bing.com/th/id/R.e316c0a46aa94116a17139f8db3fd410?rik=OtEUmMjrNaGQSg&pid=ImgRaw&r=0",
       name: "Reactjs cơ bản cho người mới bắt đầu",
