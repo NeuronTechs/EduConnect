@@ -60,7 +60,30 @@ const data = [
   },
 ];
 
-const QuizCompleted = (back: any) => {
+const QuizList = () => {
+  const array = [];
+  for (let index = 0; index < 50; index++) {
+    array.push(index);
+  }
+  return (
+    <div className="w-[35vw] left-50 top-0  absolute  bg-white p-2 border rounded-xl border-gray-400 mx-auto">
+      <p className="font-bold my-5">Tất cả câu hỏi</p>
+      <div
+        className={"grid pl-8 py-5 gap-4 grid-cols-5 h-[45vh] overflow-auto"}
+      >
+        {array.map((item) => {
+          return (
+            <div className="bg-gray-400/60 shadow-lg w-12 h-12 flex justify-center cursor-pointer text-sm font-bold items-center hover:bg-blue-500/90 hover:text-white  rounded-full">
+              {item}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+const QuizCompleted = () => {
   return (
     <div className="text-center flex bg-[#151c3b] w-full items-center justify-center flex-col gap-1 h-[500px]">
       <h1 className=" text-white">Quiz Scorecard</h1>
@@ -84,10 +107,7 @@ const QuizCompleted = (back: any) => {
       <button className="w-[55%] bg-[#6300df] rounded-sm text-white text-sm p-1 mt-10">
         Xác nhận
       </button>
-      <button
-        onClick={back}
-        className="w-[55%] bg-[#151c39] rounded-sm text-white text-sm border-[2px] border-gray-100 p-1 mt-10"
-      >
+      <button className="w-[55%] bg-[#151c39] rounded-sm text-white text-sm border-[2px] border-gray-100 p-1 mt-10">
         Xem lại bài làm
       </button>
     </div>
@@ -141,19 +161,27 @@ const Quiz = ({ setIsFullQuiz }: QuizProps) => {
 
   const [currentQuestion, setCurrentQuestion] = React.useState(data[0]);
   const [QuizComplete, setQuizComplete] = React.useState(false);
-
-  const back = () => {
-    setCurrentQuestion(data[0]);
-    setQuizComplete(false);
-  };
+  const [openQuizList, setOpenQuizList] = React.useState(false);
   return (
     <div className="bg-gray-500 flex justify-center py-5">
       {!QuizComplete && (
         <div className="h-11/12 w-11/12 bg-white p-5 ">
           <div className="flex justify-between ">
-            <div className="flex h-10 items-center gap-2 text-sm rounded-lg bg-gray-50 p-3 border-2 border-gray-300">
-              <Info size={20} />
-              Question No.5 of 10
+            <div className="flex cursor-pointer h-10 relative items-center gap-2 text-sm rounded-lg bg-gray-50 p-3 border-2 border-gray-300">
+              <Info
+                onClick={() => {
+                  setOpenQuizList(!openQuizList);
+                }}
+                size={20}
+              />
+              <p
+                onClick={() => {
+                  setOpenQuizList(!openQuizList);
+                }}
+              >
+                Question No.5 of 10
+              </p>
+              {openQuizList && <QuizList />}
             </div>
             <div className="flex">
               <div className=" h-10  flex text-center font-bold text-sm  border-gray-300">
@@ -210,6 +238,7 @@ const Quiz = ({ setIsFullQuiz }: QuizProps) => {
                   );
                 })}
           </div>
+
           <div className="flex justify-between">
             <p
               className="p-4 text-sm cursor-pointer text-gray-600"
@@ -233,7 +262,7 @@ const Quiz = ({ setIsFullQuiz }: QuizProps) => {
           </div>
         </div>
       )}
-      {QuizComplete && <QuizCompleted back={back} />}
+      {QuizComplete && <QuizCompleted />}
     </div>
   );
 };

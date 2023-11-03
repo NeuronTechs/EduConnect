@@ -1,6 +1,7 @@
 import express from "express";
 const router = express.Router();
 import courseController from "../controllers/course.controller";
+import middlewareController from "../middlewares/middlewareController";
 
 router.route("/create").post(courseController.create);
 router.route("/").get(courseController.getAll);
@@ -13,5 +14,7 @@ router
 router
   .route("/courses-by-student/:id")
   .get(courseController.getCourseByStudentId);
-router.route("/course-details/:id").get(courseController.getCourseDetails);
+router
+  .route("/course-details/:id")
+  .get(middlewareController.verifyToken, courseController.getCourseDetails);
 module.exports = router;
