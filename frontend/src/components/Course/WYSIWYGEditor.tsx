@@ -14,8 +14,8 @@ const WYSIWYGEditor = () => {
   return (
     <div>
       <form>
-        <div className="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
-          <div className="flex items-center justify-between px-3 py-2 border-b dark:border-gray-600">
+        <div className="w-full mb-4 border-2 border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+          <div className="flex items-center justify-between px-3 py-2 border-b-2 dark:border-gray-600">
             <div className="flex flex-wrap items-center divide-gray-200 sm:divide-x dark:divide-gray-600">
               <div className="flex items-center space-x-1 sm:pr-4">
                 <button
@@ -211,12 +211,25 @@ const WYSIWYGEditor = () => {
               Publish post
             </label>
             <div onClick={(e) => e.stopPropagation()}>
-              <div className="flex">
+              <div className="grid grid-cols-3">
                 {files.map((data) => {
                   return (
-                    <div className="m-2 text-gray-800 w-[200px]  rounded-lg bg-gray-300">
+                    <div className="m-2 text-gray-800 w-[200px] flex flex-col items-center rounded-lg bg-gray-300 relative">
+                      <div
+                        onClick={() => {
+                          //remove file from files
+                          setFiles((prevFiles) => {
+                            return prevFiles.filter(
+                              (file) => file.name !== data.name
+                            );
+                          });
+                        }}
+                        className="absolute top-1 right-1 bg-red-500 text-white w-4 h-4 flex justify-center items-center rounded-full text-[8px]  font-bold cursor-pointer"
+                      >
+                        X
+                      </div>
                       <img
-                        style={{ height: "150px", width: "200px" }}
+                        style={{ height: "100px", width: "100px" }}
                         src={URL.createObjectURL(data)}
                         alt=" "
                       ></img>
@@ -236,11 +249,7 @@ const WYSIWYGEditor = () => {
                 defaultValue={""}
               ></textarea>
             </div>
-            {isDragActive ? (
-              <p>Drop the files here ...</p>
-            ) : (
-              <p>Drag 'n' drop some files here, or click to select files</p>
-            )}
+            {isDragActive ? <p></p> : <p></p>}
           </div>
         </div>
         <button

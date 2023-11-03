@@ -17,7 +17,7 @@ const TabsInfo = ({ currentLecture, setCurrentTime }: Props) => {
   const [activeTab, setActiveTab] = React.useState("Overview");
   const tabHeaders = ["Overview", "Reviews"];
   return (
-    <div className="w-[100%] bg-white p-3 pt-5 rounded-lg shadow-xl">
+    <div className="w-[100%] h-[120vh] bg-white p-3 pt-5 rounded-lg shadow-xl">
       <h1 className="text-xl font-bold">{currentLecture?.lecture_name}</h1>
       <div className="flex space-x-4 text-xs text-gray-500">
         <p className="cursor-pointer">Vũ Thanh Sang </p>
