@@ -1,10 +1,10 @@
 import { ShoppingCart, Video } from "@phosphor-icons/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { formatCurrency } from "../../utils/const";
 import { AppDispatch, RootState } from "@/redux/store";
-import { Cart, removeToCart } from "@/features/cart/cartSlice";
+import { Cart, getCarts, removeToCart } from "@/features/cart/cartSlice";
 import { configRouter } from "@/configs/router";
 
 const CourseCart = () => {
@@ -12,6 +12,13 @@ const CourseCart = () => {
   const navigate = useNavigate();
   const cartCurrent = useSelector((state: RootState) => state);
   const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    const handleGetCarts = async () => {
+      await dispatch(getCarts());
+    };
+    handleGetCarts();
+  }, []);
 
   const handleRedirectCart = () => {
     navigate(configRouter.coursesCart);

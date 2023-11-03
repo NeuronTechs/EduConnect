@@ -32,7 +32,7 @@ const getTimeNow = (): number => {
 // api call to get access token new
 const refetchToken = async () => {
   try {
-    const data = await httpRequest.post("/user/refreshToken", {
+    const data = await httpRequest.get("user/refreshToken", {
       headers: { withCredentials: true },
     });
     return data;
@@ -83,7 +83,7 @@ export const setupInterceptor = (store: Store, dispatch: AppDispatch): void => {
                   accessToken: data.accessToken,
                 };
                 dispatch(refetchTokenStore(dataTemplate));
-                config.headers.Authorization = "Bearer " + data;
+                config.headers.Authorization = "Bearer " + data.accessToken;
               }
             } catch (error) {
               console.log(error);
@@ -93,7 +93,7 @@ export const setupInterceptor = (store: Store, dispatch: AppDispatch): void => {
             return config;
           }
         }
-        config.headers.Authorization = "Bearer " + accessToken;
+        config.headers.Authorization = "Bearer " + user.accessToken;
       } else {
         if (!isRefreshing) {
           isRefreshing = true;
