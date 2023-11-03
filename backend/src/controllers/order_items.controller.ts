@@ -83,6 +83,19 @@ const getOrderItemByStudentId = async (req: Request, res: Response) => {
   }
 };
 
+const getCourseMostBuy = async (req: Request, res: Response) => {
+  try {
+    const orderItem = await orderItemService.getCourseMostBuy();
+    res.status(orderItem.status).json(orderItem);
+  } catch (error) {
+    if (error) {
+      res.status(400).json({ error: error });
+    } else {
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+};
+
 export default {
   create,
   updateById,
@@ -90,4 +103,5 @@ export default {
   getOrderItemByOrderId,
   getOrderItemByCourseId,
   getOrderItemByStudentId,
+  getCourseMostBuy,
 };

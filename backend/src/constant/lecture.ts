@@ -5,4 +5,5 @@ export interface ILecture {
   source: string;
   session_id: string;
   type: string;
+  duration: number;
 }

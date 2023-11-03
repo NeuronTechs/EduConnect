@@ -4,6 +4,8 @@ import { login, test } from "../features/auth/authSlice";
 import { Auth } from "../type";
 import { AppDispatch } from "../redux/store";
 import bg from "../../public/bgLogin.png";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   Books,
   FacebookLogo,
@@ -13,16 +15,34 @@ import {
 } from "@phosphor-icons/react";
 import { Link, useNavigate } from "react-router-dom";
 import assets from "@/assets";
+
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  // const errorNotify =
+  const notify = () => {
+    toast.error("Tài khoản hoặc mật khẩu không chính xác", {
+      position: "bottom-left",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
+  };
   const loginHandler = async () => {
     const auth: Auth = { username: username, password: password };
     const loginSuccess = await dispatch(login(auth));
+    console.log(loginSuccess);
+
     if (loginSuccess.type === "auth/login/fulfilled") {
       navigate("/");
+    } else {
+      notify();
     }
   };
   return (
@@ -76,7 +96,6 @@ const Login = () => {
               className="border-2 border-slate-500 rounded-md w-[350px] h-[40px] pl-3"
             />
           </div>
-
           <div>
             <h6>Mật khẩu</h6>
             <input
@@ -88,7 +107,6 @@ const Login = () => {
               className="border-2 border-slate-500 rounded-md w-[350px] h-[40px] pl-3 pr-3"
             />
           </div>
-
           <div className="mt-5 flex w-[350px] items-center justify-between">
             <div className="space-x-3 flex  items-center">
               <input
@@ -100,7 +118,6 @@ const Login = () => {
             </div>
             <h6 className="underline">Quên mật khẩu?</h6>
           </div>
-
           <div className="flex space-x-5 mt-5">
             <button
               onClick={loginHandler}
@@ -114,7 +131,6 @@ const Login = () => {
               </button>
             </Link>
           </div>
-
           <div className="flex flex-col w-9/12 items-center mt-10 ml-5">
             <h6>Hoặc, Đăng nhập với</h6>
             <div className="flex space-x-3 mt-2">
@@ -132,6 +148,7 @@ const Login = () => {
               </button>
             </div>
           </div>
+          <ToastContainer />
         </div>
       </div>
     </div>
