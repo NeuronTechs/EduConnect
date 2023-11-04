@@ -31,6 +31,7 @@ const ContentQuestionSingleChoice = (props: {
     if (data.title === "") return;
     handleEditQuestion({
       ...props.data,
+      type: "single_choice",
       answers: [
         ...props.data.answers,
         {
