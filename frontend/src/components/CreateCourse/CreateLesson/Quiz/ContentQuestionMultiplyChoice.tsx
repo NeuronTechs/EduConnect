@@ -1,7 +1,9 @@
+import { CreateQuizContext } from "@/context/CreateQuizContext";
 import { IQuestionInfo } from "@/types/type";
 import { DndContext } from "@dnd-kit/core";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { useForm } from "react-hook-form";
 import {
   DotsSixVertical,
   Image,
@@ -12,9 +14,32 @@ import {
 } from "@phosphor-icons/react";
 import React from "react";
 
+interface IInputAnswer {
+  title: string;
+}
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ContentQuestionMultiplyChoice = (props: { data: IQuestionInfo }) => {
   const [typeAnswer, setTypeAnswer] = React.useState<string>("answer");
+  const { handleEditQuestion } = React.useContext(CreateQuizContext);
+  const { register, handleSubmit, reset } = useForm<IInputAnswer>();
+  const onSubmit = (data: IInputAnswer) => {
+    if (data.title === "") return;
+    handleEditQuestion({
+      ...props.data,
+      type: "multiple_choice",
+      answers: [
+        ...props.data.answers,
+        {
+          id: props.data.answers.length + 1,
+          answer: data.title,
+          isCorrect: false,
+          image: null,
+          question: null,
+        },
+      ],
+    });
+    reset();
+  };
   return (
     <div className="flex flex-col items-center justify-center py-2 space-y-2">
       <div className="flex items-center justify-between w-full ">
@@ -75,6 +100,7 @@ const ContentQuestionMultiplyChoice = (props: { data: IQuestionInfo }) => {
           </label>
           <div className="relative w-full">
             <input
+              {...register("title")}
               type="text"
               id="simple-search"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -83,6 +109,7 @@ const ContentQuestionMultiplyChoice = (props: { data: IQuestionInfo }) => {
             />
           </div>
           <button
+            onClick={handleSubmit(onSubmit)}
             type="submit"
             className="p-2 ml-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
