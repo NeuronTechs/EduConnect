@@ -1,3 +1,4 @@
+import { IQuestionInfo } from "@/types/type";
 import { DndContext } from "@dnd-kit/core";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -12,7 +13,7 @@ import {
 import React from "react";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const ContentQuestionMultiplyChoice = (props: { data: [] }) => {
+const ContentQuestionMultiplyChoice = (props: { data: IQuestionInfo }) => {
   const [typeAnswer, setTypeAnswer] = React.useState<string>("answer");
   return (
     <div className="flex flex-col items-center justify-center py-2 space-y-2">
@@ -35,43 +36,38 @@ const ContentQuestionMultiplyChoice = (props: { data: [] }) => {
           />
         </div>
       </div>
-      <DndContext>
-        <SortableContext items={[{ id: 1 }, { id: 2 }, { id: 3 }]}>
-          <div className="space-y-2 w-full">
-            {typeAnswer === "answer" ? (
-              <>
-                <ItemAnswer
-                  id={1}
-                  data={{ id: 1, answer: "", isCorrect: false }}
-                />
-                <ItemAnswer
-                  id={2}
-                  data={{ id: 2, answer: "", isCorrect: false }}
-                />
-                <ItemAnswer
-                  id={2}
-                  data={{ id: 3, answer: "", isCorrect: false }}
-                />
-              </>
-            ) : (
-              <>
-                <ItemAnswerImage
-                  id={3}
-                  data={{ id: 1, answer: "", isCorrect: false }}
-                />
-                <ItemAnswerImage
-                  id={3}
-                  data={{ id: 2, answer: "", isCorrect: false }}
-                />
-                <ItemAnswerImage
-                  id={3}
-                  data={{ id: 3, answer: "", isCorrect: false }}
-                />
-              </>
-            )}
+      {props.data.answers.length === 0 ? (
+        <div className="space-y-2 w-full">
+          <div className="flex items-center justify-center w-full p-2 rounded-md border border-transparent relative min-h-[45px]">
+            <p className="text-sm font-normal ">Chưa có câu trả lời nào</p>
           </div>
-        </SortableContext>
-      </DndContext>
+        </div>
+      ) : (
+        <DndContext>
+          <SortableContext items={[{ id: 1 }, { id: 2 }, { id: 3 }]}>
+            <div className="space-y-2 w-full">
+              {typeAnswer === "answer" ? (
+                <>
+                  {props.data.answers.map((item) => {
+                    return (
+                      <ItemAnswer key={item.id} id={item.id} data={item} />
+                    );
+                  })}
+                </>
+              ) : (
+                <>
+                  {props.data.answers.map((item) => {
+                    return (
+                      <ItemAnswerImage key={item.id} id={item.id} data={item} />
+                    );
+                  })}
+                </>
+              )}
+            </div>
+          </SortableContext>
+        </DndContext>
+      )}
+
       <div className="w-full  mb-4 mt-4 ">
         <form className="flex items-center">
           <label htmlFor="simple-search" className="sr-only">
@@ -216,8 +212,8 @@ const ItemAnswerImage = (props: {
             >
               <path
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 strokeWidth="2"
                 d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
               />

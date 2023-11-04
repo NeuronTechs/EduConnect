@@ -1,6 +1,12 @@
+import { IQuestionInfo } from "@/types/type";
 import React from "react";
 
-const ContentQuestionTrueFalse = (props: { data: [] }) => {
+const ContentQuestionTrueFalse = (props: {
+  data: IQuestionInfo;
+}): React.ReactElement => {
+  const [value, setValue] = React.useState<string>(
+    props.data.answers[0]?.answer ? props.data.answers[0]?.answer : ""
+  );
   return (
     <div className="flex flex-col items-center justify-center py-2 space-y-2">
       <div className="flex items-center justify-between w-full ">
@@ -11,8 +17,9 @@ const ContentQuestionTrueFalse = (props: { data: [] }) => {
         <div className="w-full px-4 p-3 bg-white flex items-center justify-start">
           <input
             type="radio"
-            value=""
-            name="default-radio"
+            value={"true"}
+            onChange={(e) => setValue(e.target.value)}
+            checked={value === "true" ? true : false}
             className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
           />
           <label
@@ -25,8 +32,9 @@ const ContentQuestionTrueFalse = (props: { data: [] }) => {
         <div className="w-full px-4 p-3 bg-white flex items-center justify-start">
           <input
             type="radio"
-            value=""
-            name="default-radio"
+            value="false"
+            onChange={(e) => setValue(e.target.value)}
+            checked={value === "false" ? true : false}
             className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
           />
           <label
