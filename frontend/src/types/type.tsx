@@ -1,17 +1,53 @@
+import { AuthState } from "@/features/auth/authSlice";
+import { CartState } from "@/features/cart/cartSlice";
+import { CourseState } from "@/features/course/courseSlice";
+
+export interface SliceState {
+  authSlice: AuthState;
+  courseSlice: CourseState;
+  cartSlice: CartState;
+}
 export interface ICourse {
-  id: string;
-  thumbnail: string;
+  course_id: string;
   title: string;
-  teacher: string;
-  avatarTeacher: string;
-  rating: number;
-  priceOfficial: string;
-  originalPrice: string;
-  numberLesson: number;
-  numberStudent: number;
-  numberSecurity: number;
+  description: string;
+  teacher_id: string;
+  price: number;
+  discount: number;
+  image: string;
+  topic_id: string;
+  total_hours: number;
+  createdAt: string;
+  updatedAt: string;
+  sessions: ISession[] | null;
+}
+export interface IComment {
+  comment_id: string;
+  content: string;
+  student_id: string;
+  lecture_id: string;
+  createdAt: string;
+  resource: string | null;
+  timestamp: string;
+  username: string;
+  avatar: string;
+}
+export interface ISession {
+  session_id: string;
+  course_id: string;
+  name: string;
+  lectures: ILecture[] | null;
 }
 
+export interface ILecture {
+  lecture_id: string;
+  lecture_name: string;
+  description: string;
+  source: string;
+  session_id: string;
+  type: string;
+  comments: IComment[] | null;
+}
 export interface ICategory {
   id: string;
   title: string;

@@ -27,6 +27,8 @@ import DashboardAdmin from "@/pages/DashboardAdmin";
 import ReportSale from "@/pages/ReportSale";
 import ReportMember from "@/pages/ReportMember";
 import StudentList from "@/pages/Admin/StudentList";
+import ComplaintCourseDetail from "@/pages/ComplaintCourseDetail";
+import ManagerComplaintCourse from "@/pages/ManagerComplaintCourse";
 interface IRouter {
   path: string;
   component: FC;
@@ -127,6 +129,16 @@ const publicRoutes: IRouter[] = [
   {
     path: configRouter.adminListStudent,
     component: StudentList,
+    layout: DefaultLayout,
+  },
+  {
+    path: configRouter.complaintCourseDetail,
+    component: ComplaintCourseDetail,
+    layout: DefaultLayout,
+  },
+  {
+    path: configRouter.managerComplaintCourse,
+    component: ManagerComplaintCourse,
     layout: DefaultLayout,
   },
 ];

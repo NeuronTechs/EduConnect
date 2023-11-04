@@ -32,7 +32,7 @@ const getTimeNow = (): number => {
 // api call to get access token new
 const refetchToken = async () => {
   try {
-    const data = await httpRequest.get("user/refreshtoken", {
+    const data = await httpRequest.get("user/refreshToken", {
       headers: { withCredentials: true },
     });
     return data;
@@ -53,7 +53,7 @@ export const setupInterceptor = (store: Store, dispatch: AppDispatch): void => {
   // handle request call aceess token
   httpRequest.default.interceptors.request.use(
     async (config) => {
-      if (config.url?.includes("user/refreshtoken")) {
+      if (config.url?.includes("user/refreshToken")) {
         return config;
       }
 
@@ -83,7 +83,7 @@ export const setupInterceptor = (store: Store, dispatch: AppDispatch): void => {
                   accessToken: data.accessToken,
                 };
                 dispatch(refetchTokenStore(dataTemplate));
-                config.headers.Authorization = "Bearer " + data;
+                config.headers.Authorization = "Bearer " + data.accessToken;
               }
             } catch (error) {
               console.log(error);
@@ -93,7 +93,7 @@ export const setupInterceptor = (store: Store, dispatch: AppDispatch): void => {
             return config;
           }
         }
-        config.headers.Authorization = "Bearer " + user?.accessToken;
+        config.headers.Authorization = "Bearer " + user.accessToken;
       } else {
         if (!isRefreshing) {
           isRefreshing = true;
@@ -132,7 +132,7 @@ export const setupInterceptor = (store: Store, dispatch: AppDispatch): void => {
       // logout system
       if (
         status === 401 &&
-        originalRequest?.url?.includes("user/refreshtoken")
+        originalRequest?.url?.includes("user/refreshToken")
       ) {
         if (!isRefreshing) {
           isRefreshing = true;

@@ -6,7 +6,7 @@ import {
   Play,
   SpeakerSimpleHigh,
 } from "@phosphor-icons/react";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Menu,
   MenuHandler,
@@ -14,9 +14,14 @@ import {
   MenuItem,
   Slider,
 } from "@material-tailwind/react";
-const Video = () => {
+import { ILecture } from "@/types/type";
+interface Props {
+  currentLecture: ILecture | null;
+  currentTime: number;
+  setCurrentTime: React.Dispatch<React.SetStateAction<number>>;
+}
+const Video = ({ currentLecture, currentTime, setCurrentTime }: Props) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
   const speedRate = [];
   for (let index = 0.5; index <= 2; index = index + 0.25) {
@@ -39,16 +44,22 @@ const Video = () => {
     }
     return 0;
   };
+  useEffect(() => {
+    videoRef?.current?.play();
+    setIsPlaying(true);
+  }, [currentLecture]);
+
   return (
-    <div className=" h-[70vh] pt-0 relative shadow-xl ">
+    <div className=" h-[75vh] pt-2 relative shadow-xl ">
       <video
-        src="https://res.cloudinary.com/dgfsdhshs/video/upload/v1687790889/Studio_Project_V1_w7836p.mp4"
-        className=" w-full aspect-video rounded-lg "
+        src={currentLecture?.source}
+        className=" w-full aspect-video rounded-lg bg-gray-900"
         ref={videoRef}
         onClick={handlePlay}
         onTimeUpdate={() => {
           setCurrentTime(getCurrentTime());
         }}
+        autoPlay
       >
         Your browser does not support the video tag.
       </video>

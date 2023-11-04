@@ -9,5 +9,6 @@ router.route("/:id").delete(orderItemController.deleteById);
 router.route("/order/:id").get(orderItemController.getOrderItemByOrderId);
 router.route("/course/:id").get(orderItemController.getOrderItemByCourseId);
 router.route("/student/:id").get(orderItemController.getOrderItemByStudentId);
+router.route("/most-buy").get(orderItemController.getCourseMostBuy);
 
 export default router;

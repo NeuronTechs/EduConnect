@@ -94,7 +94,7 @@ const DetailCourse = () => {
       </div>
       {/* Overview */}
       <div className="p-[10px]">
-        <h1 className="font-semibold text-[20px] lg:text-[24px]">
+        <h1 className="font-semibold text-[20px] lg:text-[24px] my-3">
           {data?.courseName}
         </h1>
       </div>

@@ -10,6 +10,9 @@ import { setupInterceptor } from "./utils/interceptor";
 import { adminRoutes, publicRoutes } from "./router/Router";
 import { AppDispatch, store } from "./redux/store";
 import { useDispatch, useSelector } from "react-redux";
+import { configRouter } from "./configs/router";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 function App() {
   const dispatch = useDispatch<AppDispatch>();
   setupInterceptor(store, dispatch);
@@ -46,7 +49,18 @@ function App() {
                 path={route.path}
                 element={
                   <Layout>
-                    <Page />
+                    {/* <Page /> */}
+                    {route.path === configRouter.checkout ? (
+                      <Elements
+                        stripe={loadStripe(
+                          "pk_test_51O5eyBAaHjtOXDe9Tpr7lvWGeKnA940mQgS8jWHAfM2yfSM8uVDxC6H9hL58KGsAzQCPy6ZtKXLy88tfjhOqulZB00QzKSUUQf"
+                        )}
+                      >
+                        <Page />
+                      </Elements>
+                    ) : (
+                      <Page />
+                    )}
                   </Layout>
                 }
               />

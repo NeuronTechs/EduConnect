@@ -112,9 +112,7 @@ const removeToCart = async (cart_id: String): Promise<any> => {
 const getAllCart = async (student_id: String): Promise<any> => {
   try {
     const queryGetAllCart =
-      "select p.cart_id, p.course_id, p.title, p.price, teacher.username, p.image from educonnectdb.teacher inner join " +
-      "(select cart.cart_id, cart.course_id, course.title, course.price, course.teacher_id as teacher_id , course.image from educonnectdb.cart inner join educonnectdb.course on cart.course_id = course.course_id where student_id = ?) as p " +
-      "on teacher.teacher_id = p.teacher_id";
+      "select q.cart_id, q.course_id, q.teacher_id, q.title, q.price, q.username, q.image, q.discount, full_name from (select p.cart_id, p.course_id, p.teacher_id, p.title, p.price, teacher.username, p.image, p.discount from educonnectdb.teacher inner join  (select cart.cart_id, cart.course_id, course.title, course.price, course.teacher_id as teacher_id, course.discount , course.image from educonnectdb.cart inner join educonnectdb.course on cart.course_id = course.course_id where student_id = ?) as p on teacher.teacher_id = p.teacher_id) as q inner join educonnectdb.user on q.username = user.username";
     return new Promise((resolve, reject) => {
       db.connectionDB.query(
         queryGetAllCart,

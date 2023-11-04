@@ -37,9 +37,9 @@ const Overview = () => {
 
   const handleOpen = (value: number) => setOpen(open === value ? 0 : value);
   return (
-    <div className="w-full">
+    <div className="my-3 w-full">
       <div className="p-[10px]">
-        <h1 className="font-semibold">Nội dung khóa học</h1>
+        <h3 className="font-semibold">Nội dung khóa học</h3>
         <p className="p-[5px_10px]">
           Để có cái nhìn tổng quan về ngành IT - Lập trình web các bạn nên xem
           các videos tại khóa này trước nhé.
@@ -142,7 +142,7 @@ const Overview = () => {
       </div>
       {/* Bạn sẽ học được gì? */}
       <div className="p-[10px]">
-        <h1 className="font-semibold">Bạn sẽ học được gì?</h1>
+        <h3 className="font-semibold">Bạn sẽ học được gì?</h3>
         <ul className="flex flex-col lg:flex-row flex-wrap p-[5px_10px]">
           <li className="flex items-center justify-start basis-1/2">
             <CheckCircle size={16} className="mr-3" />
@@ -172,7 +172,7 @@ const Overview = () => {
       </div>
       {/* Yêu cầu */}
       <div className="p-[10px] gap-2">
-        <h1 className="font-semibold">Yêu cầu</h1>
+        <h3 className="font-semibold">Yêu cầu</h3>
         <ul className="p-[5px_10px]">
           <li className="flex items-center justify-start basis-1/2">
             <MinusCircle weight="fill" size={16} className="mr-3" />
