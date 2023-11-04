@@ -1,10 +1,11 @@
+import { IQuestionInfo } from "@/types/type";
 import { DndContext } from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
 import { Pencil, Plus, Trash } from "@phosphor-icons/react";
 import React from "react";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const ContentQuestionMatching = (props: { data: [] }) => {
+const ContentQuestionMatching = (props: { data: IQuestionInfo }) => {
   return (
     <div className="flex flex-col items-center justify-center py-2 space-y-2">
       <div className="flex items-center justify-between w-full ">
@@ -12,12 +13,16 @@ const ContentQuestionMatching = (props: { data: [] }) => {
         <div className="flex items-center justify-end gap-2"></div>
       </div>
       <DndContext>
-        <SortableContext items={[{ id: 1 }, { id: 2 }, { id: 3 }]}>
+        <SortableContext items={props.data.answers}>
           <div className="space-y-2 w-full">
-            <ItemAnswer id={1} data={{ id: 1 }} />
-            <ItemAnswer id={2} data={{ id: 2 }} />
-            <ItemAnswer id={3} data={{ id: 3 }} />
-            <ItemAnswer id={4} data={{ id: 4 }} />
+            {props.data.answers.length === 0 && (
+              <div className="flex items-center justify-center w-full p-2 rounded-md border border-transparent relative min-h-[45px]">
+                <p className="text-sm font-normal ">Chưa có câu trả lời nào</p>
+              </div>
+            )}
+            {props.data.answers.map((item) => (
+              <ItemAnswer key={item.id} id={item.id} data={item} />
+            ))}
           </div>
         </SortableContext>
       </DndContext>

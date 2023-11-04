@@ -9,126 +9,121 @@ import {
 import CreateLessonQuiz from "./CreateLesson/CreateLessonQuiz";
 import CreateLessonVideo from "./CreateLesson/CreateLessonVideo";
 import CreateLessonDocument from "./CreateLesson/CreateLessonDocument";
+import CreateQuizProvider from "@/context/CreateQuizContext";
+import TextEditor from "./CreateLesson/TextEditor/TextEditor";
 
 const CreateCourseContainer = (): React.ReactElement => {
   const [isOpenModal, setIsOpenModal] = React.useState<boolean>(false);
-
-  const { selectLesson } =
-    React.useContext<ICreateCourseContext>(CreateCourseContext);
+  const [tab, setTab] = React.useState<string>("description");
 
   // data section
 
   return (
     <div className="w-full flex flex-col gap-2 h-full">
-      <div className="bg-white flex items-center justify-start px-4">
-        <TabContentCreateCourseTeacher />
+      <div className="bg-white flex items-center justify-between px-4">
+        <div></div>
+        <TabContentCreateCourseTeacher tab={tab} setTab={setTab} />
+        <div className="flex items-center justify-end"></div>
       </div>
       <div className="flex w-full flex-1 gap-2">
-        <div className=" bg-white rounded-md w-[25%] h-full overflow-auto">
-          <LessonInformation
-            isOpenModal={isOpenModal}
-            setIsOpenModal={setIsOpenModal}
-          />
-        </div>
-        <div className="h-full overflow-auto bg-white p-2 flex-1">
-          {selectLesson?.type === "document" && <CreateLessonDocument />}
-          {selectLesson?.type === "video" && <CreateLessonVideo />}
-          {selectLesson?.type === "quiz" && <CreateLessonQuiz />}
-        </div>
+        <ContainerCreateCourseTeacher
+          isOpenModal={isOpenModal}
+          setIsOpenModal={setIsOpenModal}
+          tab={tab}
+        />
       </div>
     </div>
   );
 };
 
 export default CreateCourseContainer;
+
+const ContainerCreateCourseTeacher = (props: {
+  isOpenModal: boolean;
+  setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+  tab: string;
+}): React.ReactElement => {
+  switch (props.tab) {
+    case "description":
+      return <DescriptionCreateCourseTeacher />;
+    case "content":
+      return <CreateContentCourse {...props} />;
+    case "price":
+      return <PriceCreateCourseTeacher />;
+    case "faq":
+      return <FAQCreateCourseTeacher />;
+    case "notice":
+      return <NoticeCreateCourseTeacher />;
+    default:
+      return <div className="flex items-center justify-center "></div>;
+  }
+};
 // tab`content
-const TabContentCreateCourseTeacher = (): React.ReactElement => {
+const TabContentCreateCourseTeacher = (props: {
+  tab: string;
+  setTab: React.Dispatch<React.SetStateAction<string>>;
+}): React.ReactElement => {
   return (
     <div className="border-b border-gray-200 dark:border-gray-700">
       <ul className="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400">
-        <li className="mr-2">
+        <li className="mr-2" onClick={() => props.setTab("description")}>
           <a
             href="#"
-            className="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 group"
+            className={`inline-flex items-center justify-center p-4 ${
+              props.tab === "description"
+                ? " text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500 "
+                : "hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+            } group`}
           >
-            <svg
-              className="w-4 h-4 mr-2 text-gray-400 group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-300"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z" />
-            </svg>
             Mô tả
           </a>
         </li>
-        <li className="mr-2">
+        <li className="mr-2" onClick={() => props.setTab("content")}>
           <a
             href="#"
-            className="inline-flex items-center justify-center p-4 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500 group"
+            className={`inline-flex items-center justify-center p-4 ${
+              props.tab === "content"
+                ? " text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500 "
+                : "hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+            } group`}
             aria-current="page"
           >
-            <svg
-              className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-500"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 18 18"
-            >
-              <path d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z" />
-            </svg>
             Nội dung
           </a>
         </li>
-        <li className="mr-2">
+        <li className="mr-2" onClick={() => props.setTab("price")}>
           <a
             href="#"
-            className="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 group"
+            className={`inline-flex items-center justify-center p-4 ${
+              props.tab === "price"
+                ? " text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500 "
+                : "hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+            } group`}
           >
-            <svg
-              className="w-4 h-4 mr-2 text-gray-400 group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-300"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path d="M5 11.424V1a1 1 0 1 0-2 0v10.424a3.228 3.228 0 0 0 0 6.152V19a1 1 0 1 0 2 0v-1.424a3.228 3.228 0 0 0 0-6.152ZM19.25 14.5A3.243 3.243 0 0 0 17 11.424V1a1 1 0 0 0-2 0v10.424a3.227 3.227 0 0 0 0 6.152V19a1 1 0 1 0 2 0v-1.424a3.243 3.243 0 0 0 2.25-3.076Zm-6-9A3.243 3.243 0 0 0 11 2.424V1a1 1 0 0 0-2 0v1.424a3.228 3.228 0 0 0 0 6.152V19a1 1 0 1 0 2 0V8.576A3.243 3.243 0 0 0 13.25 5.5Z" />
-            </svg>
             Giá Cả
           </a>
         </li>
-        <li className="mr-2">
+        <li className="mr-2" onClick={() => props.setTab("faq")}>
           <a
             href="#"
-            className="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 group"
+            className={`inline-flex items-center justify-center p-4 ${
+              props.tab === "faq"
+                ? " text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500 "
+                : "hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+            } group`}
           >
-            <svg
-              className="w-4 h-4 mr-2 text-gray-400 group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-300"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 18 20"
-            >
-              <path d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2Zm-3 14H5a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2Zm0-4H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Zm0-5H5a1 1 0 0 1 0-2h2V2h4v2h2a1 1 0 1 1 0 2Z" />
-            </svg>
             FAQ
           </a>
         </li>
-        <li className="mr-2">
+        <li className="mr-2" onClick={() => props.setTab("notice")}>
           <a
             href="#"
-            className="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 group"
+            className={`inline-flex items-center justify-center p-4 ${
+              props.tab === "notice"
+                ? " text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500 "
+                : "hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+            } group`}
           >
-            <svg
-              className="w-4 h-4 mr-2 text-gray-400 group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-300"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 18 20"
-            >
-              <path d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2Zm-3 14H5a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2Zm0-4H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Zm0-5H5a1 1 0 0 1 0-2h2V2h4v2h2a1 1 0 1 1 0 2Z" />
-            </svg>
             Lưu ý
           </a>
         </li>
@@ -264,5 +259,277 @@ const LessonTypeItem = (props: {
 
       <p className="text-xs font-medium text-gray-600">{props.title}</p>
     </div>
+  );
+};
+
+const DescriptionCreateCourseTeacher = (): React.ReactElement => {
+  return (
+    <div className="flex items-start justify-center w-full">
+      <div className="flex flex-col gap-4 bg-white p-2 min-w-[50%]">
+        <h5 className="text-base font-bold text-black">Thông tin khóa học</h5>
+        <div className="mb-2">
+          <label
+            htmlFor="confirm_password"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Tên khóa học
+          </label>
+          <input
+            type="password"
+            id="confirm_password"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+        </div>
+        <div className="mb-2">
+          <label
+            htmlFor="confirm_password"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Chủ đề khoá học
+          </label>
+          <input
+            type="password"
+            id="confirm_password"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+        </div>
+        <div className="mb-2">
+          <label
+            htmlFor="confirm_password"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Mức độ
+          </label>
+          <input
+            type="password"
+            id="confirm_password"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+        </div>
+        <div className="mb-2">
+          <label
+            htmlFor="confirm_password"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Hình ảnh
+          </label>
+          <div className="flex items-center justify-center w-full">
+            <label
+              htmlFor="dropzone-file"
+              className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+            >
+              <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                <svg
+                  className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 20 16"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                  />
+                </svg>
+                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                  <span className="font-semibold">Click to upload</span> or drag
+                  and drop
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  SVG, PNG, JPG or GIF (MAX. 800x400px)
+                </p>
+              </div>
+              <input id="dropzone-file" type="file" className="hidden" />
+            </label>
+          </div>
+        </div>
+
+        <div className="grid gap-6 mb-2 md:grid-cols-2">
+          <div>
+            <label
+              htmlFor="first_name"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Thời lượng khóa học
+            </label>
+            <input
+              type="text"
+              id="first_name"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="last_name"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Thời lượng video
+            </label>
+            <input
+              type="text"
+              id="last_name"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            />
+          </div>
+        </div>
+
+        <div className="mb-2">
+          <label
+            htmlFor="confirm_password"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Miêu tả
+          </label>
+          <TextEditor />
+        </div>
+        <div className="mb-2">
+          <label
+            htmlFor="confirm_password"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Học viên sẽ học nhận được gì khi tham gia khoá học?
+          </label>
+          <TextEditor />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const PriceCreateCourseTeacher = (): React.ReactElement => {
+  return (
+    <div className="flex items-start justify-center w-full">
+      <div className="flex flex-col gap-4 bg-white p-2 min-w-[50%]">
+        <h5 className="text-base font-bold text-black">Giá Cả</h5>
+        <div className="mb-2">
+          <label
+            htmlFor="confirm_password"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Giá ($)
+          </label>
+          <input
+            type="password"
+            id="confirm_password"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+        </div>
+        <div className="mb-2">
+          <label
+            htmlFor="confirm_password"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Giá bán ($)
+          </label>
+          <input
+            type="password"
+            id="confirm_password"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+        </div>
+        <div className="grid gap-6 mb-2 md:grid-cols-2">
+          <div>
+            <label
+              htmlFor="first_name"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Ngày bắt đầu bán hàng
+            </label>
+            <div className="relative max-w-sm">
+              {/* <div className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
+                <svg
+                  className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                </svg>
+              </div> */}
+              <input
+                data-date-format="dd/mm/yyyy"
+                type="date"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Select date"
+              />
+            </div>
+          </div>
+          <div>
+            <label
+              htmlFor="last_name"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Ngày kết thúc bán hàng
+            </label>
+            <input
+              data-date-format="dd/mm/yyyy"
+              type="date"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Select date"
+            />
+          </div>
+        </div>
+        <div className="mb-2">
+          <label
+            htmlFor="confirm_password"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Điểm cho một khóa học
+          </label>
+          <input
+            type="password"
+            id="confirm_password"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+        </div>
+        <div className="flex items-center justify-end">
+          <button
+            type="button"
+            className="px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          >
+            lưu
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const FAQCreateCourseTeacher = (): React.ReactElement => {
+  return <></>;
+};
+
+const NoticeCreateCourseTeacher = (): React.ReactElement => {
+  return <></>;
+};
+
+const CreateContentCourse = (props: {
+  isOpenModal: boolean;
+  setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+}): React.ReactElement => {
+  const { selectLesson } =
+    React.useContext<ICreateCourseContext>(CreateCourseContext);
+  return (
+    <>
+      <div className=" bg-white rounded-md w-[25%] h-full overflow-auto">
+        <LessonInformation
+          isOpenModal={props.isOpenModal}
+          setIsOpenModal={props.setIsOpenModal}
+        />
+      </div>
+      <div className="h-full overflow-auto bg-white p-2 flex-1">
+        {selectLesson?.type === "document" && <CreateLessonDocument />}
+        {selectLesson?.type === "video" && <CreateLessonVideo />}
+        {selectLesson?.type === "quiz" && (
+          <CreateQuizProvider>
+            <CreateLessonQuiz />
+          </CreateQuizProvider>
+        )}
+      </div>
+    </>
   );
 };

@@ -147,3 +147,34 @@ export interface ILessonInfo {
   idSection: string;
   draff?: boolean;
 }
+
+// quiz
+export interface IAnswerInfo {
+  id: number;
+  question: string | null;
+  answer: string;
+  image: string | null;
+  isCorrect: boolean;
+  explain?: string | null;
+}
+export interface IQuestionInfo {
+  id: number;
+  question: string | null;
+  images: string[] | null;
+  type: string;
+  answers: IAnswerInfo[];
+}
+export interface IQuizInfo {
+  id: number;
+  title: string;
+  descriptionShort: string;
+  duration: number;
+  durationUnit: string;
+  isRandom: boolean;
+  isShowAnswer: boolean;
+  type: string;
+  passPercent: number;
+  retakePercent: number;
+  content: string;
+  questions: IQuestionInfo[];
+}

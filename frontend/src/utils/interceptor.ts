@@ -93,7 +93,7 @@ export const setupInterceptor = (store: Store, dispatch: AppDispatch): void => {
             return config;
           }
         }
-        config.headers.Authorization = "Bearer " + accessToken;
+        config.headers.Authorization = "Bearer " + user?.accessToken;
       } else {
         if (!isRefreshing) {
           isRefreshing = true;
