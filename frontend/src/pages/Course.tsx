@@ -27,7 +27,17 @@ const Course = () => {
             currentTime={currentTime}
             setCurrentTime={setCurrentTime}
           /> */}
-          {isFullQuiz ? <FullQuiz /> : <Quiz setIsFullQuiz={setIsFullQuiz} />}
+          {currentCourse.currentLecture?.type === "video" ? (
+            <Video
+              currentLecture={currentCourse.currentLecture}
+              currentTime={currentTime}
+              setCurrentTime={setCurrentTime}
+            />
+          ) : isFullQuiz ? (
+            <FullQuiz />
+          ) : (
+            <Quiz setIsFullQuiz={setIsFullQuiz} />
+          )}
 
           <TabsInfo
             currentLecture={currentCourse.currentLecture}

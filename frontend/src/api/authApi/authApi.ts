@@ -44,8 +44,7 @@ export const test = async () => {
 
 export const logout = async () => {
   try {
-    const res = await httpRequest.get("/user/listServerOfUser");
-    console.log(res);
+    const res = await httpRequest.post("/user/logout");
     return res?.result;
   } catch (error) {
     return Promise.reject(error);
