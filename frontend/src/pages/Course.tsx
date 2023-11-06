@@ -19,14 +19,9 @@ const Course = () => {
     if (id !== undefined) dispatch(getCourseDetails(id));
   }, [dispatch, id]);
   return (
-    <div className="flex flex-col w-full  gap-5 ml-2">
-      <div className=" grid grid-cols-4 space-x-2 ">
-        <div className="col-span-4 lg:col-span-3 h-auto lg:h-screen lg:overflow-y-auto scrollbar-hide">
-          {/* <Video
-            currentLecture={currentCourse.currentLecture}
-            currentTime={currentTime}
-            setCurrentTime={setCurrentTime}
-          /> */}
+    <div className="flex flex-col w-full  gap-5 ml-2 overflow-y-hidden">
+      <div className=" grid grid-cols-4 space-x-2 overflow-y-hidden relative">
+        <div className="col-span-4 lg:col-span-3 h-auto lg:h-[100vh] lg:overflow-y-auto scrollbar-hide mt-2">
           {currentCourse.currentLecture?.type === "video" ? (
             <Video
               currentLecture={currentCourse.currentLecture}
@@ -42,6 +37,7 @@ const Course = () => {
           <TabsInfo
             currentLecture={currentCourse.currentLecture}
             setCurrentTime={setCurrentTime}
+            currentTime={currentTime}
           />
         </div>
         <Modules currentCourse={currentCourse.currentCourse} />

@@ -66,7 +66,7 @@ const QuizList = () => {
     array.push(index);
   }
   return (
-    <div className="w-[35vw] left-50 top-0  absolute  bg-white p-2 border rounded-xl border-gray-400 mx-auto">
+    <div className="w-[35vw] left-50 top-0  absolute  bg-white p-2 border  border-gray-400 mx-auto">
       <p className="font-bold my-5">Tất cả câu hỏi</p>
       <div
         className={"grid pl-8 py-5 gap-4 grid-cols-5 h-[45vh] overflow-auto"}
@@ -163,7 +163,7 @@ const Quiz = ({ setIsFullQuiz }: QuizProps) => {
   const [QuizComplete, setQuizComplete] = React.useState(false);
   const [openQuizList, setOpenQuizList] = React.useState(false);
   return (
-    <div className="bg-gray-500 flex justify-center py-5">
+    <div className="bg-gray-500 flex justify-center  ">
       {!QuizComplete && (
         <div className="h-11/12 w-11/12 bg-white p-5 ">
           <div className="flex justify-between ">

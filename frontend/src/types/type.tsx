@@ -1,6 +1,7 @@
 import { AuthState } from "@/features/auth/authSlice";
 import { CartState } from "@/features/cart/cartSlice";
 import { CourseState } from "@/features/course/courseSlice";
+import { FileWithPath } from "react-dropzone";
 
 export interface SliceState {
   authSlice: AuthState;
@@ -22,15 +23,14 @@ export interface ICourse {
   sessions: ISession[] | null;
 }
 export interface IComment {
-  comment_id: string;
+  comment_id?: string | undefined | null;
   content: string;
-  student_id: string;
+  username: string;
   lecture_id: string;
   createdAt: string;
-  resource: string | null;
+  resource?: FileWithPath[] | null;
   timestamp: string;
-  username: string;
-  avatar: string;
+  avatar?: string | null;
 }
 export interface ISession {
   session_id: string;
@@ -182,4 +182,35 @@ export interface ILessonInfo {
   type?: string;
   idSection: string;
   draff?: boolean;
+}
+
+// quiz
+export interface IAnswerInfo {
+  id: number;
+  question: string | null;
+  answer: string;
+  image: string | null;
+  isCorrect: boolean;
+  explain?: string | null;
+}
+export interface IQuestionInfo {
+  id: number;
+  question: string | null;
+  images: string[] | null;
+  type: string;
+  answers: IAnswerInfo[];
+}
+export interface IQuizInfo {
+  id: number;
+  title: string;
+  descriptionShort: string;
+  duration: number;
+  durationUnit: string;
+  isRandom: boolean;
+  isShowAnswer: boolean;
+  type: string;
+  passPercent: number;
+  retakePercent: number;
+  content: string;
+  questions: IQuestionInfo[];
 }

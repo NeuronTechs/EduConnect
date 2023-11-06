@@ -50,10 +50,10 @@ const Video = ({ currentLecture, currentTime, setCurrentTime }: Props) => {
   }, [currentLecture]);
 
   return (
-    <div className=" h-[75vh] pt-2 relative shadow-xl ">
+    <div className=" h-auto  relative shadow-xl ">
       <video
         src={currentLecture?.source}
-        className=" w-full aspect-video rounded-lg bg-gray-900"
+        className=" w-full aspect-video  bg-gray-900"
         ref={videoRef}
         onClick={handlePlay}
         onTimeUpdate={() => {
