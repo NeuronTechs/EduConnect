@@ -69,8 +69,8 @@ const getByLectureId = async (req: Request, res: Response) => {
       Number(pageSize)
     );
     res.status(comments.status).json({ data: comments });
-  } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
   }
 };
 

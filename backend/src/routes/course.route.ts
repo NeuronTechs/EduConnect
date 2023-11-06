@@ -16,5 +16,5 @@ router
   .get(courseController.getCourseByStudentId);
 router
   .route("/course-details/:id")
-  .get(middlewareController.verifyToken, courseController.getCourseDetails);
+  .get( courseController.getCourseDetails);
 module.exports = router;
