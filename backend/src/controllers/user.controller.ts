@@ -16,7 +16,7 @@ const generateAccessToken = (
       role: role,
     },
     "educonnect",
-    { expiresIn: "600s" }
+    { expiresIn: "1d" }
   );
 };
 const generatefreshToken = (
@@ -133,7 +133,6 @@ const login = async (req: Request, res: Response) => {
             );
             refreshTokens.push(refreshToken);
             res.setHeader("authorization", "Bearer " + accessToken);
-            console.log("header: " + req.headers?.authorization);
             res.cookie("refreshToken", refreshToken, {
               httpOnly: true,
               secure: false,
@@ -197,12 +196,14 @@ const refreshToken = async (req: Request, res: Response) => {
   const cookiesHeader = req.headers.cookie;
   if (cookiesHeader) {
     const index = cookiesHeader.indexOf(";");
-    // const refreshToken = cookiesHeader.substring(0, index);
     const refreshToken = cookiesHeader
       .substring(0, index)
       .replace("refreshToken=", "");
     if (!refreshTokens.includes(refreshToken)) {
-      return res.status(403).json("refresh token is not valid");
+      return res.status(401).json({
+        status: 401,
+        message: "refresh token is not valid",
+      });
     } else {
       jwt.verify(refreshToken, "educonnect", (error: any, user: any) => {
         if (error) {
@@ -223,7 +224,10 @@ const refreshToken = async (req: Request, res: Response) => {
       });
     }
   } else {
-    return res.status(401).json("you're not authenticated");
+    return res.status(401).json({
+      status: 401,
+      message: "you're not authenticated",
+    });
   }
 };
 
