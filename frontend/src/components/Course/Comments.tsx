@@ -66,10 +66,12 @@ const Comment = ({ comment, setCurrentTime }: commentProps) => {
 };
 interface Props {
   setCurrentTime: React.Dispatch<React.SetStateAction<number>>;
+  currentTime: number;
 }
-const Comments = ({ setCurrentTime }: Props) => {
+const Comments = ({ setCurrentTime, currentTime }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const currentCourse = useSelector((state: SliceState) => state.courseSlice);
+  const comments = currentCourse.comments;
   useEffect(() => {
     if (currentCourse.currentLecture)
       dispatch(
@@ -82,19 +84,19 @@ const Comments = ({ setCurrentTime }: Props) => {
   console.log(currentCourse.comments);
 
   return (
-    <div className="w-[95%] h-full">
-      <div className="my-3">
+    <div className="w-[100%] h-auto">
+      <div className="mt-3">
         <h1 className="font-semibold text-xl">Phản hồi của học sinh</h1>
       </div>
-      <div className="my-10 w-full">
-        <WYSIWYGEditor />
-        {/* <h1 className="font-semibold text-xl mb-10">Đánh giá</h1> */}
+      <div className="my-3 w-full">
+        <WYSIWYGEditor currentTime={currentTime} />
+
         {currentCourse?.comments?.map((comment) => {
           return <Comment comment={comment} setCurrentTime={setCurrentTime} />;
         })}
 
-        <div className="flex items-center justify-center border border-gray-700 font-bold p-2">
-          <button className="italic text-black w-[170px] border  border-b-gray-800">
+        <div className="flex items-center justify-center">
+          <button className="italic text-blue-500 w-[170px]">
             Xem tất cả nhận xét
           </button>
         </div>
