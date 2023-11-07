@@ -61,7 +61,7 @@ const deleteById = async (req: Request, res: Response) => {
 const getByLectureId = async (req: Request, res: Response) => {
   const { id } = req.params;
   const { page } = req.query;
-  const pageSize = 10;
+  const pageSize = 5;
   try {
     const comments = await CommentService.getByLectureId(
       id,

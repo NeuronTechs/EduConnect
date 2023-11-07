@@ -1,6 +1,7 @@
 import { CommentLecture } from "@/features/course/courseSlice";
 import { AppDispatch } from "@/redux/store";
 import { IComment, SliceState } from "@/types/type";
+import { Avatar } from "@material-tailwind/react";
 import React, { useState } from "react";
 import { useDropzone, FileWithPath } from "react-dropzone";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,7 +28,6 @@ const WYSIWYGEditor = ({ currentTime }: { currentTime: number }) => {
         content: content,
         timestamp: currentTime.toString(),
         // resource: files,
-        createdAt: new Date().toISOString(),
         lecture_id: currentLecture.lecture_id,
         username: currentUser.username,
       };
@@ -39,8 +39,18 @@ const WYSIWYGEditor = ({ currentTime }: { currentTime: number }) => {
   console.log(files);
 
   return (
-    <div>
-      <div className="w-full mb-4 border-2 border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+    <div className="grid grid-cols-12">
+      <Avatar
+        loading="lazy"
+        className="w-[40px] h-[40px] col-span-1"
+        src={
+          currentUser && currentUser.avatar !== null
+            ? currentUser.avatar
+            : "https://png.pngtree.com/png-clipart/20200224/original/pngtree-cartoon-color-simple-male-avatar-png-image_5230557.jpg"
+        }
+        alt="avatar"
+      />
+      <div className="w-full col-span-11 mb-4 border-2 border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
         <div className="flex items-center justify-between px-3 py-2 border-b-2 dark:border-gray-600">
           <div className="flex flex-wrap items-center divide-gray-200 sm:divide-x dark:divide-gray-600">
             <div className="flex items-center space-x-1 sm:pr-4">
@@ -270,6 +280,7 @@ const WYSIWYGEditor = ({ currentTime }: { currentTime: number }) => {
               className="block w-full px-0 text-sm text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
               placeholder="Write an article..."
               required
+              value={content}
               onChange={(e) => {
                 setContent(e.target.value);
               }}
@@ -281,9 +292,9 @@ const WYSIWYGEditor = ({ currentTime }: { currentTime: number }) => {
       </div>
       <button
         onClick={submitHandler}
-        className="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800"
+        className="inline-flex col-span-3 items-center px-2 ml-14 justify-center py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800"
       >
-        Publish post
+        Bình luận
       </button>
     </div>
   );

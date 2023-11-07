@@ -34,6 +34,13 @@ export const CommentOfLecture = createAsyncThunk<
   const res = await courseApi.CommentOfLecture(params);
   return res;
 });
+export const LoadMoreComment = createAsyncThunk<
+  IComment[],
+  { id: string; paging: number }
+>("course/LoadMoreComment", async (params) => {
+  const res = await courseApi.CommentOfLecture(params);
+  return res;
+});
 export const CommentLecture = createAsyncThunk<IComment, IComment>(
   "course/CommentLecture",
   async (params: IComment) => {
@@ -95,6 +102,20 @@ export const courseSlice = createSlice({
       state.comments?.push(action.payload);
     });
     builder.addCase(CommentLecture.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+      state.isError = true;
+    });
+    builder.addCase(LoadMoreComment.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(LoadMoreComment.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = undefined;
+      state.isError = false;
+      state.comments?.push(...action.payload);
+    });
+    builder.addCase(LoadMoreComment.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message;
       state.isError = true;

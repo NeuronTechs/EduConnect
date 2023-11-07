@@ -48,7 +48,11 @@ const Video = ({ currentLecture, currentTime, setCurrentTime }: Props) => {
     videoRef?.current?.play();
     setIsPlaying(true);
   }, [currentLecture]);
-
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.currentTime = currentTime;
+    }
+  }, [currentTime]);
   return (
     <div className=" h-auto  relative shadow-xl ">
       <video

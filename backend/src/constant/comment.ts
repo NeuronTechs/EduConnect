@@ -6,5 +6,5 @@ export interface IComment {
   lecture_id: string;
   timestamp: string;
   resource: string | null;
-  createdAt: Date;
+  createdAt: number;
 }

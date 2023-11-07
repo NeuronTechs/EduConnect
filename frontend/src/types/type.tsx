@@ -27,7 +27,7 @@ export interface IComment {
   content: string;
   username: string;
   lecture_id: string;
-  createdAt: string;
+  createdAt?: number;
   resource?: FileWithPath[] | null;
   timestamp: string;
   avatar?: string | null;
