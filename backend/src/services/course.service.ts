@@ -231,6 +231,33 @@ const getCourseDetails = async (
   });
 };
 
+const getOverviewCourse = async (
+  course_id: string
+): Promise<dataResponse<any>> => {
+  const sql = `SELECT c.course_id ,c.title as course_name,c.description as course_description,s.session_id, s.name AS session_name, l.lecture_id, l.name AS lecture_name, l.description, l.source, l.type, l.duration, c.price, c.discount, c.study, c.requirement
+  FROM Session s
+  JOIN Lecture l ON s.session_id = l.session_id
+  JOIN Course c ON s.course_id = c.course_id
+  WHERE s.course_id = ?
+  ORDER BY s.session_id, l.lecture_id;`;
+
+  return new Promise<dataResponse<any>>((resolve, reject) => {
+    db.connectionDB.query(sql, [course_id], (err, result: RowDataPacket[]) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      // Return the course details as a dataResponse object
+      resolve({
+        status: 200,
+        data: result,
+        message: "Success",
+      });
+    });
+  });
+};
+
 export default {
   create,
   getAll,
@@ -240,4 +267,5 @@ export default {
   getCourseByTeacherId,
   getCourseByStudentId,
   getCourseDetails,
+  getOverviewCourse,
 };

@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { login, test } from "../features/auth/authSlice";
+import { login } from "../features/auth/authSlice";
 import { Auth } from "../type";
 import { AppDispatch } from "../redux/store";
 import { ToastContainer, toast } from "react-toastify";
@@ -20,10 +20,10 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  // const errorNotify =
+
   const notify = () => {
     toast.error("Tài khoản hoặc mật khẩu không chính xác", {
-      position: "bottom-left",
+      position: "top-right",
       autoClose: 3000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -36,7 +36,6 @@ const Login = () => {
   const loginHandler = async () => {
     const auth: Auth = { username: username, password: password };
     const loginSuccess = await dispatch(login(auth));
-    console.log(loginSuccess);
 
     if (loginSuccess.type === "auth/login/fulfilled") {
       navigate("/");

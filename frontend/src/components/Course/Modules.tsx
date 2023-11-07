@@ -62,7 +62,7 @@ const LectureCard = (props: ILecture) => {
   return (
     <>
       <div
-        className="flex flex-col items-start justify-center text-[12px] cursor-pointer py-2 px-2 font-bold text-sm hover:bg-gray-100 rounded-md"
+        className="flex flex-col items-start justify-start text-[12px] cursor-pointer p-2 pl-0  font-bold text-sm hover:bg-gray-100 rounded-md"
         onClick={handleSelect}
       >
         <div className="flex">
@@ -132,7 +132,7 @@ const Session = (props: LectureProps) => {
 
 const Modules = ({ currentCourse }: Props) => {
   return (
-    <div className=" col-span-4 lg:col-span-1  p-4  mt-2  shadow-xl  border-l-2 border-gray-350 lg:h-[105vh] bg-white  lg:overflow-y-auto ">
+    <div className=" col-span-4 lg:col-span-1 h-auto p-4  mt-2 sticky shadow-xl  border-l-2 border-gray-350 lg:h-[100vh] bg-white  lg:overflow-y-auto ">
       <h1 className="text-xl font-bold">Nội dung khóa học</h1>
       <p className="text-xs text-gray-500">Lecture (15) / Total (5,5 hrs)</p>
       <div className="mt-5">

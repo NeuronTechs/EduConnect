@@ -5,6 +5,7 @@ import { Store } from "@reduxjs/toolkit";
 import { logoutThunk, refetchTokenStore } from "@/features/auth/authSlice";
 import { User } from "@/type";
 import { AppDispatch } from "@/redux/store";
+import { redirect } from "react-router-dom";
 
 interface IAccessToken {
   exp: number;
@@ -32,8 +33,10 @@ const getTimeNow = (): number => {
 // api call to get access token new
 const refetchToken = async () => {
   try {
-    const data = await httpRequest.get("user/refreshToken", {
-      headers: { withCredentials: true },
+    const data = await httpRequest.post("user/refreshToken", {
+      headers: {
+        withCredentials: true,
+      },
     });
     return data;
   } catch (error) {
@@ -77,6 +80,7 @@ export const setupInterceptor = (store: Store, dispatch: AppDispatch): void => {
                 refreshPromise = refetchToken();
               }
               const data = await refreshPromise;
+              console.log(data);
               if (data) {
                 const dataTemplate: User = {
                   ...user,
@@ -108,7 +112,7 @@ export const setupInterceptor = (store: Store, dispatch: AppDispatch): void => {
                 accessToken: data.accessToken,
               };
               store.dispatch(refetchTokenStore(dataTemplate));
-              config.headers.Authorization = "Bearer " + data;
+              config.headers.Authorization = "Bearer " + data.accessToken;
             }
           } catch (error) {
             Promise.reject(error);
@@ -136,7 +140,8 @@ export const setupInterceptor = (store: Store, dispatch: AppDispatch): void => {
       ) {
         if (!isRefreshing) {
           isRefreshing = true;
-          dispatch(logoutThunk());
+          await dispatch(logoutThunk());
+          redirect("/login");
         }
         isRefreshing = false;
       }
