@@ -23,10 +23,10 @@ function App() {
   );
   routerCheck = publicRoutes;
   if (useCurrentUser?.role === "admin") {
-    routerCheck = adminRoutes;
+    routerCheck = [...publicRoutes, ...adminRoutes];
   }
   if (useCurrentUser?.role === "user") {
-    routerCheck = publicRoutes;
+    routerCheck = [...publicRoutes];
   }
   if (useCurrentUser?.role === "teacher") {
     routerCheck = publicRoutes;

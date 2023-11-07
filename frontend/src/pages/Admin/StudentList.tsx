@@ -1,4 +1,4 @@
-import Pagination from "@/components/Admin/ListSTudent/Pagination ";
+import Pagination from "@/components/Admin/ListStudent/Pagination";
 import SearchBar from "@/components/Admin/ListStudent/SearchBar";
 import Table from "@/components/Admin/ListStudent/Table";
 import { dataStudent } from "@/types/constans";

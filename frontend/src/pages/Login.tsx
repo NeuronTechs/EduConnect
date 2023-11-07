@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 import { login, test } from "../features/auth/authSlice";
 import { Auth } from "../type";
 import { AppDispatch } from "../redux/store";
-import bg from "../../public/bgLogin.png";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {

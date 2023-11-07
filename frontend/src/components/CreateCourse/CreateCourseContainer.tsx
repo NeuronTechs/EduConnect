@@ -19,13 +19,20 @@ const CreateCourseContainer = (): React.ReactElement => {
   // data section
 
   return (
-    <div className="w-full flex flex-col gap-2 h-full">
+    <div className="w-full flex flex-col gap-2 h-full ">
       <div className="bg-white flex items-center justify-between px-4">
         <div></div>
         <TabContentCreateCourseTeacher tab={tab} setTab={setTab} />
-        <div className="flex items-center justify-end"></div>
+        <div className="flex items-center justify-end">
+          <button
+            type="button"
+            className="px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          >
+            Lưu
+          </button>
+        </div>
       </div>
-      <div className="flex w-full flex-1 gap-2">
+      <div className="flex w-full flex-1 gap-2 pb-5">
         <ContainerCreateCourseTeacher
           isOpenModal={isOpenModal}
           setIsOpenModal={setIsOpenModal}
@@ -249,7 +256,7 @@ const LessonTypeItem = (props: {
 }): React.ReactElement => {
   return (
     <div
-      className="px-3 py-4 flex flex-col items-center justify-center border hover:border-blue-500 gap-3 rounded-md h-30 w-30 cursor-pointer"
+      className="px-3 py-4 flex flex-col items-center justify-center border hover:border-blue-500 gap-3 rounded-md h-30 w-30 cursor-pointer px-6"
       onClick={props.onClick}
     >
       {React.cloneElement(props.icon as React.ReactElement, {
@@ -265,7 +272,7 @@ const LessonTypeItem = (props: {
 const DescriptionCreateCourseTeacher = (): React.ReactElement => {
   return (
     <div className="flex items-start justify-center w-full">
-      <div className="flex flex-col gap-4 bg-white p-2 min-w-[50%]">
+      <div className="flex flex-col gap-4 bg-white p-2 min-w-[50%] px-6">
         <h5 className="text-base font-bold text-black">Thông tin khóa học</h5>
         <div className="mb-2">
           <label
@@ -402,7 +409,7 @@ const DescriptionCreateCourseTeacher = (): React.ReactElement => {
 const PriceCreateCourseTeacher = (): React.ReactElement => {
   return (
     <div className="flex items-start justify-center w-full">
-      <div className="flex flex-col gap-4 bg-white p-2 min-w-[50%]">
+      <div className="flex flex-col gap-4 bg-white p-2 min-w-[50%] px-6">
         <h5 className="text-base font-bold text-black">Giá Cả</h5>
         <div className="mb-2">
           <label
@@ -513,6 +520,16 @@ const CreateContentCourse = (props: {
 }): React.ReactElement => {
   const { selectLesson } =
     React.useContext<ICreateCourseContext>(CreateCourseContext);
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    // Simulate loading content for 2 seconds
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <>
       <div className=" bg-white rounded-md w-[25%] h-full overflow-auto">
@@ -522,12 +539,20 @@ const CreateContentCourse = (props: {
         />
       </div>
       <div className="h-full overflow-auto bg-white p-2 flex-1">
-        {selectLesson?.type === "document" && <CreateLessonDocument />}
-        {selectLesson?.type === "video" && <CreateLessonVideo />}
-        {selectLesson?.type === "quiz" && (
+        {isLoading ? (
+          <div className="w-full flex items-center justify-center">
+            <p>Loading...</p>
+          </div>
+        ) : selectLesson?.type === "document" ? (
+          <CreateLessonDocument />
+        ) : selectLesson?.type === "video" ? (
+          <CreateLessonVideo />
+        ) : selectLesson?.type === "quiz" ? (
           <CreateQuizProvider>
             <CreateLessonQuiz />
           </CreateQuizProvider>
+        ) : (
+          <div className="w-full flex items-center justify-center"></div>
         )}
       </div>
     </>
