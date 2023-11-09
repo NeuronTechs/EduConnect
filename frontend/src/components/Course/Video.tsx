@@ -22,6 +22,7 @@ interface Props {
 }
 const Video = ({ currentLecture, currentTime, setCurrentTime }: Props) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [speed, setSpeed] = useState(1);
   const videoRef = useRef<HTMLVideoElement>(null);
   const speedRate = [];
   for (let index = 0.5; index <= 2; index = index + 0.25) {
@@ -35,6 +36,26 @@ const Video = ({ currentLecture, currentTime, setCurrentTime }: Props) => {
       } else {
         videoRef.current.play();
         setIsPlaying(true);
+      }
+    }
+  };
+  /**
+   * Handles the fullscreen functionality of the video player.
+   * @returns void
+   */
+  const handleFullscreen = (): void => {
+    if (videoRef.current) {
+      if (videoRef.current.requestFullscreen) {
+        videoRef.current.requestFullscreen();
+      } else if ((videoRef.current as any).mozRequestFullScreen) {
+        /* Firefox */
+        (videoRef.current as any).mozRequestFullScreen();
+      } else if ((videoRef.current as any).webkitRequestFullscreen) {
+        /* Chrome, Safari and Opera */
+        (videoRef.current as any).webkitRequestFullscreen();
+      } else if ((videoRef.current as any).msRequestFullscreen) {
+        /* IE/Edge */
+        (videoRef.current as any).msRequestFullscreen();
       }
     }
   };
@@ -82,7 +103,7 @@ const Video = ({ currentLecture, currentTime, setCurrentTime }: Props) => {
           </div>
           <Menu>
             <MenuHandler>
-              <button>1.0x</button>
+              <button>{speed + "x"}</button>
             </MenuHandler>
             <MenuList className="bg-black text-white w-20">
               {speedRate.map((rate) => (
@@ -92,6 +113,7 @@ const Video = ({ currentLecture, currentTime, setCurrentTime }: Props) => {
                     if (videoRef.current) {
                       videoRef.current.playbackRate = rate;
                     }
+                    setSpeed(rate);
                   }}
                 >
                   {rate + "x"}
@@ -135,8 +157,9 @@ const Video = ({ currentLecture, currentTime, setCurrentTime }: Props) => {
         </div>
         <div className="flex items-center justify-center space-x-5 mr-5">
           <SpeakerSimpleHigh size={25} />
+
           <GearSix size={25} />
-          <CornersOut size={25} />
+          <CornersOut size={25} onClick={handleFullscreen} />
         </div>
       </div>
     </div>

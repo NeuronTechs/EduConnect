@@ -22,7 +22,8 @@ const transporter = nodemailer.createTransport({
 
 const login = (username: string): Promise<any> => {
   try {
-    const query = "SELECT * FROM user WHERE username = ?";
+    const query =
+      "SELECT user.*, COALESCE(student.student_id, teacher.teacher_id) as user_id FROM user LEFT JOIN student ON user.username = student.username AND user.role = 0 LEFT JOIN teacher ON user.username = teacher.username AND user.role = 1 WHERE user.username = ? ";
     return new Promise((resolve, reject) => {
       db.connectionDB.query(query, [username], function (err, results) {
         if (err) {

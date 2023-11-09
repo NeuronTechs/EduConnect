@@ -21,6 +21,8 @@ export interface ICourse {
   createdAt: string;
   updatedAt: string;
   sessions: ISession[] | null;
+  teacher_avatar?: string;
+  teacher_name?: string;
 }
 export interface IComment {
   comment_id?: string | undefined | null;
