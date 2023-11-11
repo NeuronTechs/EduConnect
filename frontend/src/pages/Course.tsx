@@ -18,6 +18,7 @@ const Course = () => {
   useEffect(() => {
     if (id !== undefined) dispatch(getCourseDetails(id));
   }, [dispatch, id]);
+
   return (
     <div className="flex flex-col w-full  gap-5 ml-2 overflow-y-hidden">
       <div className=" grid grid-cols-4 space-x-2 overflow-y-hidden relative">

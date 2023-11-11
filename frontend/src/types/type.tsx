@@ -23,6 +23,8 @@ export interface ICourse {
   sessions: ISession[] | null;
   teacher_avatar?: string;
   teacher_name?: string;
+  completed_lectures: number;
+  total_lectures: number;
 }
 export interface IComment {
   comment_id?: string | undefined | null;

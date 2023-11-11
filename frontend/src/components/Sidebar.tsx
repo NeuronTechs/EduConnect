@@ -27,7 +27,7 @@ const ITEM_SIDEBAR = [
   {
     title: "Khoá Học Của Tôi",
     icon: <BookOpenText size={25} />,
-    to: "/my-course",
+    to: "/myCourse",
   },
   {
     title: "kế hoạch",

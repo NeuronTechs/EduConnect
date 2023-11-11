@@ -124,12 +124,27 @@ const getCourseByTeacherId = async (
 const getCourseByStudentId = async (
   student_id: string
 ): Promise<dataListResponse<ICourse>> => {
-  const sql = `SELECT c.*,t.teacher_id as teacher_id, t.username  as teacher_name, s.avatar as teacher_avatar
-  FROM course c
-  JOIN teacher t ON c.teacher_id = t.teacher_id join user s on t.username = s.username
-  WHERE c.course_id IN (SELECT course_id FROM order_items WHERE student_id = ?)`;
+  const sql = `SELECT 
+    c.*, 
+    t.teacher_id as teacher_id, 
+    t.username as teacher_name, 
+    s.avatar as teacher_avatar,
+    COUNT(DISTINCT sp.lecture_id) as completed_lectures,
+    (SELECT COUNT(*) FROM lecture l JOIN session ss ON l.session_id = ss.session_id WHERE ss.course_id = c.course_id) as total_lectures
+FROM 
+    course c
+JOIN 
+    teacher t ON c.teacher_id = t.teacher_id 
+JOIN 
+    user s ON t.username = s.username
+LEFT JOIN 
+    student_progress sp ON c.course_id = sp.course_id AND sp.student_id = ?
+WHERE 
+    c.course_id IN (SELECT course_id FROM order_items WHERE student_id = ?)
+GROUP BY 
+    c.course_id;`;
   return new Promise<dataListResponse<ICourse>>((resolve, reject) => {
-    db.connectionDB.query(sql, [student_id], (err, result) => {
+    db.connectionDB.query(sql, [student_id, student_id], (err, result) => {
       if (err) {
         reject(err);
         return;
