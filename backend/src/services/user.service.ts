@@ -410,10 +410,34 @@ const resetPassword = async (
   }
 };
 
+const getInforTeacher = (teacher_id: string): Promise<any> => {
+  try {
+    const query =
+      "SELECT * FROM educonnectdb.teacher join educonnectdb.user on teacher.username = user.username WHERE teacher_id = ?";
+    return new Promise((resolve, reject) => {
+      db.connectionDB.query(query, [teacher_id], function (err, results) {
+        if (err) {
+          reject(err);
+          return;
+        } else {
+          resolve({
+            status: 200,
+            data: results,
+            message: "Get infor teacher success",
+          });
+        }
+      });
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
 export default {
   login,
   register,
   updateInformation,
   isValidEmail,
   resetPassword,
+  getInforTeacher,
 };

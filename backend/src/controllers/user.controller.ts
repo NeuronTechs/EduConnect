@@ -370,6 +370,33 @@ const resetPassword = async (req: Request, res: Response) => {
   }
 };
 
+const getInforTeacher = async (req: Request, res: Response) => {
+  try {
+    const { teacher_id } = req.params;
+    let result: any;
+    result = await UserService.getInforTeacher(teacher_id);
+    if (result?.status) {
+      const { password, ...others } = result?.data[0];
+      res.status(200).json({
+        status: result?.status,
+        data: others,
+        message: result.message,
+      });
+    } else {
+      res.status(404).json({
+        status: 404,
+        message: result.message,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      status: 500,
+      data: {},
+      message: error,
+    });
+  }
+};
+
 export default {
   login,
   refreshToken,
@@ -378,4 +405,5 @@ export default {
   updateInformation,
   isValidEmail,
   resetPassword,
+  getInforTeacher,
 };

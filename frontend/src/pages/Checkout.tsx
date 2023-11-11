@@ -1,4 +1,5 @@
 import HeaderCart from "@/components/CoursesCart/HeaderCart";
+import { SliceState } from "@/types/type";
 import { formatCurrency } from "@/utils/const";
 import {
   useStripe,
@@ -8,6 +9,12 @@ import {
   CardCvcElement,
 } from "@stripe/react-stripe-js";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import * as courseApi from "../api/courseApi/courseApi";
+import { AppDispatch } from "@/redux/store";
+import { resetCheckOutCart } from "@/features/checkoutCourse/checkoutSlice";
+import { useNavigate } from "react-router-dom";
+
 const options = {
   style: {
     base: {
@@ -18,9 +25,20 @@ const options = {
     },
   },
 };
+
 const Checkout = () => {
   const stripe = useStripe();
   const elements = useElements();
+  const dispatch = useDispatch<AppDispatch>();
+  const nav = useNavigate();
+
+  const currentCourse = useSelector(
+    (state: SliceState) => state.checkoutSlice?.courseCurrent
+  );
+
+  const currentUser = useSelector(
+    (state: SliceState) => state.authSlice?.currentUser
+  );
 
   const submitHandler = async (e: any) => {
     e.preventDefault();
@@ -34,7 +52,7 @@ const Checkout = () => {
       };
 
       const paymentData = {
-        amount: 10000,
+        amount: currentCourse?.discount,
       };
 
       res = await axios.post(
@@ -45,8 +63,6 @@ const Checkout = () => {
 
       const clientSecret = res.data.client_secret;
 
-      console.log(clientSecret);
-
       if (!stripe || !elements) {
         return;
       }
@@ -56,19 +72,32 @@ const Checkout = () => {
           payment_method: {
             card: cardElement,
             billing_details: {
-              name: "test",
-              email: "cuchi770077@gmail.com",
+              name: currentUser?.fullName,
+              email: currentUser?.email,
             },
           },
         });
         if (result.error) {
           alert(result.error.message);
         } else {
-          // The payment is processed or not
           if (result.paymentIntent.status === "succeeded") {
-            alert("success");
+            const addTransactionInCourse =
+              await courseApi.addTransactionInCourse({
+                student_id: "00657",
+                course_id: currentCourse?.course_id,
+                amount: currentCourse?.discount,
+                status: "Thành công",
+              });
+            console.log(addTransactionInCourse);
+            if (addTransactionInCourse.status === 200) {
+              dispatch(resetCheckOutCart());
+              alert("Thanh toán thành công");
+              nav("/course/123");
+            } else {
+              alert(addTransactionInCourse.message);
+            }
           } else {
-            alert("There is some issue while payment processing");
+            alert("Có một vài vấn đề trong lúc thanh toán!!!");
           }
         }
       }
@@ -76,6 +105,7 @@ const Checkout = () => {
       alert(error.response.data.message);
     }
   };
+
   return (
     <div className="w-full h-screen overflow-x-hidden overflow-y-auto">
       <HeaderCart />
@@ -127,31 +157,25 @@ const Checkout = () => {
                   options={options}
                 />
               </div>
-              {/* <button
-                id="pay_btn"
-                type="submit"
-                className="w-full bg-blue-500 text-white py-2 px-3 rounded-md my-3"
-              >
-                Thanh toán
-              </button> */}
             </form>
             <div className="my-3 w-full">
               <h1 className="mb-4 font-semibold my-3 text-[20px]">Khóa học</h1>
               <div className="w-full flex-1 grid grid-cols-[80px_auto_40px] md:grid-cols-[80px_auto_80px] justify-stretch items-center my-3">
                 <img
                   className="w-full h-[80px] object-cover p-1"
-                  src="https://img-b.udemycdn.com/course/100x100/4802926_c68f_5.jpg"
+                  src={currentCourse?.image}
                   alt="course image"
                   loading="lazy"
                 />
                 <div className="truncate text-[16px] mx-2 cursor-pointer">
                   <p className="my-1 font-semibold truncate">
-                    CompTIA A+ Core 1 (220-1101) Complete Course & Practice Exam
+                    {currentCourse?.title}
                   </p>
+                  <p className="my-1 truncate">{currentCourse?.full_name}</p>
                 </div>
                 <div className="hidden md:block">
                   <p className="text-[14px] text-black">
-                    {formatCurrency(1490000)}
+                    {formatCurrency(currentCourse?.discount as number)}
                   </p>
                 </div>
               </div>
@@ -167,7 +191,7 @@ const Checkout = () => {
                 Tạm tính (3 khóa học)
               </div>
               <div className="text-[15px] font-semibold">
-                {formatCurrency(1500 / 2)}
+                {formatCurrency(currentCourse?.discount as number)}
               </div>
             </div>
             <div className="flex items-center justify-between my-2">
@@ -179,7 +203,7 @@ const Checkout = () => {
             <div className="flex items-start justify-between my-2">
               <div className="text-[15px]">Tổng cộng</div>
               <div className="text-[15px] font-semibold flex flex-col items-end justify-center">
-                <p>{formatCurrency(1500 / 2)}</p>
+                <p>{formatCurrency(currentCourse?.discount as number)}</p>
                 <p className="font-normal">Đã bao gồm VAT (nếu có)</p>
               </div>
             </div>

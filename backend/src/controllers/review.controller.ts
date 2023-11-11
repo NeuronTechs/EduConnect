@@ -3,7 +3,7 @@ import reviewService from "../services/review.service";
 
 const getReviews = async (req: Request, res: Response) => {
   try {
-    const { course_id } = req.body;
+    const { course_id } = req.params;
     let result: any;
     result = await reviewService.getReviews(course_id);
     if (result?.status) {
@@ -63,7 +63,7 @@ const addNewReview = async (req: Request, res: Response) => {
 
 const getAllReviews = async (req: Request, res: Response) => {
   try {
-    const { course_id } = req.body;
+    const { course_id } = req.params;
     let result: any;
     result = await reviewService.getAllReviews(course_id);
     if (result?.status) {
@@ -90,7 +90,7 @@ const getAllReviews = async (req: Request, res: Response) => {
 
 const getstatisticStar = async (req: Request, res: Response) => {
   try {
-    const { course_id } = req.body;
+    const { course_id } = req.params;
     let result: any;
     result = await reviewService.getstatisticStar(course_id);
     if (result?.status) {

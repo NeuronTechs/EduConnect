@@ -1,14 +1,25 @@
-import { CheckCircle, MinusCircle, PlayCircle } from "@phosphor-icons/react";
+import { CheckCircle, MinusCircle, PlayCircle, X } from "@phosphor-icons/react";
 import {
   Accordion,
   AccordionHeader,
   AccordionBody,
+  Dialog,
+  Card,
+  CardBody,
 } from "@material-tailwind/react";
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { SliceState } from "@/types/type";
+import { convertTime, convertTimeToTemplate } from "@/utils/const";
 
 interface IconProps {
   id: number;
   open: number;
+}
+
+interface ISourceVideo {
+  lecture_name: string;
+  source: string;
 }
 
 const Icon = ({ id, open }: IconProps) => {
@@ -34,110 +45,116 @@ const Icon = ({ id, open }: IconProps) => {
 
 const Overview = () => {
   const [open, setOpen] = useState<number>(1);
+  const currentCourse = useSelector(
+    (state: SliceState) => state.courseOverviewSlice.courseCurrent
+  );
 
   const handleOpen = (value: number) => setOpen(open === value ? 0 : value);
+
+  const [video, setVideo] = useState<boolean>(false);
+  const handleVideo = () => setVideo((cur) => !cur);
+  const [contentVideo, setContentVideo] = useState<ISourceVideo>({
+    lecture_name: "",
+    source: "",
+  });
+
+  const handlePlay = (index: number, lecture_name: string, source: string) => {
+    if (index === 1) {
+      setVideo((cur) => !cur);
+      setContentVideo({ lecture_name: lecture_name, source: source });
+    }
+  };
   return (
     <div className="my-3 w-full">
       <div className="p-[10px]">
         <h3 className="font-semibold">Nội dung khóa học</h3>
+        <p className="p-[5px_10px]">{currentCourse?.description}</p>
         <p className="p-[5px_10px]">
-          Để có cái nhìn tổng quan về ngành IT - Lập trình web các bạn nên xem
-          các videos tại khóa này trước nhé.
-        </p>
-        <p className="p-[5px_10px]">
-          <span className="font-semibold">4</span> chương •{" "}
-          <span className="font-semibold">11</span> bài học • Thời lượng{" "}
-          <span className="font-semibold">03 giờ 25 phút</span>
+          <span className="font-semibold">
+            {currentCourse?.sessions.length}
+          </span>{" "}
+          chương •{" "}
+          <span className="font-semibold">{currentCourse?.totalLecture}</span>{" "}
+          bài học • Thời lượng{" "}
+          <span className="font-semibold">
+            {convertTime(currentCourse?.totalTime as number)}
+          </span>
         </p>
         <div className="w-full px-3 p-[5px_10px]">
-          <Accordion open={open === 1} icon={<Icon id={1} open={open} />}>
-            <AccordionHeader onClick={() => handleOpen(1)}>
-              <div className="flex flex-col justify-between items-start opacity-100">
-                <div className="text-[16px]">1. Khái niệm cơ bản?</div>
-                <div className="text-[13px] font-normal">
-                  15 phút để hoàn thành
+          {currentCourse?.sessions.map((session, index) => (
+            <Accordion
+              key={index}
+              open={open === index + 1}
+              icon={<Icon id={index + 1} open={open} />}
+            >
+              <AccordionHeader onClick={() => handleOpen(index + 1)}>
+                <div className="flex flex-row justify-between items-center opacity-100">
+                  <div className="text-[18px]">
+                    <p>{`${index + 1}. ${session.name}`}</p>
+                  </div>
+                  {index + 1 === 1 && (
+                    <div
+                      className={` ml-3 text-[14px] border p-2 bg-gray-300 rounded-lg`}
+                    >
+                      Học thử
+                    </div>
+                  )}
                 </div>
-              </div>
-            </AccordionHeader>
-            <AccordionBody>
-              <ul>
-                <li className="flex items-center justify-start text-[15px]">
-                  <PlayCircle size={16} className="mr-3" />
-                  1. Mô hình Client - Server là gì?
-                </li>
-                <li className="flex items-center justify-start">
-                  <PlayCircle size={16} className="mr-3" />
-                  2. Domain là gì? Tên miền là gì?
-                </li>
-              </ul>
-            </AccordionBody>
-          </Accordion>
-          <Accordion open={open === 2} icon={<Icon id={2} open={open} />}>
-            <AccordionHeader onClick={() => handleOpen(2)}>
-              <div className="flex flex-col justify-between items-start opacity-100">
-                <div className="text-[16px]">2. Môi trường, con người, IT</div>
-                <div className="text-[13px] font-normal">
-                  15 phút để hoàn thành
+              </AccordionHeader>
+              <AccordionBody>
+                <ul>
+                  {session.lectures.map((lecture, indexLec) => (
+                    <li
+                      key={lecture.lecture_id}
+                      className={`${
+                        index + 1 === 1 ? "cursor-pointer" : "cursor-default"
+                      } flex items-center justify-between text-[15px]`}
+                      onClick={() =>
+                        handlePlay(
+                          index + 1,
+                          lecture.lecture_name,
+                          lecture.source
+                        )
+                      }
+                    >
+                      <div className="flex items-center justify-start text-[15px]">
+                        <PlayCircle
+                          color="#ffcc80"
+                          size={18}
+                          className="mr-3"
+                          weight="fill"
+                        />
+                        <p className="text-[15px]">{`${index + 1}.${
+                          indexLec + 1
+                        }. ${lecture.lecture_name}`}</p>
+                      </div>
+                      <p className="text-[15px]">{`${convertTimeToTemplate(
+                        lecture.time
+                      )}`}</p>
+                    </li>
+                  ))}
+                </ul>
+              </AccordionBody>
+            </Accordion>
+          ))}
+          <Dialog
+            open={video}
+            handler={handleVideo}
+            className="bg-transparent shadow-none"
+          >
+            <Card className="mx-auto w-full max-w-full">
+              <CardBody className="flex flex-col gap-4">
+                <div className="flex item-center justify-between font-semibold">
+                  <p className="text-[20px]">{contentVideo?.lecture_name}</p>
+                  <X cursor={"pointer"} size={24} onClick={handleVideo} />
                 </div>
-              </div>
-            </AccordionHeader>
-            <AccordionBody>
-              <ul>
-                <li className="flex items-center justify-start text-[15px]">
-                  <PlayCircle size={16} className="mr-3" />
-                  3. Mô hình Client - Server là gì?
-                </li>
-                <li className="flex items-center justify-start">
-                  <PlayCircle size={16} className="mr-3" />
-                  4. Domain là gì? Tên miền là gì?
-                </li>
-              </ul>
-            </AccordionBody>
-          </Accordion>
-          <Accordion open={open === 3} icon={<Icon id={3} open={open} />}>
-            <AccordionHeader onClick={() => handleOpen(3)}>
-              <div className="flex flex-col justify-between items-start opacity-100">
-                <div className="text-[16px]">3. Phương pháp và định hướng</div>
-                <div className="text-[13px] font-normal">
-                  1 tiếng để hoàn thành
-                </div>
-              </div>
-            </AccordionHeader>
-            <AccordionBody>
-              <ul>
-                <li className="flex items-center justify-start text-[15px]">
-                  <PlayCircle size={16} className="mr-3" />
-                  5. Mô hình Client - Server là gì?
-                </li>
-                <li className="flex items-center justify-start">
-                  <PlayCircle size={16} className="mr-3" />
-                  6. Domain là gì? Tên miền là gì?
-                </li>
-              </ul>
-            </AccordionBody>
-          </Accordion>
-          <Accordion open={open === 4} icon={<Icon id={4} open={open} />}>
-            <AccordionHeader onClick={() => handleOpen(4)}>
-              <div className="flex flex-col justify-between items-start opacity-100">
-                <div className="text-[16px]">4. Hoàn thành khóa học</div>
-                <div className="text-[13px] font-normal">
-                  15 phút để hoàn thành
-                </div>
-              </div>
-            </AccordionHeader>
-            <AccordionBody>
-              <ul>
-                <li className="flex items-center justify-start text-[15px]">
-                  <PlayCircle size={16} className="mr-3" />
-                  7. Mô hình Client - Server là gì?
-                </li>
-                <li className="flex items-center justify-start">
-                  <PlayCircle size={16} className="mr-3" />
-                  8. Domain là gì? Tên miền là gì?
-                </li>
-              </ul>
-            </AccordionBody>
-          </Accordion>
+                <video className="h-full w-full rounded-lg" controls>
+                  <source src={contentVideo?.source} type="video/mp4" />
+                  Trình duyệt của bạn không hỗ trợ phát video này.
+                </video>
+              </CardBody>
+            </Card>
+          </Dialog>
         </div>
       </div>
       {/* Bạn sẽ học được gì? */}
@@ -146,45 +163,57 @@ const Overview = () => {
         <ul className="flex flex-col lg:flex-row flex-wrap p-[5px_10px]">
           <li className="flex items-center justify-start basis-1/2">
             <CheckCircle size={16} className="mr-3" />
-            Các kiến thức cơ bản, nền móng của ngành IT
+            {currentCourse?.study?.study1}
           </li>
           <li className="flex items-center justify-start basis-1/2">
             <CheckCircle size={16} className="mr-3" />
-            Các kiến thức cơ bản, nền móng của ngành IT
+            {currentCourse?.study?.study2}
           </li>
           <li className="flex items-center justify-start basis-1/2">
             <CheckCircle size={16} className="mr-3" />
-            Các kiến thức cơ bản, nền móng của ngành IT
+            {currentCourse?.study?.study3}
           </li>
           <li className="flex items-center justify-start basis-1/2">
             <CheckCircle size={16} className="mr-3" />
-            Các kiến thức cơ bản, nền móng của ngành IT
+            {currentCourse?.study?.study4}
           </li>
           <li className="flex items-center justify-start basis-1/2">
             <CheckCircle size={16} className="mr-3" />
-            Các kiến thức cơ bản, nền móng của ngành IT
+            {currentCourse?.study?.study5}
           </li>
           <li className="flex items-center justify-start basis-1/2">
             <CheckCircle size={16} className="mr-3" />
-            Các kiến thức cơ bản, nền móng của ngành IT
+            {currentCourse?.study?.study6}
           </li>
         </ul>
       </div>
       {/* Yêu cầu */}
       <div className="p-[10px] gap-2">
         <h3 className="font-semibold">Yêu cầu</h3>
-        <ul className="p-[5px_10px]">
+        <ul className="p-[5px_10px] flex flex-col lg:flex-row flex-wrap">
           <li className="flex items-center justify-start basis-1/2">
             <MinusCircle weight="fill" size={16} className="mr-3" />
-            Các kiến thức cơ bản, nền móng của ngành IT
+            {currentCourse?.requirement?.require1}
           </li>
           <li className="flex items-center justify-start basis-1/2">
             <MinusCircle weight="fill" size={16} className="mr-3" />
-            Các kiến thức cơ bản, nền móng của ngành IT
+            {currentCourse?.requirement?.require2}
           </li>
           <li className="flex items-center justify-start basis-1/2">
             <MinusCircle weight="fill" size={16} className="mr-3" />
-            Các kiến thức cơ bản, nền móng của ngành IT
+            {currentCourse?.requirement?.require3}
+          </li>
+          <li className="flex items-center justify-start basis-1/2">
+            <MinusCircle weight="fill" size={16} className="mr-3" />
+            {currentCourse?.requirement?.require4}
+          </li>
+          <li className="flex items-center justify-start basis-1/2">
+            <MinusCircle weight="fill" size={16} className="mr-3" />
+            {currentCourse?.requirement?.require5}
+          </li>
+          <li className="flex items-center justify-start basis-1/2">
+            <MinusCircle weight="fill" size={16} className="mr-3" />
+            {currentCourse?.requirement?.require6}
           </li>
         </ul>
       </div>

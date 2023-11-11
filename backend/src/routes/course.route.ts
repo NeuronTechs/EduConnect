@@ -20,4 +20,10 @@ router
 router
   .route("/overview-course/:id")
   .get(middlewareController.verifyToken, courseController.getOverviewCourse);
+router
+  .route("/add-transaction-course")
+  .post(
+    middlewareController.verifyToken,
+    courseController.addTransactionInCourse
+  );
 module.exports = router;
