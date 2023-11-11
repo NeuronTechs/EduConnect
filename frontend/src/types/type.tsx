@@ -1,12 +1,16 @@
 import { AuthState } from "@/features/auth/authSlice";
 import { CartState } from "@/features/cart/cartSlice";
+import { CheckoutState } from "@/features/checkoutCourse/checkoutSlice";
 import { CourseState } from "@/features/course/courseSlice";
+import { CourseOverviewState } from "@/features/overviewCourse/courseOverviewSlice";
 import { FileWithPath } from "react-dropzone";
 
 export interface SliceState {
   authSlice: AuthState;
   courseSlice: CourseState;
   cartSlice: CartState;
+  courseOverviewSlice: CourseOverviewState;
+  checkoutSlice: CheckoutState;
 }
 export interface ICourse {
   course_id: string;
@@ -213,4 +217,62 @@ export interface IQuizInfo {
   retakePercent: number;
   content: string;
   questions: IQuestionInfo[];
+}
+// overview course
+export interface ICourseOverview {
+  course_id: string;
+  title: string;
+  image: string;
+  description: string;
+  requirement: any;
+  study: any;
+  price: number;
+  discount: number;
+  level: string;
+  language: string;
+  totalTime?: number;
+  totalLecture?: number;
+  timeLine?: number | string;
+  student?: number | string;
+  teacher_id: string;
+  fullName: string;
+  educational_level: string;
+  avatar: string;
+  student_id: string,
+  sessions: ISessionOverview[];
+}
+
+export interface ISessionOverview {
+  session_id: string;
+  name: string;
+  lectures: ILectureOverview[];
+}
+
+export interface ILectureOverview {
+  lecture_id: string;
+  lecture_name: string;
+  description: string;
+  source: string;
+  type: string;
+  time: number;
+}
+
+export interface IReview {
+  review_id: string;
+  content: string;
+  title: string;
+  createdAt: string;
+  rating: number;
+  course_id: string;
+  full_name: string;
+  username: string;
+  avatar: string;
+}
+
+export interface addReview {
+  course_id: string;
+  content: string;
+  author_id: string;
+  rating: number;
+  title: string;
 }

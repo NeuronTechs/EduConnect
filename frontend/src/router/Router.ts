@@ -141,6 +141,11 @@ const publicRoutes: IRouter[] = [
     component: ManagerComplaintCourse,
     layout: DefaultLayout,
   },
+  {
+    path: configRouter.managerComplaintCourse,
+    component: ManagerComplaintCourse,
+    layout: DefaultLayout,
+  },
 ];
 const privateRoutes = [{ path: "/", component: Home }];
 const adminRoutes = [{ path: "/", component: Home }];

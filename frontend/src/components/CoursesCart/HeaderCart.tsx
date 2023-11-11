@@ -1,4 +1,4 @@
-import SearchHeader from "../Header/SearchHeader";
+// import SearchHeader from "../Header/SearchHeader";
 import NotificationHeader from "../Header/NotificationHeader";
 import MessageHeader from "../Header/MessageHeader";
 import CourseCart from "../Header/CourseCart";
@@ -23,9 +23,9 @@ const HeaderCart = () => {
           className="h-[50px] object-cover"
         />
       </div>
-      <div className="w-[500px]">
+      {/* <div className="w-[500px]">
         <SearchHeader />
-      </div>
+      </div> */}
       <div className="flex items-center justify-center gap-3 pr-3">
         <NotificationHeader />
         <MessageHeader />

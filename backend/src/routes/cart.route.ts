@@ -9,6 +9,6 @@ router
   .route("/removetocart")
   .post(middlewareController.verifyToken, cartController.removeToCart);
 router
-  .route("/getcart")
+  .route("/getcart/:student_id")
   .get(middlewareController.verifyToken, cartController.getAllCart);
 export default router;
