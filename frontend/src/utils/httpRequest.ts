@@ -1,7 +1,6 @@
-import { BASE_URL } from "@/configs/enviroment";
+import { BASE_URL } from "@/configs/environment";
 import axios from "axios";
 import { AxiosRequestHeaders } from "axios";
-console.log(BASE_URL);
 const instance = axios.create({
   baseURL: BASE_URL,
   withCredentials: false,

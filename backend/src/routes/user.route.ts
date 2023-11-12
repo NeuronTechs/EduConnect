@@ -11,4 +11,5 @@ router.route("/reset-password").post(AuthController.resetPassword);
 router
   .route("/updateinformation")
   .post(middlewareController.verifyToken, AuthController.updateInformation);
+
 export default router;

@@ -11,7 +11,7 @@ export interface signupState {
 export interface User {
   userId: string;
   username: string;
-  role: string;
+  role: string | null;
   fullName: string;
   createdAt: string;
   updatedAt: string;

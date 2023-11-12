@@ -117,5 +117,5 @@ export default {
   getCourseByTeacherId,
   getCourseByStudentId,
   getCourseDetails,
-  getOverviewCourse
+  getOverviewCourse,
 };

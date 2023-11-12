@@ -19,6 +19,13 @@ const ListCategory = (props: props): React.ReactElement => {
           <ListCategoryLoading className="col-span-4" />
         ) : (
           <>
+            {props.data.length === 0 && (
+              <div className="flex items-center justify-center w-full py-15 col-span-4">
+                <p className="text-center text-lg font-semibold">
+                  Không có danh mục nào
+                </p>
+              </div>
+            )}
             {props.data.map((category) => {
               return <CategoryItem data={category} key={category.id} />;
             })}
