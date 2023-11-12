@@ -10,20 +10,8 @@ import Overview from "./Tabs/Overview";
 import Reviews from "./Tabs/Reviews";
 import Instructor from "./Tabs/Instructor";
 import { formatCurrency } from "../../utils/const";
-
-const data = {
-  image:
-    "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera_assets.s3.amazonaws.com/images/a7c5400e51272c78b710ce9b56fd3178.png?auto=format%2Ccompress&dpr=1&w=562&h=221&q=40&fit=crop",
-  teacher: "Nguyen Thu Huong",
-  position: "Web developer",
-  avatar:
-    "https://cache.lovethispic.com/uploaded_images/327102-Rose-In-Grayscale.jpeg",
-  start: 3,
-  numberReview: 1200,
-  price: 400000,
-  discount: 200000,
-  courseName: "Reactjs cơ bản cho người mới bắt đầu",
-};
+import { useSelector } from "react-redux";
+import { SliceState } from "@/types/type";
 
 const dataTab = [
   {
@@ -44,17 +32,18 @@ const dataTab = [
 ];
 
 const DetailCourse = () => {
+  const currentCourse = useSelector((state: SliceState) => state.courseOverviewSlice.courseCurrent);
   return (
     <div className="w-full lg:w-[70%] lg:p-[10px] h-auto bg-white">
       {/* image */}
-      {data?.image === "" ? (
+      {currentCourse?.image === "" ? (
         <div className="my-3 bg-gray-400 w-full h-[200px] rounded-lg"></div>
       ) : (
         <div className="my-3 w-full lg:h-[200px] p-[0_10px]">
           <img
             loading="lazy"
             className="h-full w-full rounded-lg object-cover object-center"
-            src={data?.image}
+            src={currentCourse?.image}
             alt="image course"
           />
         </div>
@@ -62,40 +51,40 @@ const DetailCourse = () => {
       {/* Infor course */}
       <div className="flex flex-col lg:flex lg:flex-row lg:items-center lg:justify-between p-[10px] h-[50px]">
         <div className="flex">
-          <Avatar src={data?.avatar} alt="avatar" loading="lazy" />
+          <Avatar src={currentCourse?.avatar} alt="avatar" loading="lazy" />
           <div className="mx-3">
-            <p className="font-semibold">{data?.teacher}</p>
-            <p>{data?.position}</p>
+            <p className="font-semibold">{currentCourse?.fullName}</p>
+            <p>{currentCourse?.educational_level}</p>
           </div>
           <div className="flex items-center">
             <Rating
-              value={data?.start}
+              value={3}
               readonly
               unratedColor="amber"
               ratedColor="amber"
             />
             <p className="hidden lg:block text-[14px] ml-1 italic font-normal">
-              {data.numberReview} đánh giá
+              {1200} đánh giá
             </p>
           </div>
         </div>
         <div className="hidden lg:block text-blue-300">
-          {data?.discount ? (
+          {currentCourse?.discount ? (
             <>
-              <p className="line-through">{formatCurrency(data?.price)}</p>
+              <p className="line-through">{formatCurrency(currentCourse?.price)}</p>
               <p className="font-semibold text-blue-500">
-                {formatCurrency(data?.discount)}
+                {formatCurrency(currentCourse?.discount)}
               </p>
             </>
           ) : (
-            <p>{data?.price}VND</p>
+            <p>{currentCourse?.price}VND</p>
           )}
         </div>
       </div>
       {/* Overview */}
       <div className="p-[10px]">
-        <h1 className="font-semibold text-[20px] lg:text-[24px]">
-          {data?.courseName}
+        <h1 className="font-semibold text-[20px] lg:text-[24px] my-3">
+          {currentCourse?.title}
         </h1>
       </div>
       <div>

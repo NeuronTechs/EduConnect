@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   CaretDown,
   DotsSixVertical,
-  Pencil,
   Plus,
   Question,
   Trash,
@@ -21,15 +20,30 @@ import {
   MenuItem,
   MenuList,
 } from "@material-tailwind/react";
+import TextEditor from "./TextEditor/TextEditor";
+import { IQuestionInfo } from "@/types/type";
+import { CreateQuizContext } from "@/context/CreateQuizContext";
+import InputEditTitle from "./Quiz/InputEditTitle";
 
 interface IInputTitle {
   title: string;
 }
+
 const CreateLessonQuiz = (): React.ReactElement => {
   const { register, handleSubmit } = useForm<IInputTitle>();
-  const onSubmitTitle = (data: IInputTitle) => {};
+  const [indexTab, setIndexTab] = React.useState<number>(0);
+  const { dataQuiz, handleChangeTitleQuiz } =
+    React.useContext(CreateQuizContext);
+
+  const onSubmitTitle = (data: IInputTitle) => {
+    if (data.title.trim() === "") return;
+    handleChangeTitleQuiz(data.title);
+  };
+  React.useEffect(() => {
+    console.log(dataQuiz);
+  }, [dataQuiz]);
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full space-y-2">
       {/* header */}
       <div className="w-full p-2 border-b-2 border-gray-200 flex items-center gap-2">
         <div className="flex flex-1">
@@ -48,15 +62,57 @@ const CreateLessonQuiz = (): React.ReactElement => {
         <button
           onClick={handleSubmit(onSubmitTitle)}
           type="button"
-          disabled={true}
+          // disabled={true}
           className="text-white bg-blue-500 hover:bg-blue-300 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
         >
           Lưu
         </button>
       </div>
-      <ContainerQuestion />
+      {/* tab content */}
       <div className="w-full">
-        <AddQuestion />
+        <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
+          <ul className="flex flex-wrap -mb-px">
+            <li className="mr-2 cursor-pointer">
+              <div
+                onClick={() => setIndexTab(0)}
+                className={`inline-block p-4 ${
+                  indexTab === 0
+                    ? "text-blue-600 border-b-2 border-blue-600 dark:text-blue-500 dark:border-blue-500"
+                    : "border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+                } rounded-t-lg `}
+              >
+                Câu Hỏi
+              </div>
+            </li>
+            <li className="mr-2 cursor-pointer">
+              <div
+                onClick={() => setIndexTab(1)}
+                className={`inline-block p-4 ${
+                  indexTab === 1
+                    ? "text-blue-600 border-b-2 border-blue-600 dark:text-blue-500 dark:border-blue-500"
+                    : "border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+                } rounded-t-lg active `}
+                aria-current="page"
+              >
+                Thiết Lập
+              </div>
+            </li>
+          </ul>
+        </div>
+        {indexTab === 0 && (
+          <>
+            <ContainerQuestion data={dataQuiz.questions} />
+            <div className="w-full">
+              <AddQuestion />
+            </div>
+          </>
+        )}
+
+        {indexTab === 1 && (
+          <div className="py-6 space-y-2">
+            <SettingQuiz />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -64,27 +120,193 @@ const CreateLessonQuiz = (): React.ReactElement => {
 
 export default CreateLessonQuiz;
 
-const ContainerQuestion = (): React.ReactElement => {
+const SettingQuiz = (): React.ReactElement => {
   return (
-    <div className="py-6 space-y-2">
-      <QuestionItem />
+    <div className="w-full space-y-3 px-2">
+      <div className="space-y-2">
+        <p className="text-xs font-bold text-black">Mô Tả</p>
+        <textarea
+          rows={4}
+          className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Viết Mô Tả Về Bài Kiếm Tra..."
+        ></textarea>
+      </div>
+      <div className="flex gap-2">
+        <div className="space-y-2">
+          <p className="text-xs font-bold text-black">
+            Thời lượng bài kiểm tra
+          </p>
+          <input
+            type="text"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+        </div>
+        <div className="space-y-2">
+          <p className="text-xs font-bold text-black">Đơn vị thời gian</p>
+          <select
+            id="countries"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          >
+            <option value={"m"}>phút</option>
+            <option value={"d"}>ngày</option>
+            <option value={"w"}>tuần</option>
+          </select>
+        </div>
+      </div>
+      <div className="space-y-2">
+        <p className="text-xs font-bold text-black">Loại bài Kiểm Tra</p>
+        <select
+          id="countries"
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        >
+          <option value={"Default"}>Mặc định</option>
+          <option value={"global"}>toàn cầu</option>
+          <option value={"Pagination"}>Phân trang</option>
+        </select>
+      </div>
+
+      <div className="flex items-center justify-start gap-2">
+        <label className="relative inline-flex items-center mb-4 cursor-pointer">
+          <input type="checkbox" value="" className="sr-only peer" />
+          <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
+          <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+            Chọn ngẫu nhiên các câu hỏi
+          </span>
+        </label>
+        <label className="relative inline-flex items-center mb-4 cursor-pointer">
+          <input type="checkbox" value="" className="sr-only peer" />
+          <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
+          <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+            Hiển thị câu trả lời đúng
+          </span>
+        </label>
+      </div>
+      <div className="flex gap-2">
+        <div className="space-y-2">
+          <p className="text-xs font-bold text-black">Đạt điểm (%)</p>
+          <input
+            type="text"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+        </div>
+        <div className="space-y-2">
+          <p className="text-xs font-bold text-black">
+            Bị cắt điểm sau khi thi lại (%)
+          </p>
+          <input
+            type="text"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <p className="text-xs font-bold text-black">Nội dung bài học</p>
+        <TextEditor />
+      </div>
     </div>
   );
 };
 
-const QuestionItem = (): React.ReactElement => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [questionType, setQuestionType] = React.useState<number>(1);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
-  const [data, setData] = React.useState<any>([]);
-
+const ContainerQuestion = ({
+  data,
+}: {
+  data: IQuestionInfo[];
+}): React.ReactElement => {
   return (
-    <div className=" px-2 pt-2 rounded-md border border-transparent bg-blue-200/30 relative  flex flex-col justify-center items-center">
-      <button className="absolute -top-[10px] p-1 border-4 border-white bg-blue-600 hover:bg-blue-500 active:bg-blue-600 text-white rounded-md">
-        <Plus size={15} />
-      </button>
+    <div className="py-6 space-y-2">
+      {data.length === 0 ? (
+        <div className="flex items-center justify-center w-full p-2 rounded-md border border-transparent relative min-h-[45px]">
+          <p className="text-sm font-normal ">Chưa có câu trả lời nào</p>
+        </div>
+      ) : (
+        data.map((item) => (
+          <div key={item.id} className="w-full">
+            <QuestionItem data={item} />
+          </div>
+        ))
+      )}
+    </div>
+  );
+};
+
+const QuestionItem = ({
+  data,
+}: {
+  data: IQuestionInfo;
+}): React.ReactElement => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [questionType, setQuestionType] = React.useState<string>(data.type); // set type question
+  const [isHover, setIsHover] = React.useState<boolean>(false); // set is hover show button add question
+  const { handleEditQuestion, handleDeleteQuestion } =
+    React.useContext(CreateQuizContext);
+  useEffect(() => {
+    if (questionType === "fill")
+      handleEditQuestion({
+        ...data,
+        answers: [
+          {
+            id: Math.floor(Math.random() * 1000000),
+            answer: "nhập câu trả lời",
+            isCorrect: true,
+            image: null,
+            question: null,
+          },
+        ],
+      });
+    else if (questionType === "true_false")
+      handleEditQuestion({
+        ...data,
+        answers: [
+          {
+            id: Math.floor(Math.random() * 1000000),
+            answer: "true",
+            isCorrect: true,
+            image: null,
+            question: null,
+          },
+          {
+            id: Math.floor(Math.random() * 1000000),
+            answer: "false",
+            isCorrect: false,
+            image: null,
+            question: null,
+          },
+        ],
+      });
+    else
+      handleEditQuestion({
+        ...data,
+        answers: [],
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [questionType]);
+  const handleClickDeleteQuestion = () => {
+    handleDeleteQuestion(data.id);
+  };
+
+  const handleEditQuestionTitle = (dataQuestion: string) => {
+    handleEditQuestion({
+      ...data,
+      question: dataQuestion,
+    });
+  };
+  return (
+    <div
+      className=" px-2 pt-2 rounded-md border border-transparent bg-blue-200/30 relative  flex flex-col justify-center items-center"
+      onMouseEnter={() => setIsHover(true)}
+      onMouseLeave={() => setIsHover(false)}
+    >
+      {isHover && (
+        <button className="absolute -top-[10px] p-1 border-4 border-white bg-blue-600 hover:bg-blue-500 active:bg-blue-600 text-white rounded-md">
+          <Plus size={15} />
+        </button>
+      )}
       <div className="absolute right-0 -top-[1px] flex bg-white">
-        <button className="bg-red-500 p-1  text-white">
+        <button
+          className="bg-red-500 p-1  text-white"
+          onClick={handleClickDeleteQuestion}
+        >
           <Trash size={15} />
         </button>
         <div className="flex items-center justify-center">
@@ -97,22 +319,24 @@ const QuestionItem = (): React.ReactElement => {
           <div className="h-[50px] w-[50px] bg-white flex items-center justify-center"></div>
           <div className="space-y-2">
             <div className="flex items-center justify-start gap-2">
-              <p className="text-sm font-semibold">Fill the Gap</p>
-              <Pencil size={15} className="text-gray-500" />
+              <InputEditTitle
+                value={data.question ? data.question : "nhập câu hỏi"}
+                onSubmit={handleEditQuestionTitle}
+              />
             </div>
             <div className="flex items-center justify-start gap-4">
               <select
-                onChange={(e) => setQuestionType(parseInt(e.target.value))}
+                onChange={(e) => setQuestionType(e.target.value)}
                 value={questionType}
                 className="bg-white border border-transparent text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-1 px-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
-                <option value={1}>Lựa Chọn Duy Nhất</option>
-                <option value={2}>Nhiều Lựa Chọn</option>
-                <option value={3}>Đúng - Sai</option>
-                <option value={4}>Kết Hợp</option>
-                <option value={5}>Kết Hợp Hình Ảnh</option>
-                <option value={6}>Từ Khoá</option>
-                <option value={7}>Điền Vào Khoảng Trống</option>
+                <option value={"single_choice"}>Lựa Chọn Duy Nhất</option>
+                <option value={"multiple_choice"}>Nhiều Lựa Chọn</option>
+                <option value={"true_false"}>Đúng - Sai</option>
+                <option value={"matching"}>Kết Hợp</option>
+                <option value={"matching_image"}>Kết Hợp Hình Ảnh</option>
+                <option value={"keyword"}>Từ Khoá</option>
+                <option value={"fill"}>Điền Vào Khoảng Trống</option>
               </select>
               {/* <select className="bg-white border border-transparent text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-1 px-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <option value="">Chọn Thể Loại</option>
@@ -146,22 +370,82 @@ const QuestionItem = (): React.ReactElement => {
       <hr className="h-px my-4 bg-gray-300 border-0 dark:bg-gray-700 w-full"></hr>
       {/* answer */}
       <div className="w-full">
-        <RenderContentQuestion type={questionType} />
+        <RenderContentQuestion type={questionType} data={data} />
       </div>
     </div>
   );
 };
-const RenderContentQuestion = (props: { type: number }) => {
-  if (props.type === 1) return <ContentQuestionSingleChoice data={[]} />;
-  if (props.type === 2) return <ContentQuestionMultiplyChoice data={[]} />;
-  if (props.type === 3) return <ContentQuestionTrueFalse data={[]} />;
-  if (props.type === 4) return <ContentQuestionMatching data={[]} />;
-  if (props.type === 5) return <ContentQuestionMatchingImage data={[]} />;
-  if (props.type === 6) return <ContentQuestionKeyword />;
-  if (props.type === 7) return <ContentQuestionFill />;
+const RenderContentQuestion = (props: {
+  type: string;
+  data: IQuestionInfo;
+}) => {
+  if (props.type === "single_choice")
+    return <ContentQuestionSingleChoice data={props.data} />;
+  if (props.type === "multiple_choice")
+    return <ContentQuestionMultiplyChoice data={props.data} />;
+  if (props.type === "true_false")
+    return <ContentQuestionTrueFalse data={props.data} />;
+  if (props.type === "matching")
+    return <ContentQuestionMatching data={props.data} />;
+  if (props.type === "matching_image")
+    return <ContentQuestionMatchingImage data={props.data} />;
+  if (props.type === "keyword")
+    return <ContentQuestionKeyword data={props.data} />;
+  if (props.type === "fill") return <ContentQuestionFill data={props.data} />;
 };
 const AddQuestion = (): React.ReactElement => {
+  const { handleAddNewQuestion } = React.useContext(CreateQuizContext);
   // set the dropdown menu element
+  const handleAddQuestion = (type: string) => {
+    if (type === "fill") {
+      handleAddNewQuestion({
+        id: Math.floor(Math.random() * 1000000),
+        question: "nhập câu hỏi",
+        type: type,
+        answers: [
+          {
+            id: Math.floor(Math.random() * 1000000),
+            answer: "nhập câu trả lời",
+            isCorrect: true,
+            image: null,
+            question: null,
+          },
+        ],
+        images: null,
+      }); // add new question fill
+    } else if (type === "true_false") {
+      handleAddNewQuestion({
+        id: Math.floor(Math.random() * 1000000),
+        question: "nhập câu hỏi",
+        type: type,
+        answers: [
+          {
+            id: Math.floor(Math.random() * 1000000),
+            answer: "true",
+            isCorrect: true,
+            image: null,
+            question: null,
+          },
+          {
+            id: Math.floor(Math.random() * 1000000),
+            answer: "false",
+            isCorrect: false,
+            image: null,
+            question: null,
+          },
+        ],
+        images: null,
+      });
+    } else {
+      handleAddNewQuestion({
+        id: Math.floor(Math.random() * 1000000),
+        question: "nhập câu hỏi",
+        type: type,
+        answers: [],
+        images: null,
+      });
+    }
+  };
   return (
     <div className="border-dashed border-2 border-sky-500 px-5 py-4 flex items-center justify-center gap-2">
       <Menu>
@@ -178,37 +462,58 @@ const AddQuestion = (): React.ReactElement => {
         </MenuHandler>
         <MenuList>
           <MenuItem>
-            <div className="flex items-center justify-start gap-2">
+            <div
+              className="flex items-center justify-start gap-2"
+              onClick={() => handleAddQuestion("single_choice")}
+            >
               <p className="text-sm font-semibold">Lựa Chọn Duy Nhất</p>
             </div>
           </MenuItem>
           <MenuItem>
-            <div className="flex items-center justify-start gap-2">
+            <div
+              className="flex items-center justify-start gap-2"
+              onClick={() => handleAddQuestion("multiple_choice")}
+            >
               <p className="text-sm font-semibold">Nhiều Lựa Chọn</p>
             </div>
           </MenuItem>
           <MenuItem>
-            <div className="flex items-center justify-start gap-2">
+            <div
+              className="flex items-center justify-start gap-2"
+              onClick={() => handleAddQuestion("true_false")}
+            >
               <p className="text-sm font-semibold">Đúng - Sai</p>
             </div>
           </MenuItem>
           <MenuItem>
-            <div className="flex items-center justify-start gap-2">
+            <div
+              className="flex items-center justify-start gap-2"
+              onClick={() => handleAddQuestion("matching")}
+            >
               <p className="text-sm font-semibold">Kết Hợp</p>
             </div>
           </MenuItem>
           <MenuItem>
-            <div className="flex items-center justify-start gap-2">
+            <div
+              className="flex items-center justify-start gap-2"
+              onClick={() => handleAddQuestion("matching_image")}
+            >
               <p className="text-sm font-semibold">Kết Hợp Hình Ảnh</p>
             </div>
           </MenuItem>
           <MenuItem>
-            <div className="flex items-center justify-start gap-2">
+            <div
+              className="flex items-center justify-start gap-2"
+              onClick={() => handleAddQuestion("keyword")}
+            >
               <p className="text-sm font-semibold">Từ Khoá</p>
             </div>
           </MenuItem>
           <MenuItem>
-            <div className="flex items-center justify-start gap-2">
+            <div
+              className="flex items-center justify-start gap-2"
+              onClick={() => handleAddQuestion("fill")}
+            >
               <p className="text-sm font-semibold">Điền Vào Khoảng Trống</p>
             </div>
           </MenuItem>

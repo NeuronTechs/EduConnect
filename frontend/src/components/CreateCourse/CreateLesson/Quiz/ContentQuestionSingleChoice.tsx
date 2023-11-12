@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { CreateQuizContext } from "@/context/CreateQuizContext";
+import { IAnswerInfo, IQuestionInfo } from "@/types/type";
 import { DndContext } from "@dnd-kit/core";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -6,20 +8,67 @@ import {
   DotsSixVertical,
   Image,
   List,
-  Pencil,
   Plus,
   Trash,
 } from "@phosphor-icons/react";
-import React from "react";
+import React, { useContext, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import InputEditTitle from "./InputEditTitle";
 
+interface IInputAnswer {
+  title: string;
+}
 const ContentQuestionSingleChoice = (props: {
-  data: [];
+  data: IQuestionInfo;
 }): React.ReactElement => {
   const [typeAnswer, setTypeAnswer] = React.useState<string>("answer");
+  const { register, handleSubmit, reset } = useForm<IInputAnswer>();
+  const { handleEditQuestion } = React.useContext(CreateQuizContext);
+  const [selected, setSelected] = React.useState<string>("");
+
+  const onSubmit = (data: IInputAnswer) => {
+    console.log(data);
+    if (data.title === "") return;
+    handleEditQuestion({
+      ...props.data,
+      type: "single_choice",
+      answers: [
+        ...props.data.answers,
+        {
+          id: props.data.answers.length + 1,
+          answer: data.title,
+          isCorrect: false,
+          image: null,
+          question: null,
+        },
+      ],
+    });
+    reset();
+  };
+  React.useEffect(() => {
+    if (selected === "") return;
+    handleEditQuestion({
+      ...props.data,
+      answers: props.data.answers.map((answer) => {
+        if (answer.id === Number(selected)) {
+          return {
+            ...answer,
+            isCorrect: true,
+          };
+        } else {
+          return {
+            ...answer,
+            isCorrect: false,
+          };
+        }
+      }),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selected]);
   return (
     <div className="flex flex-col items-center justify-center py-2 space-y-2">
       <div className="flex items-center justify-between w-full ">
-        <p className="text-xs font-bold text-gray-500">Câu Trả Lời</p>
+        <p className="text-sm font-bold text-gray-500">Câu Trả Lời</p>
         <div className="flex items-center justify-end gap-2">
           <List
             size={15}
@@ -37,43 +86,46 @@ const ContentQuestionSingleChoice = (props: {
           />
         </div>
       </div>
-      <DndContext>
-        <SortableContext items={[{ id: 1 }, { id: 2 }, { id: 3 }]}>
-          <div className="space-y-2 w-full">
-            {typeAnswer === "answer" ? (
-              <>
-                <ItemAnswer
-                  id={1}
-                  data={{ id: 1, answer: "", isCorrect: false }}
-                />
-                <ItemAnswer
-                  id={2}
-                  data={{ id: 2, answer: "", isCorrect: false }}
-                />
-                <ItemAnswer
-                  id={2}
-                  data={{ id: 3, answer: "", isCorrect: false }}
-                />
-              </>
-            ) : (
-              <>
-                <ItemAnswerImage
-                  id={3}
-                  data={{ id: 1, answer: "", isCorrect: false }}
-                />
-                <ItemAnswerImage
-                  id={3}
-                  data={{ id: 2, answer: "", isCorrect: false }}
-                />
-                <ItemAnswerImage
-                  id={3}
-                  data={{ id: 3, answer: "", isCorrect: false }}
-                />
-              </>
-            )}
-          </div>
-        </SortableContext>
-      </DndContext>
+      {props.data.answers.length === 0 ? (
+        <div className="flex items-center justify-center w-full p-2 rounded-md border border-transparent relative min-h-[45px]">
+          <p className="text-sm font-normal ">Chưa có câu trả lời nào</p>
+        </div>
+      ) : (
+        <DndContext>
+          <SortableContext items={[{ id: 1 }, { id: 2 }, { id: 3 }]}>
+            <div className="space-y-2 w-full">
+              {typeAnswer === "answer" ? (
+                <>
+                  {props.data.answers.map((item) => (
+                    <ItemAnswer
+                      id={item.id}
+                      idQuestion={props.data.id}
+                      data={item}
+                      key={item.id}
+                      checked={item.isCorrect}
+                      onchange={(e) => setSelected(e.target.value)}
+                    />
+                  ))}
+                </>
+              ) : (
+                <>
+                  {props.data.answers.map((item) => (
+                    <ItemAnswerImage
+                      id={item.id}
+                      idQuestion={props.data.id}
+                      data={item}
+                      key={item.id}
+                      checked={item.isCorrect}
+                      onchange={(e) => setSelected(e.target.value)}
+                    />
+                  ))}
+                </>
+              )}
+            </div>
+          </SortableContext>
+        </DndContext>
+      )}
+
       <div className="w-full  mb-4 mt-4 ">
         <form className="flex items-center">
           <label htmlFor="simple-search" className="sr-only">
@@ -81,14 +133,15 @@ const ContentQuestionSingleChoice = (props: {
           </label>
           <div className="relative w-full">
             <input
+              {...register("title", { required: true })}
               type="text"
-              id="simple-search"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Thêm trả lời mới..."
               required
             />
           </div>
           <button
+            onClick={handleSubmit(onSubmit)}
             type="submit"
             className="p-2 ml-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
@@ -103,14 +156,12 @@ const ContentQuestionSingleChoice = (props: {
 
 export default ContentQuestionSingleChoice;
 
-interface IItemAnswer {
-  id: number;
-  answer: string;
-  isCorrect: boolean;
-}
 const ItemAnswer = (props: {
   id: number;
-  data: IItemAnswer;
+  idQuestion: number;
+  data: IAnswerInfo;
+  checked?: boolean;
+  onchange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }): React.ReactElement => {
   const [hover, setHover] = React.useState<boolean>(false);
 
@@ -121,7 +172,14 @@ const ItemAnswer = (props: {
     transform: CSS.Transform.toString(transform),
     transition,
   };
-
+  const { handleEditAnswerQuestion, handleDeleteAnswerQuestion } =
+    useContext(CreateQuizContext);
+  const handleChangeValueAnswer = (data: string) => {
+    handleEditAnswerQuestion(props.idQuestion, {
+      ...props.data,
+      answer: data,
+    });
+  };
   return (
     <div
       className=" flex items-center justify-between w-full p-2 rounded-md border border-transparent bg-white relative min-h-[45px]"
@@ -135,10 +193,11 @@ const ItemAnswer = (props: {
         <div className="flex items-center justify-center" {...listeners}>
           <DotsSixVertical size={15} className="cursor-pointer" />
         </div>
-        <p className="text-xs font-normal">Power Supply</p>
-        <div className=" text-gray-500">
-          <Pencil size={15} />
-        </div>
+        <InputEditTitle
+          value={props.data.answer ? props.data.answer : " Nhập câu trả lời"}
+          onSubmit={handleChangeValueAnswer}
+          className={"text-sm font-thin"}
+        />
       </div>
       <div className="flex bg-white items-center justify-center gap-3">
         {hover && (
@@ -150,7 +209,12 @@ const ItemAnswer = (props: {
               <Plus size={15} />
               <p>Thêm Giải Thích</p>
             </button>
-            <button className=" p-1  text-gray-500 hover:text-gray-600">
+            <button
+              className=" p-1  text-gray-500 hover:text-gray-600"
+              onClick={() => {
+                handleDeleteAnswerQuestion(props.idQuestion, props.data.id);
+              }}
+            >
               <Trash size={15} />
             </button>
           </>
@@ -158,8 +222,10 @@ const ItemAnswer = (props: {
         <p className="text-sm font-medium text-gray-500">Đúng</p>
         <input
           type="radio"
-          value=""
+          value={props.data.id}
           name="bordered-radio"
+          checked={props.data.isCorrect}
+          onChange={props.onchange}
           className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
         />
       </div>
@@ -169,13 +235,24 @@ const ItemAnswer = (props: {
 
 const ItemAnswerImage = (props: {
   id: number;
-  data: IItemAnswer;
+  idQuestion: number;
+  data: IAnswerInfo;
+  checked?: boolean;
+  onchange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }): React.ReactElement => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: props.id });
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
+  };
+  const { handleEditAnswerQuestion, handleDeleteAnswerQuestion } =
+    useContext(CreateQuizContext);
+  const handleChangeValueAnswer = (data: string) => {
+    handleEditAnswerQuestion(props.idQuestion, {
+      ...props.data,
+      answer: data,
+    });
   };
 
   return (
@@ -190,15 +267,17 @@ const ItemAnswerImage = (props: {
           <div className="flex items-center justify-center" {...listeners}>
             <DotsSixVertical size={15} className="cursor-pointer" />
           </div>
-          <p className="text-xs font-normal">Power Supply</p>
-          <div className=" text-gray-500">
-            <Pencil size={15} />
-          </div>
+          <InputEditTitle
+            value={props.data.answer ? props.data.answer : " Nhập câu trả lời"}
+            onSubmit={handleChangeValueAnswer}
+            className={"text-sm font-thin"}
+          />
         </div>
         <div className="flex bg-white items-center justify-center gap-3">
           <p className="text-sm font-medium text-gray-500">Đúng</p>
           <input
-            checked
+            checked={props.checked}
+            onChange={props.onchange}
             type="radio"
             value=""
             name="bordered-radio"
@@ -221,8 +300,8 @@ const ItemAnswerImage = (props: {
             >
               <path
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 strokeWidth="2"
                 d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
               />
@@ -246,7 +325,12 @@ const ItemAnswerImage = (props: {
           <Plus size={15} />
           <p>Thêm Giải Thích</p>
         </button>
-        <button className=" p-1  text-gray-500 hover:text-gray-600">
+        <button
+          className=" p-1  text-gray-500 hover:text-gray-600"
+          onClick={() =>
+            handleDeleteAnswerQuestion(props.idQuestion, props.data.id)
+          }
+        >
           <Trash size={15} />
         </button>
       </div>

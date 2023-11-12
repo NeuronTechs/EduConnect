@@ -4,13 +4,16 @@ import {
   BookOpenText,
   Calendar,
   Chat,
-  Gear,
+  FolderPlus,
   House,
-  Notification,
+  MaskSad,
   UserCircle,
+  UsersThree,
+  Wallet,
   X,
 } from "@phosphor-icons/react";
 import { Link, useLocation } from "react-router-dom";
+import { configRouter } from "@/configs/router";
 
 interface Props {
   isOpen: boolean;
@@ -22,23 +25,23 @@ const ITEM_SIDEBAR = [
   {
     title: "Trang Chủ",
     icon: <House size={25} />,
-    to: "/",
+    to: configRouter.home,
   },
   {
     title: "Khoá Học Của Tôi",
     icon: <BookOpenText size={25} />,
-    to: "/myCourse",
+    to: configRouter.myCourse,
   },
   {
     title: "kế hoạch",
     icon: <Calendar size={25} />,
-    to: "/schedule",
+    to: configRouter.myCourse,
   },
-  {
-    title: "Thông báo",
-    icon: <Notification size={25} />,
-    to: "/notification",
-  },
+  // {
+  //   title: "Thông báo",
+  //   icon: <Notification size={25} />,
+  //   to: configRouter.myCourse,
+  // },
   {
     title: "Tin Nhắn",
     icon: <Chat size={25} />,
@@ -49,10 +52,56 @@ const ITEM_SIDEBAR = [
     icon: <UserCircle size={25} />,
     to: "/profile",
   },
+  // {
+  //   title: "Cài đặt",
+  //   icon: <Gear size={25} />,
+  //   to: "/setting",
+  // },
+];
+
+const ITEM_TEACHER_SIDEBAR = [
   {
-    title: "Cài đặt",
-    icon: <Gear size={25} />,
-    to: "/setting",
+    title: "Trang Chủ",
+    icon: <House size={25} />,
+    to: configRouter.dashboardTeacher,
+  },
+  {
+    title: "Quản lý học viên",
+    icon: <UsersThree size={25} />,
+    to: configRouter.liststudent,
+  },
+  {
+    title: "Quản lý doanh thu",
+    icon: <Wallet size={25} />,
+    to: configRouter.payout,
+  },
+  {
+    title: "Khóa học",
+    icon: <BookOpenText size={25} />,
+    to: configRouter.courseMyTeacher,
+  },
+  {
+    title: "Tạo khóa học",
+    icon: <FolderPlus size={25} />,
+    to: configRouter.createCourse,
+  },
+];
+
+const ITEM_ADMIN_SIDEBAR = [
+  {
+    title: "Trang Chủ",
+    icon: <House size={25} />,
+    to: configRouter.dashboardAdmin,
+  },
+  {
+    title: "Quản lý học viên",
+    icon: <UsersThree size={25} />,
+    to: configRouter.adminListStudent,
+  },
+  {
+    title: "Khiếu nại",
+    icon: <MaskSad size={25} />,
+    to: configRouter.managerComplaintCourse,
   },
 ];
 const ItemSidebar = (props: {
@@ -62,7 +111,6 @@ const ItemSidebar = (props: {
   isOpen: boolean;
 }) => {
   const location = useLocation();
-
   return (
     <Link
       to={props.to}
@@ -87,6 +135,7 @@ const ItemSidebar = (props: {
 };
 const Sidebar = React.forwardRef<Ref, Props>(
   (props, ref): React.ReactElement => {
+    const location = useLocation();
     return (
       <div className="relative xl:w-[60px] h-screen w-[opx]">
         <div
@@ -111,17 +160,43 @@ const Sidebar = React.forwardRef<Ref, Props>(
             </div>
           </div>
           {/* item  */}
-          {ITEM_SIDEBAR.map((item, index) => {
-            return (
-              <ItemSidebar
-                isOpen={props.isOpen}
-                key={index}
-                title={item.title}
-                icon={item.icon}
-                to={item.to}
-              />
-            );
-          })}
+          {location.pathname.split("/")[1] === "teacher" &&
+            ITEM_TEACHER_SIDEBAR.map((item, index) => {
+              return (
+                <ItemSidebar
+                  isOpen={props.isOpen}
+                  key={index}
+                  title={item.title}
+                  icon={item.icon}
+                  to={item.to}
+                />
+              );
+            })}
+          {location.pathname.split("/")[1] === "admin" &&
+            ITEM_ADMIN_SIDEBAR.map((item, index) => {
+              return (
+                <ItemSidebar
+                  isOpen={props.isOpen}
+                  key={index}
+                  title={item.title}
+                  icon={item.icon}
+                  to={item.to}
+                />
+              );
+            })}
+          {location.pathname.split("/")[1] !== "teacher" &&
+            location.pathname.split("/")[1] !== "admin" &&
+            ITEM_SIDEBAR.map((item, index) => {
+              return (
+                <ItemSidebar
+                  isOpen={props.isOpen}
+                  key={index}
+                  title={item.title}
+                  icon={item.icon}
+                  to={item.to}
+                />
+              );
+            })}
         </div>
       </div>
     );

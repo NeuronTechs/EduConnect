@@ -9,7 +9,8 @@ declare global {
 }
 const middlewareController = {
   verifyToken: (req: Request, res: Response, next: NextFunction) => {
-    const token = req.headers?.token as string | undefined;
+    const token = req.headers?.authorization as string | undefined;
+
     if (token) {
       const accessToken = token.split(" ")[1];
       jwt.verify(

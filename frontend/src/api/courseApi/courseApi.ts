@@ -1,4 +1,4 @@
-import { IComment } from "@/types/type";
+import { IComment, addReview } from "@/types/type";
 import * as httpRequest from "../../utils/httpRequest";
 
 export const getCourseByStudentId = async (params: string) => {
@@ -22,6 +22,15 @@ export const getCourseDetails = async (params: string) => {
   }
 };
 
+export const getCourseOverview = async (params: string) => {
+  try {
+    const res = await httpRequest.get(`/course/overview-course/${params}`);
+    return res?.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
 export const CommentLecture = async (params: IComment) => {
   try {
     const res = await httpRequest.post(`/comment/create`, params);
@@ -40,6 +49,60 @@ export const CommentOfLecture = async (params: {
       `/comment/comments-by-lecture/${params.id}?page=${params.paging}`
     );
     return res?.data?.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const getReviewCourse = async (params: string) => {
+  try {
+    const res = await httpRequest.get(`/review/get-reviews/${params}`);
+    return res;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const getAllReviewCourse = async (params: string) => {
+  try {
+    const res = await httpRequest.get(`/review/get-all-reviews/${params}`);
+    return res;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const getStatisticStar = async (params: string) => {
+  try {
+    const res = await httpRequest.get(`/review/get-statistic-star/${params}`);
+    return res;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const getTeacherInOverviewCourse = async (params: string) => {
+  try {
+    const res = await httpRequest.get(`/user/information-teacher/${params}`);
+    return res;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const addToReview = async (params: addReview) => {
+  try {
+    const res = await httpRequest.post(`/review/add-review`, params);
+    return res;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const addTransactionInCourse = async (params: any) => {
+  try {
+    const res = await httpRequest.post(`/course/add-transaction-course`, params);
+    return res;
   } catch (error) {
     return Promise.reject(error);
   }

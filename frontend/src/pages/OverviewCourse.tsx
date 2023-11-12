@@ -9,7 +9,10 @@ import {
   DialogBody,
   DialogFooter,
 } from "@material-tailwind/react";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { getCourseOverview } from "@/features/overviewCourse/courseOverviewSlice";
 
 const OverviewCourse = () => {
   const titleDataReport = [
@@ -23,6 +26,10 @@ const OverviewCourse = () => {
   const [title, setTitle] = useState<string>("");
   const [problem, setProblem] = useState<string>("");
   const [image, setImage] = useState<string>("");
+  const dispatch = useDispatch<AppDispatch>()
+  useEffect(()=>{
+    dispatch(getCourseOverview('15938'))
+  },[])
 
   const handleGetImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {

@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import cartService from "../services/cart.service";
+import reviewService from "../services/review.service";
 
-const addToCart = async (req: Request, res: Response) => {
+const getReviews = async (req: Request, res: Response) => {
   try {
-    const { student_id, course_id } = req.body;
+    const { course_id } = req.params;
     let result: any;
-    result = await cartService.addToCart(student_id, course_id);
+    result = await reviewService.getReviews(course_id);
     if (result?.status) {
       res.status(200).json({
         status: 200,
@@ -28,11 +28,17 @@ const addToCart = async (req: Request, res: Response) => {
   }
 };
 
-const removeToCart = async (req: Request, res: Response) => {
+const addNewReview = async (req: Request, res: Response) => {
   try {
-    const { cart_id } = req.body;
+    const { content, author_id, course_id, rating, title } = req.body;
     let result: any;
-    result = await cartService.removeToCart(cart_id);
+    result = await reviewService.addNewReview(
+      content,
+      author_id,
+      course_id,
+      rating,
+      title
+    );
     if (result?.status) {
       res.status(200).json({
         status: 200,
@@ -55,12 +61,38 @@ const removeToCart = async (req: Request, res: Response) => {
   }
 };
 
-const getAllCart = async (req: Request, res: Response) => {
+const getAllReviews = async (req: Request, res: Response) => {
   try {
-    const { student_id } = req.params;
-    // const { student_id } = req.body;
+    const { course_id } = req.params;
     let result: any;
-    result = await cartService.getAllCart(student_id);
+    result = await reviewService.getAllReviews(course_id);
+    if (result?.status) {
+      res.status(200).json({
+        status: 200,
+        data: result?.data,
+        message: result?.message,
+      });
+    } else {
+      res.status(400).json({
+        status: 400,
+        data: {},
+        message: result?.message,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      status: 500,
+      data: {},
+      message: error,
+    });
+  }
+};
+
+const getstatisticStar = async (req: Request, res: Response) => {
+  try {
+    const { course_id } = req.params;
+    let result: any;
+    result = await reviewService.getstatisticStar(course_id);
     if (result?.status) {
       res.status(200).json({
         status: 200,
@@ -84,7 +116,8 @@ const getAllCart = async (req: Request, res: Response) => {
 };
 
 export default {
-  addToCart,
-  removeToCart,
-  getAllCart,
+  getReviews,
+  addNewReview,
+  getAllReviews,
+  getstatisticStar,
 };
