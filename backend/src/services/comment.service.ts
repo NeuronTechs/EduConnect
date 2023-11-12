@@ -8,24 +8,56 @@ import {
   dataResponse,
   updateResponse,
 } from "../constant/type";
+import { Multer } from "multer";
 
-const create = async (data: IComment): Promise<dataResponse<IComment>> => {
-  data.comment_id = generateRandomString();
-  data.createdAt = Date.now();
-  const sql = `INSERT INTO comments SET ?`;
-  return new Promise<dataResponse<IComment>>((resolve, reject) => {
-    db.connectionDB.query(sql, data, (err, result) => {
-      if (err) {
-        reject(err);
-        return;
+const create = async (
+  data: IComment,
+  files:
+    | {
+        [fieldname: string]: Express.Multer.File[];
       }
-      resolve({
-        status: 200,
-        data: { ...data },
-        message: "Created successfully",
+    | Express.Multer.File[]
+    | undefined
+): Promise<dataResponse<IComment>> => {
+  try {
+    data.comment_id = generateRandomString();
+    data.createdAt = Date.now();
+
+    let fileData: string | null = null;
+    if (files) {
+      fileData = JSON.stringify(
+        Object.values(files).map((file) => {
+          console.log(file);
+
+          return {
+            originalname: file.originalname,
+            mimetype: file.mimetype,
+            path: file.path,
+            size: file.size,
+          };
+        })
+      );
+    }
+    data.resource = fileData;
+    const sql = `INSERT INTO comments SET ?`;
+    return new Promise<dataResponse<IComment>>((resolve, reject) => {
+      db.connectionDB.query(sql, data, (err, result) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve({
+          status: 200,
+          data: { ...data },
+          message: "Created successfully",
+        });
       });
     });
-  });
+  } catch (error) {
+    console.log(error);
+
+    throw error;
+  }
 };
 
 const getById = async (id: string): Promise<dataResponse<IComment>> => {

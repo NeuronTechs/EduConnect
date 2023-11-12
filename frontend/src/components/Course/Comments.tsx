@@ -18,6 +18,12 @@ interface commentProps {
 
 const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
   const [isReply, setIsReply] = useState(false);
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
   return (
     <div className="flex flex-col items-start gap-4 my-5">
       <div className="flex items-start ml-5  my-3 space-x-5">
@@ -44,7 +50,7 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
             <p
               onClick={() => {
                 setCurrentTime(parseInt(comment.timestamp));
-                console.log(Date.now());
+                scrollToTop();
               }}
               className=" cursor-pointer flex items-center justify-center p-2 w-14 h-6 font-bold  rounded-xl text-white bg-blue-500"
             >

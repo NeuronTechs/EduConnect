@@ -1,19 +1,5 @@
-import {
-  CornersOut,
-  FastForward,
-  GearSix,
-  Pause,
-  Play,
-  SpeakerSimpleHigh,
-} from "@phosphor-icons/react";
 import React, { useEffect, useRef, useState } from "react";
-import {
-  Menu,
-  MenuHandler,
-  MenuList,
-  MenuItem,
-  Slider,
-} from "@material-tailwind/react";
+
 import { ILecture } from "@/types/type";
 interface Props {
   currentLecture: ILecture | null;
@@ -21,54 +7,13 @@ interface Props {
   setCurrentTime: React.Dispatch<React.SetStateAction<number>>;
 }
 const Video = ({ currentLecture, currentTime, setCurrentTime }: Props) => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [speed, setSpeed] = useState(1);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const speedRate = [];
-  for (let index = 0.5; index <= 2; index = index + 0.25) {
-    speedRate.push(index);
-  }
-  const handlePlay = () => {
+  const getCurrentTime = () => {
     if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-        setIsPlaying(false);
-      } else {
-        videoRef.current.play();
-        setIsPlaying(true);
-      }
-    }
-  };
-  /**
-   * Handles the fullscreen functionality of the video player.
-   * @returns void
-   */
-  const handleFullscreen = (): void => {
-    if (videoRef.current) {
-      if (videoRef.current.requestFullscreen) {
-        videoRef.current.requestFullscreen();
-      } else if ((videoRef.current as any).mozRequestFullScreen) {
-        /* Firefox */
-        (videoRef.current as any).mozRequestFullScreen();
-      } else if ((videoRef.current as any).webkitRequestFullscreen) {
-        /* Chrome, Safari and Opera */
-        (videoRef.current as any).webkitRequestFullscreen();
-      } else if ((videoRef.current as any).msRequestFullscreen) {
-        /* IE/Edge */
-        (videoRef.current as any).msRequestFullscreen();
-      }
-    }
-  };
-  const getCurrentTime = (): number => {
-    if (videoRef.current) {
-      return parseInt(videoRef.current.currentTime.toFixed(0));
+      return videoRef.current.currentTime;
     }
     return 0;
   };
-  useEffect(() => {
-    videoRef?.current?.play();
-    setIsPlaying(true);
-  }, [currentLecture]);
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.currentTime = currentTime;
@@ -80,88 +25,17 @@ const Video = ({ currentLecture, currentTime, setCurrentTime }: Props) => {
         src={currentLecture?.source}
         className=" w-full aspect-video  bg-gray-900"
         ref={videoRef}
-        onClick={handlePlay}
-        onTimeUpdate={() => {
+        onPause={() => {
+          setCurrentTime(getCurrentTime());
+        }}
+        onSeeked={() => {
           setCurrentTime(getCurrentTime());
         }}
         autoPlay
+        controls
       >
         Your browser does not support the video tag.
       </video>
-      {!isPlaying && (
-        <div
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full bg-gray-800 p-5 text-white cursor-pointer opacity-70"
-          onClick={handlePlay}
-        >
-          <Play size={32} />
-        </div>
-      )}
-      <div className=" absolute opacity-0 flex justify-between items-center text-white hover:opacity-50 w-full h-[50px] bg-black  bottom-0">
-        <div className=" ml-5 flex space-x-5 font-bold items-center justify-center">
-          <div className="cursor-pointer" onClick={handlePlay}>
-            {isPlaying ? <Pause size={25} /> : <Play size={25} />}
-          </div>
-          <Menu>
-            <MenuHandler>
-              <button>{speed + "x"}</button>
-            </MenuHandler>
-            <MenuList className="bg-black text-white w-20">
-              {speedRate.map((rate) => (
-                <MenuItem
-                  key={rate}
-                  onClick={() => {
-                    if (videoRef.current) {
-                      videoRef.current.playbackRate = rate;
-                    }
-                    setSpeed(rate);
-                  }}
-                >
-                  {rate + "x"}
-                </MenuItem>
-              ))}
-            </MenuList>
-          </Menu>
-          <FastForward
-            size={25}
-            onClick={() => {
-              if (videoRef.current) {
-                setCurrentTime(currentTime + 5);
-                videoRef.current.currentTime += 5;
-              }
-            }}
-            className="cursor-pointer"
-          />
-          <h6>
-            {currentTime} /{" "}
-            {videoRef.current && videoRef.current.duration.toFixed(0)}
-          </h6>
-          <div className="flex w-[430px] flex-col ">
-            <Slider
-              color="blue"
-              defaultValue={0}
-              value={
-                videoRef.current
-                  ? (currentTime / videoRef.current.duration) * 100
-                  : 0
-              }
-              onChange={(e) => {
-                if (videoRef.current) {
-                  const time = Number(e.target.value);
-                  const s = (time / 100) * videoRef.current.duration;
-                  setCurrentTime(Number(s.toFixed(0)));
-                  videoRef.current.currentTime = Number(s.toFixed(0));
-                }
-              }}
-            />
-          </div>
-        </div>
-        <div className="flex items-center justify-center space-x-5 mr-5">
-          <SpeakerSimpleHigh size={25} />
-
-          <GearSix size={25} />
-          <CornersOut size={25} onClick={handleFullscreen} />
-        </div>
-      </div>
     </div>
   );
 };
