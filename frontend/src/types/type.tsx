@@ -25,13 +25,17 @@ export interface ICourse {
   createdAt: string;
   updatedAt: string;
   sessions: ISession[] | null;
+  teacher_avatar?: string;
+  teacher_name?: string;
+  completed_lectures: number;
+  total_lectures: number;
 }
 export interface IComment {
   comment_id?: string | undefined | null;
   content: string;
   username: string;
   lecture_id: string;
-  createdAt: string;
+  createdAt?: number;
   resource?: FileWithPath[] | null;
   timestamp: string;
   avatar?: string | null;

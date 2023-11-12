@@ -11,7 +11,7 @@ import {
 
 const create = async (data: IComment): Promise<dataResponse<IComment>> => {
   data.comment_id = generateRandomString();
-  data.createdAt = new Date();
+  data.createdAt = Date.now();
   const sql = `INSERT INTO comments SET ?`;
   return new Promise<dataResponse<IComment>>((resolve, reject) => {
     db.connectionDB.query(sql, data, (err, result) => {
@@ -83,7 +83,7 @@ const getByLectureId = async (
   pageSize: number
 ): Promise<dataListResponse<IComment>> => {
   const offset = (page - 1) * pageSize;
-  const sql = `SELECT comment_id,c.username,lecture_id,timestamp,content,c.createdAt,avatar FROM comments c join user u on c.username=u.username WHERE lecture_id = ? LIMIT ?, ?`;
+  const sql = `SELECT comment_id,c.username,lecture_id,timestamp,content,c.createdAt,avatar FROM comments c join user u on c.username=u.username WHERE lecture_id = ? order by createdAt LIMIT ?, ?`;
   return new Promise<dataListResponse<IComment>>((resolve, reject) => {
     db.connectionDB.query(
       sql,

@@ -9,10 +9,10 @@ type props = {
 const Card = (props: props) => {
   const navigate = useNavigate();
   return (
-    <div className="rounded-2xl bg-white p-2 flex flex-col gap-4 shadow-sm w-[200px] min-w-[150]  ">
+    <div className="rounded-2xl bg-white p-2 flex flex-col gap-4 shadow-sm w-[90%] mb-5   ">
       <div className="w-full">
         <img
-          src={props.data.thumbnail}
+          src={props.data.image}
           alt=""
           className="w-full h-[100px] object-fill rounded-2xl"
         />
@@ -24,17 +24,21 @@ const Card = (props: props) => {
             <h5
               className="text-sm font-semibold text-black cursor-pointer"
               onClick={() => {
-                navigate("/myCourse/" + props.data.id);
+                navigate("/course/learn/" + props.data.course_id);
               }}
             >
               {props.data.title}
             </h5>
             <p className="text-xs font-normal text-gray-600">
-              {props.data.teacher}
+              {props.data.teacher_name}
             </p>
           </div>
-          <div className="rounded-full h-[35px] w-[35px]">
-            <img src={props.data.avatarTeacher} alt="" />
+          <div>
+            <img
+              className="rounded-full h-[35px] w-[35px]"
+              src={props.data.teacher_avatar}
+              alt=""
+            />
           </div>
         </div>
       </div>
@@ -52,7 +56,12 @@ const Card = (props: props) => {
       <div className="w-full bg-gray-300 rounded-lg h-1">
         <div
           className="bg-gray-600 h-1 p-0.5 text-center text-[10px] font-light leading-none text-primary-100 rounded-lg"
-          style={{ width: "40%" }}
+          style={{
+            width:
+              (props.data.completed_lectures / props.data.total_lectures) *
+                100 +
+              "%",
+          }}
         ></div>
       </div>
       <div className="flex justify-between text-[11px] text-gray-500">

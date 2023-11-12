@@ -4,7 +4,9 @@ import * as httpRequest from "../../utils/httpRequest";
 export const getCourseByStudentId = async (params: string) => {
   try {
     const res = await httpRequest.get(`/course/courses-by-student/${params}`);
-    return res?.result;
+    console.log(res);
+
+    return res?.data.data;
   } catch (error) {
     return Promise.reject(error);
   }

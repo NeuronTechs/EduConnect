@@ -5,6 +5,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 export interface CourseState {
   currentLecture: ILecture | null;
   currentCourse: ICourse | null;
+  courses: ICourse[] | null;
   comments: IComment[] | null;
   loading: boolean;
   error: string | undefined;
@@ -14,6 +15,7 @@ export interface CourseState {
 const initialState: CourseState = {
   currentCourse: null,
   currentLecture: null,
+  courses: null,
   comments: null,
   loading: false,
   error: undefined,
@@ -34,10 +36,25 @@ export const CommentOfLecture = createAsyncThunk<
   const res = await courseApi.CommentOfLecture(params);
   return res;
 });
+export const LoadMoreComment = createAsyncThunk<
+  IComment[],
+  { id: string; paging: number }
+>("course/LoadMoreComment", async (params) => {
+  const res = await courseApi.CommentOfLecture(params);
+  return res;
+});
 export const CommentLecture = createAsyncThunk<IComment, IComment>(
   "course/CommentLecture",
   async (params: IComment) => {
     const res = await courseApi.CommentLecture(params);
+    return res;
+  }
+);
+
+export const getCourseByStudentId = createAsyncThunk<ICourse[], string>(
+  "course/getCourseByStudentId",
+  async (params: string) => {
+    const res = await courseApi.getCourseByStudentId(params);
     return res;
   }
 );
@@ -62,6 +79,8 @@ export const courseSlice = createSlice({
     });
     builder.addCase(getCourseDetails.fulfilled, (state, action) => {
       state.loading = false;
+      console.log(action.payload);
+
       state.currentCourse = action.payload;
       state.error = undefined;
       state.isError = false;
@@ -69,6 +88,8 @@ export const courseSlice = createSlice({
     builder.addCase(getCourseDetails.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message;
+      state.currentCourse = null;
+      state.currentLecture = null;
       state.isError = true;
     });
     builder.addCase(CommentOfLecture.pending, (state) => {
@@ -98,6 +119,31 @@ export const courseSlice = createSlice({
       state.loading = false;
       state.error = action.error.message;
       state.isError = true;
+    });
+    builder.addCase(LoadMoreComment.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(LoadMoreComment.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = undefined;
+      state.isError = false;
+      state.comments?.push(...action.payload);
+    });
+    builder.addCase(LoadMoreComment.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+      state.isError = true;
+    });
+    builder.addCase(getCourseByStudentId.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(getCourseByStudentId.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = undefined;
+      state.isError = false;
+      console.log(action.payload);
+
+      state.courses = action.payload;
     });
   },
 });
