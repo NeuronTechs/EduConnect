@@ -1,9 +1,9 @@
 import React from "react";
 import Course from "../Course";
-import { ICourse } from "../../types/type";
+import { ICourseOverview } from "../../types/type";
 import ListCourseLoading from "../Loading/ListCourseLoading";
 interface props {
-  data: ICourse[];
+  data: ICourseOverview[];
   title: string;
   isLoading: boolean;
 }
@@ -18,11 +18,20 @@ const ListCourse = (props: props): React.ReactElement => {
         {props.isLoading ? (
           <ListCourseLoading numberShow={5} />
         ) : (
-          <div className="grid 2xl:grid-cols-5 md:grid-cols-4 grid-cols-2  gap-3 w-full">
-            {props.data.map((course) => {
-              return <Course data={course} key={course.id} />;
-            })}
-          </div>
+          <>
+            {props.data.length === 0 && (
+              <div className="flex items-center justify-center w-full py-15">
+                <p className="text-center text-lg font-semibold">
+                  Không có khóa học nào
+                </p>
+              </div>
+            )}
+            <div className="grid 2xl:grid-cols-5 md:grid-cols-4 grid-cols-2  gap-3 w-full">
+              {props.data.map((course) => {
+                return <Course data={course} key={course.course_id} />;
+              })}
+            </div>
+          </>
         )}
       </div>
     </div>

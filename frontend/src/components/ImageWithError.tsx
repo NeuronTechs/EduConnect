@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 interface IProps {
-  src: string;
+  src?: string;
   alt?: string;
   fallbackSrc?: string;
   className?: string;

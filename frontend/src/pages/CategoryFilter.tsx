@@ -42,7 +42,7 @@ const CategoryFilter = () => {
       <div className="grid grid-cols-5 gap-4 w-full">
         {dataCourse.map(
           (item): React.ReactElement => (
-            <Course data={item} key={item.id} />
+            <Course data={item} key={item.course_id} />
           )
         )}
         {/* <Course />
