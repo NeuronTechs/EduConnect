@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import categoryService from "../services/category.service";
+import topicService from "../services/topic.service";
 
 const getRecommendCourse = async (req: Request, res: Response) => {
   console.log("call");
   try {
-    const result = await categoryService.getCoursesRecommend();
+    const result = await topicService.getCoursesRecommend();
     if (result?.status) {
       res.status(200).json({
         status: 200,
@@ -28,9 +28,10 @@ const getRecommendCourse = async (req: Request, res: Response) => {
   }
 };
 const getTopicCourse = async (req: Request, res: Response) => {
-  const { topicId, limit } = req.query;
+  const { limit } = req.query;
+  const { topicId } = req.params;
   try {
-    const result = await categoryService.getTopicCourses(
+    const result = await topicService.getTopicCourses(
       topicId as string,
       parseInt(limit as string)
     );
@@ -60,7 +61,7 @@ const getTopicCategory = async (req: Request, res: Response) => {
   const { limit } = req.query;
 
   try {
-    const result = await categoryService.getTopicCategory(
+    const result = await topicService.getTopicCategory(
       parseInt(limit as string)
     );
     if (result?.status) {

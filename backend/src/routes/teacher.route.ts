@@ -4,7 +4,7 @@ const router = express.Router();
 import teacherController from "../controllers/teacher.controller";
 
 router
-  .route("/recommended-courses")
+  .route("/recommendations")
   .get(teacherController.getTeacherRecommendations);
 router.route("/::teacherId").get(teacherController.getTeacherDetail);
 

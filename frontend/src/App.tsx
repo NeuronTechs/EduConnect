@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import DefaultLayout from "./layout/DefaultLayout/defaultLayout";
 import { setupInterceptor } from "./utils/interceptor";
 import {
+  IRouter,
   adminRoutes,
   privateRoutes,
   publicRoutes,
@@ -13,7 +14,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { configRouter } from "./configs/router";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { IRouter } from "./types/type";
 import React, { FC } from "react";
 import RequireAuth from "./router/RequireAuth";
 import { AnimatePresence } from "framer-motion";

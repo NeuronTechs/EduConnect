@@ -29,7 +29,7 @@ const ListTeacher = (props: props): React.ReactElement => {
               </div>
             )}
             {props.data.map((teacher) => {
-              return <TeacherItem data={teacher} key={teacher.id} />;
+              return <TeacherItem data={teacher} key={teacher.teacher_id} />;
             })}
           </div>
         )}

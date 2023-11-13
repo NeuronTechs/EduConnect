@@ -2,8 +2,11 @@ import { Request, Response } from "express";
 import teacherService from "../services/teacher.service";
 
 const getTeacherRecommendations = async (req: Request, res: Response) => {
+  const { limit } = req.query;
   try {
-    const result = await teacherService.getTeacherRecommendations();
+    const result = await teacherService.getTeacherRecommendations(
+      limit as string
+    );
     if (result?.status) {
       res.status(200).json({
         status: 200,

@@ -1,10 +1,20 @@
-import { IRouter } from "@/types/type";
 // layout
 import BlankLayout from "../layout/BlankLayout/blankLayout";
 import DefaultLayout from "../layout/DefaultLayout/defaultLayout";
 import { configRouter } from "@/configs/router";
-import { lazy } from "react";
+import { FC, lazy } from "react";
 // pages
+
+interface LayoutProps {
+  children?: React.ReactNode;
+}
+export interface IRouter {
+  path: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  component: React.LazyExoticComponent<React.ComponentType<any>>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  layout: FC<LayoutProps>;
+}
 
 const publicRoutes: IRouter[] = [
   {
