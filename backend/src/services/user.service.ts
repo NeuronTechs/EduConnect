@@ -22,7 +22,8 @@ const transporter = nodemailer.createTransport({
 
 const login = (username: string): Promise<any> => {
   try {
-    const query = "SELECT * FROM user WHERE username = ?";
+    const query =
+      "SELECT user.*, COALESCE(student.student_id, teacher.teacher_id) as user_id FROM user LEFT JOIN student ON user.username = student.username AND user.role = 0 LEFT JOIN teacher ON user.username = teacher.username AND user.role = 1 WHERE user.username = ? ";
     return new Promise((resolve, reject) => {
       db.connectionDB.query(query, [username], function (err, results) {
         if (err) {
@@ -410,10 +411,34 @@ const resetPassword = async (
   }
 };
 
+const getInforTeacher = (teacher_id: string): Promise<any> => {
+  try {
+    const query =
+      "SELECT * FROM educonnectdb.teacher join educonnectdb.user on teacher.username = user.username WHERE teacher_id = ?";
+    return new Promise((resolve, reject) => {
+      db.connectionDB.query(query, [teacher_id], function (err, results) {
+        if (err) {
+          reject(err);
+          return;
+        } else {
+          resolve({
+            status: 200,
+            data: results,
+            message: "Get infor teacher success",
+          });
+        }
+      });
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
 export default {
   login,
   register,
   updateInformation,
   isValidEmail,
   resetPassword,
+  getInforTeacher,
 };

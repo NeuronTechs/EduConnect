@@ -1,15 +1,16 @@
+import { RowDataPacket } from "mysql2";
 import db from "../config/connectDB";
 import { convertTimestampToDateTime, generateID } from "../constant/utils";
 
 const getReviews = (course_id: String): Promise<any> => {
   try {
     const queryCheckExistCourse =
-      "SELECT * FROM `review` join `user` on `author_id` = `username` where `course_id` = ? limit 3 ";
+      `SELECT review.review_id, review.content, review.title, review.createdAt, review.rating, review.course_id, user.full_name, user.username, user.avatar FROM review  join user on author_id = username where course_id = ? limit 3`;
     return new Promise((resolve, reject) => {
       db.connectionDB.query(
         queryCheckExistCourse,
         [course_id],
-        (error, reviews, fields) => {
+        (error, reviews: RowDataPacket[], fields) => {
           if (error) {
             reject({
               status: false,
@@ -162,7 +163,7 @@ const getstatisticStar = (course_id: String): Promise<any> => {
               statistic.total5Start = Math.round(
                 (statistic.total5Start / statistic.totalStar) * 100
               );
-              statistic.totalStar /= 5;
+              statistic.totalStar /= reviews.length;
             }
             resolve({
               status: true,

@@ -57,7 +57,8 @@ const removeToCart = async (req: Request, res: Response) => {
 
 const getAllCart = async (req: Request, res: Response) => {
   try {
-    const { student_id } = req.body;
+    const { student_id } = req.params;
+    // const { student_id } = req.body;
     let result: any;
     result = await cartService.getAllCart(student_id);
     if (result?.status) {

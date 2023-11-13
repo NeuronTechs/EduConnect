@@ -11,5 +11,7 @@ router.route("/reset-password").post(AuthController.resetPassword);
 router
   .route("/updateinformation")
   .post(middlewareController.verifyToken, AuthController.updateInformation);
-
+router
+  .route("/information-teacher/:teacher_id")
+  .get(middlewareController.verifyToken, AuthController.getInforTeacher);
 export default router;
