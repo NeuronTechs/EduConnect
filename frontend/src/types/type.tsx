@@ -14,13 +14,13 @@ export interface SliceState {
 }
 export interface ICourse {
   course_id: string;
+  teacher_id: string;
+  topic_id: string;
+  image: string;
   title: string;
   description: string;
-  teacher_id: string;
   price: number;
   discount: number;
-  image: string;
-  topic_id: string;
   total_hours: number;
   createdAt: string;
   updatedAt: string;
@@ -29,6 +29,74 @@ export interface ICourse {
   teacher_name?: string;
   completed_lectures: number;
   total_lectures: number;
+}
+
+export interface ICourseOverview {
+  course_id: number;
+  title: string;
+  description: string;
+  image: string;
+  price: number;
+  study: number;
+  requirement: string;
+  level: string;
+  language: string;
+  discount: number;
+  ranking?: number;
+  total_ranking?: number;
+  total_enrollment?: number;
+  total_lecture?: number;
+  total_hour?: number;
+  total_student?: number;
+  teacher_id: number;
+  topic_id: number;
+  teacher?: ITeacher;
+  user?: IUser;
+  topic?: ITopic;
+}
+export interface IUser {
+  username: number;
+  full_name: string;
+  email: string;
+  avatar: string;
+  phone: string;
+  role: string;
+  birthday: string;
+  address: string;
+  created_at?: string;
+  updated_at?: string;
+}
+export interface ITopic {
+  topic_id: string;
+  title: string;
+  description?: string;
+  course_count: number;
+  images?: string;
+}
+
+export interface ITeacher {
+  teacher_id: number;
+  username: string;
+  introduce?: string;
+  subject?: string;
+  educational_level?: string;
+  email: string;
+  phone: string;
+  avatar: string;
+  course?: string;
+  major: string;
+  school: string;
+  address_school?: string;
+  amount?: number;
+  totalStudent?: number;
+  scoreReview?: number;
+  totalReview?: number;
+  totalCourse?: number;
+  linkWeb?: string;
+  linkFacebook?: string;
+  linkYoutube?: string;
+  linkLinkedin?: string;
+  user?: IUser;
 }
 export interface IComment {
   comment_id?: string | undefined | null;
@@ -55,32 +123,6 @@ export interface ILecture {
   session_id: string;
   type: string;
   comments: IComment[] | null;
-}
-export interface ICategory {
-  id: string;
-  title: string;
-  numberCourse: number;
-  images: string;
-}
-
-export interface ITeacher {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  avatar: string;
-  position: string;
-  school: string;
-  totalStudent: number;
-  scoreReview: number;
-  totalReview: number;
-  totalCourse: number;
-  subject: string;
-  introduce: string;
-  linkWeb: string;
-  linkFacebook: string;
-  linkYoutube: string;
-  linkLinkedin: string;
 }
 
 export interface IConventionChat {
@@ -178,7 +220,7 @@ export interface IStudent {
   createdAt: Date;
   updateAt: Date;
 }
-
+// section quiz
 export interface ISectionInfo {
   id: string;
   title: string;

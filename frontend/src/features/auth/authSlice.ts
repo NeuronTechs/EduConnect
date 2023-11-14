@@ -64,6 +64,9 @@ export const authSlice = createSlice({
       state.loading = false;
       state.error = undefined;
     },
+    updateInformation: (state, action: PayloadAction<User>) => {
+      state.currentUser = action.payload;
+    },
   },
   extraReducers: (builder) => {
     // login password
@@ -108,6 +111,7 @@ export const authSlice = createSlice({
   },
 });
 
-export const { refetchTokenStore, resetStoreAuth } = authSlice.actions;
+export const { refetchTokenStore, resetStoreAuth, updateInformation } =
+  authSlice.actions;
 
 export default authSlice.reducer;

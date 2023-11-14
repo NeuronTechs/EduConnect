@@ -240,72 +240,163 @@ const logout = async (req: Request, res: Response) => {
 };
 
 const updateInformation = async (req: Request, res: Response) => {
+  console.log(req.body);
   try {
-    if (
-      !req.body?.username ||
-      !req.body?.role ||
-      !req.body?.fullName ||
-      !req.body?.avatar ||
-      !req.body?.phone ||
-      !req.body?.email ||
-      !req.body?.address ||
-      !req.body?.birthday ||
-      !req.body?.educational_level ||
-      !req.body?.major ||
-      !req.body?.course ||
-      !req.body?.school ||
-      !req.body?.address_school
-    ) {
-      res.status(400).json({
+    if (!req.body) {
+      return res.status(400).json({
         status: 400,
         data: {},
-        message:
-          "username, role, fullName, avatar, phone, email, address, birthday, educational_level, major, course, school and address_school is require!",
+        message: "Request body is missing",
+      });
+    }
+
+    if (!req.body.username) {
+      return res.status(400).json({
+        status: 400,
+        data: {},
+        message: "Username is required",
+      });
+    }
+
+    if (!req.body.role) {
+      return res.status(400).json({
+        status: 400,
+        data: {},
+        message: "Role is required",
+      });
+    }
+
+    if (!req.body.fullName) {
+      return res.status(400).json({
+        status: 400,
+        data: {},
+        message: "Full name is required",
+      });
+    }
+
+    if (!req.body.avatar) {
+      return res.status(400).json({
+        status: 400,
+        data: {},
+        message: "Avatar is required",
+      });
+    }
+
+    if (!req.body.phone) {
+      return res.status(400).json({
+        status: 400,
+        data: {},
+        message: "Phone is required",
+      });
+    }
+
+    if (!req.body.email) {
+      return res.status(400).json({
+        status: 400,
+        data: {},
+        message: "Email is required",
+      });
+    }
+
+    if (!req.body.address) {
+      return res.status(400).json({
+        status: 400,
+        data: {},
+        message: "Address is required",
+      });
+    }
+
+    if (!req.body.birthday) {
+      return res.status(400).json({
+        status: 400,
+        data: {},
+        message: "Birthday is required",
+      });
+    }
+
+    if (!req.body.educational_level) {
+      return res.status(400).json({
+        status: 400,
+        data: {},
+        message: "Educational level is required",
+      });
+    }
+
+    if (!req.body.major) {
+      return res.status(400).json({
+        status: 400,
+        data: {},
+        message: "Major is required",
+      });
+    }
+
+    if (!req.body.course) {
+      return res.status(400).json({
+        status: 400,
+        data: {},
+        message: "Course is required",
+      });
+    }
+
+    if (!req.body.school) {
+      return res.status(400).json({
+        status: 400,
+        data: {},
+        message: "School is required",
+      });
+    }
+
+    if (!req.body.address_school) {
+      return res.status(400).json({
+        status: 400,
+        data: {},
+        message: "School address is required",
+      });
+    }
+
+    const {
+      username,
+      role,
+      fullName,
+      avatar,
+      phone,
+      email,
+      address,
+      birthday,
+      educational_level,
+      major,
+      course,
+      school,
+      address_school,
+    } = req.body;
+
+    let result: informationResponse;
+    result = await UserService.updateInformation({
+      username,
+      role,
+      fullName,
+      avatar,
+      phone,
+      email,
+      address,
+      birthday,
+      educational_level,
+      major,
+      course,
+      school,
+      address_school,
+    });
+
+    if (result?.status) {
+      res.status(200).json({
+        status: 200,
+        message: result?.message,
       });
     } else {
-      const {
-        username,
-        role,
-        fullName,
-        avatar,
-        phone,
-        email,
-        address,
-        birthday,
-        educational_level,
-        major,
-        course,
-        school,
-        address_school,
-      } = req.body;
-      let result: informationResponse;
-      result = await UserService.updateInformation({
-        username,
-        role,
-        fullName,
-        avatar,
-        phone,
-        email,
-        address,
-        birthday,
-        educational_level,
-        major,
-        course,
-        school,
-        address_school,
+      res.status(400).json({
+        status: 400,
+        message: result?.message,
       });
-
-      if (result?.status) {
-        res.status(200).json({
-          status: 200,
-          message: result?.message,
-        });
-      } else {
-        res.status(400).json({
-          status: 400,
-          message: result?.message,
-        });
-      }
     }
   } catch (error) {
     res.status(500).json({

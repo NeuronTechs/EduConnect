@@ -2,10 +2,12 @@ import React from "react";
 import Banner from "../components/Home/Banner";
 import ListCategory from "../components/Home/ListCategory";
 import ListCourse from "../components/Home/ListCourse";
-import ListTeacher from "../components/Home/ListTeacher";
 import { Link, useLocation } from "react-router-dom";
-import { dataCategory, dataCourse, dataTeacher } from "../types/constans";
-import instance from "@/utils/httpRequest";
+import * as topicApi from "@/api/topicApi/topicApi";
+import * as teacherApi from "@/api/teacherApi/teacherApi";
+import { ICourseOverview, ITeacher, ITopic } from "@/types/type";
+import ListTeacher from "@/components/Home/ListTeacher";
+
 const TabHome = (): React.ReactElement => {
   const location = useLocation();
   const tabData = [
@@ -42,29 +44,48 @@ const TabHome = (): React.ReactElement => {
 export { TabHome };
 
 const Home = () => {
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [dataCourse, setDataCourse] = React.useState<ICourseOverview[]>([]);
+  const [dataCategory, setDataCategory] = React.useState<ITopic[]>([]);
+  const [dataTeacher, setDataTeacher] = React.useState<ITeacher[]>([]);
   React.useEffect(() => {
-    const callApi = async () => {
+    const fetchData = async () => {
+      setIsLoading(true);
       try {
-        const data = await instance.get("/courses");
-        console.log(data);
+        const promises = [
+          topicApi.getRecommendCourse({ limit: "5" }),
+          topicApi.getTopicCategory({ limit: "5" }),
+          teacherApi.teacherRecommendationsApi({ limit: "5" }),
+        ];
+        const [courses, categories, teachers] = await Promise.all(promises);
+        setDataCourse(courses.data);
+        setDataCategory(categories.data as ITopic[]);
+        console.log(categories.data as ITopic[]);
+        setDataTeacher(teachers.data as ITeacher[]);
       } catch (error) {
-        console.log(error);
+        console.error(error);
+      } finally {
+        setIsLoading(false);
       }
     };
-    callApi();
+    fetchData();
   }, []);
   return (
     <div className="flex flex-col w-full  gap-5">
       <TabHome />
-      <Banner isLoading={false} />
+      <Banner isLoading={isLoading} />
       <ListCourse
-        isLoading={false}
+        isLoading={isLoading}
         data={dataCourse}
         title={"Khoá Học Nỗi Bật"}
       />
-      <ListCategory isLoading={false} data={dataCategory} title={"Thể Loại"} />
+      <ListCategory
+        isLoading={isLoading}
+        data={dataCategory}
+        title={"Thể Loại"}
+      />
       <ListTeacher
-        isLoading={false}
+        isLoading={isLoading}
         data={dataTeacher}
         title={"Giáo Viên Nỗi Bật"}
       />
