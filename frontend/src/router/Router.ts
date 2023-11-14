@@ -37,6 +37,16 @@ const publicRoutes: IRouter[] = [
     component: lazy(() => import("../pages/SignUp")),
     layout: BlankLayout,
   },
+  {
+    path: configRouter.forgetPassword,
+    component: lazy(() => import("../pages/ForgetPassword")),
+    layout: BlankLayout,
+  },
+  {
+    path: configRouter.resetPassword,
+    component: lazy(() => import("../pages/ResetPassword")),
+    layout: BlankLayout,
+  },
 ];
 const privateRoutes: IRouter[] = [
   {

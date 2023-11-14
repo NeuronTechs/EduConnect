@@ -290,15 +290,8 @@ ORDER BY s.session_id, l.lecture_id;`;
 const getOverviewCourse = async (
   course_id: string
 ): Promise<dataResponse<any>> => {
-  // const sql = `SELECT c.course_id ,c.title as course_name,c.description as course_description,s.session_id, s.name AS session_name, l.lecture_id, l.name AS lecture_name, l.description, l.source, l.type, l.duration, c.price, c.discount, c.study, c.requirement, c.level, c.language, c.image, tc.teacher_id, us.full_name, tc.educational_level, us.avatar
-  // FROM educonnectdb.Session s
-  // JOIN educonnectdb.Lecture l ON s.session_id = l.session_id
-  // JOIN educonnectdb.Course c ON s.course_id = c.course_id
-  // JOIN educonnectdb.Teacher tc on c.teacher_id = tc.teacher_id
-  // JOIN educonnectdb.user us on tc.username = us.username
-  // WHERE s.course_id = ?
-  // ORDER BY s.session_id, l.lecture_id;`;
-  const sql = `SELECT c.course_id ,c.title as course_name,c.description as course_description,s.session_id, s.name AS session_name, l.lecture_id, l.name AS lecture_name, l.description, l.source, l.type, l.duration, c.price, c.discount, c.study, c.requirement, c.level, c.language, c.image, tc.teacher_id, us.full_name, tc.educational_level, us.avatar, GROUP_CONCAT(DISTINCT ot.student_id) as student_id
+  try {
+    const sql = `SELECT c.course_id ,c.title as course_name,c.description as course_description,s.session_id, s.name AS session_name, l.lecture_id, l.name AS lecture_name, l.description, l.source, l.type, l.duration, c.price, c.discount, c.study, c.requirement, c.level, c.language, c.image, tc.teacher_id, us.full_name, tc.educational_level, us.avatar, GROUP_CONCAT(DISTINCT ot.student_id) as student_id
   FROM educonnectdb.Session s
   JOIN educonnectdb.Lecture l ON s.session_id = l.session_id
   JOIN educonnectdb.Course c ON s.course_id = c.course_id
@@ -310,89 +303,109 @@ const getOverviewCourse = async (
   c.course_id, c.title, c.description, s.session_id, s.name, l.lecture_id, l.name, l.description, l.source, l.type, l.duration, c.price, c.discount,c.study,c.requirement,c.level,c.language,c.image,tc.teacher_id,us.full_name,tc.educational_level,us.avatar
   ORDER BY s.session_id, l.lecture_id;`;
 
-  return new Promise<dataResponse<any>>((resolve, reject) => {
-    db.connectionDB.query(sql, [course_id], (err, result: RowDataPacket[]) => {
-      if (err) {
-        reject(err);
-        return;
-      }
-      const resultData: ICourseOverview = {
-        course_id: result[0].course_id,
-        title: result[0].course_name,
-        image: result[0].image,
-        description: result[0].course_description,
-        price: result[0].price,
-        discount: result[0].discount,
-        requirement: result[0].requirement,
-        study: result[0].study,
-        level: result[0].level,
-        language: result[0].language,
-        timeLine: "MAX",
-        totalTime: result.reduce((total, data) => {
-          return parseInt(data.duration) + total;
-        }, 0),
-        student: "MAX",
-        totalLecture: result.length,
-        teacher_id: result[0].teacher_id,
-        fullName: result[0].full_name,
-        educational_level: result[0].educational_level,
-        avatar: result[0].avatar,
-        student_id: result[0].student_id,
-        sessions: [],
-      };
+    return new Promise<any>((resolve, reject) => {
+      db.connectionDB.query(
+        sql,
+        [course_id],
+        (err, result: RowDataPacket[]) => {
+          if (err) {
+            reject({
+              status: 404,
+              data: {},
+              message: err,
+            });
+            return;
+          } else {
+            if (result.length === 0) {
+              resolve({
+                status: 404,
+                data: {},
+                message: "Course doesn't existed",
+              });
+              return;
+            }
+            const resultData: ICourseOverview = {
+              course_id: result[0].course_id,
+              title: result[0].course_name,
+              image: result[0].image,
+              description: result[0].course_description,
+              price: result[0].price,
+              discount: result[0].discount,
+              requirement: result[0].requirement,
+              study: result[0].study,
+              level: result[0].level,
+              language: result[0].language,
+              timeLine: "MAX",
+              totalTime: result.reduce((total, data) => {
+                return parseInt(data.duration) + total;
+              }, 0),
+              student: "MAX",
+              totalLecture: result.length,
+              teacher_id: result[0].teacher_id,
+              fullName: result[0].full_name,
+              educational_level: result[0].educational_level,
+              avatar: result[0].avatar,
+              student_id: result[0].student_id,
+              sessions: [],
+            };
 
-      let sample = {
-        session_id: result[0].session_id,
-        session_name: result[0].session_name,
-      };
-      let lectures: any[] = [];
-      for (const item of result) {
-        if (sample.session_id === item.session_id) {
-          lectures.push({
-            lecture_id: item.lecture_id,
-            lecture_name: item.lecture_name,
-            description: item.description,
-            source: item.source,
-            type: item.type,
-            time: item.duration,
-          });
-        } else {
-          const { session_id, session_name } = sample;
-          const temp: ISession = {
-            session_id,
-            name: session_name,
-            lectures,
-          };
-          resultData.sessions.push(temp);
-          lectures = [];
-          sample.session_id = item.session_id;
-          sample.session_name = item.session_name;
-          lectures.push({
-            lecture_id: item.lecture_id,
-            lecture_name: item.lecture_name,
-            description: item.description,
-            source: item.source,
-            type: item.type,
-            time: item.duration,
-          });
+            let sample = {
+              session_id: result[0].session_id,
+              session_name: result[0].session_name,
+            };
+            let lectures: any[] = [];
+            for (const item of result) {
+              if (sample.session_id === item.session_id) {
+                lectures.push({
+                  lecture_id: item.lecture_id,
+                  lecture_name: item.lecture_name,
+                  description: item.description,
+                  source: item.source,
+                  type: item.type,
+                  time: item.duration,
+                });
+              } else {
+                const { session_id, session_name } = sample;
+                const temp: ISession = {
+                  session_id,
+                  name: session_name,
+                  lectures,
+                };
+                resultData.sessions.push(temp);
+                lectures = [];
+                sample.session_id = item.session_id;
+                sample.session_name = item.session_name;
+                lectures.push({
+                  lecture_id: item.lecture_id,
+                  lecture_name: item.lecture_name,
+                  description: item.description,
+                  source: item.source,
+                  type: item.type,
+                  time: item.duration,
+                });
+              }
+            }
+
+            const { session_id, session_name } = sample;
+            const temp: ISession = {
+              session_id,
+              name: session_name,
+              lectures,
+            };
+            resultData.sessions.push(temp);
+
+            resolve({
+              status: 200,
+              data: resultData as ICourseOverview,
+              message: "Success",
+            });
+          }
         }
-      }
-
-      const { session_id, session_name } = sample;
-      const temp: ISession = {
-        session_id,
-        name: session_name,
-        lectures,
-      };
-      resultData.sessions.push(temp);
-
-      resolve({
-        status: 200,
-        data: resultData as ICourseOverview,
-        message: "Success",
-      });
+      );
     });
-  });
+  } catch (error) {
+    throw error;
+  }
 };
 
 const addTransactionInCourse = (

@@ -2,7 +2,7 @@ import { IReview, SliceState, addReview } from "@/types/type";
 import { Avatar, Progress, Rating, Typography } from "@material-tailwind/react";
 // import { ThumbsDown, ThumbsUp } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import * as courseApi from "../../../api/courseApi/courseApi";
 import { formatTimeStamp } from "@/utils/const";
 import { useSelector } from "react-redux";
@@ -76,6 +76,11 @@ const Reviews = () => {
   const [rated, setRated] = useState<number>(0);
   const [reviews, setReviews] = useState<IReview[]>([]);
   const [statistic, setTatistic] = useState<any>({});
+  const { id } = useParams();
+
+  const currentUser = useSelector(
+    (state: SliceState) => state.authSlice.currentUser
+  );
 
   const currentCourse = useSelector(
     (state: SliceState) => state.courseOverviewSlice.courseCurrent
@@ -83,15 +88,13 @@ const Reviews = () => {
 
   useEffect(() => {
     const getReview = async () => {
-      const data = await courseApi.getReviewCourse("27381");
+      const data = await courseApi.getReviewCourse(id as string);
       setReviews([...data?.data]);
     };
 
     const getStatisticStar = async () => {
-      const data = await courseApi.getStatisticStar("27381");
+      const data = await courseApi.getStatisticStar(id as string);
       setTatistic(data?.data);
-      // setReviews(data?.data);
-      // console.log(data);
     };
 
     getReview();
@@ -99,15 +102,15 @@ const Reviews = () => {
   }, []);
 
   const handleGetAllReviews = async () => {
-    const data = await courseApi.getAllReviewCourse("27381");
+    const data = await courseApi.getAllReviewCourse(id as string);
     setReviews(data?.data);
   };
 
   const handleAddReview = async () => {
     let params: addReview = {
-      course_id: "27381",
+      course_id: id as string,
       content: content,
-      author_id: "test2",
+      author_id: currentUser?.user_id as string,
       rating: rated,
       title: title,
     };
@@ -223,17 +226,19 @@ const Reviews = () => {
         {/* <Review content="Review 1" title="Review 1" />
         <Review content="Review 2" title="Review 2" />
         <Review content="Review 3" title="Review 3" /> */}
-        {reviews?.map((review) => (
-          <Review
-            content={review.content}
-            title={review.title}
-            createdAt={review.createdAt}
-            rating={review.rating}
-            full_name={review.full_name}
-            username={review.username}
-            avatar={review.avatar}
-          />
-        ))}
+
+        {reviews?.length > 0 &&
+          reviews?.map((review) => (
+            <Review
+              content={review.content}
+              title={review.title}
+              createdAt={review.createdAt}
+              rating={review.rating}
+              full_name={review.full_name}
+              username={review.username}
+              avatar={review.avatar}
+            />
+          ))}
         <div className="flex items-center justify-center">
           <button
             className="italic text-blue-500 w-[170px]"
