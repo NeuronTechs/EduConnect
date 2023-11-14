@@ -15,7 +15,7 @@ const ListCourse = (props: props): React.ReactElement => {
         <ListCourseLoading numberShow={3}></ListCourseLoading>
       ) : (
         <div className="grid grid-cols-3 ">
-          {props.data.map((data) => {
+          {props?.data?.map((data) => {
             return <Card data={data} />;
           })}
         </div>

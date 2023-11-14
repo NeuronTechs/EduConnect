@@ -23,6 +23,16 @@ const publicRoutes: IRouter[] = [
     layout: BlankLayout,
   },
   {
+    path: configRouter.course,
+    component: OverviewCourse,
+    layout: DefaultLayout,
+  },
+  {
+    path: configRouter.learning,
+    component: Course,
+    layout:BlankLayout,
+  },
+  {
     path: configRouter.signUp,
     component: lazy(() => import("../pages/SignUp")),
     layout: BlankLayout,

@@ -21,11 +21,11 @@ export const get = async (path: string, options = {}) => {
 export const post = async (
   path: string,
   options = {},
-  header?: AxiosRequestHeaders
+  headers?: AxiosRequestHeaders
 ) => {
   try {
     const response = await instance.post(path, options, {
-      headers: header,
+      headers: headers,
     });
 
     return response.data;
