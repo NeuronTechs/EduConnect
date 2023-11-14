@@ -3,7 +3,6 @@ import { CartState } from "@/features/cart/cartSlice";
 import { CheckoutState } from "@/features/checkoutCourse/checkoutSlice";
 import { CourseState } from "@/features/course/courseSlice";
 import { CourseOverviewState } from "@/features/overviewCourse/courseOverviewSlice";
-import { FileWithPath } from "react-dropzone";
 
 export interface SliceState {
   authSlice: AuthState;
@@ -31,13 +30,13 @@ export interface ICourse {
   total_lectures?: number;
 }
 
-export interface ICourseOverview {
-  course_id: number;
+export interface ICourseDetail {
+  course_id: string;
   title: string;
   description: string;
   image: string;
   price: number;
-  study: number;
+  study: string;
   requirement: string;
   level: string;
   language: string;
@@ -48,14 +47,14 @@ export interface ICourseOverview {
   total_lecture?: number;
   total_hour?: number;
   total_student?: number;
-  teacher_id: number;
-  topic_id: number;
+  teacher_id: string;
+  topic_id: string;
   teacher?: ITeacher;
   user?: IUser;
   topic?: ITopic;
 }
 export interface IUser {
-  username: number;
+  username: string;
   full_name: string;
   email: string;
   avatar: string;
@@ -75,7 +74,7 @@ export interface ITopic {
 }
 
 export interface ITeacher {
-  teacher_id: number;
+  teacher_id: string;
   username: string;
   introduce?: string;
   subject?: string;
@@ -278,7 +277,9 @@ export interface ICourseOverview {
   title: string;
   image: string;
   description: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   requirement: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   study: any;
   price: number;
   discount: number;

@@ -111,7 +111,7 @@ const BuyCourse = () => {
               <p className="text-[16px]">Thời gian</p>
             </div>
             <p className="text-[16px]">
-              {convertTime(currentCourse?.totalTime as number)}
+              {/* {convertTime(currentCourse?.totalTime as number)} */}
             </p>
           </li>
           <li className="flex items-center justify-between border-b border-b-solid border-b-gray-400 p-[5px]">
@@ -134,10 +134,10 @@ const BuyCourse = () => {
       <div className="p-[10px] gap-2">
         <div className="flex justify-between items-center py-2">
           <p className="line-through">
-            {formatCurrency(currentCourse?.price as number)}
+            {/* {formatCurrency(currentCourse?.price as number)} */}
           </p>
           <p className="font-semibold">
-            {formatCurrency(currentCourse?.discount as number)}
+            {/* {formatCurrency(currentCourse?.discount as number)} */}
           </p>
         </div>
         <div className="flex flex-col justify-center items-center gap-2">

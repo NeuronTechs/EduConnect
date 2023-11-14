@@ -2,7 +2,7 @@ import express from "express";
 const router = express.Router();
 import courseController from "../controllers/course.controller";
 import middlewareController from "../middlewares/middlewareController";
-const uploadCloud = require("../middlewares/uploadFileClouldinary");
+const uploadCloud = require("../middlewares/uploadCloudinary");
 
 router.route("/create").post(courseController.create);
 router

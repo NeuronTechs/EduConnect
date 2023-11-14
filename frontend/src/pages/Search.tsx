@@ -1,9 +1,9 @@
 import React from "react";
 import ListCourse from "../components/Home/ListCourse";
-import { dataCategory, dataCourse, dataTeacher } from "../types/constans";
 import ListTeacher from "../components/Home/ListTeacher";
 import ListCategory from "../components/Home/ListCategory";
 import { useSearchParams } from "react-router-dom";
+import { dataCategoryT, dataCourseT, dataTeacherT } from "@/types/constans";
 
 const Search = (): React.ReactElement => {
   const [searchParams] = useSearchParams();
@@ -15,16 +15,16 @@ const Search = (): React.ReactElement => {
       <div className="w-full bg-white shadow-sm flex items-center px-4 py-4">
         <h5 className="text-black text-xl font-semibold">Kết Quả Tìm Kiếm</h5>
       </div>
-      <ListCourse isLoading={false} title="Chủ đề nổi bật" data={dataCourse} />
+      <ListCourse isLoading={false} title="Chủ đề nổi bật" data={dataCourseT} />
       <ListTeacher
         isLoading={false}
         title="Chủ đề nổi bật"
-        data={dataTeacher}
+        data={dataTeacherT}
       />
       <ListCategory
         isLoading={false}
         title="Chủ đề nổi bật"
-        data={dataCategory}
+        data={dataCategoryT}
       />
     </div>
   );

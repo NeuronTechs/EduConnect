@@ -32,7 +32,9 @@ const dataTab = [
 ];
 
 const DetailCourse = () => {
-  const currentCourse = useSelector((state: SliceState) => state.courseOverviewSlice.courseCurrent);
+  const currentCourse = useSelector(
+    (state: SliceState) => state.courseOverviewSlice.courseCurrent
+  );
   return (
     <div className="w-full lg:w-[70%] lg:p-[10px] h-auto bg-white">
       {/* image */}
@@ -71,9 +73,9 @@ const DetailCourse = () => {
         <div className="hidden lg:block text-blue-300">
           {currentCourse?.discount ? (
             <>
-              <p className="line-through">{formatCurrency(currentCourse?.price)}</p>
+              {/* <p className="line-through">{formatCurrency(currentCourse?.price)}</p> */}
               <p className="font-semibold text-blue-500">
-                {formatCurrency(currentCourse?.discount)}
+                {/* {formatCurrency(currentCourse?.discount)} */}
               </p>
             </>
           ) : (

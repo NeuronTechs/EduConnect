@@ -17,6 +17,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import React, { FC } from "react";
 import RequireAuth from "./router/RequireAuth";
 import { AnimatePresence } from "framer-motion";
+import LoadingPage from "./components/LoadingPage/LoadingPage";
 interface LayoutProps {
   children?: React.ReactNode;
 }
@@ -64,7 +65,7 @@ function App() {
                       user={useCurrentUser}
                     >
                       <Layout>
-                        <React.Suspense fallback={<div> loading ....</div>}>
+                        <React.Suspense fallback={<LoadingPage />}>
                           {/* // If the route is checkout, render the Elements
                         component, which provides access to Stripe Elements. //
                         Otherwise, render the Page component. */}
