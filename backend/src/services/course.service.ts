@@ -1,7 +1,12 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import db from "../config/connectDB";
 import { generateRandomString } from "../config/randomString";
-import { ICourse, ICourseDetail, ICourseOverview } from "../constant/course";
+import {
+  IComplaint,
+  ICourse,
+  ICourseDetail,
+  ICourseOverview,
+} from "../constant/course";
 import {
   dataListResponse,
   dataResponse,
@@ -178,86 +183,107 @@ const getCourseByTopicId = async (
  * @returns A Promise that resolves to a dataResponse object containing the course details.
  */
 const getCourseDetails = async (
-  course_id: string
+  course_id: string,
+  user_id: string
 ): Promise<dataResponse<ICourseDetail>> => {
   // Define the SQL query to retrieve course details
-  const sql = `SELECT c.course_id ,c.title as course_name,c.description as course_description,s.session_id, s.name AS session_name, l.lecture_id, l.name AS lecture_name, l.description, l.source, l.type, l.duration
-  FROM Session s
-  JOIN Lecture l ON s.session_id = l.session_id
-  JOIN Course c ON s.course_id = c.course_id
-  WHERE s.course_id = ?
-  ORDER BY s.session_id, l.lecture_id; `;
+  const sql = `SELECT 
+  c.course_id,
+  c.title as course_name,
+  c.description as course_description,
+  s.session_id,
+  s.name AS session_name,
+  l.lecture_id,
+  l.name AS lecture_name,
+  l.description,
+  l.source,
+  l.type,
+  l.duration,
+  CASE 
+    WHEN sp.progress IS NULL THEN 'No'
+    ELSE 'Yes'
+  END AS has_watched
+FROM Session s
+JOIN Lecture l ON s.session_id = l.session_id
+JOIN Course c ON s.course_id = c.course_id
+LEFT JOIN student_progress sp ON sp.lecture_id = l.lecture_id AND sp.student_id = ?
+WHERE s.course_id = "15938"
+ORDER BY s.session_id, l.lecture_id;`;
 
   // Execute the SQL query and return a Promise that resolves to the course details
   return new Promise<dataResponse<ICourseDetail>>((resolve, reject) => {
-    db.connectionDB.query(sql, [course_id], (err, result: RowDataPacket[]) => {
-      if (err) {
-        reject(err);
-        return;
-      }
-      // Parse the query result and create an ICourseDetail object
-      if (result.length === 0)
-        resolve({
-          status: 404,
-
-          message: "Course not found",
-        });
-      else {
-        const resultData: ICourseDetail = {
-          course_id: result[0].course_id,
-          title: result[0].course_name,
-          description: result[0].course_description,
-          sessions: [],
-        };
-        // Iterate over the query result and group lectures by session
-        let sample = {
-          session_id: result[0].session_id,
-          session_name: result[0].session_name,
-        };
-        let lectures: any[] = [];
-        for (const item of result) {
-          if (sample.session_id === item.session_id) {
-            lectures.push({ ...item });
-          } else {
-            const { session_id, session_name } = sample;
-            const temp: ISession = {
-              session_id,
-              name: session_name,
-              course_id: resultData.course_id,
-              lectures,
-            };
-            resultData.sessions.push(temp);
-            lectures = [];
-            sample.session_id = item.session_id;
-            sample.session_name = item.session_name;
-            lectures.push({
-              lecture_id: item.lecture_id,
-              lecture_name: item.lecture_name,
-              description: item.description,
-              source: item.source,
-              type: item.type,
-            });
-          }
+    db.connectionDB.query(
+      sql,
+      [course_id, user_id],
+      (err, result: RowDataPacket[]) => {
+        if (err) {
+          reject(err);
+          return;
         }
+        // Parse the query result and create an ICourseDetail object
+        if (result.length === 0)
+          resolve({
+            status: 404,
 
-        // Add the last session to the ICourseDetail object
-        const { session_id, session_name } = sample;
-        const temp: ISession = {
-          session_id,
-          name: session_name,
-          course_id: resultData.course_id,
-          lectures,
-        };
-        resultData.sessions.push(temp);
+            message: "Course not found",
+          });
+        else {
+          const resultData: ICourseDetail = {
+            course_id: result[0].course_id,
+            title: result[0].course_name,
+            description: result[0].course_description,
+            sessions: [],
+          };
+          // Iterate over the query result and group lectures by session
+          let sample = {
+            session_id: result[0].session_id,
+            session_name: result[0].session_name,
+          };
+          let lectures: any[] = [];
+          for (const item of result) {
+            if (sample.session_id === item.session_id) {
+              lectures.push({ ...item });
+            } else {
+              const { session_id, session_name } = sample;
+              const temp: ISession = {
+                session_id,
+                name: session_name,
+                course_id: resultData.course_id,
+                lectures,
+              };
+              resultData.sessions.push(temp);
+              lectures = [];
+              sample.session_id = item.session_id;
+              sample.session_name = item.session_name;
+              lectures.push({
+                lecture_id: item.lecture_id,
+                lecture_name: item.lecture_name,
+                description: item.description,
+                source: item.source,
+                type: item.type,
+              });
+            }
+          }
 
-        // Return the course details as a dataResponse object
-        resolve({
-          status: 200,
-          data: resultData as ICourseDetail,
-          message: "Success",
-        });
+          // Add the last session to the ICourseDetail object
+          const { session_id, session_name } = sample;
+          const temp: ISession = {
+            session_id,
+            name: session_name,
+            course_id: resultData.course_id,
+            lectures,
+          };
+          resultData.sessions.push(temp);
+
+          // Return the course details as a dataResponse object
+          resolve({
+            status: 200,
+            data: resultData as ICourseDetail,
+            message: "Success",
+          });
+        }
       }
-    });
+    );
   });
 };
 
@@ -455,6 +481,86 @@ const addToCourse = (
   }
 };
 
+const complaintCourse = (
+  data: IComplaint,
+  files:
+    | {
+        [fieldname: string]: Express.Multer.File[];
+      }
+    | Express.Multer.File[]
+    | undefined
+): Promise<any> => {
+  try {
+    data.complaint_id = generateRandomString();
+    data.createdAt = convertTimestampToDateTime();
+
+    let fileData: string | undefined = "";
+    if (files) {
+      fileData = JSON.stringify(
+        Object.values(files).map((file) => {
+          return file.path;
+          // return {
+          //   mimetype: file.mimetype,
+          //   path: file.path,
+          // };
+        })
+      );
+    }
+    if (fileData) {
+      data.image = fileData;
+    }
+    const sql = `INSERT INTO complaint SET ?`;
+    return new Promise<dataResponse<any>>((resolve, reject) => {
+      db.connectionDB.query(sql, data, (err, result) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve({
+          status: 200,
+          data: data,
+          message: "Complaint successfully",
+        });
+      });
+    });
+  } catch (error) {
+    console.log(error);
+
+    throw error;
+  }
+};
+
+const getComplaintCourse = (): Promise<any> => {
+  try {
+    const query = `SELECT complaint.complaint_id, complaint.title, complaint.content, complaint.createdAt ,complaint.student_id, complaint.course_id, course.title as course_name, user.full_name FROM educonnectdb.complaint join educonnectdb.student on complaint.student_id = student.student_id
+    join educonnectdb.course on course.course_id = complaint.course_id
+    join educonnectdb.user on user.username = student.username`;
+    return new Promise((resolve, reject) => {
+      db.connectionDB.query(
+        query,
+        [""],
+        (error, complaints: RowDataPacket[], fields) => {
+          if (error) {
+            reject({
+              status: false,
+              data: {},
+              message: error,
+            });
+            return;
+          }
+          resolve({
+            status: true,
+            data: complaints,
+            message: "Get complaint success",
+          });
+        }
+      );
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
 export default {
   create,
   getAll,
@@ -467,4 +573,6 @@ export default {
   getOverviewCourse,
   addTransactionInCourse,
   addToCourse,
+  complaintCourse,
+  getComplaintCourse,
 };

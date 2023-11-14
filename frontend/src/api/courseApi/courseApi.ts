@@ -1,5 +1,6 @@
 import { IComment, addReview } from "@/types/type";
 import * as httpRequest from "../../utils/httpRequest";
+import { AxiosRequestHeaders } from "axios";
 
 export const getCourseByStudentId = async (params: string) => {
   try {
@@ -31,15 +32,16 @@ export const getCourseOverview = async (params: string) => {
   }
 };
 
-export const CommentLecture = async (params: IComment) => {
+export const CommentLecture = async (params: FormData) => {
   try {
-    const res = await httpRequest.post(`/comment/create`, params);
+    const res = await httpRequest.post(`/comment/create`, params, {
+      "Content-Type": "multipart/form-data",
+    } as AxiosRequestHeaders);
     return res?.data?.data;
   } catch (error) {
     return Promise.reject(error);
   }
 };
-
 export const CommentOfLecture = async (params: {
   id: string;
   paging: number;
@@ -101,7 +103,10 @@ export const addToReview = async (params: addReview) => {
 
 export const addTransactionInCourse = async (params: any) => {
   try {
-    const res = await httpRequest.post(`/course/add-transaction-course`, params);
+    const res = await httpRequest.post(
+      `/course/add-transaction-course`,
+      params
+    );
     return res;
   } catch (error) {
     return Promise.reject(error);

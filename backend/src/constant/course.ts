@@ -43,3 +43,13 @@ export interface ICourseOverview {
   student_id: string,
   sessions: ISession[];
 }
+
+export interface IComplaint{
+  complaint_id?: string,
+  student_id?: string,
+  course_id?: string,
+  title?: string,
+  content?: string,
+  image?: string | undefined,
+  createdAt?: string
+}

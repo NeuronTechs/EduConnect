@@ -24,11 +24,11 @@ export interface ICourse {
   total_hours: number;
   createdAt: string;
   updatedAt: string;
-  sessions: ISession[] | null;
+  sessions?: ISession[] | null;
   teacher_avatar?: string;
   teacher_name?: string;
-  completed_lectures: number;
-  total_lectures: number;
+  completed_lectures?: number;
+  total_lectures?: number;
 }
 
 export interface ICourseOverview {
@@ -104,7 +104,14 @@ export interface IComment {
   username: string;
   lecture_id: string;
   createdAt?: number;
-  resource?: FileWithPath[] | null;
+  resource?:
+    | {
+        path: string;
+        size: number;
+        mimetype: string;
+        originalname: string;
+      }[]
+    | null;
   timestamp: string;
   avatar?: string | null;
 }
@@ -123,6 +130,7 @@ export interface ILecture {
   session_id: string;
   type: string;
   comments: IComment[] | null;
+  duration: string;
 }
 
 export interface IConventionChat {
@@ -284,7 +292,7 @@ export interface ICourseOverview {
   fullName: string;
   educational_level: string;
   avatar: string;
-  student_id: string,
+  student_id: string;
   sessions: ISessionOverview[];
 }
 

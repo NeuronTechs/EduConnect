@@ -5,19 +5,8 @@ import {
   Accordion,
   AccordionHeader,
   AccordionBody,
-  Menu,
-  MenuHandler,
-  MenuList,
-  MenuItem,
 } from "@material-tailwind/react";
-import {
-  ArchiveBox,
-  ArrowDown,
-  BookOpenText,
-  Clock,
-  Folder,
-  MonitorPlay,
-} from "@phosphor-icons/react";
+import { BookOpenText, Check, Clock, MonitorPlay } from "@phosphor-icons/react";
 import { Select } from "flowbite-react";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
@@ -54,42 +43,34 @@ const Icon = ({ open }: IconProps) => {
     </svg>
   );
 };
-const LectureCard = (props: ILecture) => {
+const LectureCard = (props: { Lecture: ILecture; index: number }) => {
   const dispatch = useDispatch<AppDispatch>();
   const handleSelect = () => {
-    dispatch(selectLecture(props));
+    dispatch(selectLecture(props.Lecture));
   };
   return (
     <>
       <div
-        className="flex flex-col items-start justify-start text-[12px] cursor-pointer p-2 pl-0  font-bold text-sm hover:bg-gray-100 rounded-md"
+        className="flex flex-col items-start justify-start text-[12px] cursor-pointer p-4   font-bold text-sm hover:bg-gray-100 rounded-md"
         onClick={handleSelect}
       >
-        <div className="flex">
-          {props.lecture_id + ". " + props.lecture_name}
+        <div className="flex text-semibold text-gray-800 text-sm">
+          {props.index + 1 + ". " + props.Lecture.lecture_name}
         </div>
-        <div className="flex justify-between mt-2 items-center">
-          <div className="flex items-center space-x-2">
+        <div className="flex justify-between w-full mt-2 items-center">
+          <div className="flex items-center text-xs space-x-2">
             <MonitorPlay size={16} />
-            <p> {15 + " phút"}</p>
+            <p> {props.Lecture.duration + " phút"}</p>
           </div>
-
-          <Menu>
-            <MenuHandler>
-              <div className="w-27 h-6 border-[0.5px] border-black hidden justify-between items-center ml-15 text-black p-1">
-                <Folder size={16} /> <p className="text-sm">Resource</p>{" "}
-                <ArrowDown size={16} />
-              </div>
-            </MenuHandler>
-            <MenuList className="text-black">
-              <MenuItem className="flex gap-2">
-                <ArchiveBox size={16} /> Menu Item 1
-              </MenuItem>
-            </MenuList>
-          </Menu>
+          <div className="rounded-full border-[0.5px] w-5 h-5 flex justify-center items-center border-green-500 bg-green-500">
+            <Check size={14} color="white" />
+          </div>
+          {/* <div className="rounded-full border-[0.5px] w-5 h-5 flex justify-center items-center border-black ">
+            <Check size={14} color="white" />
+          </div> */}
         </div>
-        <div className="w-10/12 mt-4 h-[1px] bg-gray-300"></div>
       </div>
+      <div className="w-10/12 mt-4 h-[1px] bg-gray-300"></div>
     </>
   );
 };
@@ -115,15 +96,9 @@ const Session = (props: LectureProps) => {
           </div>
         </AccordionHeader>
         <AccordionBody>
-          <ul>
-            {props.lectures?.map((Lecture) => {
-              return (
-                <li>
-                  <LectureCard {...Lecture} />
-                </li>
-              );
-            })}
-          </ul>
+          {props.lectures?.map((Lecture, index) => {
+            return <LectureCard Lecture={Lecture} index={index} />;
+          })}
         </AccordionBody>
       </Accordion>
     </div>
@@ -132,7 +107,7 @@ const Session = (props: LectureProps) => {
 
 const Modules = ({ currentCourse }: Props) => {
   return (
-    <div className=" col-span-4 lg:col-span-1 h-auto p-4  mt-2 sticky shadow-xl  border-l-2 border-gray-350 lg:h-[100vh] bg-white  lg:overflow-y-auto ">
+    <div className=" col-span-4 lg:col-span-1 h-auto p-4 py-2  sticky shadow-xl  border-l-2 border-gray-350 lg:h-[100vh] bg-white  lg:overflow-y-auto ">
       <h1 className="text-xl font-bold">Nội dung khóa học</h1>
       <p className="text-xs text-gray-500">Lecture (15) / Total (5,5 hrs)</p>
       <div className="mt-5">

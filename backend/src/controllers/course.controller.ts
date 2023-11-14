@@ -90,8 +90,10 @@ const getCourseByStudentId = async (req: Request, res: Response) => {
 
 const getCourseDetails = async (req: Request, res: Response) => {
   const { id } = req.params;
+  const { user } = req;
+
   try {
-    const courses = await CourseService.getCourseDetails(id);
+    const courses = await CourseService.getCourseDetails(id, user.id);
     res.status(courses.status).json({ data: courses });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
@@ -139,6 +141,33 @@ const addTransactionInCourse = async (req: Request, res: Response) => {
   }
 };
 
+const complaintCourse = async (req: Request, res: Response) => {
+  const { body, files } = req;
+  try {
+    const data = await CourseService.complaintCourse(body, files);
+    res.status(data.status).json(data);
+  } catch (error) {
+    if (error) {
+      res.status(400).json({ error: error });
+    } else {
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+};
+
+const getComplaintCourse = async (req: Request, res: Response) => {
+  try {
+    const data = await CourseService.getComplaintCourse();
+    res.status(200).json(data);
+  } catch (error) {
+    if (error) {
+      res.status(400).json({ error: error });
+    } else {
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+};
+
 export default {
   create,
   getAll,
@@ -151,4 +180,6 @@ export default {
   getOverviewCourse,
 
   addTransactionInCourse,
+  complaintCourse,
+  getComplaintCourse,
 };

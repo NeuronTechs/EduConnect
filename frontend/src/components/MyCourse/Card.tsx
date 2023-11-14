@@ -9,12 +9,12 @@ type props = {
 const Card = (props: props) => {
   const navigate = useNavigate();
   return (
-    <div className="rounded-2xl bg-white p-2 flex flex-col gap-4 shadow-sm w-[90%] mb-5   ">
+    <div className="rounded-2xl bg-white p-2  flex flex-col gap-4 shadow-sm w-[90%] h-[50vh] mb-5   ">
       <div className="w-full">
         <img
           src={props.data.image}
           alt=""
-          className="w-full h-[100px] object-fill rounded-2xl"
+          className="w-full h-[25vh] object-fill rounded-2xl"
         />
       </div>
       <div className="card-content px-1 space-y-2 mb-2">
@@ -22,14 +22,14 @@ const Card = (props: props) => {
         <div className="w-full flex justify-between">
           <div className="flex flex-col">
             <h5
-              className="text-sm font-semibold text-black cursor-pointer"
+              className="text-[13p] font-bold text-black cursor-pointer"
               onClick={() => {
                 navigate("/course/learn/" + props.data.course_id);
               }}
             >
               {props.data.title}
             </h5>
-            <p className="text-xs font-normal text-gray-600">
+            <p className="text-xs font-normal text-gray-400">
               {props.data.teacher_name}
             </p>
           </div>
@@ -58,7 +58,10 @@ const Card = (props: props) => {
           className="bg-gray-600 h-1 p-0.5 text-center text-[10px] font-light leading-none text-primary-100 rounded-lg"
           style={{
             width:
-              (props.data.completed_lectures / props.data.total_lectures) *
+              (props.data.completed_lectures !== undefined &&
+              props.data.total_lectures !== undefined
+                ? props.data.completed_lectures / props.data.total_lectures
+                : 0) *
                 100 +
               "%",
           }}

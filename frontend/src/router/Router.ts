@@ -23,6 +23,16 @@ const publicRoutes: IRouter[] = [
     layout: BlankLayout,
   },
   {
+    path: configRouter.course,
+    component: OverviewCourse,
+    layout: DefaultLayout,
+  },
+  {
+    path: configRouter.learning,
+    component: Course,
+    layout:BlankLayout,
+  },
+  {
     path: configRouter.signUp,
     component: lazy(() => import("../pages/SignUp")),
     layout: BlankLayout,
@@ -122,6 +132,11 @@ const adminRoutes: IRouter[] = [
     component: lazy(() => import("@/pages/Admin/StudentList")),
     layout: DefaultLayout,
   },
+  {
+    path: configRouter.managerComplaintCourse,
+    component: lazy(() => import("@/pages/ManagerComplaintCourse")),
+    layout: DefaultLayout,
+  },
 ];
 const teacherRoutes: IRouter[] = [
   {
@@ -147,11 +162,6 @@ const teacherRoutes: IRouter[] = [
   {
     path: configRouter.payout,
     component: lazy(() => import("@/pages/Payout")),
-    layout: DefaultLayout,
-  },
-  {
-    path: configRouter.managerComplaintCourse,
-    component: ManagerComplaintCourse,
     layout: DefaultLayout,
   },
 ];

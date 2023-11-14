@@ -2,9 +2,11 @@ import { Request, Response } from "express";
 import CommentService from "../services/comment.service";
 
 const create = async (req: Request, res: Response) => {
-  const { body } = req;
+  const { body, files } = req;
   try {
-    const data = await CommentService.create(body);
+    // console.log(req);
+
+    const data = await CommentService.create(body, files);
     res.status(data.status).json({ data });
   } catch (error) {
     if (error) {

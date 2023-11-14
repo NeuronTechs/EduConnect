@@ -43,10 +43,12 @@ export const LoadMoreComment = createAsyncThunk<
   const res = await courseApi.CommentOfLecture(params);
   return res;
 });
-export const CommentLecture = createAsyncThunk<IComment, IComment>(
+export const CommentLecture = createAsyncThunk<IComment, FormData>(
   "course/CommentLecture",
-  async (params: IComment) => {
+  async (params: FormData) => {
     const res = await courseApi.CommentLecture(params);
+    console.log(res);
+
     return res;
   }
 );
@@ -79,7 +81,6 @@ export const courseSlice = createSlice({
     });
     builder.addCase(getCourseDetails.fulfilled, (state, action) => {
       state.loading = false;
-      console.log(action.payload);
 
       state.currentCourse = action.payload;
       state.error = undefined;
@@ -97,6 +98,7 @@ export const courseSlice = createSlice({
     });
     builder.addCase(CommentOfLecture.fulfilled, (state, action) => {
       state.loading = false;
+
       state.comments = action.payload;
       state.error = undefined;
       state.isError = false;
