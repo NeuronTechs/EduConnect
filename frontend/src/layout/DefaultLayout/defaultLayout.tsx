@@ -4,7 +4,7 @@ import Header from "../../components/Header/Header";
 import Sidebar from "../../components/Sidebar";
 import { useOnClickOutside } from "../../hooks/useOnClickOutside";
 interface LayoutProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 const DefaultLayout = ({ children }: LayoutProps) => {
   const [isOpen, setIsOpen] = useState(false);

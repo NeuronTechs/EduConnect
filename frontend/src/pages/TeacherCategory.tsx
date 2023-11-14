@@ -1,4 +1,5 @@
 import InfoTeacherCategoryLoading from "@/components/Loading/InfoTeacherCategoryLoading";
+import PageTransition from "@/components/PageTransition";
 import TabsTeacherCategory from "@/components/TeacherCategory/TabsTeacherCategory";
 import TeacherInformation from "@/components/TeacherCategory/TeacherInformation";
 import { ITeacher } from "@/types/type";
@@ -30,17 +31,19 @@ const TeacherCategory = (): ReactElement => {
   }, []);
 
   return (
-    <div className="flex flex-col space-y-5">
-      {/* profile */}
-      {!data ? (
-        <InfoTeacherCategoryLoading />
-      ) : (
-        <TeacherInformation data={data} />
-      )}
+    <PageTransition>
+      <div className="flex flex-col space-y-5">
+        {/* profile */}
+        {!data ? (
+          <InfoTeacherCategoryLoading />
+        ) : (
+          <TeacherInformation data={data} />
+        )}
 
-      <TabsTeacherCategory idTeacher={data?.id} />
-      {/* tab course review student */}
-    </div>
+        <TabsTeacherCategory idTeacher={data?.id} />
+        {/* tab course review student */}
+      </div>
+    </PageTransition>
   );
 };
 

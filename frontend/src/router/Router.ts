@@ -1,46 +1,25 @@
-import { FC } from "react";
 // layout
 import BlankLayout from "../layout/BlankLayout/blankLayout";
 import DefaultLayout from "../layout/DefaultLayout/defaultLayout";
 import { configRouter } from "@/configs/router";
+import { FC, lazy } from "react";
 // pages
-import TeacherCategory from "@/pages/TeacherCategory";
-import Checkout from "../pages/Checkout";
-import CoursesCart from "../pages/CoursesCart";
-import CategoryFilter from "../pages/CategoryFilter";
-import Home from "../pages/Home";
-import Login from "../pages/Login";
-import MyCourse from "../pages/MyCourse/MyCourse";
-import OverviewCourse from "../pages/OverviewCourse";
-import Profile from "../pages/Profile";
-import RegisterInformation from "../pages/RegisterInformation";
-import Search from "../pages/Search";
-import SignUp from "../pages/SignUp";
-import Chat from "@/pages/Chat";
-import Payout from "@/pages/Payout";
-import ListStudent from "@/pages/ListStudent";
-import CourseMyTeacher from "@/pages/CourseMyTeacher";
-import CreateCourseTeacher from "@/pages/CreateCourseTeacher";
-import Course from "@/pages/Course";
-import DashboardTeacher from "@/pages/DashboardTeacher";
-import DashboardAdmin from "@/pages/DashboardAdmin";
-import ReportSale from "@/pages/ReportSale";
-import ReportMember from "@/pages/ReportMember";
-import StudentList from "@/pages/Admin/StudentList";
-import ComplaintCourseDetail from "@/pages/ComplaintCourseDetail";
-import ManagerComplaintCourse from "@/pages/ManagerComplaintCourse";
-interface IRouter {
-  path: string;
-  component: FC;
-  layout: FC<never>;
+
+interface LayoutProps {
+  children?: React.ReactNode;
 }
+export interface IRouter {
+  path: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  component: React.LazyExoticComponent<React.ComponentType<any>>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  layout: FC<LayoutProps>;
+}
+
 const publicRoutes: IRouter[] = [
-  { path: configRouter.login, component: Login, layout: BlankLayout },
-  { path: configRouter.signUp, component: SignUp, layout: BlankLayout },
-  { path: configRouter.home, component: Home, layout: DefaultLayout },
   {
-    path: configRouter.registerInformation,
-    component: RegisterInformation,
+    path: configRouter.login,
+    component: lazy(() => import("../pages/Login")),
     layout: BlankLayout,
   },
   {
@@ -51,103 +30,139 @@ const publicRoutes: IRouter[] = [
   {
     path: configRouter.learning,
     component: Course,
-    layout: BlankLayout,
-  },
-  { path: configRouter.myCourse, component: MyCourse, layout: DefaultLayout },
-
-  { path: configRouter.profile, component: Profile, layout: DefaultLayout },
-  {
-    path: configRouter.coursesCart,
-    component: CoursesCart,
-    layout: BlankLayout,
+    layout:BlankLayout,
   },
   {
-    path: configRouter.checkout,
-    component: Checkout,
+    path: configRouter.signUp,
+    component: lazy(() => import("../pages/SignUp")),
+    layout: BlankLayout,
+  },
+];
+const privateRoutes: IRouter[] = [
+  {
+    path: configRouter.registerInformation,
+    component: lazy(() => import("../pages/RegisterInformation")),
     layout: BlankLayout,
   },
   {
-    path: configRouter.categoryFilter,
-    component: CategoryFilter,
+    path: configRouter.home,
+    component: lazy(() => import("../pages/Home")),
     layout: DefaultLayout,
   },
   {
-    path: configRouter.search,
-    component: Search,
+    path: configRouter.categoryFilter,
+    component: lazy(() => import("../pages/CategoryFilter")),
     layout: DefaultLayout,
   },
   {
     path: configRouter.teacherCategory,
-    component: TeacherCategory,
+    component: lazy(() => import("@/pages/TeacherCategory")),
+    layout: DefaultLayout,
+  },
+  {
+    path: configRouter.search,
+    component: lazy(() => import("../pages/Search")),
     layout: DefaultLayout,
   },
   {
     path: configRouter.chat,
-    component: Chat,
+    component: lazy(() => import("@/pages/Chat")),
+    layout: DefaultLayout,
+  },
+
+  {
+    path: configRouter.course,
+    component: lazy(() => import("../pages/OverviewCourse")),
     layout: DefaultLayout,
   },
   {
-    path: configRouter.dashboardTeacher,
-    component: DashboardTeacher,
+    path: configRouter.learning,
+    component: lazy(() => import("../pages/Course")),
     layout: DefaultLayout,
   },
   {
-    path: configRouter.payout,
-    component: Payout,
+    path: configRouter.myCourse,
+    component: lazy(() => import("../pages/MyCourse/MyCourse")),
     layout: DefaultLayout,
   },
   {
-    path: configRouter.liststudent,
-    component: ListStudent,
+    path: configRouter.profile,
+    component: lazy(() => import("../pages/Profile")),
     layout: DefaultLayout,
   },
   {
-    path: configRouter.courseMyTeacher,
-    component: CourseMyTeacher,
-    layout: DefaultLayout,
+    path: configRouter.coursesCart,
+    component: lazy(() => import("../pages/CoursesCart")),
+    layout: BlankLayout,
   },
   {
-    path: configRouter.createCourse,
-    component: CreateCourseTeacher,
-    layout: DefaultLayout,
+    path: configRouter.checkout,
+    component: lazy(() => import("../pages/Checkout")),
+    layout: BlankLayout,
   },
+];
+const adminRoutes: IRouter[] = [
   {
     path: configRouter.dashboardAdmin,
-    component: DashboardAdmin,
+    component: lazy(() => import("@/pages/DashboardAdmin")),
     layout: DefaultLayout,
   },
   {
     path: configRouter.reportSale,
-    component: ReportSale,
-    layout: DefaultLayout,
-  },
-  {
-    path: configRouter.reportMember,
-    component: ReportMember,
-    layout: DefaultLayout,
-  },
-  {
-    path: configRouter.adminListStudent,
-    component: StudentList,
+    component: lazy(() => import("@/pages/ReportSale")),
     layout: DefaultLayout,
   },
   {
     path: configRouter.complaintCourseDetail,
-    component: ComplaintCourseDetail,
+    component: lazy(() => import("@/pages/ComplaintCourseDetail")),
     layout: DefaultLayout,
   },
   {
     path: configRouter.managerComplaintCourse,
-    component: ManagerComplaintCourse,
+    component: lazy(() => import("@/pages/ManagerComplaintCourse")),
+    layout: DefaultLayout,
+  },
+  {
+    path: configRouter.reportMember,
+    component: lazy(() => import("@/pages/ReportMember")),
+    layout: DefaultLayout,
+  },
+  {
+    path: configRouter.adminListStudent,
+    component: lazy(() => import("@/pages/Admin/StudentList")),
     layout: DefaultLayout,
   },
   {
     path: configRouter.managerComplaintCourse,
-    component: ManagerComplaintCourse,
+    component: lazy(() => import("@/pages/ManagerComplaintCourse")),
     layout: DefaultLayout,
   },
 ];
-const privateRoutes = [{ path: "/", component: Home }];
-const adminRoutes = [{ path: "/", component: Home }];
-const teacherRoutes = [{ path: "/", component: Home }];
+const teacherRoutes: IRouter[] = [
+  {
+    path: configRouter.dashboardTeacher,
+    component: lazy(() => import("@/pages/DashboardTeacher")),
+    layout: DefaultLayout,
+  },
+  {
+    path: configRouter.courseMyTeacher,
+    component: lazy(() => import("@/pages/CourseMyTeacher")),
+    layout: DefaultLayout,
+  },
+  {
+    path: configRouter.createCourse,
+    component: lazy(() => import("@/pages/CreateCourseTeacher")),
+    layout: DefaultLayout,
+  },
+  {
+    path: configRouter.liststudent,
+    component: lazy(() => import("@/pages/ListStudent")),
+    layout: DefaultLayout,
+  },
+  {
+    path: configRouter.payout,
+    component: lazy(() => import("@/pages/Payout")),
+    layout: DefaultLayout,
+  },
+];
 export { publicRoutes, privateRoutes, adminRoutes, teacherRoutes };

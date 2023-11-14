@@ -1,7 +1,7 @@
 import React from "react";
 
 interface LayoutProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 const BlankLayout = ({ children }: LayoutProps) => {
   return (
