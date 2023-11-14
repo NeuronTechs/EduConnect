@@ -1,10 +1,8 @@
-import React from "react";
-import Card from "../../components/MyCourse/Card";
+import { dataCourseT } from "@/types/constans";
 import assets from "../../assets";
 import Calendar from "../../components/MyCourse/Calendar";
 import Task from "../../components/MyCourse/Task";
 import ListCourse from "@/components/MyCourse/ListCourse";
-import { dataCourse } from "@/types/constans";
 
 const MyCourse = () => {
   return (
@@ -24,12 +22,12 @@ const MyCourse = () => {
           />
           <div>
             <strong> Các khóa học gần đây</strong>
-            <ListCourse isLoading={false} data={dataCourse} />
+            <ListCourse isLoading={false} data={dataCourseT} />
           </div>
           <div>
             <div className="mb-5">
               <strong> Các khóa học của bạn</strong>
-              <ListCourse isLoading={false} data={dataCourse} />
+              <ListCourse isLoading={false} data={dataCourseT} />
             </div>
           </div>
         </div>

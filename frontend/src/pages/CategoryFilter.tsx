@@ -2,7 +2,7 @@ import { CaretDown, Funnel, List, SquaresFour } from "@phosphor-icons/react";
 import Course from "../components/Course";
 import React from "react";
 import { TabHome } from "./Home";
-import { dataCourse } from "../types/constans";
+import { dataCourseT } from "../types/constans";
 
 const ViewButton = (): React.ReactElement => {
   return (
@@ -40,7 +40,7 @@ const CategoryFilter = () => {
       <TabHome />
       <ControlFilterCategory />
       <div className="grid grid-cols-5 gap-4 w-full">
-        {dataCourse.map(
+        {dataCourseT.map(
           (item): React.ReactElement => (
             <Course data={item} key={item.course_id} />
           )

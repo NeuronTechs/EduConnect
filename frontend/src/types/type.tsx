@@ -24,12 +24,12 @@ export interface ICourse {
 }
 
 export interface ICourseOverview {
-  course_id: number;
+  course_id: string;
   title: string;
   description: string;
   image: string;
   price: number;
-  study: number;
+  study: string;
   requirement: string;
   level: string;
   language: string;
@@ -40,14 +40,14 @@ export interface ICourseOverview {
   total_lecture?: number;
   total_hour?: number;
   total_student?: number;
-  teacher_id: number;
-  topic_id: number;
+  teacher_id: string;
+  topic_id: string;
   teacher?: ITeacher;
   user?: IUser;
   topic?: ITopic;
 }
 export interface IUser {
-  username: number;
+  username: string;
   full_name: string;
   email: string;
   avatar: string;
@@ -67,7 +67,7 @@ export interface ITopic {
 }
 
 export interface ITeacher {
-  teacher_id: number;
+  teacher_id: string;
   username: string;
   introduce?: string;
   subject?: string;

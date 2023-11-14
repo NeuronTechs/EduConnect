@@ -1,5 +1,4 @@
 import React from "react";
-import { Rating } from "@material-tailwind/react";
 import {
   ArrowRight,
   FolderPlus,
@@ -10,41 +9,6 @@ import { ICourseOverview } from "../types/type";
 import { Link } from "react-router-dom";
 import ImageWithError from "./ImageWithError";
 import assets from "@/assets";
-
-function RatedIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className="h-5 w-5"
-    >
-      <path
-        d="M9 13.3275L13.635 16.125L12.405 10.8525L16.5 7.305L11.1075 6.8475L9 1.875L6.8925 6.8475L1.5 7.305L5.595 10.8525L4.365 16.125L9 13.3275Z"
-        fill="#FACC15"
-      />
-    </svg>
-  );
-}
-
-function UnratedIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={0.1}
-      stroke="currentColor"
-      className="h-5 w-5"
-    >
-      <path
-        d="M16.5 7.305L11.1075 6.84L9 1.875L6.8925 6.8475L1.5 7.305L5.595 10.8525L4.365 16.125L9 13.3275L13.635 16.125L12.4125 10.8525L16.5 7.305ZM9 11.925L6.18 13.6275L6.93 10.4175L4.44 8.2575L7.725 7.9725L9 4.95L10.2825 7.98L13.5675 8.265L11.0775 10.425L11.8275 13.635L9 11.925Z"
-        fill="black"
-        fillOpacity="0.23"
-      />
-    </svg>
-  );
-}
 
 interface props {
   data: ICourseOverview;
@@ -89,12 +53,12 @@ const Course = (props: props): React.ReactElement => {
           {/* rating */}
           <div className="w-full flex justify-between flex-col gap-3">
             <div className="flex gap-1 items-center">
-              <Rating
+              {/* <Rating
                 value={props.data?.ranking || 0}
                 readonly
                 ratedIcon={<RatedIcon />}
                 unratedIcon={<UnratedIcon />}
-              />
+              /> */}
               <p className="text-xs font-medium">{props.data?.ranking || 0}</p>
             </div>
             <div className="flex flex-col">
