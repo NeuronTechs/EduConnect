@@ -1,7 +1,12 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import db from "../config/connectDB";
 import { generateRandomString } from "../config/randomString";
-import { ICourse, ICourseDetail, ICourseOverview } from "../constant/course";
+import {
+  IComplaint,
+  ICourse,
+  ICourseDetail,
+  ICourseOverview,
+} from "../constant/course";
 import {
   dataListResponse,
   dataResponse,
@@ -455,6 +460,86 @@ const addToCourse = (
   }
 };
 
+const complaintCourse = (
+  data: IComplaint,
+  files:
+    | {
+        [fieldname: string]: Express.Multer.File[];
+      }
+    | Express.Multer.File[]
+    | undefined
+): Promise<any> => {
+  try {
+    data.complaint_id = generateRandomString();
+    data.createdAt = convertTimestampToDateTime();
+
+    let fileData: string | undefined = "";
+    if (files) {
+      fileData = JSON.stringify(
+        Object.values(files).map((file) => {
+          return file.path;
+          // return {
+          //   mimetype: file.mimetype,
+          //   path: file.path,
+          // };
+        })
+      );
+    }
+    if (fileData) {
+      data.image = fileData;
+    }
+    const sql = `INSERT INTO complaint SET ?`;
+    return new Promise<dataResponse<any>>((resolve, reject) => {
+      db.connectionDB.query(sql, data, (err, result) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve({
+          status: 200,
+          data: data,
+          message: "Complaint successfully",
+        });
+      });
+    });
+  } catch (error) {
+    console.log(error);
+
+    throw error;
+  }
+};
+
+const getComplaintCourse = (): Promise<any> => {
+  try {
+    const query = `SELECT complaint.complaint_id, complaint.title, complaint.content, complaint.createdAt ,complaint.student_id, complaint.course_id, course.title as course_name, user.full_name FROM educonnectdb.complaint join educonnectdb.student on complaint.student_id = student.student_id
+    join educonnectdb.course on course.course_id = complaint.course_id
+    join educonnectdb.user on user.username = student.username`;
+    return new Promise((resolve, reject) => {
+      db.connectionDB.query(
+        query,
+        [""],
+        (error, complaints: RowDataPacket[], fields) => {
+          if (error) {
+            reject({
+              status: false,
+              data: {},
+              message: error,
+            });
+            return;
+          }
+          resolve({
+            status: true,
+            data: complaints,
+            message: "Get complaint success",
+          });
+        }
+      );
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
 export default {
   create,
   getAll,
@@ -467,4 +552,6 @@ export default {
   getOverviewCourse,
   addTransactionInCourse,
   addToCourse,
+  complaintCourse,
+  getComplaintCourse,
 };

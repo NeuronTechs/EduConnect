@@ -2,8 +2,12 @@ import express from "express";
 const router = express.Router();
 import courseController from "../controllers/course.controller";
 import middlewareController from "../middlewares/middlewareController";
+const uploadCloud = require("../middlewares/uploadFileClouldinary");
 
 router.route("/create").post(courseController.create);
+router
+  .route("/get-complaint-course")
+  .get(middlewareController.verifyToken, courseController.getComplaintCourse);
 router.route("/").get(courseController.getAll);
 router.route("/:id").get(courseController.getById);
 router.route("/:id").put(courseController.update);
@@ -25,5 +29,13 @@ router
   .post(
     middlewareController.verifyToken,
     courseController.addTransactionInCourse
+  );
+
+router
+  .route("/complaint-course")
+  .post(
+    middlewareController.verifyToken,
+    uploadCloud.array("files"),
+    courseController.complaintCourse
   );
 module.exports = router;
