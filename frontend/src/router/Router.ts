@@ -122,6 +122,11 @@ const adminRoutes: IRouter[] = [
     component: lazy(() => import("@/pages/Admin/StudentList")),
     layout: DefaultLayout,
   },
+  {
+    path: configRouter.managerComplaintCourse,
+    component: lazy(() => import("@/pages/ManagerComplaintCourse")),
+    layout: DefaultLayout,
+  },
 ];
 const teacherRoutes: IRouter[] = [
   {
@@ -147,11 +152,6 @@ const teacherRoutes: IRouter[] = [
   {
     path: configRouter.payout,
     component: lazy(() => import("@/pages/Payout")),
-    layout: DefaultLayout,
-  },
-  {
-    path: configRouter.managerComplaintCourse,
-    component: ManagerComplaintCourse,
     layout: DefaultLayout,
   },
 ];
