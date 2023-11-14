@@ -36,7 +36,14 @@ export interface IComment {
   username: string;
   lecture_id: string;
   createdAt?: number;
-  resource?: FileWithPath[] | null;
+  resource?:
+    | {
+        path: string;
+        size: number;
+        mimetype: string;
+        originalname: string;
+      }[]
+    | null;
   timestamp: string;
   avatar?: string | null;
 }
@@ -55,6 +62,7 @@ export interface ILecture {
   session_id: string;
   type: string;
   comments: IComment[] | null;
+  duration: string;
 }
 export interface ICategory {
   id: string;

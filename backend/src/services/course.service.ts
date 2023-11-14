@@ -178,86 +178,107 @@ const getCourseByTopicId = async (
  * @returns A Promise that resolves to a dataResponse object containing the course details.
  */
 const getCourseDetails = async (
-  course_id: string
+  course_id: string,
+  user_id: string
 ): Promise<dataResponse<ICourseDetail>> => {
   // Define the SQL query to retrieve course details
-  const sql = `SELECT c.course_id ,c.title as course_name,c.description as course_description,s.session_id, s.name AS session_name, l.lecture_id, l.name AS lecture_name, l.description, l.source, l.type, l.duration
-  FROM Session s
-  JOIN Lecture l ON s.session_id = l.session_id
-  JOIN Course c ON s.course_id = c.course_id
-  WHERE s.course_id = ?
-  ORDER BY s.session_id, l.lecture_id; `;
+  const sql = `SELECT 
+  c.course_id,
+  c.title as course_name,
+  c.description as course_description,
+  s.session_id,
+  s.name AS session_name,
+  l.lecture_id,
+  l.name AS lecture_name,
+  l.description,
+  l.source,
+  l.type,
+  l.duration,
+  CASE 
+    WHEN sp.progress IS NULL THEN 'No'
+    ELSE 'Yes'
+  END AS has_watched
+FROM Session s
+JOIN Lecture l ON s.session_id = l.session_id
+JOIN Course c ON s.course_id = c.course_id
+LEFT JOIN student_progress sp ON sp.lecture_id = l.lecture_id AND sp.student_id = ?
+WHERE s.course_id = "15938"
+ORDER BY s.session_id, l.lecture_id;`;
 
   // Execute the SQL query and return a Promise that resolves to the course details
   return new Promise<dataResponse<ICourseDetail>>((resolve, reject) => {
-    db.connectionDB.query(sql, [course_id], (err, result: RowDataPacket[]) => {
-      if (err) {
-        reject(err);
-        return;
-      }
-      // Parse the query result and create an ICourseDetail object
-      if (result.length === 0)
-        resolve({
-          status: 404,
-
-          message: "Course not found",
-        });
-      else {
-        const resultData: ICourseDetail = {
-          course_id: result[0].course_id,
-          title: result[0].course_name,
-          description: result[0].course_description,
-          sessions: [],
-        };
-        // Iterate over the query result and group lectures by session
-        let sample = {
-          session_id: result[0].session_id,
-          session_name: result[0].session_name,
-        };
-        let lectures: any[] = [];
-        for (const item of result) {
-          if (sample.session_id === item.session_id) {
-            lectures.push({ ...item });
-          } else {
-            const { session_id, session_name } = sample;
-            const temp: ISession = {
-              session_id,
-              name: session_name,
-              course_id: resultData.course_id,
-              lectures,
-            };
-            resultData.sessions.push(temp);
-            lectures = [];
-            sample.session_id = item.session_id;
-            sample.session_name = item.session_name;
-            lectures.push({
-              lecture_id: item.lecture_id,
-              lecture_name: item.lecture_name,
-              description: item.description,
-              source: item.source,
-              type: item.type,
-            });
-          }
+    db.connectionDB.query(
+      sql,
+      [course_id, user_id],
+      (err, result: RowDataPacket[]) => {
+        if (err) {
+          reject(err);
+          return;
         }
+        // Parse the query result and create an ICourseDetail object
+        if (result.length === 0)
+          resolve({
+            status: 404,
 
-        // Add the last session to the ICourseDetail object
-        const { session_id, session_name } = sample;
-        const temp: ISession = {
-          session_id,
-          name: session_name,
-          course_id: resultData.course_id,
-          lectures,
-        };
-        resultData.sessions.push(temp);
+            message: "Course not found",
+          });
+        else {
+          const resultData: ICourseDetail = {
+            course_id: result[0].course_id,
+            title: result[0].course_name,
+            description: result[0].course_description,
+            sessions: [],
+          };
+          // Iterate over the query result and group lectures by session
+          let sample = {
+            session_id: result[0].session_id,
+            session_name: result[0].session_name,
+          };
+          let lectures: any[] = [];
+          for (const item of result) {
+            if (sample.session_id === item.session_id) {
+              lectures.push({ ...item });
+            } else {
+              const { session_id, session_name } = sample;
+              const temp: ISession = {
+                session_id,
+                name: session_name,
+                course_id: resultData.course_id,
+                lectures,
+              };
+              resultData.sessions.push(temp);
+              lectures = [];
+              sample.session_id = item.session_id;
+              sample.session_name = item.session_name;
+              lectures.push({
+                lecture_id: item.lecture_id,
+                lecture_name: item.lecture_name,
+                description: item.description,
+                source: item.source,
+                type: item.type,
+              });
+            }
+          }
 
-        // Return the course details as a dataResponse object
-        resolve({
-          status: 200,
-          data: resultData as ICourseDetail,
-          message: "Success",
-        });
+          // Add the last session to the ICourseDetail object
+          const { session_id, session_name } = sample;
+          const temp: ISession = {
+            session_id,
+            name: session_name,
+            course_id: resultData.course_id,
+            lectures,
+          };
+          resultData.sessions.push(temp);
+
+          // Return the course details as a dataResponse object
+          resolve({
+            status: 200,
+            data: resultData as ICourseDetail,
+            message: "Success",
+          });
+        }
       }
-    });
+    );
   });
 };
 

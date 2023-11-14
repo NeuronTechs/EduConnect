@@ -51,7 +51,7 @@ const publicRoutes: IRouter[] = [
   {
     path: configRouter.learning,
     component: Course,
-    layout: DefaultLayout,
+    layout: BlankLayout,
   },
   { path: configRouter.myCourse, component: MyCourse, layout: DefaultLayout },
 

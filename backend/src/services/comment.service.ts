@@ -115,7 +115,7 @@ const getByLectureId = async (
   pageSize: number
 ): Promise<dataListResponse<IComment>> => {
   const offset = (page - 1) * pageSize;
-  const sql = `SELECT comment_id,c.username,lecture_id,timestamp,content,c.createdAt,avatar FROM comments c join user u on c.username=u.username WHERE lecture_id = ? order by createdAt LIMIT ?, ?`;
+  const sql = `SELECT comment_id,c.username,lecture_id,timestamp,content,c.resource,c.createdAt,avatar FROM comments c join user u on c.username=u.username WHERE lecture_id = ? order by createdAt LIMIT ?, ?`;
   return new Promise<dataListResponse<IComment>>((resolve, reject) => {
     db.connectionDB.query(
       sql,

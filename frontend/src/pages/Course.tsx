@@ -9,6 +9,7 @@ import { AppDispatch } from "@/redux/store";
 import { SliceState } from "@/types/type";
 import Quiz from "@/components/Course/Quiz";
 import FullQuiz from "@/components/Course/FullQuiz";
+import Header from "@/components/Course/Header/Header";
 const Course = () => {
   const { id } = useParams();
   const dispatch = useDispatch<AppDispatch>();
@@ -21,28 +22,31 @@ const Course = () => {
   console.log(currentTime);
 
   return (
-    <div className="flex flex-col w-full  gap-5 ml-2 overflow-y-hidden">
-      <div className=" grid grid-cols-4 space-x-2 overflow-y-hidden relative">
-        <div className="col-span-4 lg:col-span-3 h-auto lg:h-[100vh] lg:overflow-y-auto scrollbar-hide mt-2">
-          {currentCourse.currentLecture?.type === "video" ? (
-            <Video
-              currentLecture={currentCourse.currentLecture}
-              currentTime={currentTime}
-              setCurrentTime={setCurrentTime}
-            />
-          ) : isFullQuiz ? (
-            <FullQuiz />
-          ) : (
-            <Quiz setIsFullQuiz={setIsFullQuiz} />
-          )}
+    <div>
+      <Header />
+      <div className="flex flex-col w-full  gap-5 overflow-y-hidden">
+        <div className=" grid grid-cols-4 space-x-2 overflow-y-hidden relative">
+          <div className="col-span-4 lg:col-span-3 h-auto lg:h-[100vh] lg:overflow-y-auto scrollbar-hide ">
+            {currentCourse.currentLecture?.type === "video" ? (
+              <Video
+                currentLecture={currentCourse.currentLecture}
+                currentTime={currentTime}
+                setCurrentTime={setCurrentTime}
+              />
+            ) : isFullQuiz ? (
+              <FullQuiz />
+            ) : (
+              <Quiz setIsFullQuiz={setIsFullQuiz} />
+            )}
 
-          <TabsInfo
-            currentLecture={currentCourse.currentLecture}
-            setCurrentTime={setCurrentTime}
-            currentTime={currentTime}
-          />
+            <TabsInfo
+              currentLecture={currentCourse.currentLecture}
+              setCurrentTime={setCurrentTime}
+              currentTime={currentTime}
+            />
+          </div>
+          <Modules currentCourse={currentCourse.currentCourse} />
         </div>
-        <Modules currentCourse={currentCourse.currentCourse} />
       </div>
     </div>
   );

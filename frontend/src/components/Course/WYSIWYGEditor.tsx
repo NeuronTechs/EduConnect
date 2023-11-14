@@ -24,14 +24,24 @@ const WYSIWYGEditor = ({ currentTime }: { currentTime: number }) => {
   const submitHandler = (e) => {
     e.preventDefault();
     if (currentUser != null && currentLecture != null) {
-      const data: IComment = {
-        content: content,
-        timestamp: currentTime.toString(),
-        // resource: files,
-        lecture_id: currentLecture.lecture_id,
-        username: currentUser.username,
-      };
-      dispatch(CommentLecture(data));
+      const formData = new FormData();
+      formData.append("content", content);
+      formData.append("timestamp", currentTime.toString());
+      formData.append("lecture_id", currentLecture.lecture_id);
+      formData.append("username", currentUser.username);
+      files.forEach((file) => {
+        formData.append("files", file);
+      });
+      console.log(formData);
+      dispatch(CommentLecture(formData));
+      // const data: IComment = {
+      //   content: content,
+      //   timestamp: currentTime.toString(),
+      //   // resource: files,
+      //   lecture_id: currentLecture.lecture_id,
+      //   username: currentUser.username,
+      // };
+      // dispatch(CommentLecture(data));
       setContent("");
       setFiles([]);
     }

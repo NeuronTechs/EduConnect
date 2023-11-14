@@ -23,7 +23,7 @@ const Video = ({ currentLecture, currentTime, setCurrentTime }: Props) => {
     <div className=" h-auto  relative shadow-xl ">
       <video
         src={currentLecture?.source}
-        className=" w-full aspect-video  bg-gray-900"
+        className=" w-full aspect-video  bg-black"
         ref={videoRef}
         onPause={() => {
           setCurrentTime(getCurrentTime());
