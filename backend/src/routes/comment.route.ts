@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 import commentController from "../controllers/comment.controller";
-const uploadCloud = require("../middlewares/uploadClouldinary");
+const uploadCloud = require("../middlewares/uploadCloudinary");
 router
   .route("/create")
   .post(uploadCloud.array("files"), commentController.create);

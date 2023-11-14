@@ -5,13 +5,13 @@ import {
   SealCheck,
   UsersThree,
 } from "@phosphor-icons/react";
-import { ICourseOverview } from "../types/type";
+import { ICourseDetail } from "../types/type";
 import { Link } from "react-router-dom";
 import ImageWithError from "./ImageWithError";
 import assets from "@/assets";
 
 interface props {
-  data: ICourseOverview;
+  data: ICourseDetail;
 }
 const Course = (props: props): React.ReactElement => {
   return (

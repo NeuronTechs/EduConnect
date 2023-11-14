@@ -24,13 +24,13 @@ const publicRoutes: IRouter[] = [
   },
   {
     path: configRouter.course,
-    component: OverviewCourse,
+    component: lazy(() => import("../pages/OverviewCourse")),
     layout: DefaultLayout,
   },
   {
     path: configRouter.learning,
-    component: Course,
-    layout:BlankLayout,
+    component: lazy(() => import("../pages/Course")),
+    layout: BlankLayout,
   },
   {
     path: configRouter.signUp,
@@ -78,7 +78,7 @@ const privateRoutes: IRouter[] = [
   {
     path: configRouter.learning,
     component: lazy(() => import("../pages/Course")),
-    layout: DefaultLayout,
+    layout: BlankLayout,
   },
   {
     path: configRouter.myCourse,

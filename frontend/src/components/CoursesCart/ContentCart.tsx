@@ -76,10 +76,10 @@ const ContentCart = () => {
                     </div>
                     <div className="hidden md:block">
                       <p className="text-[14px] text-blue-600 line-through">
-                        {formatCurrency(data?.price as number)}
+                        {/* {formatCurrency(data?.price as number)} */}
                       </p>
                       <p className="text-[14px] text-blue-600 font-semibold">
-                        {formatCurrency(data?.discount as number)}
+                        {/* {formatCurrency(data?.discount as number)} */}
                       </p>
                     </div>
                     <div>

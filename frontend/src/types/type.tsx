@@ -3,7 +3,6 @@ import { CartState } from "@/features/cart/cartSlice";
 import { CheckoutState } from "@/features/checkoutCourse/checkoutSlice";
 import { CourseState } from "@/features/course/courseSlice";
 import { CourseOverviewState } from "@/features/overviewCourse/courseOverviewSlice";
-import { FileWithPath } from "react-dropzone";
 
 export interface SliceState {
   authSlice: AuthState;
@@ -31,7 +30,7 @@ export interface ICourse {
   total_lectures?: number;
 }
 
-export interface ICourseOverview {
+export interface ICourseDetail {
   course_id: string;
   title: string;
   description: string;
@@ -278,7 +277,9 @@ export interface ICourseOverview {
   title: string;
   image: string;
   description: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   requirement: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   study: any;
   price: number;
   discount: number;

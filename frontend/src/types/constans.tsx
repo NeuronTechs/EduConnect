@@ -1,6 +1,6 @@
-import { ITopic, ICourseOverview, IStudent, ITeacher } from "./type";
+import { ITopic, IStudent, ITeacher, ICourseDetail } from "./type";
 
-export const dataCourseT: ICourseOverview[] = [
+export const dataCourseT: ICourseDetail[] = [
   {
     course_id: "c123",
     title: "UI/UX Design",
