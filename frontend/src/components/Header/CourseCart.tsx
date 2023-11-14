@@ -3,19 +3,22 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { formatCurrency } from "../../utils/const";
-import { AppDispatch, RootState } from "@/redux/store";
-import { Cart, getCarts, removeToCart } from "@/features/cart/cartSlice";
+import { AppDispatch } from "@/redux/store";
+import { getCarts, removeToCart } from "@/features/cart/cartSlice";
 import { configRouter } from "@/configs/router";
+import { SliceState } from "@/types/type";
 
 const CourseCart = () => {
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const navigate = useNavigate();
-  const cartCurrent = useSelector((state: RootState) => state);
+  const cartCurrent = useSelector(
+    (state: SliceState) => state.cartSlice.cartCurrent
+  );
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     const handleGetCarts = async () => {
-      await dispatch(getCarts());
+      await dispatch(getCarts("00657"));
     };
     handleGetCarts();
   }, []);
@@ -24,8 +27,9 @@ const CourseCart = () => {
     navigate(configRouter.coursesCart);
   };
 
-  const handleRemoveCourseToCart = async (data: Cart) => {
-    await dispatch(removeToCart(data));
+  const handleRemoveCourseToCart = async (cart_id: string) => {
+    await dispatch(removeToCart(cart_id));
+    await dispatch(getCarts("00657"));
   };
 
   const handleRedirectCourse = () => {
@@ -45,63 +49,61 @@ const CourseCart = () => {
             Khoá học mới đã thêm
           </div>
           {/* list course */}
-          {cartCurrent?.cartSlice?.cartCurrent?.length !== 0 ? (
-            cartCurrent?.cartSlice?.cartCurrent?.map(
-              (data: any, index: any) => (
-                <div
-                  className="w-full py-[10px] border-b border-solid border-gray-300"
-                  key={index}
-                >
-                  <div className="flex-1 h-[70px] grid grid-cols-[80px_240px_50px] justify-stretch items-center">
-                    <div
-                      className="mr-1 cursor-pointer"
-                      onClick={handleRedirectCourse}
-                    >
-                      <img
-                        className="w-[80px] h-[60px] object-cover rounded-md"
-                        src={data.image}
-                        alt="course image"
-                        loading="lazy"
-                      />
-                    </div>
-                    <div className="w-[90%] flex flex-col items-start justify-center text-ellipsis overflow-hidden mr-1">
-                      <div className="text-[14px] text-ellipsis overflow-hidden">
-                        <p
-                          className="font-semibold text-ellipsis overflow-hidden cursor-pointer"
-                          onClick={handleRedirectCourse}
-                        >
-                          {data.name}
-                        </p>
-                        <p className="truncate">{data.teacher}</p>
-                      </div>
-                      <div className="flex">
-                        <p className="text-[14px] text-blue-600 line-through">
-                          {formatCurrency(data?.price)}
-                        </p>
-                        <p className="text-[14px] text-blue-600 font-semibold">
-                          {formatCurrency(data?.discount)}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="w-full text-center">
-                      <button
-                        onClick={() => handleRemoveCourseToCart(data)}
-                        className="border-2 border-blue-300 py-1 px-3 hover:bg-blue-500 hover:text-white transition-all rounded-md"
+          {cartCurrent?.length !== 0 && cartCurrent !== null ? (
+            cartCurrent?.map((data: any, index: any) => (
+              <div
+                className="w-full py-[10px] border-b border-solid border-gray-300"
+                key={index}
+              >
+                <div className="flex-1 h-[70px] grid grid-cols-[80px_240px_50px] justify-stretch items-center">
+                  <div
+                    className="mr-1 cursor-pointer"
+                    onClick={handleRedirectCourse}
+                  >
+                    <img
+                      className="w-[80px] h-[60px] object-cover rounded-md"
+                      src={data.image}
+                      alt="course image"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="w-[90%] flex flex-col items-start justify-center text-ellipsis overflow-hidden mr-1">
+                    <div className="text-[14px] text-ellipsis overflow-hidden">
+                      <p
+                        className="font-semibold text-ellipsis overflow-hidden cursor-pointer"
+                        onClick={handleRedirectCourse}
                       >
-                        Xoá
-                      </button>
+                        {data.title}
+                      </p>
+                      <p className="truncate">{data.full_name}</p>
+                    </div>
+                    <div className="flex">
+                      <p className="text-[14px] text-blue-600 line-through">
+                        {formatCurrency(data?.price)}
+                      </p>
+                      <p className="text-[14px] text-blue-600 font-semibold">
+                        {formatCurrency(data?.discount)}
+                      </p>
                     </div>
                   </div>
+                  <div className="w-full text-center">
+                    <button
+                      onClick={() => handleRemoveCourseToCart(data?.cart_id)}
+                      className="border-2 border-blue-300 py-1 px-3 hover:bg-blue-500 hover:text-white transition-all rounded-md"
+                    >
+                      Xoá
+                    </button>
+                  </div>
                 </div>
-              )
-            )
+              </div>
+            ))
           ) : (
             <div className="w-full h-full flex flex-col justify-center items-center">
               <Video size={32} />
               Không có khóa học
             </div>
           )}
-          {cartCurrent?.cartSlice?.cartCurrent?.length !== 0 && (
+          {cartCurrent?.length !== 0 && (
             <div className="absolute right-3 py-3">
               <button
                 onClick={handleRedirectCart}

@@ -149,5 +149,10 @@ const teacherRoutes: IRouter[] = [
     component: lazy(() => import("@/pages/Payout")),
     layout: DefaultLayout,
   },
+  {
+    path: configRouter.managerComplaintCourse,
+    component: ManagerComplaintCourse,
+    layout: DefaultLayout,
+  },
 ];
 export { publicRoutes, privateRoutes, adminRoutes, teacherRoutes };

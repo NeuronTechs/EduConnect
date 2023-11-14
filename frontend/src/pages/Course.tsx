@@ -1,7 +1,7 @@
 import TabsInfo from "@/components/Course/Tabs";
 import Modules from "@/components/Course/Modules";
 import Video from "@/components/Course/Video";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getCourseDetails } from "@/features/course/courseSlice";
@@ -18,6 +18,7 @@ const Course = () => {
   useEffect(() => {
     if (id !== undefined) dispatch(getCourseDetails(id));
   }, [dispatch, id]);
+
   return (
     <div className="flex flex-col w-full  gap-5 ml-2 overflow-y-hidden">
       <div className=" grid grid-cols-4 space-x-2 overflow-y-hidden relative">

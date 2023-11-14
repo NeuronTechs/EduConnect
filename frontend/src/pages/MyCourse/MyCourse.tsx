@@ -1,10 +1,25 @@
-import { dataCourseT } from "@/types/constans";
+import React, { useEffect } from "react";
 import assets from "../../assets";
 import Calendar from "../../components/MyCourse/Calendar";
 import Task from "../../components/MyCourse/Task";
 import ListCourse from "@/components/MyCourse/ListCourse";
+import { AppDispatch } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { ICourse, SliceState } from "@/types/type";
+import { getCourseByStudentId } from "@/features/course/courseSlice";
 
 const MyCourse = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { currentUser } = useSelector((state: SliceState) => state.authSlice);
+  const dataCourse: ICourse[] | null = useSelector(
+    (state: SliceState) => state.courseSlice.courses
+  );
+  console.log(dataCourse);
+
+  useEffect(() => {
+    if (currentUser) dispatch(getCourseByStudentId(currentUser?.user_id));
+  }, []);
+
   return (
     <div className="flex flex-col w-full px-2 py-2 gap-5">
       <div className="flex items-center justify-start gap-5 w-full shadow-sm bg-white py-2 px-2 rounded-sm">
@@ -22,12 +37,16 @@ const MyCourse = () => {
           />
           <div>
             <strong> Các khóa học gần đây</strong>
-            <ListCourse isLoading={false} data={dataCourseT} />
+            {dataCourse !== null && (
+              <ListCourse isLoading={false} data={dataCourse} />
+            )}
           </div>
           <div>
             <div className="mb-5">
               <strong> Các khóa học của bạn</strong>
-              <ListCourse isLoading={false} data={dataCourseT} />
+              {dataCourse !== null && (
+                <ListCourse isLoading={false} data={dataCourse} />
+              )}
             </div>
           </div>
         </div>
