@@ -8,12 +8,20 @@ import {
 import { useEffect, useState } from "react";
 import * as courseApi from "../../../api/courseApi/courseApi";
 import { formatBirthDay } from "@/utils/const";
+import { useSelector } from "react-redux";
+import { SliceState } from "@/types/type";
 
 const Instructor = () => {
+  const currentCourse = useSelector(
+    (state: SliceState) => state.courseOverviewSlice.courseCurrent
+  );
+
   const [teacher, setTeacher] = useState<any>(null);
   useEffect(() => {
     const getTeacherOverviewCourse = async () => {
-      const data = await courseApi.getTeacherInOverviewCourse("05168");
+      const data = await courseApi.getTeacherInOverviewCourse(
+        currentCourse?.teacher_id as string
+      );
       setTeacher(data?.data);
     };
     getTeacherOverviewCourse();

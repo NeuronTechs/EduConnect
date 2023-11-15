@@ -12,7 +12,9 @@ export default function RequireAuth({ children, requiredRole, user }: Props) {
   if (
     !user &&
     location.pathname !== configRouter.login &&
-    location.pathname !== configRouter.signUp
+    location.pathname !== configRouter.signUp &&
+    location.pathname !== configRouter.forgetPassword &&
+    location.pathname !== configRouter.resetPassword
   ) {
     // Redirect them to the /login page, but save the current location they were
     // trying to go to when they were redirected. This allows us to send them

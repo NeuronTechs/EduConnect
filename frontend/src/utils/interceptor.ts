@@ -67,6 +67,15 @@ export const setupInterceptor = (store: Store, dispatch: AppDispatch): void => {
       if (config.url?.includes("user/register")) {
         return config;
       }
+
+      if (config.url?.includes("user/forget-password")) {
+        return config;
+      }
+
+      if (config.url?.includes("user/reset-password")) {
+        return config;
+      }
+
       const user: User = store.getState().authSlice?.currentUser;
 
       // store.dispatch(refetchTokenStore(accessToken));

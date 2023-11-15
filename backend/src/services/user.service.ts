@@ -1,4 +1,5 @@
 import db from "../config/connectDB";
+require("dotenv").config();
 import {
   User,
   informationDataUpdate,
@@ -306,13 +307,20 @@ const isValidEmail = async (
               });
               return;
             } else {
-              const resetLink: string = `https://yourwebsite.com/reset-password?token=${token}`;
+              const resetLink: string = `${process.env.URL}/reset-password`;
               // Send reset email
               transporter.sendMail(
                 {
                   to: email,
-                  subject: "Password Reset Request",
-                  html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>`,
+                  subject: "Mã khôi phục tài khoản của bạn",
+                  html: `<div>
+                  <h1>Xin chào</h1>
+                  <p>Chúng tôi đã nhận được yêu cầu đặt lại mật khẩu của bạn.
+                  Nhập mã đặt lại mật khẩu sau đây:</p>
+                  <p style="border:1px solid blue; border-radius:5px; padding:5px; width:75%; textAlign:center; fontSize:20px;">${token}</p>
+                  <p>Hãy truy cập vào link sau để thay đổi trực tiếp mật khẩu của bạn.</p>
+                  <p>Click <a href="${resetLink}">Đổi mật khẩu</a> để thay đổi mật khẩu.</p>
+                </div>`,
                 },
                 (emailErr) => {
                   if (emailErr) {

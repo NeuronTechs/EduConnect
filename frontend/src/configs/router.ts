@@ -28,4 +28,6 @@ export const configRouter = {
   myCourseDetails: "/myCourse/:id",
   managerComplaintCourse: "/admin/complaint",
   complaintCourseDetail: "/admin/complaint/:id",
+  forgetPassword: "/forget-password",
+  resetPassword: "/reset-password",
 };

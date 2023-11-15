@@ -50,3 +50,27 @@ export const logout = async () => {
     return Promise.reject(error);
   }
 };
+
+export const forgetPassword = async (email: string) => {
+  try {
+    const res = await httpRequest.post("/user/forgetpassword", {
+      email: email,
+    });
+    console.log(res);
+    return res;
+  } catch (error: any) {
+    return Promise.reject(error);
+  }
+};
+
+export const resetPassword = async (newPass: string, token: string) => {
+  try {
+    const res = await httpRequest.post("/user/reset-password", {
+      newPassword: newPass,
+      token: token,
+    });
+    return res;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};

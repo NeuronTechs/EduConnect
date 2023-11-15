@@ -14,6 +14,7 @@ import {
 } from "@phosphor-icons/react";
 import { Link, useNavigate } from "react-router-dom";
 import assets from "@/assets";
+import { configRouter } from "@/configs/router";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -42,6 +43,10 @@ const Login = () => {
     } else {
       notify();
     }
+  };
+
+  const handleRedirectForgetPassword = () => {
+    navigate(configRouter.forgetPassword);
   };
   return (
     <div className="flex h-[100vh]">
@@ -114,7 +119,12 @@ const Login = () => {
               />
               <label htmlFor="RememberCheck">Ghi nhớ đăng nhập</label>
             </div>
-            <h6 className="underline">Quên mật khẩu?</h6>
+            <h6
+              className="underline cursor-pointer"
+              onClick={handleRedirectForgetPassword}
+            >
+              Quên mật khẩu?
+            </h6>
           </div>
           <div className="flex space-x-5 mt-5">
             <button
