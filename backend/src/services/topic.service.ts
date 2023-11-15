@@ -4,14 +4,14 @@ import { dataListResponse } from "../constant/type";
 
 // topic
 interface ITopic {
-  id: number;
-  name: string;
+  topic_id: number;
+  title: string;
   description: string;
-  image: string;
+  image?: string;
   course_count?: number;
 }
 interface ITeacher {
-  teacher_id: number;
+  teacher_id: string;
   username: string;
   introduce?: string;
   subject?: string;
@@ -35,12 +35,12 @@ interface ITeacher {
 }
 // recommend course for user
 interface ICourse {
-  course_id: number;
+  course_id: string;
   title: string;
   description: string;
   image: string;
   price: number;
-  study: number;
+  study: string;
   requirement: string;
   level: string;
   language: string;
@@ -51,14 +51,14 @@ interface ICourse {
   total_lecture?: number;
   total_hour?: number;
   total_student?: number;
-  teacher_id: number;
-  topic_id: number;
+  teacher_id: string;
+  topic_id: string;
   teacher?: ITeacher;
   user?: IUser;
   topic?: ITopic;
 }
 interface IUser {
-  username: number;
+  username: string;
   full_name: string;
   email: string;
   avatar: string;
@@ -182,8 +182,35 @@ const getTopicCategory = async (limit?: number) => {
     throw error;
   }
 };
+const getAllTopic = async () => {
+  try {
+    const query = `
+      SELECT topic.topic_id, topic.title, topic.description FROM topic;
+    `;
+    return new Promise<dataListResponse<ITopic>>((resolve, reject) => {
+      db.connectionDB.query(query, (error, course, fields) => {
+        if (error) {
+          reject({
+            status: 500,
+            data: [],
+            message: error,
+          });
+          return;
+        }
+        resolve({
+          status: 200,
+          data: course as ITopic[],
+          message: "Get topic successfully",
+        });
+      });
+    });
+  } catch (error) {
+    throw error;
+  }
+};
 export default {
   getCoursesRecommend,
   getTopicCourses,
   getTopicCategory,
+  getAllTopic,
 };

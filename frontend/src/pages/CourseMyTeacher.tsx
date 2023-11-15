@@ -1,6 +1,8 @@
 import CourseTeacher from "@/components/CourseTeacher";
+import { configRouter } from "@/configs/router";
 import { Plus } from "@phosphor-icons/react";
 import React from "react";
+import { Link } from "react-router-dom";
 
 const CourseMyTeacher = (): React.ReactElement => {
   return (
@@ -10,10 +12,12 @@ const CourseMyTeacher = (): React.ReactElement => {
           <div className="text-xl font-bold">Khoá học</div>
         </div>
         <div className="flex items-center ">
-          <div className="flex items-center gap-4 justify-center px-3 py-2 bg-blue-400 rounded-md hover:bg-blue-500 cursor-pointer">
-            <Plus size={20} className="text-white" />
-            <p className="text-sm font-bold text-white">Tạo Khoá Học Mới</p>
-          </div>
+          <Link to={configRouter.createCourse}>
+            <div className="flex items-center gap-4 justify-center px-3 py-2 bg-blue-400 rounded-md hover:bg-blue-500 cursor-pointer">
+              <Plus size={20} className="text-white" />
+              <p className="text-sm font-bold text-white">Tạo Khoá Học Mới</p>
+            </div>
+          </Link>
         </div>
       </div>
       <div className="grid grid-cols-4 gap-2">

@@ -32,11 +32,11 @@ function App() {
     (state: any) => state.authSlice.currentUser
   );
   routerCheck = publicRoutes;
-  if (useCurrentUser?.role === "user") {
+  if (useCurrentUser?.role === "0") {
     routerCheck = [...privateRoutes];
-  } else if (useCurrentUser?.role === "teacher") {
+  } else if (useCurrentUser?.role === "1") {
     routerCheck = [...privateRoutes, ...teacherRoutes];
-  } else if (useCurrentUser?.role === "admin") {
+  } else if (useCurrentUser?.role === "2") {
     routerCheck = [...privateRoutes, ...adminRoutes];
   } else {
     routerCheck = [...publicRoutes, ...privateRoutes];

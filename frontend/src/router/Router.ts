@@ -161,8 +161,13 @@ const teacherRoutes: IRouter[] = [
   },
   {
     path: configRouter.createCourse,
+    component: lazy(() => import("@/pages/CreateCourseTitle")),
+    layout: BlankLayout,
+  },
+  {
+    path: configRouter.manageCourse,
     component: lazy(() => import("@/pages/CreateCourseTeacher")),
-    layout: DefaultLayout,
+    layout: BlankLayout,
   },
   {
     path: configRouter.liststudent,

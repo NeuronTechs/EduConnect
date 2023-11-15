@@ -1,8 +1,10 @@
-import { dataListResponse } from "../constant/type";
+import { dataListResponse, dataResponse } from "../constant/type";
 import db from "../config/connectDB";
+import { v4 as uuidv4 } from "uuid";
+import { title } from "process";
 
 interface ITeacher {
-  teacher_id: number;
+  teacher_id: string;
   username: string;
   introduce?: string;
   subject?: string;
@@ -26,7 +28,7 @@ interface ITeacher {
   user?: IUser;
 }
 interface IUser {
-  username: number;
+  username: string;
   full_name: string;
   email: string;
   avatar: string;
@@ -103,7 +105,50 @@ const getTeacherDetail = async (id: string) => {
     throw error;
   }
 };
+
+interface ICourseTeacher {
+  teacher_id: string;
+  course_id?: string;
+  description?: string;
+  title: string;
+  topic_id: string;
+  level: string;
+}
+const createCourseTeacher = async (data: ICourseTeacher) => {
+  try {
+    const course_id = uuidv4();
+
+    const query = `INSERT INTO course (teacher_id, course_id, title, topic_id, level, description) VALUES ('${data.teacher_id}', '${course_id}', '${data.title}', '${data.topic_id}', '${data.level}', '${data.description}');`;
+    return new Promise<dataResponse<ICourseTeacher>>((resolve, reject) => {
+      db.connectionDB.query(
+        { sql: query },
+        (error, course: ICourseTeacher, fields) => {
+          const dataTmp = {
+            ...data,
+            course_id: course_id,
+          };
+          if (error) {
+            reject({
+              status: 500,
+              data: [],
+              message: error,
+            });
+            return;
+          }
+          resolve({
+            status: 201,
+            data: dataTmp as ICourseTeacher,
+            message: "Get teacher successfully",
+          });
+        }
+      );
+    });
+  } catch (error) {
+    throw error;
+  }
+};
 export default {
   getTeacherRecommendations,
   getTeacherDetail,
+  createCourseTeacher,
 };

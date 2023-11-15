@@ -19,5 +19,6 @@ export default {
       ssl: {
         ca: fs.readFileSync("./src/config/DigiCertGlobalRootCA.crt.pem"),
       },
+      multipleStatements: true,
     }),
 };
