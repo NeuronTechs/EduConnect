@@ -109,6 +109,7 @@ const getTeacherDetail = async (id: string) => {
 interface ICourseTeacher {
   teacher_id: string;
   course_id?: string;
+  description?: string;
   title: string;
   topic_id: string;
   level: string;
@@ -117,7 +118,7 @@ const createCourseTeacher = async (data: ICourseTeacher) => {
   try {
     const course_id = uuidv4();
 
-    const query = `INSERT INTO course (teacher_id, course_id, title, topic_id, level) VALUES ('${data.teacher_id}', '${course_id}', '${data.title}', '${data.topic_id}', '${data.level}');`;
+    const query = `INSERT INTO course (teacher_id, course_id, title, topic_id, level, description) VALUES ('${data.teacher_id}', '${course_id}', '${data.title}', '${data.topic_id}', '${data.level}', '${data.description}');`;
     return new Promise<dataResponse<ICourseTeacher>>((resolve, reject) => {
       db.connectionDB.query(
         { sql: query },

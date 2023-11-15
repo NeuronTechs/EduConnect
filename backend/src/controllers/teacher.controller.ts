@@ -63,13 +63,14 @@ interface ICourseTeacher {
   level: string;
 }
 const createCourseTeacher = async (req: Request, res: Response) => {
-  const { teacher_id, title, topic_id, level } = req.body;
+  const { teacher_id, title, topic_id, level, description } = req.body;
   try {
     const result = await teacherService.createCourseTeacher({
       teacher_id: teacher_id,
       title: title,
       topic_id: topic_id,
       level: level,
+      description: description,
     } as ICourseTeacher);
     if (result?.status) {
       res.status(201).json({

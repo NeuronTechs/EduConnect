@@ -11,6 +11,8 @@ import courseApi from "@/api/courseApi";
 import { useSelector } from "react-redux";
 import * as topicApi from "@/api/topicApi/topicApi";
 import { ITopic } from "@/types/type";
+import { useNavigate } from "react-router-dom";
+import { configRouter } from "@/configs/router";
 
 // type
 interface IFormInput {
@@ -47,6 +49,8 @@ const StepperCreateCourse = ({
   handlerStepperPrev: () => void;
   handleSubmit: UseFormHandleSubmit<IFormInput, undefined>;
 }) => {
+  const navigate = useNavigate();
+
   const useCurrentUser = useSelector(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (state: any) => state.authSlice.currentUser
@@ -58,7 +62,7 @@ const StepperCreateCourse = ({
     // call api create course
     const dataCourse = {
       title: data.title,
-      // description: "",
+      description: "",
       level: data.level,
       topic_id: data.topic,
       teacher_id: useCurrentUser.user_id,
@@ -66,6 +70,8 @@ const StepperCreateCourse = ({
     try {
       const res = await courseApi.createCourse(dataCourse);
       console.log(res);
+      navigate(configRouter.manageCourse);
+      toast.success("Create course successfully!");
     } catch (error) {
       console.log(error);
       toast.error(

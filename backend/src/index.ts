@@ -17,7 +17,7 @@ db.connectionDB.connect((err) => {
   app.use(express.json());
   app.use(
     cors({
-      origin: `${environment.BASE_URL}}`,
+      origin: environment.BASE_URL,
       methods: "GET,POST,PUT,DELETE",
       credentials: true,
     })
