@@ -1,6 +1,6 @@
 import React from "react";
 import ListCourse from "../Home/ListCourse";
-import { dataCourse } from "@/types/constans";
+import { dataCourseT } from "@/types/constans";
 import assets from "@/assets";
 interface IProps {
   idTeacher: string | undefined;
@@ -108,11 +108,11 @@ const TabsContent = (props: ITabsContent): React.ReactElement => {
 const TabsContentFirst = (): React.ReactElement => {
   return (
     <div className="w-full block space-y-4">
-      <ListCourse isLoading={false} data={dataCourse} title="Nỗi Bật" />
-      <ListCourse isLoading={false} data={dataCourse} title="Mới Nhất" />
+      <ListCourse isLoading={false} data={dataCourseT} title="Nỗi Bật" />
+      <ListCourse isLoading={false} data={dataCourseT} title="Mới Nhất" />
       <ListCourse
         isLoading={false}
-        data={dataCourse}
+        data={dataCourseT}
         title="Biên tập đề xuất"
       />
     </div>

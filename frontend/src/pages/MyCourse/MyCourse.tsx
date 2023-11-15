@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ICourse, SliceState } from "@/types/type";
 import { getCourseByStudentId } from "@/features/course/courseSlice";
 
-const MyCourse = () => {
+const MyCourse = (): React.ReactElement => {
   const dispatch = useDispatch<AppDispatch>();
   const { currentUser } = useSelector((state: SliceState) => state.authSlice);
   const dataCourse: ICourse[] | null = useSelector(
