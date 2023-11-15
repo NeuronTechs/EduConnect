@@ -11,15 +11,13 @@ export default {
     //   database: env.DATABASE,
     // }),
     mysql.createConnection({
-      host: "educonnect-db-mysql-01.mysql.database.azure.com",
+      host: "educonnect.mysql.database.azure.com",
       user: "admin_educonnect_db_msql01",
       password: "Educonnect13579@",
       database: "educonnectdb",
       port: 3306,
       ssl: {
-        ca: fs.readFileSync(
-          "./src/config/DigiCertGlobalRootCA.crt.pem..pem..pem"
-        ),
+        ca: fs.readFileSync("./src/config/DigiCertGlobalRootCA.crt.pem"),
       },
     }),
 };
