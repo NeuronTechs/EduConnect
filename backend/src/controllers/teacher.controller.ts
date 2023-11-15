@@ -55,7 +55,46 @@ const getTeacherDetail = async (req: Request, res: Response) => {
     });
   }
 };
+interface ICourseTeacher {
+  teacher_id: string;
+  course_id?: string;
+  title: string;
+  topic_id: string;
+  level: string;
+}
+const createCourseTeacher = async (req: Request, res: Response) => {
+  const { teacher_id, title, topic_id, level } = req.body;
+  try {
+    const result = await teacherService.createCourseTeacher({
+      teacher_id: teacher_id,
+      title: title,
+      topic_id: topic_id,
+      level: level,
+    } as ICourseTeacher);
+    if (result?.status) {
+      res.status(201).json({
+        status: 201,
+        data: result?.data,
+        message: result?.message,
+      });
+    } else {
+      res.status(400).json({
+        status: 400,
+        data: result?.data,
+        message: result?.message,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      status: 500,
+      data: [],
+      message: "Internal server error",
+    });
+  }
+};
 export default {
   getTeacherRecommendations,
   getTeacherDetail,
+  createCourseTeacher,
 };

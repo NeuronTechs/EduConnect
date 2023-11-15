@@ -20,19 +20,10 @@ const CreateCourseContainer = (): React.ReactElement => {
 
   return (
     <div className="w-full flex flex-col gap-2 h-full ">
-      <div className="bg-white flex items-center justify-between px-4">
-        <div></div>
+      <div className="bg-white flex items-center justify-center px-4 sticky top-[60px] shadow-sm">
         <TabContentCreateCourseTeacher tab={tab} setTab={setTab} />
-        <div className="flex items-center justify-end">
-          <button
-            type="button"
-            className="px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Lưu
-          </button>
-        </div>
       </div>
-      <div className="flex w-full flex-1 gap-2 pb-5">
+      <div className="flex w-full flex-1 gap-2 pb-5 px-2 pt-2">
         <ContainerCreateCourseTeacher
           isOpenModal={isOpenModal}
           setIsOpenModal={setIsOpenModal}

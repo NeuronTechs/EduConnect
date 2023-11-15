@@ -1,27 +1,81 @@
 import { AddressBook, Note } from "@phosphor-icons/react";
-import React from "react";
+import React, { useEffect } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import {
+  UseFormHandleSubmit,
+  UseFormRegister,
+  UseFormSetValue,
+} from "react-hook-form";
+import courseApi from "@/api/courseApi";
+import { useSelector } from "react-redux";
+import * as topicApi from "@/api/topicApi/topicApi";
+import { ITopic } from "@/types/type";
 
-const CreateCourseTitle = () => {
-  return <StepperCreateCourse />;
+// type
+interface IFormInput {
+  typeCourse: string;
+  title: string;
+  topic: string;
+  level: string;
+}
+const CreateCourseTitle = (props: {
+  register: UseFormRegister<IFormInput>;
+  setValue: UseFormSetValue<IFormInput>;
+  stepperIndex: number;
+  handlerStepperNext: () => void;
+  handlerStepperPrev: () => void;
+  handleSubmit: UseFormHandleSubmit<IFormInput, undefined>;
+}) => {
+  return <StepperCreateCourse {...props} />;
 };
 
 export default CreateCourseTitle;
-
-const StepperCreateCourse = () => {
-  const [stepperIndex, setStepperIndex] = React.useState<number>(0);
-
-  const handlerStepperNext = () => {
-    if (stepperIndex < 2) {
-      setStepperIndex((prev) => prev + 1);
+// content data stepper create course
+const StepperCreateCourse = ({
+  register,
+  setValue,
+  stepperIndex,
+  handlerStepperNext,
+  handlerStepperPrev,
+  handleSubmit,
+}: {
+  register: UseFormRegister<IFormInput>;
+  setValue: UseFormSetValue<IFormInput>;
+  stepperIndex: number;
+  handlerStepperNext: () => void;
+  handlerStepperPrev: () => void;
+  handleSubmit: UseFormHandleSubmit<IFormInput, undefined>;
+}) => {
+  const useCurrentUser = useSelector(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (state: any) => state.authSlice.currentUser
+  );
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const onCreateCourse = async (data: IFormInput) => {
+    isLoading && setIsLoading(true);
+    console.log(data);
+    // call api create course
+    const dataCourse = {
+      title: data.title,
+      // description: "",
+      level: data.level,
+      topic_id: data.topic,
+      teacher_id: useCurrentUser.user_id,
+    };
+    try {
+      const res = await courseApi.createCourse(dataCourse);
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+      toast.error(
+        "An error occurred while creating the course. Please try again."
+      );
     }
-  };
-  const handlerStepperPrev = () => {
-    if (stepperIndex > 0) {
-      setStepperIndex((prev) => prev - 1);
-    }
+    !isLoading && setIsLoading(false);
   };
   return (
-    <div className="p-2 space-y-2 h-full flex flex-col">
+    <div className="p-2 space-y-2 h-[calc(100%-70px)] flex flex-col w-full ">
       <div className="w-full px-4 py-2 flex items-center justify-center bg-white rounded-md">
         <ol className="flex items-center w-full text-sm font-medium text-center text-gray-500 dark:text-gray-400 sm:text-base">
           <li className="flex md:w-full items-center text-blue-600 dark:text-blue-500 sm:after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10 dark:after:border-gray-700">
@@ -92,7 +146,11 @@ const StepperCreateCourse = () => {
         </ol>
       </div>
       <div className="bg-white rounded-md flex-1">
-        <ContentStepperCreateCourse stepperIndex={stepperIndex} />
+        <ContentStepperCreateCourse
+          stepperIndex={stepperIndex}
+          register={register}
+          setValue={setValue}
+        />
       </div>
       <div className="p-2 w-full flex justify-between bg-white rounded-md">
         <div>
@@ -114,9 +172,40 @@ const StepperCreateCourse = () => {
               Tiếp Theo
             </button>
           ) : (
-            <button className="text-base font-bold p-2 bg-blue-500 text-white rounded-md">
-              Tạo khoá học
-            </button>
+            <>
+              {isLoading ? (
+                <button
+                  className="text-base font-bold p-2 bg-blue-400 text-white rounded-md px-5"
+                  disabled
+                >
+                  <svg
+                    aria-hidden="true"
+                    role="status"
+                    className="inline w-4 h-4 me-3 text-white animate-spin"
+                    viewBox="0 0 100 101"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                      fill="#E5E7EB"
+                    />
+                    <path
+                      d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                  Đang tạo khoá học...
+                </button>
+              ) : (
+                <button
+                  className="text-base font-bold p-2 bg-blue-500 text-white rounded-md"
+                  onClick={handleSubmit(onCreateCourse)}
+                >
+                  Tạo khoá học
+                </button>
+              )}
+            </>
           )}
         </div>
       </div>
@@ -124,32 +213,46 @@ const StepperCreateCourse = () => {
   );
 };
 
-const ContentStepperCreateCourse = (props: { stepperIndex: number }) => {
+// content data course overview
+const ContentStepperCreateCourse = (props: {
+  stepperIndex: number;
+  register: UseFormRegister<IFormInput>;
+  setValue: UseFormSetValue<IFormInput>;
+}) => {
   const [value, setValue] = React.useState("");
+  const [selected, setSelected] = React.useState("Chọn một thể loại");
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value.slice(0, 60);
     setValue(newValue);
   };
-  const dataSelectTypeCourse = [
-    "Chọn một thể loại",
-    "Phát triển",
-    "Kinh doanh",
-    "Tài chính && kế toán",
-    "CNTT && Phần mềm",
-    "Khoa học",
-    "Kỹ năng mềm",
-    "Marketing",
-    "Ngoại ngữ",
-    "Thiết kế",
-    "Sức khỏe && Thể hình",
-    "khác",
-  ];
+
+  const [dataTypes, setDataTypes] = React.useState<ITopic[]>([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await topicApi.getAllTopic();
+        setDataTypes(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
   return (
     <div className="min-h-[500px] flex justify-center items-start pt-20">
       {props.stepperIndex === 0 && (
         <div className="flex gap-2 h-[250px]">
-          <div className="h-full w-[200px] flex flex-col items-center justify-start p-2 pt-10 shadow-md text-gray-500 gap-2 border border-blue-400">
+          <div
+            className={
+              "h-full w-[200px] flex flex-col items-center justify-start p-2 pt-10 shadow-md text-gray-500 gap-2 border border-blue-400 hover:bg-blue-100 cursor-pointer" +
+              (selected === "lesson" ? " bg-blue-100" : "")
+            }
+            onClick={() => {
+              props.setValue("typeCourse", "lesson");
+              setSelected("lesson");
+            }}
+          >
             <AddressBook size={32} className="" />
             <h5 className="text-base font-bold">Khoá Học</h5>
             <p className="text-sm font-medium text-center">
@@ -157,7 +260,16 @@ const ContentStepperCreateCourse = (props: { stepperIndex: number }) => {
               bạn tạo nên trải nghiệm học tập phong phú.
             </p>
           </div>
-          <div className="h-full w-[200px] flex flex-col items-center justify-start p-2 pt-10 shadow-md text-gray-500 gap-2 border border-blue-400">
+          <div
+            className={
+              "h-full w-[200px] flex flex-col items-center justify-start p-2 pt-10 shadow-md text-gray-500 gap-2 border border-blue-400 hover:bg-blue-100 cursor-pointer" +
+              (selected === "test" ? " bg-blue-100" : "")
+            }
+            onClick={() => {
+              props.setValue("typeCourse", "test");
+              setSelected("test");
+            }}
+          >
             <Note size={32} />
             <h5 className="text-base font-bold">Bài kiểm tra thực hành</h5>
             <p className="text-sm font-medium text-center">
@@ -177,6 +289,7 @@ const ContentStepperCreateCourse = (props: { stepperIndex: number }) => {
             có thể thay đổi sau.
           </p>
           <input
+            {...props.register("title")}
             type="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Ví dụ: Học react từ cơ bản"
@@ -187,6 +300,25 @@ const ContentStepperCreateCourse = (props: { stepperIndex: number }) => {
           <p className="text-sm text-gray-500">
             {value.length}/{60}
           </p>
+
+          <div className="w-full flex flex-col items-center justify-center gap-3">
+            <h5 className="text-2xl font-bold">
+              Vậy khoá học hướng người trình độ nào?
+            </h5>
+            <p className="text-sm font-medium text-gray-600">
+              Đừng lo nếu bạn không nghĩ ra được một tiêu đề hay ngay bây giờ.
+              Bạn có thể thay đổi sau.
+            </p>
+            <select
+              {...props.register("level")}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            >
+              <option value="Chọn một trình độ">Chọn một trình độ</option>
+              <option value="Cơ bản">Cơ bản</option>
+              <option value="Trung bình">Trung bình</option>
+              <option value="Nâng cao">Nâng cao</option>
+            </select>
+          </div>
         </div>
       )}
       {props.stepperIndex === 2 && (
@@ -200,11 +332,16 @@ const ContentStepperCreateCourse = (props: { stepperIndex: number }) => {
 
           <select
             id="countries"
+            {...props.register("topic")}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             // value="Chọn một thể loại" // set default value to "it"
           >
-            {dataSelectTypeCourse.map((item) => {
-              return <option value={item}>{item}</option>;
+            {dataTypes.map((topic) => {
+              return (
+                <option value={topic.topic_id} key={topic.topic_id}>
+                  {topic.title}
+                </option>
+              );
             })}
           </select>
         </div>

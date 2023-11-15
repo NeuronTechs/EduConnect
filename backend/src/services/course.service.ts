@@ -12,7 +12,6 @@ import {
   dataResponse,
   updateResponse,
 } from "../constant/type";
-import { log } from "util";
 import { ISession } from "../constant/session";
 import { convertTimestampToDateTime, generateID } from "../constant/utils";
 

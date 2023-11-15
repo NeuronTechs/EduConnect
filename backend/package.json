@@ -33,9 +33,11 @@
     "nodemon": "^3.0.1",
     "stripe": "^14.2.0",
     "ts-node": "^10.9.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@types/multer": "^1.4.10"
+    "@types/multer": "^1.4.10",
+    "@types/uuid": "^9.0.7"
   }
 }

@@ -6,5 +6,6 @@ import topicController from "../controllers/topic.controller";
 router.route("/recommendations").get(topicController.getRecommendCourse);
 router.route("/:topicId/courses").get(topicController.getTopicCourse);
 router.route("/").get(topicController.getTopicCategory);
+router.route("/all").get(topicController.getAllTopic);
 
 export default router;

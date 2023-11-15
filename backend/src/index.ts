@@ -1,7 +1,10 @@
 import express from "express";
 import ApiV1 from "./routes";
 import db from "./config/connectDB";
+import environment from "./config/environment";
+
 const cors = require("cors");
+
 db.connectionDB.connect((err) => {
   if (err) {
     console.error("Error connecting to the database: " + err.stack);
@@ -14,7 +17,7 @@ db.connectionDB.connect((err) => {
   app.use(express.json());
   app.use(
     cors({
-      origin: `http://localhost:3001`,
+      origin: `${environment.BASE_URL}}`,
       methods: "GET,POST,PUT,DELETE",
       credentials: true,
     })

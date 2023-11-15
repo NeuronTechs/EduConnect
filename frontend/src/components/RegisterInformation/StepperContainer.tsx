@@ -342,7 +342,7 @@ const ContentStepper = (props: propsContentStepper): React.ReactElement => {
                 <div className="flex gap-10">
                   <Radio
                     {...props.register("role")}
-                    value={"student"}
+                    value={"0"}
                     name="role"
                     label="Học sinh, Sinh Viên"
                     defaultChecked
@@ -351,7 +351,7 @@ const ContentStepper = (props: propsContentStepper): React.ReactElement => {
                   />
                   <Radio
                     {...props.register("role")}
-                    value={"teacher"}
+                    value={"1"}
                     name="role"
                     label="Giáo Viên"
                     crossOrigin={undefined}

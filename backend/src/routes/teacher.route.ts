@@ -6,6 +6,6 @@ import teacherController from "../controllers/teacher.controller";
 router
   .route("/recommendations")
   .get(teacherController.getTeacherRecommendations);
-router.route("/::teacherId").get(teacherController.getTeacherDetail);
-
+router.route("/:teacherId").get(teacherController.getTeacherDetail);
+router.route("/courses").post(teacherController.createCourseTeacher);
 export default router;

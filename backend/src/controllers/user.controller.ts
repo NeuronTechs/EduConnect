@@ -240,7 +240,6 @@ const logout = async (req: Request, res: Response) => {
 };
 
 const updateInformation = async (req: Request, res: Response) => {
-  console.log(req.body);
   try {
     if (!req.body) {
       return res.status(400).json({

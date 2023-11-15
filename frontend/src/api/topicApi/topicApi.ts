@@ -30,3 +30,12 @@ export const getRecommendCourse = async (params: { limit: string }) => {
     return Promise.reject(error);
   }
 };
+
+export const getAllTopic = async () => {
+  try {
+    const res = await httpRequest.get(`/topics/all`);
+    return res;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
