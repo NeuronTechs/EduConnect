@@ -8,4 +8,5 @@ router
   .get(teacherController.getTeacherRecommendations);
 router.route("/:teacherId").get(teacherController.getTeacherDetail);
 router.route("/courses").post(teacherController.createCourseTeacher);
+router.route("/:teacherId/courses").get(teacherController.getCourseTeacher);
 export default router;
