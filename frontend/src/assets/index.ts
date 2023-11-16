@@ -8,7 +8,8 @@ import audio1 from "./audio/ambient-piano-logo-165357.mp3";
 import avatarBlack from "./images/blank-profile.png";
 import task from "./images/task.png";
 import cameraLogo from "./images/cameraLogo.jpg";
-import noAvatar from "./images/noAvatar.png";
+import noAvatar from "./images/noavatar.png";
+import noBg from "./images/nobg.jpg";
 const assets = {
   // working
   // step 2: import the image
@@ -23,6 +24,7 @@ const assets = {
     task: task,
     cameraLogo: cameraLogo,
     noAvatar: noAvatar,
+    noBg: noBg,
   },
   audios: {
     audio1: audio1,

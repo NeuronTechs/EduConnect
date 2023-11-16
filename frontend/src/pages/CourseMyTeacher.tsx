@@ -1,10 +1,37 @@
 import CourseTeacher from "@/components/CourseTeacher";
 import { configRouter } from "@/configs/router";
+import { ICourseDetail } from "@/types/type";
 import { Plus } from "@phosphor-icons/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import * as teacherApi from "@/api/teacherApi/teacherApi";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { User } from "@/type";
+import ListCourseLoading from "@/components/Loading/ListCourseLoading";
 
 const CourseMyTeacher = (): React.ReactElement => {
+  const [dataCourse, setDataCourse] = React.useState<ICourseDetail[]>([]);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const useCurrentUser = useSelector<RootState, User>(
+    (state) => state.authSlice.currentUser as User
+  );
+  useEffect(() => {
+    setIsLoading(true);
+    const requestApi = async () => {
+      try {
+        const res = await teacherApi.getCourseTeacherApi({
+          teacherId: useCurrentUser.user_id,
+          limit: 10,
+        });
+        setDataCourse(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+      setIsLoading(false);
+    };
+    requestApi();
+  }, []);
   return (
     <div className="w-full p-2 space-y-2">
       <div className="w-full px-3 py-2 flex items-center justify-between bg-white rounded-md">
@@ -20,25 +47,27 @@ const CourseMyTeacher = (): React.ReactElement => {
           </Link>
         </div>
       </div>
-      <div className="grid grid-cols-4 gap-2">
-        <CourseTeacher
-          data={{
-            id: "fgsjadasdjasdsa",
-            thumbnail:
-              "https://images.pexels.com/photos/3806753/pexels-photo-3806753.jpeg?auto=compress&cs=tinysrgb&w=1600",
-            title: "HTML leaning",
-            teacher: "Jionson whet",
-            avatarTeacher:
-              "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436180.jpg?w=740&t=st=1695713066~exp=1695713666~hmac=f87d62b1534e3e2205803c7aa2b17765e6e6c2091e6fbc023c6630a185b13050",
-            rating: 4,
-            priceOfficial: "150.000",
-            originalPrice: "200.000",
-            numberLesson: 15,
-            numberStudent: 15,
-            numberSecurity: 15,
-            status: "công khai",
-          }}
-        />
+      <div className="grid grid-cols-5 gap-2 w-full">
+        {isLoading ? (
+          <div className="col-span-5 flex items-center justify-center py-5 w-full">
+            <ListCourseLoading numberShow={5} />
+          </div>
+        ) : (
+          <>
+            {dataCourse.length === 0 && (
+              <div className="col-span-5 flex items-center justify-center py-5">
+                <div className="text-xl font-bold">
+                  Bạn chưa có khoá học nào
+                </div>
+              </div>
+            )}
+            {dataCourse.map((item) => {
+              return <CourseTeacher data={item} key={item.course_id} />;
+            })}
+          </>
+        )}
+
+        {/* <CourseTeacher data={dataCourseT[0]} /> */}
       </div>
     </div>
   );

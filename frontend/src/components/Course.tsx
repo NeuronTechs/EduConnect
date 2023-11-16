@@ -9,6 +9,7 @@ import { ICourseDetail } from "../types/type";
 import { Link } from "react-router-dom";
 import ImageWithError from "./ImageWithError";
 import assets from "@/assets";
+import { Rating } from "flowbite-react";
 
 interface props {
   data: ICourseDetail;
@@ -16,19 +17,18 @@ interface props {
 const Course = (props: props): React.ReactElement => {
   return (
     <div className="rounded-2xl bg-white p-2 flex flex-col gap-2 shadow-sm w-full">
-      <div className="w-full aspect-video h-full max-h-[200px] min-h-[150px]">
-        <ImageWithError
-          src={props.data.image}
-          alt={props.data.title}
-          fallbackSrc={assets.images.bgCourse}
-          className="w-full h-full object-fill rounded-2xl"
-        />
-      </div>
-      <div className="card-content px-1 space-y-2 mb-2">
-        {/* content */}
+      <div className="w-full flex flex-col gap-2">
+        <div className="w-full aspect-video h-full max-h-[200px] min-h-[150px]">
+          <ImageWithError
+            src={props.data.image}
+            alt={props.data.title}
+            fallbackSrc={assets.images.noBg}
+            className="w-full h-full object-fill rounded-2xl"
+          />
+        </div>
         <div className="w-full flex justify-between gap-2">
-          <div className="flex flex-auto flex-col overflow-hidden">
-            <h5 className="xl:text-lg lg:text-base md:text-sm font-semibold text-black  w-full whitespace-nowrap text-ellipsis">
+          <div className="w-[calc(100%-45px)] flex-auto flex-col overflow-hidden">
+            <h5 className="xl:text-lg lg:text-base md:text-sm font-semibold text-black  w-full overflow-hidden whitespace-nowrap text-ellipsis">
               {props.data.title}
             </h5>
             <p className="text-xs font-normal text-gray-600">
@@ -49,24 +49,28 @@ const Course = (props: props): React.ReactElement => {
             /> */}
           </div>
         </div>
+      </div>
+      <div className="card-content px-1 space-y-2 mb-2">
+        {/* content */}
         <div className="flex flex-col gap-2">
           {/* rating */}
           <div className="w-full flex justify-between flex-col gap-3">
             <div className="flex gap-1 items-center">
-              {/* <Rating
-                value={props.data?.ranking || 0}
-                readonly
-                ratedIcon={<RatedIcon />}
-                unratedIcon={<UnratedIcon />}
-              /> */}
+              <Rating size={"sm"}>
+                <Rating.Star />
+                <Rating.Star />
+                <Rating.Star />
+                <Rating.Star />
+                <Rating.Star filled={false} />
+              </Rating>
               <p className="text-xs font-medium">{props.data?.ranking || 0}</p>
             </div>
             <div className="flex flex-col">
               <p className="text-xs text-black font-extralight">
-                {`${props.data.price} VND`}
+                {`${props.data.price ? props.data.price : 0} VND`}
               </p>
               <p className="text-xs text-gray-500 font-extralight line-through">
-                {`${props.data.discount} VND`}
+                {`${props.data.discount ? props.data.discount : 0} VND`}
               </p>
             </div>
           </div>
