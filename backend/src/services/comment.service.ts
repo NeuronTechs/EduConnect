@@ -9,6 +9,7 @@ import {
   updateResponse,
 } from "../constant/type";
 import { Multer } from "multer";
+import { v4 as uuidv4 } from "uuid";
 
 const create = async (
   data: IComment,
@@ -20,7 +21,7 @@ const create = async (
     | undefined
 ): Promise<dataResponse<IComment>> => {
   try {
-    data.comment_id = generateRandomString();
+    data.comment_id = uuidv4();
     data.createdAt = Date.now();
 
     let fileData: string | null = null;

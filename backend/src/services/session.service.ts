@@ -7,9 +7,9 @@ import {
   updateResponse,
 } from "../constant/type";
 import { ResultSetHeader } from "mysql2";
-
+import { v4 as uuidv4 } from "uuid";
 const create = async (data: ISession): Promise<dataResponse<ISession>> => {
-  data.session_id = generateRandomString();
+  data.session_id = uuidv4();
   const sql = `INSERT INTO session SET ?`;
   return new Promise<dataResponse<ISession>>((resolve, rejects) => {
     db.connectionDB.query(sql, data, (err, result) => {

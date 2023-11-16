@@ -8,9 +8,9 @@ import {
   dataResponse,
   updateResponse,
 } from "../constant/type";
-
+import { v4 as uuidv4 } from "uuid";
 const create = async (data: ILecture): Promise<dataResponse<ILecture>> => {
-  data.lecture_id = generateRandomString();
+  data.lecture_id = uuidv4();
   const sql = `INSERT INTO lecture SET ?`;
   return new Promise<dataResponse<ILecture>>((resolve, reject) => {
     db.connectionDB.query(sql, data, (err, result) => {
