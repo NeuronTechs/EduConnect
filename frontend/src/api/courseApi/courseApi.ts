@@ -13,9 +13,14 @@ export const getCourseByStudentId = async (params: string) => {
   }
 };
 
-export const getCourseDetails = async (params: string) => {
+export const getCourseDetails = async (params: {
+  id: string;
+  user_id: string;
+}) => {
   try {
-    const res = await httpRequest.get(`/course/course-details/${params}`);
+    const res = await httpRequest.get(
+      `/course/course-details/${params.id}/users/${params.user_id}`
+    );
 
     return res?.data?.data;
   } catch (error) {

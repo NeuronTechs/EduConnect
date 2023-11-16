@@ -8,7 +8,7 @@ const Header = () => {
   const navigate = useNavigate();
   return (
     <div className="sticky top-0 z-10">
-      <div className="h-[10vh]  bg-gray-900 flex items-center p-2  text-white">
+      <div className="h-[9vh]  bg-gray-900 flex items-center p-2  text-white">
         <div className="flex w-full h-full gap-3 items-center">
           <ArrowLeft
             className="ml-5 cursor-pointer"
@@ -42,9 +42,9 @@ const Header = () => {
             <BookOpenText size={20} />
             <p>Tiến độ khóa học</p>
           </div>
-          <div style={{ width: 45, height: 45 }}>
+          <div style={{ width: 35, height: 35 }}>
             <CircularProgressbarWithChildren value={percentage}>
-              <p>{percentage}%</p>
+              <p className="text-[5px]">{percentage}%</p>
             </CircularProgressbarWithChildren>
           </div>
           <p className="w-[]">1/69 bài học</p>

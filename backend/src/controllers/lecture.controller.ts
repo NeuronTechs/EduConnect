@@ -71,10 +71,38 @@ const getByLectureId = async (req: Request, res: Response) => {
   }
 };
 
+const createStudentProgress = async (req: Request, res: Response) => {
+  const { body } = req;
+  try {
+    const data = await lectureService.createStudentProgress(body);
+    res.status(data.status).json({ data });
+  } catch (error) {
+    if (error) {
+      res.status(400).json({ error: error });
+    } else {
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+};
+const updateStudentProgress = async (req: Request, res: Response) => {
+  const { body } = req;
+  try {
+    const data = await lectureService.updateStudentProgress(body);
+    res.status(data.status).json({ data });
+  } catch (error) {
+    if (error) {
+      res.status(400).json({ error: error });
+    } else {
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+};
 export default {
   create,
   updateById,
   deleteById,
   getBySessionId,
   getByLectureId,
+  createStudentProgress,
+  updateStudentProgress,
 };

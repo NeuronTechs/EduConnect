@@ -26,8 +26,8 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
     });
   };
   return (
-    <div className="flex flex-col items-start gap-4 my-5">
-      <div className="flex items-start ml-5  my-3 space-x-5">
+    <div className="flex flex-col w-full justify-center items-start  gap-4 my-5">
+      <div className="flex items-start w-full ml-5  my-3 space-x-5">
         <div className=" flex justify-center items-center">
           <Avatar
             loading="lazy"
@@ -40,8 +40,8 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
             alt="avatar"
           />
         </div>
-        <div className=" text-sm flex flex-col gap-2 bg-gray-200 py-3 px-5 rounded-lg">
-          <div className="flex items-center gap-2">
+        <div className=" text-sm flex  flex-col gap-2 bg-gray-200 py-3 px-5  rounded-lg">
+          <div className="flex items-center  gap-2">
             <h1 className="font-semibold mr-3 text-sm">{comment.username}</h1>
             <p className="opacity-80">
               {comment.createdAt && calculateTimePassed(comment.createdAt)}

@@ -62,9 +62,11 @@ const LectureCard = (props: { Lecture: ILecture; index: number }) => {
             <MonitorPlay size={16} />
             <p> {props.Lecture.duration + " phút"}</p>
           </div>
-          <div className="rounded-full border-[0.5px] w-5 h-5 flex justify-center items-center border-green-500 bg-green-500">
-            <Check size={14} color="white" />
-          </div>
+          {props.Lecture.has_watched === "yes" && (
+            <div className="rounded-full border-[0.5px] w-5 h-5 flex justify-center items-center border-green-500 bg-green-500">
+              <Check size={14} color="white" />
+            </div>
+          )}
           {/* <div className="rounded-full border-[0.5px] w-5 h-5 flex justify-center items-center border-black ">
             <Check size={14} color="white" />
           </div> */}

@@ -89,11 +89,10 @@ const getCourseByStudentId = async (req: Request, res: Response) => {
 };
 
 const getCourseDetails = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const { user } = req;
+  const { id, user_id } = req.params;
 
   try {
-    const courses = await CourseService.getCourseDetails(id, user.id);
+    const courses = await CourseService.getCourseDetails(id, user_id);
     res.status(courses.status).json({ data: courses });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });

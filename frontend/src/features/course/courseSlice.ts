@@ -1,7 +1,7 @@
 import * as courseApi from "../../api/courseApi/courseApi";
-import { IComment, ICourse, ILecture } from "@/types/type";
+import { IComment, ICourse, ILecture, IStudentProgress } from "@/types/type";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
+import * as lectureApi from "../../api/lectureApi/lectureApi";
 export interface CourseState {
   currentLecture: ILecture | null;
   currentCourse: ICourse | null;
@@ -22,9 +22,12 @@ const initialState: CourseState = {
   isError: false,
 };
 
-export const getCourseDetails = createAsyncThunk<ICourse, string>(
+export const getCourseDetails = createAsyncThunk<
+  ICourse,
+  { id: string; user_id: string }
+>(
   "course/getCourseDetails",
-  async (params: string) => {
+  async (params: { id: string; user_id: string }) => {
     const res = await courseApi.getCourseDetails(params);
     return res;
   }
@@ -60,6 +63,20 @@ export const getCourseByStudentId = createAsyncThunk<ICourse[], string>(
     return res;
   }
 );
+export const createStudentProgress = createAsyncThunk<
+  IStudentProgress,
+  IStudentProgress
+>("course/createStudentProgress", async (params: IStudentProgress) => {
+  const res = await lectureApi.createStudentProgress(params);
+  return res;
+});
+export const updateStudentProgress = createAsyncThunk<
+  IStudentProgress,
+  IStudentProgress
+>("course/updateStudentProgress", async (params: IStudentProgress) => {
+  const res = await lectureApi.updateStudentProgress(params);
+  return res;
+});
 export const courseSlice = createSlice({
   name: "course",
   initialState,
@@ -146,6 +163,39 @@ export const courseSlice = createSlice({
       console.log(action.payload);
 
       state.courses = action.payload;
+    });
+    builder.addCase(getCourseByStudentId.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+      state.isError = true;
+    });
+    builder.addCase(createStudentProgress.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(createStudentProgress.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = undefined;
+      state.isError = false;
+      console.log(action.payload);
+    });
+    builder.addCase(createStudentProgress.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+      state.isError = true;
+    });
+    builder.addCase(updateStudentProgress.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(updateStudentProgress.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = undefined;
+      state.isError = false;
+      console.log(action.payload);
+    });
+    builder.addCase(updateStudentProgress.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+      state.isError = true;
     });
   },
 });
