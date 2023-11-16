@@ -7,7 +7,6 @@ import {
   AccordionBody,
 } from "@material-tailwind/react";
 import { BookOpenText, Check, Clock, MonitorPlay } from "@phosphor-icons/react";
-import { Select } from "flowbite-react";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 

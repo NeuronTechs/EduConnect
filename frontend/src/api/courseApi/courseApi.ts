@@ -61,6 +61,20 @@ export const CommentOfLecture = async (params: {
   }
 };
 
+export const getReplyByCommentId = async (params: {
+  id: string;
+  paging: number;
+}) => {
+  try {
+    const res = await httpRequest.get(
+      `/comment/reply-by-comment/${params.id}?page=${params.paging}`
+    );
+    return res?.data?.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
 export const getReviewCourse = async (params: string) => {
   try {
     const res = await httpRequest.get(`/review/get-reviews/${params}`);

@@ -8,8 +8,6 @@ import {
 } from "@/features/course/courseSlice";
 import { AppDispatch } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import session from "redux-persist/lib/storage/session";
-
 interface Props {
   currentLecture: ILecture | null;
   currentTime: number;
@@ -22,6 +20,7 @@ const Video = ({ currentLecture, currentTime, setCurrentTime }: Props) => {
     session_id: currentLecture.session_id,
   });
   const videoRef = useRef<HTMLVideoElement>(null);
+  const ytbRef = useRef<HTMLIFrameElement>(null);
   const location = useLocation();
   const dispatch = useDispatch<AppDispatch>();
   const getCurrentTime = () => {
@@ -80,23 +79,46 @@ const Video = ({ currentLecture, currentTime, setCurrentTime }: Props) => {
       );
     }
   }, [currentLecture, location]);
+  const getEmbedUrl = (url: string) => {
+    const videoId = url.split("v=")[1].split("&")[0];
+    return `https://www.youtube.com/embed/${videoId}`;
+  };
+
   return (
-    <div className=" h-auto  relative shadow-xl ">
-      <video
-        src={currentLecture?.source}
-        className=" w-full aspect-video  bg-black"
-        ref={videoRef}
-        onPause={() => {
-          setCurrentTime(getCurrentTime());
-        }}
-        onSeeked={() => {
-          setCurrentTime(getCurrentTime());
-        }}
-        autoPlay
-        controls
-      >
-        Your browser does not support the video tag.
-      </video>
+    <div className=" h-auto flex justify-center bg-black relative shadow-xl ">
+      {currentLecture?.source.includes("youtube") ? (
+        <iframe
+          ref={ytbRef}
+          className="w-[90%] aspect-video"
+          src={getEmbedUrl(currentLecture?.source)}
+          title="YouTube video player"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          onClick={() => {
+            setCurrentTime(getCurrentTime());
+            console.log(getCurrentTime());
+          }}
+          onSeeked={() => {
+            setCurrentTime(getCurrentTime());
+          }}
+        ></iframe>
+      ) : (
+        <video
+          src={currentLecture?.source}
+          className=" w-full aspect-video  bg-black"
+          ref={videoRef}
+          onPause={() => {
+            setCurrentTime(getCurrentTime());
+          }}
+          onSeeked={() => {
+            setCurrentTime(getCurrentTime());
+          }}
+          autoPlay
+          controls
+        >
+          Your browser does not support the video tag.
+        </video>
+      )}
     </div>
   );
 };

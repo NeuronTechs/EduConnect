@@ -113,6 +113,7 @@ export interface IComment {
     | null;
   timestamp: string;
   avatar?: string | null;
+  reply_count?: number;
 }
 export interface ISession {
   session_id: string;

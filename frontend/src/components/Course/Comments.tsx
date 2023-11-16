@@ -1,6 +1,7 @@
 import {
   CommentOfLecture,
   LoadMoreComment,
+  getReplyByCommentId,
 } from "@/features/course/courseSlice";
 import { AppDispatch } from "@/redux/store";
 import { IComment, SliceState } from "@/types/type";
@@ -10,6 +11,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import WYSIWYGEditor from "./WYSIWYGEditor";
 import { calculateTimePassed } from "@/utils/utils";
+import { set } from "react-hook-form";
 interface commentProps {
   comment: IComment;
   setCurrentTime: React.Dispatch<React.SetStateAction<number>>;
@@ -19,12 +21,33 @@ interface commentProps {
 const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
   const [isReply, setIsReply] = useState(false);
   const [Positive, setPositive] = useState<boolean | null>(null);
+  const [page, setPage] = useState(1);
+  const [reply, setReply] = useState<IComment[]>([]);
+  const dispatch = useDispatch<AppDispatch>();
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
   };
+  const loadReplyCommentHandler = async () => {
+    setIsReply(!isReply);
+    if (comment.comment_id) {
+      const res = await dispatch(
+        getReplyByCommentId({
+          id: comment.comment_id,
+          paging: page,
+        })
+      );
+      if (res.payload) {
+        const temp = res.payload as IComment[];
+        setReply([...reply, ...temp]);
+      }
+
+      setPage(page + 1);
+    }
+  };
+
   return (
     <div className="flex flex-col w-full justify-center items-start  gap-4 my-5">
       <div className="flex items-start w-full ml-5  my-3 space-x-5">
@@ -127,15 +150,30 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
               )}
               <p
                 className="underline cursor-pointer"
-                onClick={() => setIsReply(!isReply)}
+                // onClick={() => setIsReply(!isReply)}
+                onClick={loadReplyCommentHandler}
               >
-                Trả lời
+                Trả lời ({comment.reply_count})
               </p>
             </div>
           </div>
           <div className="w-[100vh] mx-5 p-2">
             {isReply && (
-              <WYSIWYGEditor currentTime={currentTime}></WYSIWYGEditor>
+              <div>
+                <WYSIWYGEditor
+                  currentTime={currentTime}
+                  Reply={{ comment_id: comment.comment_id }}
+                ></WYSIWYGEditor>
+                {reply.map((comment) => {
+                  return (
+                    <Comment
+                      comment={comment}
+                      currentTime={currentTime}
+                      setCurrentTime={setCurrentTime}
+                    />
+                  );
+                })}
+              </div>
             )}
           </div>
         </div>
