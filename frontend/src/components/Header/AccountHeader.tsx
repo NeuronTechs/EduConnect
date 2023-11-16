@@ -11,6 +11,8 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { logoutThunk } from "@/features/auth/authSlice";
 import { resetStoreCart } from "@/features/cart/cartSlice";
+import { resetStoreCourseOverview } from "@/features/overviewCourse/courseOverviewSlice";
+import { resetCheckOutCart } from "@/features/checkoutCourse/checkoutSlice";
 
 const AccountHeader = () => {
   const nav = useNavigate();
@@ -18,6 +20,8 @@ const AccountHeader = () => {
   const handleLogOut = async () => {
     await dispatch(logoutThunk());
     await dispatch(resetStoreCart());
+    await dispatch(resetStoreCourseOverview());
+    await dispatch(resetCheckOutCart());
     nav(configRouter.login);
   };
   const handleRedirectTeacher = () => {

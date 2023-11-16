@@ -5,7 +5,7 @@ import ListCourse from "../components/Home/ListCourse";
 import { Link, useLocation } from "react-router-dom";
 import * as topicApi from "@/api/topicApi/topicApi";
 import * as teacherApi from "@/api/teacherApi/teacherApi";
-import { ICourseOverview, ITeacher, ITopic } from "@/types/type";
+import { ICourseDetail, ITeacher, ITopic } from "@/types/type";
 import ListTeacher from "@/components/Home/ListTeacher";
 
 const TabHome = (): React.ReactElement => {
@@ -45,7 +45,7 @@ export { TabHome };
 
 const Home = () => {
   const [isLoading, setIsLoading] = React.useState(true);
-  const [dataCourse, setDataCourse] = React.useState<ICourseOverview[]>([]);
+  const [dataCourse, setDataCourse] = React.useState<ICourseDetail[]>([]);
   const [dataCategory, setDataCategory] = React.useState<ITopic[]>([]);
   const [dataTeacher, setDataTeacher] = React.useState<ITeacher[]>([]);
   React.useEffect(() => {

@@ -12,9 +12,12 @@ export const configRouter = {
   chat: "/chat",
   dashboardTeacher: "/teacher/dashboard",
   payout: "/teacher/payout",
+  // teacher
   liststudent: "/teacher/liststudent",
   courseMyTeacher: "/teacher/course",
-  createCourse: "/teacher/create-course",
+  createCourse: "/teacher/course/create",
+  manageCourse: "/teacher/manage/course/:id",
+  // student
   myCourse: "/myCourse",
   learning: "/course/learn/:id",
   profile: "/profile",
@@ -25,4 +28,6 @@ export const configRouter = {
   myCourseDetails: "/myCourse/:id",
   managerComplaintCourse: "/admin/complaint",
   complaintCourseDetail: "/admin/complaint/:id",
+  forgetPassword: "/forget-password",
+  resetPassword: "/reset-password",
 };

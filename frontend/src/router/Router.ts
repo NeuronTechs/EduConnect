@@ -37,6 +37,16 @@ const publicRoutes: IRouter[] = [
     component: lazy(() => import("../pages/SignUp")),
     layout: BlankLayout,
   },
+  {
+    path: configRouter.forgetPassword,
+    component: lazy(() => import("../pages/ForgetPassword")),
+    layout: BlankLayout,
+  },
+  {
+    path: configRouter.resetPassword,
+    component: lazy(() => import("../pages/ResetPassword")),
+    layout: BlankLayout,
+  },
 ];
 const privateRoutes: IRouter[] = [
   {
@@ -151,8 +161,13 @@ const teacherRoutes: IRouter[] = [
   },
   {
     path: configRouter.createCourse,
+    component: lazy(() => import("@/pages/CreateCourseTitle")),
+    layout: BlankLayout,
+  },
+  {
+    path: configRouter.manageCourse,
     component: lazy(() => import("@/pages/CreateCourseTeacher")),
-    layout: DefaultLayout,
+    layout: BlankLayout,
   },
   {
     path: configRouter.liststudent,
