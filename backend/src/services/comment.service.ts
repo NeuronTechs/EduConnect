@@ -116,13 +116,15 @@ const getByLectureId = async (
   pageSize: number
 ): Promise<dataListResponse<IComment>> => {
   const offset = (page - 1) * pageSize;
-  const sql = `SELECT 
+  const sql = `
+SELECT 
   c.comment_id,
   c.username,
   c.lecture_id,
   c.timestamp,
   c.content,
   c.resource,
+  c.isReply,
   c.createdAt,
   u.avatar,
   (SELECT COUNT(*) FROM comments r WHERE r.reply_id = c.comment_id) as reply_count
@@ -163,7 +165,27 @@ const getReplyByCommentId = async (
   pageSize: number
 ): Promise<dataListResponse<IComment>> => {
   const offset = (page - 1) * pageSize;
-  const sql = `SELECT comment_id,c.username,lecture_id,timestamp,content,c.resource,c.createdAt,avatar FROM comments c join user u on c.username=u.username WHERE reply_id = ? order by createdAt LIMIT ?, ?`;
+  const sql = `
+SELECT 
+  c.username,
+  c.lecture_id,
+  c.timestamp,
+  c.content,
+  c.isReply,
+  c.resource,
+  c.createdAt,
+  u.avatar
+FROM 
+  comments c 
+JOIN 
+  user u 
+ON 
+  c.username=u.username 
+WHERE 
+  c.reply_id = ? 
+ORDER BY 
+  c.createdAt 
+LIMIT ?, ?`;
   return new Promise<dataListResponse<IComment>>((resolve, reject) => {
     db.connectionDB.query(
       sql,

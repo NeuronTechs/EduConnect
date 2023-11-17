@@ -199,15 +199,22 @@ const getCourseDetails = async (
   l.type,
   l.duration,
   CASE 
-    WHEN sp.progress IS NULL THEN 'No'
-    ELSE sp.progress
-  END AS has_watched
-FROM Session s
-JOIN Lecture l ON s.session_id = l.session_id
-JOIN Course c ON s.course_id = c.course_id
-LEFT JOIN student_progress sp ON sp.lecture_id = l.lecture_id AND sp.student_id = ?
-WHERE s.course_id = ?
-ORDER BY s.session_id, l.lecture_id;`;
+      WHEN sp.progress IS NULL THEN 'No'
+      ELSE sp.progress
+  END AS has_watched,
+  CEIL((SELECT COUNT(*) FROM comments WHERE lecture_id = l.lecture_id AND isReply="false") / 5) as comment_pages
+FROM 
+  Session s
+JOIN 
+  Lecture l ON s.session_id = l.session_id
+JOIN 
+  Course c ON s.course_id = c.course_id
+LEFT JOIN 
+  student_progress sp ON sp.lecture_id = l.lecture_id AND sp.student_id = ?
+WHERE 
+  s.course_id = ?
+ORDER BY 
+  s.session_id, l.lecture_id;`;
 
   // Execute the SQL query and return a Promise that resolves to the course details
   return new Promise<dataResponse<ICourseDetail>>((resolve, reject) => {

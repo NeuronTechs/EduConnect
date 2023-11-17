@@ -112,6 +112,7 @@ export interface IComment {
       }[]
     | null;
   timestamp: string;
+  isReply?: string;
   avatar?: string | null;
   reply_count?: number;
 }

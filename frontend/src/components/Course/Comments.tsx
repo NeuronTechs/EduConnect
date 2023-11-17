@@ -23,6 +23,7 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
   const [Positive, setPositive] = useState<boolean | null>(null);
   const [page, setPage] = useState(1);
   const [reply, setReply] = useState<IComment[]>([]);
+  const [showReply, setShowReply] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const scrollToTop = () => {
     window.scrollTo({
@@ -31,8 +32,8 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
     });
   };
   const loadReplyCommentHandler = async () => {
-    setIsReply(!isReply);
     if (comment.comment_id) {
+      setShowReply(!showReply);
       const res = await dispatch(
         getReplyByCommentId({
           id: comment.comment_id,
@@ -150,36 +151,54 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
               )}
               <p
                 className="underline cursor-pointer"
-                // onClick={() => setIsReply(!isReply)}
-                onClick={loadReplyCommentHandler}
+                onClick={() => setIsReply(!isReply)}
+                // onClick={loadReplyCommentHandler}
               >
-                Trả lời ({comment.reply_count})
+                Trả lời
               </p>
             </div>
           </div>
-          <div className="w-[100vh] mx-5 p-2">
+          <div className="w-[100vh] mx-5 p-2 py-0">
             {isReply && (
               <div>
                 <WYSIWYGEditor
                   currentTime={currentTime}
                   Reply={{ comment_id: comment.comment_id }}
                 ></WYSIWYGEditor>
-                {reply.map((comment) => {
-                  return (
-                    <Comment
-                      comment={comment}
-                      currentTime={currentTime}
-                      setCurrentTime={setCurrentTime}
-                    />
-                  );
-                })}
               </div>
             )}
           </div>
+          {comment.isReply === "false" && showReply === true && (
+            <p
+              className="underline cursor-pointer"
+              onClick={loadReplyCommentHandler}
+            >
+              Ẩn phản hồi
+            </p>
+          )}
+          {showReply === true &&
+            reply.map((comment) => {
+              return (
+                <Comment
+                  comment={comment}
+                  currentTime={currentTime}
+                  setCurrentTime={setCurrentTime}
+                />
+              );
+            })}
+
+          {comment.isReply === "false" && showReply === false && (
+            <p
+              className="underline cursor-pointer"
+              onClick={loadReplyCommentHandler}
+            >
+              {comment.reply_count && comment.reply_count > 0
+                ? `Xem ${comment.reply_count} phản hồi`
+                : "Trả lời"}
+            </p>
+          )}
         </div>
       </div>
-
-      <div className="w-10/12  h-[1px] bg-gray-300"></div>
     </div>
   );
 };
