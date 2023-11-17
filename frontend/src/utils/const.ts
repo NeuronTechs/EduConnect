@@ -8,7 +8,7 @@ export const formatCurrency = (value: number): string => {
 export const convertTime = (value: number): string => {
   return value / 60 / 60 < 1
     ? `${value / 60} phút`
-    : `${Math.floor(value / 60)} giờ ${
+    : `${Math.floor(value / 60 / 60)} giờ ${
         value / 60 - Math.floor(value / 60) * 60
       } phút`;
 };

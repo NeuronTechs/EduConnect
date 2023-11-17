@@ -110,11 +110,17 @@ const Reviews = () => {
     let params: addReview = {
       course_id: id as string,
       content: content,
-      author_id: currentUser?.user_id as string,
+      author_id: currentUser?.username as string,
       rating: rated,
       title: title,
     };
     await courseApi.addToReview(params);
+    const data = await courseApi.getReviewCourse(
+      currentCourse?.course_id as string
+    );
+    setReviews([...data?.data]);
+    const getStatistic = await courseApi.getStatisticStar(id as string);
+    setTatistic(getStatistic?.data);
     setContent("");
     setTitle("");
     setRated(0);
@@ -127,7 +133,9 @@ const Reviews = () => {
         <h1 className="font-semibold text-xl">Phản hồi của học sinh</h1>
         <div className="my-3 flex space-x-8">
           <div className="my-3 flex flex-col items-center justify-center w-[20%]">
-            <p className="font-semibold text-6xl ">{statistic?.totalStar}</p>
+            <p className="font-semibold text-6xl ">
+              {statistic?.totalStar?.toFixed(1)}
+            </p>
             <Rating
               unratedColor="amber"
               ratedColor="amber"
@@ -223,10 +231,11 @@ const Reviews = () => {
       {/* list review */}
       <div className="my-3 w-full">
         <h1 className="font-semibold text-xl mb-3">Đánh giá</h1>
-        {/* <Review content="Review 1" title="Review 1" />
-        <Review content="Review 2" title="Review 2" />
-        <Review content="Review 3" title="Review 3" /> */}
-
+        {reviews?.length === 0 && (
+          <p className="italic text-blue-500 text-[12px]">
+            Chưa có đánh giá nào
+          </p>
+        )}
         {reviews?.length > 0 &&
           reviews?.map((review) => (
             <Review
@@ -239,66 +248,69 @@ const Reviews = () => {
               avatar={review.avatar}
             />
           ))}
-        <div className="flex items-center justify-center">
-          <button
-            className="italic text-blue-500 w-[170px]"
-            onClick={handleGetAllReviews}
-          >
-            Xem tất cả nhận xét
-          </button>
-        </div>
+        {reviews?.length !== 0 && (
+          <div className="flex items-center justify-center">
+            <button
+              className="italic text-blue-500 w-[170px]"
+              onClick={handleGetAllReviews}
+            >
+              Xem tất cả nhận xét
+            </button>
+          </div>
+        )}
       </div>
       {/* review */}
-      {currentCourse?.student_id.includes("00657") && (
-        <div className="my-3">
-          <h1 className="font-semibold text-xl">Viết đánh giá</h1>
-          <div className="px-3 my-3 flex flex-col gap-5">
-            <div className="my-1">
-              <p className="font-semibold text-[14px]">
-                Bạn thấy khóa học này như thế nào?
-              </p>
-              <div className="flex items-center gap-2">
-                <Rating
-                  value={rated}
-                  onChange={(value) => setRated(value)}
-                  unratedColor="amber"
-                  ratedColor="amber"
+      {currentCourse?.student_id !== null &&
+        currentCourse?.student_id?.includes(currentUser?.user_id as string) && (
+          <div className="my-3">
+            <h1 className="font-semibold text-xl">Viết đánh giá</h1>
+            <div className="px-3 my-3 flex flex-col gap-5">
+              <div className="my-1">
+                <p className="font-semibold text-[14px]">
+                  Bạn thấy khóa học này như thế nào?
+                </p>
+                <div className="flex items-center gap-2">
+                  <Rating
+                    value={rated}
+                    onChange={(value) => setRated(value)}
+                    unratedColor="amber"
+                    ratedColor="amber"
+                  />
+                  <Typography color="blue-gray" className="font-medium">
+                    {rated}.0 Rated
+                  </Typography>
+                </div>
+              </div>
+              <div className="mb-1">
+                <p className="font-semibold text-[14px]">Tiêu đề</p>
+                <input
+                  type="text"
+                  placeholder="Nhập tiêu đề"
+                  className="w-full p-3 outline-none rounded-lg border border-blue-200 hover:border-blue-400"
+                  onChange={(e) => setTitle(e.target.value)}
+                  value={title}
                 />
-                <Typography color="blue-gray" className="font-medium">
-                  {rated}.0 Rated
-                </Typography>
+              </div>
+              <div className="mb-1">
+                <p className="font-semibold text-[14px]">Nội dung</p>
+                <textarea
+                  placeholder="Nhập nội dung đánh giá"
+                  className="w-full min-h-[50px] max-h-[150px] p-3 outline-none rounded-lg border border-blue-200 hover:border-blue-400"
+                  onChange={(e) => setContent(e.target.value)}
+                  value={content}
+                />
+              </div>
+              <div>
+                <button
+                  className="border text-white px-3 py-2 rounded-lg bg-blue-400"
+                  onClick={handleAddReview}
+                >
+                  Gửi đánh giá
+                </button>
               </div>
             </div>
-            <div className="mb-1">
-              <p className="font-semibold text-[14px]">Tiêu đề</p>
-              <input
-                type="text"
-                placeholder="Nhập tiêu đề"
-                className="w-full p-3 outline-none rounded-lg border border-blue-200 hover:border-blue-400"
-                onChange={(e) => setTitle(e.target.value)}
-                value={title}
-              />
-            </div>
-            <div className="mb-1">
-              <p className="font-semibold text-[14px]">Nội dung</p>
-              <textarea
-                placeholder="Nhập nội dung đánh giá"
-                className="w-full min-h-[50px] max-h-[150px] p-3 outline-none rounded-lg border border-blue-200 hover:border-blue-400"
-                onChange={(e) => setContent(e.target.value)}
-                value={content}
-              />
-            </div>
-            <div>
-              <button
-                className="border text-white px-3 py-2 rounded-lg bg-blue-400"
-                onClick={handleAddReview}
-              >
-                Gửi đánh giá
-              </button>
-            </div>
           </div>
-        </div>
-      )}
+        )}
     </div>
   );
 };

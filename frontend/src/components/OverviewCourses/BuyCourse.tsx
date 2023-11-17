@@ -10,7 +10,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, getCarts } from "../../features/cart/cartSlice";
 import { AppDispatch } from "../../redux/store";
-import { convertTime, formatCurrency } from "../../utils/const";
+import { convertTimeToTemplate, formatCurrency } from "../../utils/const";
 import { SliceState } from "@/types/type";
 import { useNavigate, useParams } from "react-router-dom";
 import { configRouter } from "@/configs/router";
@@ -33,12 +33,21 @@ const BuyCourse = () => {
     (state: SliceState) => state.authSlice.currentUser
   );
 
+  const cartCurrent = useSelector(
+    (state: SliceState) => state.cartSlice.cartCurrent
+  );
+
   const loading = useSelector(
     (state: SliceState) => state.courseOverviewSlice.loading
   );
 
   const handleAddToCart = async () => {
-    await dispatch(addToCart({ student_id: currentUser?.user_id as string, course_id: id as string }));
+    await dispatch(
+      addToCart({
+        student_id: currentUser?.user_id as string,
+        course_id: id as string,
+      })
+    );
     await dispatch(getCarts(currentUser?.user_id as string));
   };
 
@@ -59,6 +68,23 @@ const BuyCourse = () => {
   const handleRedirectToCouse = (course_id: string) => {
     navigate(`/course/learn/${course_id}`);
   };
+
+  const handleRedirectToCart = () => {
+    navigate(`/courses-cart`);
+  };
+
+  const isCourseIdExist = (courseId: string) => {
+    if (cartCurrent?.length === 0 || cartCurrent === null) {
+      return false;
+    } else {
+      for (let i = 0; i < cartCurrent?.length; i++) {
+        if (cartCurrent[i].course_id === courseId) {
+          return true;
+        }
+      }
+    }
+  };
+
   return (
     <div
       className={`${
@@ -139,7 +165,7 @@ const BuyCourse = () => {
                   <p className="text-[16px]">Thời gian</p>
                 </div>
                 <p className="text-[16px]">
-                  {convertTime(currentCourse?.totalTime as number)}
+                  {convertTimeToTemplate(currentCourse?.totalTime as number)}
                 </p>
               </li>
               <li className="flex items-center justify-between border-b border-b-solid border-b-gray-400 p-[5px]">
@@ -179,7 +205,10 @@ const BuyCourse = () => {
               </p>
             </div>
             <div className="flex flex-col justify-center items-center gap-2">
-              {currentCourse?.student_id.includes("00657") ? (
+              {currentCourse?.student_id !== null &&
+              currentCourse?.student_id?.includes(
+                currentUser?.user_id as string
+              ) ? (
                 <button
                   onClick={() =>
                     handleRedirectToCouse(currentCourse?.course_id)
@@ -190,12 +219,22 @@ const BuyCourse = () => {
                 </button>
               ) : (
                 <>
-                  <button
-                    onClick={handleAddToCart}
-                    className="flex items-center justify-center border border-blue-300 w-full py-2 rounded-lg text-blue-400"
-                  >
-                    Thêm vào giỏ hàng <ArrowRight size={18} />
-                  </button>
+                  {!isCourseIdExist(currentCourse?.course_id as string) ? (
+                    <button
+                      onClick={handleAddToCart}
+                      className="flex items-center justify-center border border-blue-300 w-full py-2 rounded-lg text-blue-400"
+                    >
+                      Thêm vào giỏ hàng <ArrowRight size={18} />
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleRedirectToCart}
+                      className="flex items-center justify-center border border-blue-300 w-full py-2 rounded-lg text-blue-400"
+                    >
+                      Tới giỏ hàng <ArrowRight size={18} />
+                    </button>
+                  )}
+
                   <button
                     onClick={handleRedirectCheckoutPage}
                     className="flex items-center justify-center border text-white w-full py-2 rounded-lg bg-blue-300"

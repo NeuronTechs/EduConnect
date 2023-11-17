@@ -14,6 +14,8 @@ import * as courseApi from "../api/courseApi/courseApi";
 import { AppDispatch } from "@/redux/store";
 import { resetCheckOutCart } from "@/features/checkoutCourse/checkoutSlice";
 import { useNavigate } from "react-router-dom";
+import { Spinner } from "@material-tailwind/react";
+import { useState } from "react";
 
 const options = {
   style: {
@@ -31,6 +33,13 @@ const Checkout = () => {
   const elements = useElements();
   const dispatch = useDispatch<AppDispatch>();
   const nav = useNavigate();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  // useEffect(() => {
+  //   return () => {
+  //     dispatch(resetCheckOutCart());
+  //   };
+  // }, [dispatch]);
 
   const currentCourse = useSelector(
     (state: SliceState) => state.checkoutSlice?.courseCurrent
@@ -45,6 +54,7 @@ const Checkout = () => {
 
     let res;
     try {
+      setLoading(true);
       const config = {
         headers: {
           "Content-Type": "application/json",
@@ -78,25 +88,29 @@ const Checkout = () => {
           },
         });
         if (result.error) {
+          setLoading(false);
           alert(result.error.message);
         } else {
           if (result.paymentIntent.status === "succeeded") {
             const addTransactionInCourse =
               await courseApi.addTransactionInCourse({
-                student_id: "00657",
+                student_id: currentUser?.user_id,
                 course_id: currentCourse?.course_id,
                 amount: currentCourse?.discount,
                 status: "Thành công",
               });
             console.log(addTransactionInCourse);
             if (addTransactionInCourse.status === 200) {
+              setLoading(false);
               dispatch(resetCheckOutCart());
               alert("Thanh toán thành công");
-              nav("/course/123");
+              nav("/");
             } else {
+              setLoading(false);
               alert(addTransactionInCourse.message);
             }
           } else {
+            setLoading(false);
             alert("Có một vài vấn đề trong lúc thanh toán!!!");
           }
         }
@@ -208,12 +222,16 @@ const Checkout = () => {
               </div>
             </div>
             <div className="my-3">
-              <button
-                onClick={submitHandler}
-                className="w-full bg-blue-500 text-white py-2 px-3 rounded-md"
-              >
-                THANH TOÁN
-              </button>
+              {loading ? (
+                <Spinner />
+              ) : (
+                <button
+                  onClick={submitHandler}
+                  className="w-full bg-blue-500 text-white py-2 px-3 rounded-md"
+                >
+                  THANH TOÁN
+                </button>
+              )}
             </div>
           </div>
         </div>

@@ -7,6 +7,7 @@ import { AppDispatch } from "@/redux/store";
 import { getCarts, removeToCart } from "@/features/cart/cartSlice";
 import { configRouter } from "@/configs/router";
 import { SliceState } from "@/types/type";
+import { getCourseOverview } from "@/features/overviewCourse/courseOverviewSlice";
 
 const CourseCart = () => {
   const [isHovered, setIsHovered] = useState<boolean>(false);
@@ -14,11 +15,14 @@ const CourseCart = () => {
   const cartCurrent = useSelector(
     (state: SliceState) => state.cartSlice.cartCurrent
   );
+  const currentUser = useSelector(
+    (state: SliceState) => state.authSlice.currentUser
+  );
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     const handleGetCarts = async () => {
-      await dispatch(getCarts("00657"));
+      await dispatch(getCarts(currentUser?.user_id as string));
     };
     handleGetCarts();
   }, []);
@@ -29,11 +33,12 @@ const CourseCart = () => {
 
   const handleRemoveCourseToCart = async (cart_id: string) => {
     await dispatch(removeToCart(cart_id));
-    await dispatch(getCarts("00657"));
+    await dispatch(getCarts(currentUser?.user_id as string));
   };
 
-  const handleRedirectCourse = () => {
-    navigate("/course/123");
+  const handleRedirectCourse = (id: string) => {
+    dispatch(getCourseOverview(id));
+    navigate(`/course/${id}`);
   };
 
   return (
@@ -58,7 +63,7 @@ const CourseCart = () => {
                 <div className="flex-1 h-[70px] grid grid-cols-[80px_240px_50px] justify-stretch items-center">
                   <div
                     className="mr-1 cursor-pointer"
-                    onClick={handleRedirectCourse}
+                    onClick={() => handleRedirectCourse(data?.course_id)}
                   >
                     <img
                       className="w-[80px] h-[60px] object-cover rounded-md"
@@ -71,7 +76,7 @@ const CourseCart = () => {
                     <div className="text-[14px] text-ellipsis overflow-hidden">
                       <p
                         className="font-semibold text-ellipsis overflow-hidden cursor-pointer"
-                        onClick={handleRedirectCourse}
+                        onClick={() => handleRedirectCourse(data?.course_id)}
                       >
                         {data.title}
                       </p>
