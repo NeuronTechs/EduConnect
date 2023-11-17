@@ -10,7 +10,7 @@ import {
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { SliceState } from "@/types/type";
-import { convertTime, convertTimeToTemplate } from "@/utils/const";
+import { convertTimeToTemplate } from "@/utils/const";
 
 interface IconProps {
   id: number;
@@ -77,7 +77,7 @@ const Overview = () => {
           <span className="font-semibold">{currentCourse?.totalLecture}</span>{" "}
           bài học • Thời lượng{" "}
           <span className="font-semibold">
-            {convertTime(currentCourse?.totalTime as number)}
+            {convertTimeToTemplate(currentCourse?.totalTime as number)}
           </span>
         </p>
         <div className="w-full px-3 p-[5px_10px]">
@@ -148,10 +148,16 @@ const Overview = () => {
                   <p className="text-[20px]">{contentVideo?.lecture_name}</p>
                   <X cursor={"pointer"} size={24} onClick={handleVideo} />
                 </div>
-                <video className="h-full w-full rounded-lg" controls>
-                  <source src={contentVideo?.source} type="video/mp4" />
-                  Trình duyệt của bạn không hỗ trợ phát video này.
-                </video>
+                <iframe
+                  width="560"
+                  height="315"
+                  src={`https://www.youtube.com/embed/${
+                    contentVideo.source.split("v=")[1]
+                  }`}
+                  title="YouTube Video"
+                  frameBorder="0"
+                  allowFullScreen
+                ></iframe>
               </CardBody>
             </Card>
           </Dialog>
@@ -161,27 +167,27 @@ const Overview = () => {
       <div className="p-[10px]">
         <h3 className="font-semibold">Bạn sẽ học được gì?</h3>
         <ul className="flex flex-col lg:flex-row flex-wrap p-[5px_10px]">
-          <li className="flex items-center justify-start basis-1/2">
+          <li className="flex items-baseline justify-start basis-1/2">
             <CheckCircle size={16} className="mr-3" />
             {currentCourse?.study?.study1}
           </li>
-          <li className="flex items-center justify-start basis-1/2">
+          <li className="flex items-baseline justify-start basis-1/2">
             <CheckCircle size={16} className="mr-3" />
             {currentCourse?.study?.study2}
           </li>
-          <li className="flex items-center justify-start basis-1/2">
+          <li className="flex items-baseline justify-start basis-1/2">
             <CheckCircle size={16} className="mr-3" />
             {currentCourse?.study?.study3}
           </li>
-          <li className="flex items-center justify-start basis-1/2">
+          <li className="flex items-baseline justify-start basis-1/2">
             <CheckCircle size={16} className="mr-3" />
             {currentCourse?.study?.study4}
           </li>
-          <li className="flex items-center justify-start basis-1/2">
+          <li className="flex items-baseline justify-start basis-1/2">
             <CheckCircle size={16} className="mr-3" />
             {currentCourse?.study?.study5}
           </li>
-          <li className="flex items-center justify-start basis-1/2">
+          <li className="flex items-baseline justify-start basis-1/2">
             <CheckCircle size={16} className="mr-3" />
             {currentCourse?.study?.study6}
           </li>
@@ -191,27 +197,27 @@ const Overview = () => {
       <div className="p-[10px] gap-2">
         <h3 className="font-semibold">Yêu cầu</h3>
         <ul className="p-[5px_10px] flex flex-col lg:flex-row flex-wrap">
-          <li className="flex items-center justify-start basis-1/2">
+          <li className="flex items-baseline justify-start basis-1/2">
             <MinusCircle weight="fill" size={16} className="mr-3" />
             {currentCourse?.requirement?.require1}
           </li>
-          <li className="flex items-center justify-start basis-1/2">
+          <li className="flex items-baseline justify-start basis-1/2">
             <MinusCircle weight="fill" size={16} className="mr-3" />
             {currentCourse?.requirement?.require2}
           </li>
-          <li className="flex items-center justify-start basis-1/2">
+          <li className="flex items-baseline justify-start basis-1/2">
             <MinusCircle weight="fill" size={16} className="mr-3" />
             {currentCourse?.requirement?.require3}
           </li>
-          <li className="flex items-center justify-start basis-1/2">
+          <li className="flex items-baseline justify-start basis-1/2">
             <MinusCircle weight="fill" size={16} className="mr-3" />
             {currentCourse?.requirement?.require4}
           </li>
-          <li className="flex items-center justify-start basis-1/2">
+          <li className="flex items-baseline justify-start basis-1/2">
             <MinusCircle weight="fill" size={16} className="mr-3" />
             {currentCourse?.requirement?.require5}
           </li>
-          <li className="flex items-center justify-start basis-1/2">
+          <li className="flex items-baseline justify-start basis-1/2">
             <MinusCircle weight="fill" size={16} className="mr-3" />
             {currentCourse?.requirement?.require6}
           </li>

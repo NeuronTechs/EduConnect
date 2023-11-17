@@ -1,4 +1,4 @@
-import { Breadcrumbs, Tooltip } from "@material-tailwind/react";
+import { Breadcrumbs, Spinner, Tooltip } from "@material-tailwind/react";
 import DetailCourse from "../components/OverviewCourses/DetailCourse";
 import BuyCourse from "../components/OverviewCourses/BuyCourse";
 import { Video, WarningOctagon } from "@phosphor-icons/react";
@@ -12,10 +12,15 @@ import {
 import { ChangeEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/redux/store";
-import { getCourseOverview } from "@/features/overviewCourse/courseOverviewSlice";
+import {
+  getCourseOverview,
+  resetStoreCourseOverview,
+} from "@/features/overviewCourse/courseOverviewSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import { SliceState } from "@/types/type";
 import { configRouter } from "@/configs/router";
+import * as courseApi from "../api/courseApi/courseApi";
+// import { toast } from "react-toastify";
 
 const OverviewCourse = () => {
   const titleDataReport = [
@@ -26,46 +31,79 @@ const OverviewCourse = () => {
     "Khác",
   ];
   const [open, setOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [title, setTitle] = useState<string>("");
   const [problem, setProblem] = useState<string>("");
-  const [image, setImage] = useState<string>("");
+  const [image, setImage] = useState<File[]>([]);
   const dispatch = useDispatch<AppDispatch>();
   const { id } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getCourseOverview(id as string));
-  }, []);
+
+    return () => {
+      // Dispatch action để xóa dữ liệu khi thoát trang
+      dispatch(resetStoreCourseOverview());
+    };
+  }, [dispatch]);
 
   const currentCourse = useSelector(
     (state: SliceState) => state.courseOverviewSlice.courseCurrent
   );
 
+  const currentUser = useSelector(
+    (state: SliceState) => state.authSlice.currentUser
+  );
+
   const handleGetImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setImage(URL.createObjectURL(e.target.files[0]));
+    const files = e.target.files;
+    if (files) {
+      setImage([...files]);
     }
   };
 
   const handleOpen = () => {
     setProblem("");
     setTitle("");
-    setImage("");
+    setImage([]);
     setOpen(!open);
   };
 
   const handleClose = () => {
     setProblem("");
     setTitle("");
-    setImage("");
+    setImage([]);
     setOpen(!open);
   };
 
-  const handleReport = () => {
-    alert(title + " " + problem + " " + image);
+  const handleReport = async () => {
+    setLoading(true);
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("student_id", currentUser?.user_id as string);
+    formData.append("course_id", currentCourse?.course_id as string);
+    formData.append("content", problem);
+    image.forEach((img) => {
+      formData.append("files", img);
+    });
+    const data = await courseApi.addComplaint(formData);
+    if (data?.status === 200) {
+      // await toast.success("Khiếu nại thành công");
+      alert("Khiếu nại thành công");
+      setLoading(false);
+    } else {
+      // toast.error("Khiếu nại thất bại");
+      alert("Khiếu nại thất bại");
+      setLoading(false);
+    }
+    // console.log(data);
+    // console.log(formData.getAll("files"));
+    // toast.success("sss");
+    // alert(title + " " + problem + " " + image);
     setProblem("");
     setTitle("");
-    setImage("");
+    setImage([]);
     setOpen(!open);
   };
 
@@ -102,79 +140,88 @@ const OverviewCourse = () => {
             <DetailCourse />
             <BuyCourse />
           </div>
-          <div className="absolute bottom-10 right-10">
-            <Tooltip content="Báo cáo" placement="top">
-              <button
-                onClick={handleOpen}
-                className="rounded-[50%] bg-blue-500 p-2 text-white text-center"
-              >
-                <WarningOctagon size={32} color="#ffffff" weight="fill" />
-              </button>
-            </Tooltip>
-            <Dialog open={open} handler={handleOpen}>
-              <DialogHeader>Báo cáo</DialogHeader>
-              <DialogBody>
-                <div className="w-full my-3">
-                  <select
-                    className="w-full rounded-md"
-                    placeholder="Lựa chọn vấn đề"
-                    onChange={(e) => handleGetTitle(e)}
+          {currentCourse?.student_id !== null &&
+            currentCourse?.student_id?.includes(
+              currentUser?.user_id as string
+            ) && (
+              <div className="absolute bottom-10 right-10">
+                <Tooltip content="Báo cáo" placement="top">
+                  <button
+                    onClick={handleOpen}
+                    className="rounded-[50%] bg-blue-500 p-2 text-white text-center"
                   >
-                    {titleDataReport.map((title) => (
-                      <option key={title} value={title}>
-                        {title}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="w-full max-h-[200px]">
-                  <textarea
-                    className="w-full max-h-[200px] rounded-md"
-                    placeholder="vấn đề"
-                    onChange={(e) => setProblem(e.target.value)}
-                  />
-                </div>
-                {image === "" ? (
-                  <div className="w-full h-[50px] my-3">
-                    <input
-                      type="file"
-                      placeholder="Image"
-                      onChange={(e) => handleGetImage(e)}
-                    />
-                  </div>
-                ) : (
-                  <div className="w-full h-[200px] my-3">
-                    <input
-                      type="file"
-                      id="file"
-                      className="hidden"
-                      onChange={(e) => handleGetImage(e)}
-                    />
-                    <label htmlFor="file">
-                      <img
-                        className="w-full h-full object-contain"
-                        src={image}
-                        alt="image"
+                    <WarningOctagon size={32} color="#ffffff" weight="fill" />
+                  </button>
+                </Tooltip>
+                <Dialog open={open} handler={handleOpen}>
+                  <DialogHeader>Báo cáo</DialogHeader>
+                  <DialogBody>
+                    <div className="w-full my-3">
+                      <select
+                        className="w-full rounded-md"
+                        placeholder="Lựa chọn vấn đề"
+                        onChange={(e) => handleGetTitle(e)}
+                      >
+                        {titleDataReport.map((title) => (
+                          <option key={title} value={title}>
+                            {title}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="w-full max-h-[200px]">
+                      <textarea
+                        className="w-full max-h-[200px] rounded-md"
+                        placeholder="vấn đề"
+                        onChange={(e) => setProblem(e.target.value)}
                       />
-                    </label>
-                  </div>
-                )}
-              </DialogBody>
-              <DialogFooter>
-                <Button
-                  variant="text"
-                  color="red"
-                  onClick={handleClose}
-                  className="mr-1"
-                >
-                  <span>Hủy</span>
-                </Button>
-                <Button variant="gradient" color="green" onClick={handleReport}>
-                  <span>Báo cáo</span>
-                </Button>
-              </DialogFooter>
-            </Dialog>
-          </div>
+                    </div>
+                    {image.length === 0 ? (
+                      <div className="w-full h-[50px] my-3">
+                        <input
+                          type="file"
+                          placeholder="Image"
+                          onChange={(e) => handleGetImage(e)}
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-full h-[200px] my-3">
+                        <input
+                          type="file"
+                          id="file"
+                          className="hidden"
+                          onChange={(e) => handleGetImage(e)}
+                        />
+                        <label htmlFor="file">
+                          <img
+                            className="w-full h-full object-contain"
+                            src={URL.createObjectURL(image[0])}
+                            alt="image"
+                          />
+                        </label>
+                      </div>
+                    )}
+                  </DialogBody>
+                  <DialogFooter>
+                    <Button
+                      variant="text"
+                      color="red"
+                      onClick={handleClose}
+                      className="mr-1"
+                    >
+                      <span>Hủy</span>
+                    </Button>
+                    <Button
+                      variant="gradient"
+                      color="green"
+                      onClick={handleReport}
+                    >
+                      <span>{loading ? <Spinner /> : "Báo cáo"}</span>
+                    </Button>
+                  </DialogFooter>
+                </Dialog>
+              </div>
+            )}
         </>
       ) : (
         <div className="w-full h-[400px] flex flex-col justify-center items-center">

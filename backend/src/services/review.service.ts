@@ -4,8 +4,7 @@ import { convertTimestampToDateTime, generateID } from "../constant/utils";
 
 const getReviews = (course_id: String): Promise<any> => {
   try {
-    const queryCheckExistCourse =
-      `SELECT review.review_id, review.content, review.title, review.createdAt, review.rating, review.course_id, user.full_name, user.username, user.avatar FROM review  join user on author_id = username where course_id = ? limit 3`;
+    const queryCheckExistCourse = `SELECT review.review_id, review.content, review.title, review.createdAt, review.rating, review.course_id, user.full_name, user.username, user.avatar FROM review  join user on author_id = username where course_id = ? order by createdAt desc limit 3`;
     return new Promise((resolve, reject) => {
       db.connectionDB.query(
         queryCheckExistCourse,
@@ -79,7 +78,7 @@ const addNewReview = (
 const getAllReviews = (course_id: String): Promise<any> => {
   try {
     const queryCheckExistCourse =
-      "SELECT * FROM `review` join `user` on `author_id` = `username` where `course_id` = ?";
+      "SELECT * FROM `review` join `user` on `author_id` = `username` where `course_id` = ? order by review.createdAt desc";
     return new Promise((resolve, reject) => {
       db.connectionDB.query(
         queryCheckExistCourse,
@@ -132,44 +131,54 @@ const getstatisticStar = (course_id: String): Promise<any> => {
               total5Start: 0,
             };
             if (Array.isArray(reviews)) {
-              for (const currentValue of reviews) {
-                if ("rating" in currentValue) {
-                  statistic.totalStar += currentValue?.rating;
-                  if (currentValue?.rating === 1) {
-                    statistic.total1Start += currentValue?.rating;
-                  } else if (currentValue?.rating === 2) {
-                    statistic.total2Start += currentValue?.rating;
-                  } else if (currentValue?.rating === 3) {
-                    statistic.total3Start += currentValue?.rating;
-                  } else if (currentValue?.rating === 4) {
-                    statistic.total4Start += currentValue?.rating;
-                  } else {
-                    statistic.total5Start += currentValue?.rating;
+              if (reviews.length === 0) {
+                resolve({
+                  status: true,
+                  data: statistic,
+                  message: "",
+                });
+              } else {
+                for (const currentValue of reviews) {
+                  if ("rating" in currentValue) {
+                    statistic.totalStar += currentValue?.rating;
+                    if (currentValue?.rating === 1) {
+                      statistic.total1Start += currentValue?.rating;
+                    } else if (currentValue?.rating === 2) {
+                      statistic.total2Start += currentValue?.rating;
+                    } else if (currentValue?.rating === 3) {
+                      statistic.total3Start += currentValue?.rating;
+                    } else if (currentValue?.rating === 4) {
+                      statistic.total4Start += currentValue?.rating;
+                    } else if (currentValue?.rating === 5) {
+                      statistic.total5Start += currentValue?.rating;
+                    } else {
+                      statistic.totalStar = 0;
+                    }
                   }
                 }
+                statistic.total1Start = Math.round(
+                  (statistic.total1Start / statistic.totalStar) * 100
+                );
+                statistic.total2Start = Math.round(
+                  (statistic.total2Start / statistic.totalStar) * 100
+                );
+                statistic.total3Start = Math.round(
+                  (statistic.total3Start / statistic.totalStar) * 100
+                );
+                statistic.total4Start = Math.round(
+                  (statistic.total4Start / statistic.totalStar) * 100
+                );
+                statistic.total5Start = Math.round(
+                  (statistic.total5Start / statistic.totalStar) * 100
+                );
+                statistic.totalStar = statistic.totalStar / reviews.length;
+                resolve({
+                  status: true,
+                  data: statistic,
+                  message: "",
+                });
               }
-              statistic.total1Start = Math.round(
-                (statistic.total1Start / statistic.totalStar) * 100
-              );
-              statistic.total2Start = Math.round(
-                (statistic.total2Start / statistic.totalStar) * 100
-              );
-              statistic.total3Start = Math.round(
-                (statistic.total3Start / statistic.totalStar) * 100
-              );
-              statistic.total4Start = Math.round(
-                (statistic.total4Start / statistic.totalStar) * 100
-              );
-              statistic.total5Start = Math.round(
-                (statistic.total5Start / statistic.totalStar) * 100
-              );
-              statistic.totalStar /= reviews.length;
             }
-            resolve({
-              status: true,
-              data: statistic,
-              message: "",
-            });
           }
         }
       );

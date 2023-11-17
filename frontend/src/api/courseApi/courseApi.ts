@@ -1,4 +1,4 @@
-import { IComment, addReview } from "@/types/type";
+import { addReview } from "@/types/type";
 import * as httpRequest from "../../utils/httpRequest";
 import { AxiosRequestHeaders } from "axios";
 
@@ -107,6 +107,17 @@ export const addTransactionInCourse = async (params: any) => {
       `/course/add-transaction-course`,
       params
     );
+    return res;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const addComplaint = async (params: FormData) => {
+  try {
+    const res = await httpRequest.post(`/course/complaint-course`, params, {
+      "Content-Type": "multipart/form-data",
+    } as AxiosRequestHeaders);
     return res;
   } catch (error) {
     return Promise.reject(error);
