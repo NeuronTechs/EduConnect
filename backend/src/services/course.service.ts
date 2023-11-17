@@ -544,15 +544,16 @@ const complaintCourse = (
   }
 };
 
-const getComplaintCourse = (): Promise<any> => {
+const getComplaintCourse = (page: number, pageSize: number): Promise<any> => {
   try {
-    const query = `SELECT complaint.complaint_id, complaint.title, complaint.content, complaint.createdAt ,complaint.student_id, complaint.course_id, course.title as course_name, user.full_name FROM educonnectdb.complaint join educonnectdb.student on complaint.student_id = student.student_id
+    const offset = (page - 1) * pageSize;
+    const countQuery = "SELECT COUNT(*) as total FROM complaint";
+    const query = `SELECT complaint.complaint_id, complaint.title, complaint.content, complaint.image, complaint.createdAt ,complaint.student_id, complaint.course_id, course.title as course_name, user.full_name, complaint.status FROM educonnectdb.complaint join educonnectdb.student on complaint.student_id = student.student_id
     join educonnectdb.course on course.course_id = complaint.course_id
-    join educonnectdb.user on user.username = student.username`;
+    join educonnectdb.user on user.username = student.username order by createdAt LIMIT ?, ?`;
     return new Promise((resolve, reject) => {
       db.connectionDB.query(
-        query,
-        [""],
+        countQuery,
         (error, complaints: RowDataPacket[], fields) => {
           if (error) {
             reject({
@@ -562,11 +563,118 @@ const getComplaintCourse = (): Promise<any> => {
             });
             return;
           }
-          resolve({
-            status: true,
-            data: complaints,
-            message: "Get complaint success",
-          });
+          db.connectionDB.query(
+            query,
+            [offset, pageSize],
+            (dataErr, result: RowDataPacket[]) => {
+              if (dataErr) {
+                reject({
+                  status: false,
+                  data: {},
+                  message: error,
+                });
+              } else {
+                resolve({
+                  status: true,
+                  data: result,
+                  totalPage: complaints[0],
+                  message: "Get complaint success",
+                });
+              }
+            }
+          );
+        }
+      );
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getComplaintDetail = (complaint_id: string): Promise<any> => {
+  try {
+    const query = `SELECT complaint.complaint_id, complaint.status, complaint.student_id, user.full_name, user.email, complaint.createdAt,
+    complaint.title as complaint_title, complaint.content, complaint.image as image_complaint, complaint.session_id, session.session_id, session.name as session_name,
+    lecture.lecture_id, lecture.name as lecture_name, lecture.type, lecture.source, complaint.course_id, course.title as course_title, course.teacher_id, course.image as image_course
+    FROM educonnectdb.complaint join educonnectdb.student on complaint.student_id = student.student_id
+    join educonnectdb.course on course.course_id = complaint.course_id
+    join educonnectdb.user on user.username = student.username 
+    join educonnectdb.session on session.session_id = complaint.session_id 
+    join educonnectdb.lecture on lecture.lecture_id = complaint.lecture_id
+    where complaint.complaint_id = ?`;
+    return new Promise((resolve, reject) => {
+      db.connectionDB.query(
+        query,
+        [complaint_id],
+        (error, complaint: RowDataPacket[], fields) => {
+          if (error) {
+            reject({
+              status: false,
+              data: {},
+              message: error,
+            });
+            return;
+          } else {
+            if (complaint.length === 0) {
+              resolve({
+                status: false,
+                data: {},
+                message: "Complaint not found",
+              });
+            } else {
+              resolve({
+                status: true,
+                data: complaint[0],
+                message: "Get complaint success",
+              });
+            }
+          }
+        }
+      );
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+const resolveComplaintCourse = (
+  complaint_id: string,
+  course_id: string
+): Promise<any> => {
+  try {
+    const query = `UPDATE educonnectdb.course SET status = "0" WHERE course_id = ?`;
+    return new Promise((resolve, reject) => {
+      db.connectionDB.query(
+        query,
+        [course_id],
+        (error, complaint: RowDataPacket[], fields) => {
+          if (error) {
+            reject({
+              status: false,
+              data: {},
+              message: error,
+            });
+            return;
+          } else {
+            db.connectionDB.query(
+              `UPDATE educonnectdb.complaint SET status = "1" WHERE complaint_id = ?`,
+              [complaint_id],
+              (dataErr, result: RowDataPacket[]) => {
+                if (dataErr) {
+                  reject({
+                    status: false,
+                    data: {},
+                    message: dataErr,
+                  });
+                  return;
+                }
+                resolve({
+                  status: true,
+                  message: "Resolve success",
+                });
+              }
+            );
+          }
         }
       );
     });
@@ -589,4 +697,6 @@ export default {
   addToCourse,
   complaintCourse,
   getComplaintCourse,
+  getComplaintDetail,
+  resolveComplaintCourse,
 };

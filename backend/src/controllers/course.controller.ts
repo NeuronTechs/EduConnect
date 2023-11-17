@@ -144,9 +144,10 @@ const addTransactionInCourse = async (req: Request, res: Response) => {
 const complaintCourse = async (req: Request, res: Response) => {
   const { body, files } = req;
   try {
-    const { content, course_id, student_id, title } = body;
+    const { content, course_id, student_id, title, session_id, lecture_id } =
+      body;
     const data = await CourseService.complaintCourse(
-      { content, course_id, student_id, title },
+      { content, course_id, student_id, title, session_id, lecture_id },
       files
     );
     res.status(data.status).json(data);
@@ -161,7 +162,40 @@ const complaintCourse = async (req: Request, res: Response) => {
 
 const getComplaintCourse = async (req: Request, res: Response) => {
   try {
-    const data = await CourseService.getComplaintCourse();
+    const { page } = req.query;
+    const pageSize = 10;
+    const data = await CourseService.getComplaintCourse(Number(page), pageSize);
+    res.status(200).json(data);
+  } catch (error) {
+    if (error) {
+      res.status(400).json({ error: error });
+    } else {
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+};
+
+const getComplaintDetail = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const data = await CourseService.getComplaintDetail(id as string);
+    res.status(200).json(data);
+  } catch (error) {
+    if (error) {
+      res.status(400).json({ error: error });
+    } else {
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+};
+
+const resolveComplaintCourse = async (req: Request, res: Response) => {
+  try {
+    const { course_id, complaint_id } = req.params;
+    const data = await CourseService.resolveComplaintCourse(
+      complaint_id,
+      course_id
+    );
     res.status(200).json(data);
   } catch (error) {
     if (error) {
@@ -186,4 +220,6 @@ export default {
   addTransactionInCourse,
   complaintCourse,
   getComplaintCourse,
+  getComplaintDetail,
+  resolveComplaintCourse,
 };
