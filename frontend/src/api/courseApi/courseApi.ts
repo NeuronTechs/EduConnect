@@ -13,9 +13,14 @@ export const getCourseByStudentId = async (params: string) => {
   }
 };
 
-export const getCourseDetails = async (params: string) => {
+export const getCourseDetails = async (params: {
+  id: string;
+  user_id: string;
+}) => {
   try {
-    const res = await httpRequest.get(`/course/course-details/${params}`);
+    const res = await httpRequest.get(
+      `/course/course-details/${params.id}/users/${params.user_id}`
+    );
 
     return res?.data?.data;
   } catch (error) {
@@ -49,6 +54,20 @@ export const CommentOfLecture = async (params: {
   try {
     const res = await httpRequest.get(
       `/comment/comments-by-lecture/${params.id}?page=${params.paging}`
+    );
+    return res?.data?.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const getReplyByCommentId = async (params: {
+  id: string;
+  paging: number;
+}) => {
+  try {
+    const res = await httpRequest.get(
+      `/comment/reply-by-comment/${params.id}?page=${params.paging}`
     );
     return res?.data?.data;
   } catch (error) {

@@ -6,7 +6,13 @@ import React, { useState } from "react";
 import { useDropzone, FileWithPath } from "react-dropzone";
 import { useDispatch, useSelector } from "react-redux";
 
-const WYSIWYGEditor = ({ currentTime }: { currentTime: number }) => {
+const WYSIWYGEditor = ({
+  currentTime,
+  Reply,
+}: {
+  currentTime: number;
+  Reply?: { comment_id: string | null | undefined };
+}) => {
   const { currentUser } = useSelector((state: SliceState) => state.authSlice);
   const { currentLecture } = useSelector(
     (state: SliceState) => state.courseSlice
@@ -29,19 +35,15 @@ const WYSIWYGEditor = ({ currentTime }: { currentTime: number }) => {
       formData.append("timestamp", currentTime.toString());
       formData.append("lecture_id", currentLecture.lecture_id);
       formData.append("username", currentUser.username);
+      formData.append("isReply", Reply ? "true" : "false");
+      if (Reply && Reply.comment_id) {
+        formData.append("reply_id", Reply.comment_id);
+      }
       files.forEach((file) => {
         formData.append("files", file);
       });
       console.log(formData);
       dispatch(CommentLecture(formData));
-      // const data: IComment = {
-      //   content: content,
-      //   timestamp: currentTime.toString(),
-      //   // resource: files,
-      //   lecture_id: currentLecture.lecture_id,
-      //   username: currentUser.username,
-      // };
-      // dispatch(CommentLecture(data));
       setContent("");
       setFiles([]);
     }
