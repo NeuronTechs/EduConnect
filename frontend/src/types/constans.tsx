@@ -5,8 +5,7 @@ export const dataCourseT: ICourseDetail[] = [
     course_id: "c123",
     title: "UI/UX Design",
     description: "UI/UX Design",
-    image:
-      "https://img.freepik.com/free-vector/3d-ux-design-website-icon-vector-isolated-white-background-3d-ux-ui-concept-cartoon-minimal-style-3d-icon-vector-render-illustration_726846-5949.jpg?w=740",
+    image: "",
     price: 1000000,
     study: "UI/UX Design",
     requirement: "UI/UX Design",
@@ -21,6 +20,7 @@ export const dataCourseT: ICourseDetail[] = [
     total_student: 100,
     teacher_id: "t123",
     topic_id: "topic123",
+    status: "nháp",
     teacher: {
       teacher_id: "t123",
       username: "Jionson whet",

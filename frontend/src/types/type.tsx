@@ -23,6 +23,7 @@ export interface ICourse {
   total_hours: number;
   createdAt: string;
   updatedAt: string;
+
   sessions?: ISession[] | null;
   teacher_avatar?: string;
   teacher_name?: string;
@@ -42,6 +43,7 @@ export interface ICourseDetail {
   language: string;
   discount: number;
   ranking?: number;
+  status?: string;
   total_ranking?: number;
   total_enrollment?: number;
   total_lecture?: number;

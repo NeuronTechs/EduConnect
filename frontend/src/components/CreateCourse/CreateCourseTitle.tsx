@@ -1,6 +1,6 @@
 import { AddressBook, Note } from "@phosphor-icons/react";
 import React, { useEffect } from "react";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   UseFormHandleSubmit,
@@ -49,6 +49,31 @@ const StepperCreateCourse = ({
   handlerStepperPrev: () => void;
   handleSubmit: UseFormHandleSubmit<IFormInput, undefined>;
 }) => {
+  const notifySuccess = () => {
+    toast.success("Tạo Khoá Học Thành Công", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
+  };
+  const notifyError = () => {
+    toast.error("Tạo khoá học thất bại, xin vui long thử lại sau.", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
+  };
+
   const navigate = useNavigate();
 
   const useCurrentUser = useSelector(
@@ -57,7 +82,7 @@ const StepperCreateCourse = ({
   );
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const onCreateCourse = async (data: IFormInput) => {
-    isLoading && setIsLoading(true);
+    setIsLoading(true);
     console.log(data);
     // call api create course
     const dataCourse = {
@@ -69,19 +94,17 @@ const StepperCreateCourse = ({
     };
     try {
       const res = await courseApi.createCourse(dataCourse);
-      console.log(res);
       navigate(configRouter.manageCourse);
-      toast.success("Create course successfully!");
+      notifySuccess();
     } catch (error) {
       console.log(error);
-      toast.error(
-        "An error occurred while creating the course. Please try again."
-      );
+      notifyError();
     }
-    !isLoading && setIsLoading(false);
+    setIsLoading(false);
   };
   return (
     <div className="p-2 space-y-2 h-[calc(100%-70px)] flex flex-col w-full ">
+      <ToastContainer />
       <div className="w-full px-4 py-2 flex items-center justify-center bg-white rounded-md">
         <ol className="flex items-center w-full text-sm font-medium text-center text-gray-500 dark:text-gray-400 sm:text-base">
           <li className="flex md:w-full items-center text-blue-600 dark:text-blue-500 sm:after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10 dark:after:border-gray-700">

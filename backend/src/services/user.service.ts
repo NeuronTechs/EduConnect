@@ -167,7 +167,7 @@ const updateInformation = async (
   data: informationDataUpdate
 ): Promise<informationResponse> => {
   try {
-    if (data?.role === "student") {
+    if (data?.role === "0") {
       const update: informationResponse = await updateUser(
         data?.username,
         data?.role,

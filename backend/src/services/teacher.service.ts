@@ -3,6 +3,14 @@ import db from "../config/connectDB";
 import { v4 as uuidv4 } from "uuid";
 import { title } from "process";
 
+// topic
+interface ITopic {
+  topic_id: number;
+  title: string;
+  description: string;
+  image?: string;
+  course_count?: number;
+}
 interface ITeacher {
   teacher_id: string;
   username: string;
@@ -25,7 +33,30 @@ interface ITeacher {
   linkFacebook?: string;
   linkYoutube?: string;
   linkLinkedin?: string;
+}
+// recommend course for user
+interface ICourse {
+  course_id: string;
+  title: string;
+  description: string;
+  image: string;
+  price: number;
+  study: string;
+  requirement: string;
+  level: string;
+  language: string;
+  discount: number;
+  ranking?: number;
+  total_ranking?: number;
+  total_enrollment?: number;
+  total_lecture?: number;
+  total_hour?: number;
+  total_student?: number;
+  teacher_id: string;
+  topic_id: string;
+  teacher?: ITeacher;
   user?: IUser;
+  topic?: ITopic;
 }
 interface IUser {
   username: string;
@@ -39,7 +70,13 @@ interface IUser {
   created_at?: string;
   updated_at?: string;
 }
-
+// course result call sql
+interface ICourseResult {
+  course: ICourse;
+  teacher: ITeacher;
+  user: IUser;
+  topic: ITopic;
+}
 interface ITeacherResult {
   teacher: ITeacher;
   user: IUser;
@@ -122,6 +159,7 @@ const createCourseTeacher = async (data: ICourseTeacher) => {
     return new Promise<dataResponse<ICourseTeacher>>((resolve, reject) => {
       db.connectionDB.query(
         { sql: query },
+
         (error, course: ICourseTeacher, fields) => {
           const dataTmp = {
             ...data,
@@ -147,8 +185,55 @@ const createCourseTeacher = async (data: ICourseTeacher) => {
     throw error;
   }
 };
+
+const getCourseTeacher = async (id: string, limit: number) => {
+  try {
+    const query = `SELECT course.*, teacher.*, user.*, topic.* FROM course JOIN teacher ON course.teacher_id = teacher.teacher_id JOIN user ON teacher.username = user.username JOIN topic ON course.topic_id = topic.topic_id WHERE teacher.teacher_id = ? LIMIT ?`;
+    return new Promise<dataListResponse<ICourse>>((resolve, reject) => {
+      db.connectionDB.query(
+        {
+          sql: query,
+          values: [`${id}`, limit ? limit : 10],
+          nestTables: true,
+        },
+        (error, results: ICourseResult[]) => {
+          if (error) {
+            reject({
+              status: 500,
+              data: [],
+              message: error,
+            });
+            return;
+          }
+          const dataResult = results.map((result) => {
+            return {
+              ...result?.course,
+              teacher: result.teacher,
+              user: result.user,
+              topic: result.topic,
+            };
+          });
+          if (error) {
+            reject({
+              status: 500,
+              data: [],
+              message: error,
+            });
+            return;
+          }
+          resolve({
+            status: 200,
+            data: dataResult as ICourse[],
+            message: "Get courses successfully",
+          });
+        }
+      );
+    });
+  } catch (error) {}
+};
 export default {
   getTeacherRecommendations,
   getTeacherDetail,
   createCourseTeacher,
+  getCourseTeacher,
 };

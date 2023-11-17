@@ -143,7 +143,11 @@ const addTransactionInCourse = async (req: Request, res: Response) => {
 const complaintCourse = async (req: Request, res: Response) => {
   const { body, files } = req;
   try {
-    const data = await CourseService.complaintCourse(body, files);
+    const { content, course_id, student_id, title } = body;
+    const data = await CourseService.complaintCourse(
+      { content, course_id, student_id, title },
+      files
+    );
     res.status(data.status).json(data);
   } catch (error) {
     if (error) {

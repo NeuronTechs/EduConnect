@@ -9,7 +9,7 @@ import { RootState } from "@/redux/store";
 import * as userRegisterInformationApi from "@/api/registerInfomationUser/registerInfomationUser";
 import ImageWithError from "../ImageWithError";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import { User } from "@/type";
 import { updateInformation } from "@/features/auth/authSlice";
 enum enumGender {
@@ -83,6 +83,10 @@ const StepperContainer = (): React.ReactElement => {
       if (res) {
         console.log(res);
         setIsLoad(false);
+        const user_id =
+          data.role === "0"
+            ? "st_" + currentUser.username
+            : "te_" + currentUser.username;
         dispatch(
           updateInformation({
             ...currentUser,
@@ -92,6 +96,7 @@ const StepperContainer = (): React.ReactElement => {
             avatar:
               "https://gravatar.com/avatar/0fafdda675b8bbc8d67cf4c51183ce45?s=400&d=robohash&r=x",
             phone: data.phone.toString(),
+            user_id: user_id,
           })
         );
         navigate("/");
@@ -107,6 +112,7 @@ const StepperContainer = (): React.ReactElement => {
 
   return (
     <div className="w-full px-16 py-4">
+      <ToastContainer />
       <StepperMain
         activeStep={activeStep}
         setIsLastStep={setIsLastStep}
@@ -288,14 +294,6 @@ const ContentStepper = (props: propsContentStepper): React.ReactElement => {
                     value={"female"}
                     name="gender"
                     label="Nữ"
-                    crossOrigin={undefined}
-                    color="blue"
-                  />
-                  <Radio
-                    {...props.register("gender")}
-                    value={"other"}
-                    name="gender"
-                    label="khác"
                     crossOrigin={undefined}
                     color="blue"
                   />

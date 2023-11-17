@@ -298,16 +298,16 @@ const getOverviewCourse = async (
 ): Promise<dataResponse<any>> => {
   try {
     const sql = `SELECT c.course_id ,c.title as course_name,c.description as course_description,s.session_id, s.name AS session_name, l.lecture_id, l.name AS lecture_name, l.description, l.source, l.type, l.duration, c.price, c.discount, c.study, c.requirement, c.level, c.language, c.image, tc.teacher_id, us.full_name, tc.educational_level, us.avatar, GROUP_CONCAT(DISTINCT ot.student_id) as student_id
-  FROM educonnectdb.Session s
-  JOIN educonnectdb.Lecture l ON s.session_id = l.session_id
-  JOIN educonnectdb.Course c ON s.course_id = c.course_id
-  JOIN educonnectdb.Teacher tc on c.teacher_id = tc.teacher_id
-  JOIN educonnectdb.user us on tc.username = us.username
-  JOIN educonnectdb.order_items ot on ot.course_id = c.course_id
-  WHERE s.course_id = ?
-  GROUP BY
-  c.course_id, c.title, c.description, s.session_id, s.name, l.lecture_id, l.name, l.description, l.source, l.type, l.duration, c.price, c.discount,c.study,c.requirement,c.level,c.language,c.image,tc.teacher_id,us.full_name,tc.educational_level,us.avatar
-  ORDER BY s.session_id, l.lecture_id;`;
+    FROM educonnectdb.session s
+    JOIN educonnectdb.lecture l ON s.session_id = l.session_id
+    JOIN educonnectdb.course c ON s.course_id = c.course_id
+    JOIN educonnectdb.teacher tc on c.teacher_id = tc.teacher_id
+    JOIN educonnectdb.user us on tc.username = us.username
+    LEFT JOIN educonnectdb.order_items ot on ot.course_id = c.course_id
+    WHERE s.course_id = ?
+    GROUP BY
+    c.course_id, c.title, c.description, s.session_id, s.name, l.lecture_id, l.name, l.description, l.source, l.type, l.duration, c.price, c.discount,c.study,c.requirement,c.level,c.language,c.image,tc.teacher_id,us.full_name,tc.educational_level,us.avatar
+    ORDER BY s.session_id, l.lecture_id;`;
 
     return new Promise<any>((resolve, reject) => {
       db.connectionDB.query(
@@ -525,9 +525,11 @@ const complaintCourse = (
         })
       );
     }
-    if (fileData) {
-      data.image = fileData;
-    }
+    // if (fileData) {
+    //   console.log(fileData);
+    //   data.image = fileData;
+    // }
+    data.image = fileData;
     const sql = `INSERT INTO complaint SET ?`;
     return new Promise<dataResponse<any>>((resolve, reject) => {
       db.connectionDB.query(sql, data, (err, result) => {
