@@ -2,6 +2,7 @@ import { dataListResponse, dataResponse } from "../constant/type";
 import db from "../config/connectDB";
 import { v4 as uuidv4 } from "uuid";
 import { title } from "process";
+import { RowDataPacket } from "mysql2";
 
 // topic
 interface ITopic {
@@ -81,6 +82,27 @@ interface ITeacherResult {
   teacher: ITeacher;
   user: IUser;
 }
+
+interface TransformedData {
+  teacher_id: string;
+  course: CourseOfTeacher[];
+}
+
+interface CourseOfTeacher {
+  course_id: string;
+  course_name: string;
+  student: StudentOfCourse[];
+}
+
+interface StudentOfCourse {
+  student_id: string;
+  username: string;
+  avatar: string;
+  address: string;
+  timeStart: string;
+  student_name: string;
+}
+
 // recommend teacher for user
 const getTeacherRecommendations = async (limit: string) => {
   try {
@@ -231,9 +253,102 @@ const getCourseTeacher = async (id: string, limit: number) => {
     });
   } catch (error) {}
 };
+
+const getStudentByTeacher = (teacher_id: string): Promise<any> => {
+  try {
+    const query = `SELECT 
+    c.course_id, c.title as course_name, t.teacher_id, s.student_id, s.username, 
+    u.full_name, u.avatar, u.address, o.createdAt
+    FROM 
+        course c
+    left JOIN 
+        teacher t ON c.teacher_id = t.teacher_id
+    left JOIN 
+        order_items o ON c.course_id = o.course_id
+    left JOIN 
+        student s ON o.student_id = s.student_id
+    left JOIN 
+        user u ON s.username = u.username
+    where t.teacher_id = ?`;
+    return new Promise((resolve, reject) => {
+      db.connectionDB.query(
+        query,
+        [teacher_id],
+        (error, result: RowDataPacket[], fields) => {
+          if (error) {
+            reject({
+              status: false,
+              data: {},
+              message: error,
+            });
+            return;
+          } else {
+            const transformedData: { [key: string]: TransformedData } = {};
+
+            // Lặp qua từng mục trong dữ liệu từ API
+            result.forEach((item) => {
+              const {
+                teacher_id,
+                course_id,
+                course_name,
+                student_id,
+                full_name,
+                avatar,
+                address,
+                createdAt,
+                username,
+              } = item;
+
+              // Nếu giáo viên chưa tồn tại trong đối tượng chuyển đổi, thêm vào
+              if (!transformedData["teacher_id"]) {
+                transformedData["teacher_id"] = { teacher_id, course: [] };
+              }
+
+              // Nếu khóa học chưa tồn tại trong mảng course, thêm vào
+              const courseIndex = transformedData[
+                "teacher_id"
+              ].course.findIndex((c) => c.course_id === course_id);
+              if (courseIndex === -1) {
+                transformedData["teacher_id"].course.push({
+                  course_id,
+                  course_name,
+                  student: [],
+                });
+              }
+
+              // Nếu sinh viên tồn tại, thêm vào mảng student của khóa học
+              if (student_id) {
+                transformedData["teacher_id"].course
+                  .find((c) => c.course_id === course_id)!
+                  .student.push({
+                    student_id,
+                    student_name: full_name,
+                    username,
+                    avatar,
+                    address,
+                    timeStart: createdAt,
+                  });
+              }
+            });
+
+            resolve({
+              status: true,
+              data: transformedData,
+              message: "Get student by teacher success",
+            });
+          }
+        }
+      );
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
 export default {
   getTeacherRecommendations,
   getTeacherDetail,
   createCourseTeacher,
   getCourseTeacher,
+  getStudentByTeacher,
 };

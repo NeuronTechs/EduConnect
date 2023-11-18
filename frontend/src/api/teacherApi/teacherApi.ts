@@ -22,3 +22,12 @@ export const getCourseTeacherApi = async (params: {
     return Promise.reject(error);
   }
 };
+
+export const getStudentByTeacher = async (teacher_id: string) => {
+  try {
+    const res = await httpRequest.get(`teachers/list-student/${teacher_id}`);
+    return res;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};

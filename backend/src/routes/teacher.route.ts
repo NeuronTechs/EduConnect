@@ -9,4 +9,5 @@ router
 router.route("/:teacherId").get(teacherController.getTeacherDetail);
 router.route("/courses").post(teacherController.createCourseTeacher);
 router.route("/:teacherId/courses").get(teacherController.getCourseTeacher);
+router.route("/list-student/:id").get(teacherController.getStudentByTeacher);
 export default router;
