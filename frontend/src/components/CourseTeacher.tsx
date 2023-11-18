@@ -110,9 +110,7 @@ const CourseTeacher = (props: IProps): React.ReactElement => {
           {/* button */}
           <div className="flex w-full justify-between ">
             <Link
-              to={
-                configRouter.manageCourse.slice(0, -2) + props.data.teacher_id
-              }
+              to={configRouter.manageCourse.slice(0, -3) + props.data.course_id}
             >
               <div className="flex items-center gap-2 text-gray-500 p-2 bg-gray-200 hover:bg-gray-300 rounded-md cursor-pointer">
                 <PencilSimple size={20} />
