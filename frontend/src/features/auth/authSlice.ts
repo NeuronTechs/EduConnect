@@ -43,7 +43,7 @@ export const signup = createAsyncThunk(
       username: params.username,
       password: params.password,
       email: params.email,
-      fullname: params.fullname,
+      full_name: params.full_name,
     });
     return res;
   }

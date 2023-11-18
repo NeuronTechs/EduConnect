@@ -19,6 +19,7 @@ export const configRouter = {
   manageCourse: "/teacher/manage/course/:id",
   // student
   myCourse: "/myCourse",
+  allTask: "/myCourse/allTask",
   learning: "/course/learn/:id",
   profile: "/profile",
   dashboardAdmin: "/admin/dashboard",
