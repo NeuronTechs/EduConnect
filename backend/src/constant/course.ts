@@ -40,16 +40,18 @@ export interface ICourseOverview {
   fullName: string;
   educational_level: string;
   avatar: string;
-  student_id: string,
+  student_id: string;
   sessions: ISession[];
 }
 
-export interface IComplaint{
-  complaint_id?: string,
-  student_id?: string,
-  course_id?: string,
-  title?: string,
-  content?: string,
-  image?: string | undefined,
-  createdAt?: string
+export interface IComplaint {
+  complaint_id?: string;
+  student_id?: string;
+  course_id?: string;
+  title?: string;
+  content?: string;
+  image?: string | undefined;
+  createdAt?: string;
+  session_id?: string;
+  lecture_id?: string;
 }

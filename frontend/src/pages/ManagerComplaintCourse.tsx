@@ -7,12 +7,32 @@ import {
   CardFooter,
   IconButton,
 } from "@material-tailwind/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CSVLink } from "react-csv";
-import { ArrowDown, Pencil } from "@phosphor-icons/react";
+import { ArrowDown, Eye } from "@phosphor-icons/react";
 import { useNavigate } from "react-router-dom";
+import * as adminApi from "../api/adminApi/adminApi";
 
-const TABLE_HEAD = ["ID", "Vấn đề", "Nội dung", "Hình ảnh", "Khóa học", ""];
+interface IComplaint {
+  complaint_id: string;
+  title: string;
+  content: string;
+  createdAt: string;
+  student_id: string;
+  course_id: string;
+  course_name: string;
+  full_name: string;
+  image: string;
+  status: string;
+}
+const TABLE_HEAD = [
+  "ID",
+  "Vấn đề",
+  "Nội dung",
+  "Hình ảnh",
+  "Khóa học",
+  "Trạng thái",
+];
 
 const headers = [
   { label: "ID", key: "id" },
@@ -22,66 +42,26 @@ const headers = [
   { label: "Khóa học", key: "course" },
 ];
 
-const TABLE_ROWS = [
-  {
-    id: "1",
-    title: "Có những từ ngữ thô tục",
-    problem: "Có những từ ngữ thô tục",
-    image:
-      "https://archiearchive.files.wordpress.com/2013/04/god-and-an-image-problem.jpg?w=500",
-    course: "Lập trình js cơ bản",
-  },
-  {
-    id: "2",
-    title: "Có những từ ngữ thô tục",
-    problem: "Có những từ ngữ thô tục",
-    image:
-      "https://archiearchive.files.wordpress.com/2013/04/god-and-an-image-problem.jpg?w=500",
-    course: "Lập trình js cơ bản",
-  },
-  {
-    id: "3",
-    title: "Đánh cắp bài giảng",
-    problem: "Có những từ ngữ thô tục",
-    image:
-      "https://archiearchive.files.wordpress.com/2013/04/god-and-an-image-problem.jpg?w=500",
-    course: "Lập trình js cơ bản",
-  },
-  {
-    id: "4",
-    title: "Đánh cắp bài giảng",
-    problem: "Có những từ ngữ thô tục",
-    image:
-      "https://archiearchive.files.wordpress.com/2013/04/god-and-an-image-problem.jpg?w=500",
-    course: "Lập trình js cơ bản",
-  },
-  {
-    id: "5",
-    title: "Đánh cắp ý tưởng",
-    problem: "Có những từ ngữ thô tục",
-    image:
-      "https://archiearchive.files.wordpress.com/2013/04/god-and-an-image-problem.jpg?w=500",
-    course: "Lập trình js cơ bản",
-  },
-  {
-    id: "6",
-    title: "Đánh cắp ý tưởng",
-    problem: "Có những từ ngữ thô tục",
-    image:
-      "https://archiearchive.files.wordpress.com/2013/04/god-and-an-image-problem.jpg?w=500",
-    course: "Lập trình js cơ bản",
-  },
-];
 const ManagerComplaintCourse = () => {
   const navigate = useNavigate();
   const [pageActive, setPageActive] = useState<number>(1);
+  const [complaints, setComplaints] = useState<IComplaint[]>([]);
+  const [totalPage, setTotalPage] = useState<number>(1);
+  useEffect(() => {
+    const getComplaint = async () => {
+      const data = await adminApi.getComplaintCourse(pageActive as number);
+      setComplaints(data?.data);
+      setTotalPage(data?.totalPage?.total);
+    };
+    getComplaint();
+  }, [pageActive]);
 
   const handlePageActive = (page: number) => {
     setPageActive(page);
   };
 
-  const handleRedirect = () => {
-    navigate("/admin/complaint/:id");
+  const handleRedirect = (id: string) => {
+    navigate(`/admin/complaint/${id}`);
   };
 
   return (
@@ -96,7 +76,7 @@ const ManagerComplaintCourse = () => {
             </div>
             <div className="flex w-full shrink-0 gap-2 md:w-max">
               <CSVLink
-                data={TABLE_ROWS}
+                data={complaints}
                 headers={headers}
                 filename={"report_complaint.csv"}
                 className="flex items-center gap-3 bg-gray-800 text-white px-3 py-2 rounded-md"
@@ -128,12 +108,11 @@ const ManagerComplaintCourse = () => {
               </tr>
             </thead>
             <tbody>
-              {TABLE_ROWS.map((report, index) => {
-                const isLast = index === TABLE_ROWS.length - 1;
+              {complaints.map((report, index) => {
+                const isLast = index === complaints.length - 1;
                 const classes = isLast ? "" : "border-b border-blue-gray-50";
-
                 return (
-                  <tr key={report.id}>
+                  <tr key={report?.complaint_id}>
                     <td className={classes}>
                       <div className="flex items-center gap-3">
                         <Typography
@@ -141,7 +120,7 @@ const ManagerComplaintCourse = () => {
                           color="blue-gray"
                           className="font-bold"
                         >
-                          {report.id}
+                          {report?.complaint_id}
                         </Typography>
                       </div>
                     </td>
@@ -160,14 +139,14 @@ const ManagerComplaintCourse = () => {
                         color="blue-gray"
                         className="font-normal"
                       >
-                        {report.problem}
+                        {report?.content}
                       </Typography>
                     </td>
                     <td className={classes}>
                       <div className="w-[100px] h-[100px]">
                         <img
                           className="w-[100px] h-[100px] object-contain"
-                          src={report.image}
+                          src={JSON.parse(report.image)[0]}
                           alt=""
                         />
                       </div>
@@ -178,13 +157,22 @@ const ManagerComplaintCourse = () => {
                         color="blue-gray"
                         className="font-normal"
                       >
-                        {report.course}
+                        {report?.course_name}
                       </Typography>
                     </td>
                     <td className={classes}>
-                      <button onClick={handleRedirect}>
-                        <Pencil size={32} weight="fill" />
-                      </button>
+                      <div className="flex justify-start items-center">
+                        <p className="mr-3">
+                          {report?.status === null || report?.status === "0"
+                            ? "Chưa xử lý"
+                            : "Đã xử lý"}
+                        </p>
+                        <button
+                          onClick={() => handleRedirect(report?.complaint_id)}
+                        >
+                          <Eye size={22} color="#3fc723" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );
@@ -196,48 +184,35 @@ const ManagerComplaintCourse = () => {
           <Button
             variant="outlined"
             size="sm"
-            className="mr-3"
+            className={`mr-3 ${pageActive === 1 ? "hidden" : "block"} `}
             onClick={() => {
               setPageActive((prev) => prev - 1);
             }}
           >
-            Previous
+            Trước
           </Button>
           <div className="flex items-center gap-2">
-            <IconButton
-              variant={pageActive === 1 ? "outlined" : "text"}
-              size="sm"
-              onClick={() => handlePageActive(1)}
-              className="hover:outline"
-            >
-              1
-            </IconButton>
-            <IconButton
-              variant={pageActive === 2 ? "outlined" : "text"}
-              size="sm"
-              onClick={() => handlePageActive(2)}
-              className="hover:outline"
-            >
-              2
-            </IconButton>
-            <IconButton
-              variant={pageActive === 3 ? "outlined" : "text"}
-              size="sm"
-              onClick={() => handlePageActive(3)}
-              className="hover:outline"
-            >
-              3
-            </IconButton>
+            {Array.from({ length: totalPage }, (_, index) => (
+              <IconButton
+                key={index + 1}
+                variant={pageActive === index + 1 ? "outlined" : "text"}
+                size="sm"
+                onClick={() => handlePageActive(index + 1)}
+                className="hover:outline"
+              >
+                {index + 1}
+              </IconButton>
+            ))}
           </div>
           <Button
             variant="outlined"
             size="sm"
-            className="ml-3"
+            className={`ml-3 ${pageActive === totalPage ? "hidden" : "block"} `}
             onClick={() => {
               setPageActive((prev) => prev + 1);
             }}
           >
-            Next
+            Tiếp
           </Button>
         </CardFooter>
       </Card>
