@@ -9,7 +9,7 @@ type props = {
 const Card = (props: props) => {
   const navigate = useNavigate();
   return (
-    <div className="rounded-2xl bg-white p-4  flex flex-col gap-4 shadow-sm w-[100%] h-[60vh] mb-5   ">
+    <div className="rounded-2xl bg-white p-4  flex flex-col gap-4 shadow-xl w-[95%] h-[55vh] mb-5   ">
       <div className="w-full">
         <img
           src={
@@ -21,7 +21,7 @@ const Card = (props: props) => {
           className="w-full h-[25vh] object-fill rounded-xl"
         />
       </div>
-      <div className="card-content px-1 space-y-2 mb-2">
+      <div className="card-content px-1 space-y-2 mb-2 h-[65%]">
         {/* content */}
         <div className="w-full flex justify-between">
           <div className="flex flex-col">
@@ -72,8 +72,23 @@ const Card = (props: props) => {
         ></div>
       </div>
       <div className="flex justify-between text-[13px] text-gray-500">
-        <p>Complete 60%</p>
-        <p>Days: 15/24</p>
+        <p>
+          Hoàn Thành
+          {"   " +
+            parseFloat(
+              (props.data.completed_lectures !== undefined &&
+              props.data.total_lectures !== undefined
+                ? props.data.completed_lectures / props.data.total_lectures
+                : 0) *
+                100 +
+                "%"
+            ).toFixed(2) +
+            "%"}
+        </p>
+        <p>
+          Bài học{" "}
+          {props.data.completed_lectures + " / " + props.data.total_lectures}{" "}
+        </p>
       </div>
     </div>
   );

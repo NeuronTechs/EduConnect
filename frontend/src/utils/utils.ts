@@ -15,12 +15,12 @@ export function getTimeAndDay(): string {
 
 export const calculateTimePassed = (time: number | string): string => {
   const unit: { [key: string]: number } = {
-    year: 12 * 30 * 7 * 24 * 60 * 60 * 1000,
-    month: 30 * 7 * 24 * 60 * 60 * 1000,
-    week: 7 * 24 * 60 * 60 * 1000,
-    day: 24 * 60 * 60 * 1000,
-    hour: 60 * 60 * 1000,
-    minute: 60 * 1000,
+    năm: 12 * 30 * 7 * 24 * 60 * 60 * 1000,
+    tháng: 30 * 7 * 24 * 60 * 60 * 1000,
+    tuần: 7 * 24 * 60 * 60 * 1000,
+    ngày: 24 * 60 * 60 * 1000,
+    giờ: 60 * 60 * 1000,
+    phút: 60 * 1000,
   };
   const date = new Date(typeof time === "string" ? parseInt(time) : time);
   const formattedDate = date.toLocaleString("en-US", {
@@ -33,7 +33,7 @@ export const calculateTimePassed = (time: number | string): string => {
     if (diff > unit[key]) {
       const value = unit[key];
       const timePassed = Math.floor(diff / value);
-      return `${timePassed} ${key}${timePassed > 1 ? "s" : ""}`;
+      return `${timePassed} ${key}${timePassed > 1 ? "" : ""}`;
     }
   }
   return "Just now";
