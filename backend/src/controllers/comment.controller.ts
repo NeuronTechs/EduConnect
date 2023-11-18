@@ -75,11 +75,26 @@ const getByLectureId = async (req: Request, res: Response) => {
     res.status(500).json({ error: error.message });
   }
 };
-
+const getReplyByCommentId = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { page } = req.query;
+  const pageSize = 3;
+  try {
+    const comments = await CommentService.getReplyByCommentId(
+      id,
+      Number(page),
+      Number(pageSize)
+    );
+    res.status(comments.status).json({ data: comments });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+};
 export default {
   create,
   getById,
   update,
   deleteById,
   getByLectureId,
+  getReplyByCommentId,
 };
