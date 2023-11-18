@@ -649,6 +649,7 @@ const resolveComplaintCourse = (
   course_id: string
 ): Promise<any> => {
   try {
+    console.log(complaint_id, course_id);
     const query = `UPDATE educonnectdb.course SET status = "0" WHERE course_id = ?`;
     return new Promise((resolve, reject) => {
       db.connectionDB.query(

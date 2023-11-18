@@ -345,3 +345,23 @@ export interface addReview {
   rating: number;
   title: string;
 }
+
+export interface TransformedData {
+  teacher_id: string;
+  course: CourseOfTeacher[];
+}
+
+export interface CourseOfTeacher {
+  course_id?: string;
+  course_name?: string;
+  student?: StudentOfCourse[];
+}
+
+export interface StudentOfCourse {
+  student_id?: string;
+  username?: string;
+  avatar?: string;
+  address?: string;
+  timeStart?: string;
+  student_name?: string;
+}

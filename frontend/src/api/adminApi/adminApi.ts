@@ -36,3 +36,26 @@ export const resolveComplaintCourse = async (
     return Promise.reject(error);
   }
 };
+
+export const getAllUser = async (page: number, txtSearch: string) => {
+  try {
+    const res = await httpRequest.get(
+      `/admin/list-user?page=${page}&txtSearch=${txtSearch}`
+    );
+    return res;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const setStatusUser = async (status: string, username: string) => {
+  try {
+    const res = await httpRequest.post(`/admin/set-status-user`, {
+      status,
+      username,
+    });
+    return res;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};

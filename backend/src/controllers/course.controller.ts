@@ -190,12 +190,13 @@ const getComplaintDetail = async (req: Request, res: Response) => {
 
 const resolveComplaintCourse = async (req: Request, res: Response) => {
   try {
-    const { course_id, complaint_id } = req.params;
+    const { course_id, complaint_id } = req.body;
     const data = await CourseService.resolveComplaintCourse(
       complaint_id,
       course_id
     );
-    res.status(200).json(data);
+    if (data.status) res.status(200).json(data);
+    else res.status(400).json(data);
   } catch (error) {
     if (error) {
       res.status(400).json({ error: error });
