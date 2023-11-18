@@ -5,8 +5,8 @@ const Task = () => {
   return (
     <div className="m-2">
       <div className="flex justify-between text-sm">
-        <strong> Upcoming Task</strong>
-        <button className="text-blue-gray-400 underline">See all</button>
+        <strong> Bài tập tới hạn</strong>
+        <button className="text-blue-gray-400 underline">Xem tất cả</button>
       </div>
       <div className="mt-6 flex text-sm space-x-4 mb-6">
         <div className="avatar-account ">

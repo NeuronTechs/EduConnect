@@ -6,7 +6,7 @@ export interface signupState {
   username: string;
   email: string;
   password: string;
-  fullname: string;
+  full_name: string;
 }
 export interface User {
   userId: string;

@@ -89,7 +89,7 @@ const Login = () => {
 
         <div>
           <div className="mb-5">
-            <h6>Email</h6>
+            <h6>Tên Đăng nhập</h6>
             <input
               type="text"
               value={username}

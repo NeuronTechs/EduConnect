@@ -96,6 +96,11 @@ const privateRoutes: IRouter[] = [
     layout: DefaultLayout,
   },
   {
+    path: configRouter.allTask,
+    component: lazy(() => import("../pages/MyCourse/AllTask")),
+    layout: DefaultLayout,
+  },
+  {
     path: configRouter.profile,
     component: lazy(() => import("../pages/Profile")),
     layout: DefaultLayout,

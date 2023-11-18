@@ -15,8 +15,8 @@ interface Props {
   currentTime: number;
 }
 const TabsInfo = ({ currentLecture, setCurrentTime, currentTime }: Props) => {
-  const [activeTab, setActiveTab] = React.useState("Overview");
-  const tabHeaders = ["Overview", "Reviews"];
+  const [activeTab, setActiveTab] = React.useState("Thảo Luận");
+  const tabHeaders = ["Tổng quan", "Thảo Luận"];
   return (
     <div className="w-[100wh] h-auto bg-white p-3  shadow-xl">
       <h1 className="text-xl font-bold">{currentLecture?.lecture_name}</h1>
@@ -54,11 +54,11 @@ const TabsInfo = ({ currentLecture, setCurrentTime, currentTime }: Props) => {
             })}
           </TabsHeader>
           <TabsBody>
-            <TabPanel key={"Overview"} value={"Overview"}>
+            <TabPanel key={"Tổng quan"} value={"Tổng quan"}>
               <Overview />
             </TabPanel>
 
-            <TabPanel key={"Reviews"} value={"Reviews"}>
+            <TabPanel key={"Thảo Luận"} value={"Thảo Luận"}>
               <Comments
                 setCurrentTime={setCurrentTime}
                 currentTime={currentTime}

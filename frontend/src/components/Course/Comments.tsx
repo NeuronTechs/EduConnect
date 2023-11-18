@@ -11,7 +11,6 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import WYSIWYGEditor from "./WYSIWYGEditor";
 import { calculateTimePassed } from "@/utils/utils";
-import { set } from "react-hook-form";
 interface commentProps {
   comment: IComment;
   setCurrentTime: React.Dispatch<React.SetStateAction<number>>;

@@ -36,7 +36,7 @@ const Course = () => {
         </div>
       ) : ( */}
       <div>
-        <Header />
+        <Header currentCourse={currentCourse.currentCourse} />
         <div className="flex flex-col w-full  gap-5 overflow-y-hidden">
           <div className=" grid grid-cols-4 space-x-2 overflow-y-hidden relative">
             <div className="col-span-4 lg:col-span-3 w-full h-auto lg:h-[100vh] lg:overflow-y-auto scrollbar-hide ">

@@ -110,7 +110,9 @@ const Modules = ({ currentCourse }: Props) => {
   return (
     <div className=" col-span-4 lg:col-span-1 h-auto p-4 py-2  sticky shadow-xl  border-l-2 border-gray-350 lg:h-[100vh] bg-white  lg:overflow-y-auto ">
       <h1 className="text-xl font-bold">Nội dung khóa học</h1>
-      <p className="text-xs text-gray-500">Lecture (15) / Total (5,5 hrs)</p>
+      <p className="text-xs text-gray-500">
+        Số lượng bài học (15) / Tổng thời gian (5,5 hrs)
+      </p>
       <div className="mt-5">
         {currentCourse?.sessions?.map((session) => {
           return (
