@@ -39,7 +39,7 @@ const Header = (currentCourse: { currentCourse: ICourse }) => {
           </svg>
           <div className="w-[0.5px] bg-gray-600 h-[50%]"></div>
           <p className="font-bold text-base">
-            {currentCourse.currentCourse.title}
+            {currentCourse?.currentCourse?.title}
           </p>
         </div>
         <div className="flex w-[34%] items-center  gap-3 text-sm">
