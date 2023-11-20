@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import assets from "../../assets";
 import {
   Menu,
   MenuHandler,
@@ -13,8 +12,7 @@ import { logoutThunk } from "@/features/auth/authSlice";
 import { resetStoreCart } from "@/features/cart/cartSlice";
 import { resetStoreCourseOverview } from "@/features/overviewCourse/courseOverviewSlice";
 import { resetCheckOutCart } from "@/features/checkoutCourse/checkoutSlice";
-import { User } from "@/type";
-import ImageWithError from "../ImageWithError";
+import { SliceState } from "@/types/type";
 
 const AccountHeader = () => {
   const nav = useNavigate();

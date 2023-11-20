@@ -10,7 +10,10 @@ export const configRouter = {
   myCourse: "/myCourse",
   learning: "/course/learn/:id",
   profile: "/profile",
-
+  myCourse: "/myCourse",
+  allTask: "/myCourse/allTask",
+  learning: "/course/learn/:id",
+  profile: "/profile",
   course: "/course/:id",
   coursesCart: "/courses-cart",
   checkout: "/checkout",
@@ -26,7 +29,6 @@ export const configRouter = {
   courseMyTeacher: "/teacher/course",
   createCourse: "/teacher/course/create",
   manageCourse: "/teacher/manage/course/:id",
-
   // admin
   dashboardAdmin: "/admin/dashboard",
   reportSale: "/admin/reportsale",

@@ -36,11 +36,11 @@ export const post = async (
 
 export const put = async (
   path: string,
-  data = {},
-  header: AxiosRequestHeaders
+  options = {},
+  header?: AxiosRequestHeaders
 ) => {
   try {
-    const response = await instance.put(path, data, {
+    const response = await instance.put(path, options, {
       headers: header,
     });
     return response.data;

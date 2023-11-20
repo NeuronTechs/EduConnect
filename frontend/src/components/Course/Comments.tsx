@@ -1,6 +1,7 @@
 import {
   CommentOfLecture,
   LoadMoreComment,
+  getReplyByCommentId,
 } from "@/features/course/courseSlice";
 import { AppDispatch } from "@/redux/store";
 import { IComment, SliceState } from "@/types/type";
@@ -19,15 +20,37 @@ interface commentProps {
 const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
   const [isReply, setIsReply] = useState(false);
   const [Positive, setPositive] = useState<boolean | null>(null);
+  const [page, setPage] = useState(1);
+  const [reply, setReply] = useState<IComment[]>([]);
+  const [showReply, setShowReply] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
   };
+  const loadReplyCommentHandler = async () => {
+    if (comment.comment_id) {
+      setShowReply(!showReply);
+      const res = await dispatch(
+        getReplyByCommentId({
+          id: comment.comment_id,
+          paging: page,
+        })
+      );
+      if (res.payload) {
+        const temp = res.payload as IComment[];
+        setReply([...reply, ...temp]);
+      }
+
+      setPage(page + 1);
+    }
+  };
+
   return (
-    <div className="flex flex-col items-start gap-4 my-5">
-      <div className="flex items-start ml-5  my-3 space-x-5">
+    <div className="flex flex-col w-full justify-center items-start  gap-4 my-5">
+      <div className="flex items-start w-full ml-5  my-3 space-x-5">
         <div className=" flex justify-center items-center">
           <Avatar
             loading="lazy"
@@ -40,8 +63,8 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
             alt="avatar"
           />
         </div>
-        <div className=" text-sm flex flex-col gap-2 bg-gray-200 py-3 px-5 rounded-lg">
-          <div className="flex items-center gap-2">
+        <div className=" text-sm flex  flex-col gap-2 bg-gray-200 py-3 px-5  rounded-lg">
+          <div className="flex items-center  gap-2">
             <h1 className="font-semibold mr-3 text-sm">{comment.username}</h1>
             <p className="opacity-80">
               {comment.createdAt && calculateTimePassed(comment.createdAt)}
@@ -128,20 +151,53 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
               <p
                 className="underline cursor-pointer"
                 onClick={() => setIsReply(!isReply)}
+                // onClick={loadReplyCommentHandler}
               >
                 Trả lời
               </p>
             </div>
           </div>
-          <div className="w-[100vh] mx-5 p-2">
+          <div className="w-[100vh] mx-5 p-2 py-0">
             {isReply && (
-              <WYSIWYGEditor currentTime={currentTime}></WYSIWYGEditor>
+              <div>
+                <WYSIWYGEditor
+                  currentTime={currentTime}
+                  Reply={{ comment_id: comment.comment_id }}
+                ></WYSIWYGEditor>
+              </div>
             )}
           </div>
+          {comment.isReply === "false" && showReply === true && (
+            <p
+              className="underline cursor-pointer"
+              onClick={loadReplyCommentHandler}
+            >
+              Ẩn phản hồi
+            </p>
+          )}
+          {showReply === true &&
+            reply.map((comment) => {
+              return (
+                <Comment
+                  comment={comment}
+                  currentTime={currentTime}
+                  setCurrentTime={setCurrentTime}
+                />
+              );
+            })}
+
+          {comment.isReply === "false" && showReply === false && (
+            <p
+              className="underline cursor-pointer"
+              onClick={loadReplyCommentHandler}
+            >
+              {comment.reply_count && comment.reply_count > 0
+                ? `Xem ${comment.reply_count} phản hồi`
+                : "Trả lời"}
+            </p>
+          )}
         </div>
       </div>
-
-      <div className="w-10/12  h-[1px] bg-gray-300"></div>
     </div>
   );
 };

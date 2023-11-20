@@ -1,14 +1,17 @@
+import { CourseState } from "@/features/course/courseSlice";
+import { ICourse } from "@/types/type";
 import { ArrowLeft, BookOpenText } from "@phosphor-icons/react";
-import React from "react";
+import React, { useState } from "react";
 import { CircularProgressbarWithChildren } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { useNavigate } from "react-router-dom";
-const Header = () => {
+const Header = (currentCourse: { currentCourse: ICourse }) => {
   const percentage = 66;
   const navigate = useNavigate();
+
   return (
     <div className="sticky top-0 z-10">
-      <div className="h-[10vh]  bg-gray-900 flex items-center p-2  text-white">
+      <div className="h-[9vh]  bg-gray-900 flex items-center p-2  text-white">
         <div className="flex w-full h-full gap-3 items-center">
           <ArrowLeft
             className="ml-5 cursor-pointer"
@@ -35,16 +38,18 @@ const Header = () => {
             </g>
           </svg>
           <div className="w-[0.5px] bg-gray-600 h-[50%]"></div>
-          <p className="font-bold text-base">Tên của khóa học</p>
+          <p className="font-bold text-base">
+            {currentCourse?.currentCourse?.title}
+          </p>
         </div>
         <div className="flex w-[34%] items-center  gap-3 text-sm">
           <div className="flex items-center gap-2">
             <BookOpenText size={20} />
             <p>Tiến độ khóa học</p>
           </div>
-          <div style={{ width: 45, height: 45 }}>
+          <div style={{ width: 35, height: 35 }}>
             <CircularProgressbarWithChildren value={percentage}>
-              <p>{percentage}%</p>
+              <p className="text-[5px]">{percentage}%</p>
             </CircularProgressbarWithChildren>
           </div>
           <p className="w-[]">1/69 bài học</p>

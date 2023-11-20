@@ -5,10 +5,15 @@ import AccountHeader from "./AccountHeader";
 import { List } from "@phosphor-icons/react";
 import React from "react";
 import CourseCart from "./CourseCart";
+import { useSelector } from "react-redux";
+import { SliceState } from "@/types/type";
 interface propsHeader {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const Header = (props: propsHeader): React.ReactElement => {
+  const currentUser = useSelector(
+    (state: SliceState) => state.authSlice.currentUser
+  );
   return (
     <div className="w-full h-[80px] bg-white shadow-sm flex items-center justify-between px-3 py-2 ">
       <div className="left flex space-x-3 items-center">
@@ -24,7 +29,7 @@ const Header = (props: propsHeader): React.ReactElement => {
       <div className="right flex gap-3 items-center">
         <NotificationHeader />
         {/* <MessageHeader /> */}
-        <CourseCart />
+        {currentUser?.role === "0" && <CourseCart />}
         <AccountHeader />
       </div>
     </div>

@@ -8,6 +8,9 @@ router.route("/create").post(courseController.create);
 router
   .route("/get-complaint-course")
   .get(middlewareController.verifyToken, courseController.getComplaintCourse);
+router
+  .route("/get-complaint-detail/:id")
+  .get(middlewareController.verifyToken, courseController.getComplaintDetail);
 router.route("/").get(courseController.getAll);
 router.route("/:id").get(courseController.getById);
 router.route("/:id").put(courseController.update);
@@ -19,7 +22,7 @@ router
   .route("/courses-by-student/:id")
   .get(courseController.getCourseByStudentId);
 router
-  .route("/course-details/:id")
+  .route("/course-details/:id/users/:user_id")
   .get(middlewareController.verifyToken, courseController.getCourseDetails);
 router
   .route("/overview-course/:id")
@@ -37,5 +40,12 @@ router
     middlewareController.verifyToken,
     uploadCloud.array("files"),
     courseController.complaintCourse
+  );
+
+router
+  .route("/resolve-complaint-course")
+  .post(
+    middlewareController.verifyToken,
+    courseController.resolveComplaintCourse
   );
 module.exports = router;

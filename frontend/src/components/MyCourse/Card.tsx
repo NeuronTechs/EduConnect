@@ -9,27 +9,31 @@ type props = {
 const Card = (props: props) => {
   const navigate = useNavigate();
   return (
-    <div className="rounded-2xl bg-white p-2  flex flex-col gap-4 shadow-sm w-[90%] h-[50vh] mb-5   ">
+    <div className="rounded-2xl bg-white p-4  flex flex-col gap-4 shadow-xl w-[95%] h-[55vh] mb-5   ">
       <div className="w-full">
         <img
-          src={props.data.image}
+          src={
+            props.data.image
+              ? props.data.image
+              : "https://foto.wuestenigel.com/wp-content/uploads/api/course-text-on-blackboard.jpeg"
+          }
           alt=""
-          className="w-full h-[25vh] object-fill rounded-2xl"
+          className="w-full h-[25vh] object-fill rounded-xl"
         />
       </div>
-      <div className="card-content px-1 space-y-2 mb-2">
+      <div className="card-content px-1 space-y-2 mb-2 h-[65%]">
         {/* content */}
         <div className="w-full flex justify-between">
           <div className="flex flex-col">
             <h5
-              className="text-[13p] font-bold text-black cursor-pointer"
+              className="text-[15px] font-bold text-black cursor-pointer"
               onClick={() => {
                 navigate("/course/learn/" + props.data.course_id);
               }}
             >
               {props.data.title}
             </h5>
-            <p className="text-xs font-normal text-gray-400">
+            <p className="text-sm font-normal text-gray-500 mt-2">
               {props.data.teacher_name}
             </p>
           </div>
@@ -42,7 +46,7 @@ const Card = (props: props) => {
           </div>
         </div>
       </div>
-      <div className="flex justify-between text-gray-500 leading-3 font-semibold">
+      <div className="flex justify-between text-gray-500 leading-3 text-base font-semibold">
         <div className="flex justify-center items-center">
           <Book size={15} className="mr-2" /> 1
         </div>
@@ -55,7 +59,7 @@ const Card = (props: props) => {
       </div>
       <div className="w-full bg-gray-300 rounded-lg h-1">
         <div
-          className="bg-gray-600 h-1 p-0.5 text-center text-[10px] font-light leading-none text-primary-100 rounded-lg"
+          className="bg-gray-600 h-1 p-0.5 text-center text-[15px] font-semibold leading-none text-primary-100 rounded-lg"
           style={{
             width:
               (props.data.completed_lectures !== undefined &&
@@ -67,9 +71,24 @@ const Card = (props: props) => {
           }}
         ></div>
       </div>
-      <div className="flex justify-between text-[11px] text-gray-500">
-        <h6>Complete 60%</h6>
-        <h6>Days: 15/24</h6>
+      <div className="flex justify-between text-[13px] text-gray-500">
+        <p>
+          Hoàn Thành
+          {"   " +
+            parseFloat(
+              (props.data.completed_lectures !== undefined &&
+              props.data.total_lectures !== undefined
+                ? props.data.completed_lectures / props.data.total_lectures
+                : 0) *
+                100 +
+                "%"
+            ).toFixed(2) +
+            "%"}
+        </p>
+        <p>
+          Bài học{" "}
+          {props.data.completed_lectures + " / " + props.data.total_lectures}{" "}
+        </p>
       </div>
     </div>
   );

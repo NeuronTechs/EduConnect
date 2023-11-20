@@ -13,6 +13,7 @@ router
   .route("/:teacherId/courses/:courseId")
   .get(teacherController.getCourseTeacherById);
 router.route("/:teacherId/courses").get(teacherController.getCourseTeacher);
+router.route("/list-student/:id").get(teacherController.getStudentByTeacher);
 router
   .route("/:teacherId/courses/:courseId")
   .put(uploadCloud.single("image"), teacherController.updateCourseTeacher);

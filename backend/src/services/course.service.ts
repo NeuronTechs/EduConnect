@@ -199,21 +199,28 @@ const getCourseDetails = async (
   l.type,
   l.duration,
   CASE 
-    WHEN sp.progress IS NULL THEN 'No'
-    ELSE 'Yes'
-  END AS has_watched
-FROM Session s
-JOIN Lecture l ON s.session_id = l.session_id
-JOIN Course c ON s.course_id = c.course_id
-LEFT JOIN student_progress sp ON sp.lecture_id = l.lecture_id AND sp.student_id = ?
-WHERE s.course_id = "15938"
-ORDER BY s.session_id, l.lecture_id;`;
+      WHEN sp.progress IS NULL THEN 'No'
+      ELSE sp.progress
+  END AS has_watched,
+  CEIL((SELECT COUNT(*) FROM comments WHERE lecture_id = l.lecture_id AND isReply="false") / 5) as comment_pages
+FROM 
+  Session s
+JOIN 
+  Lecture l ON s.session_id = l.session_id
+JOIN 
+  Course c ON s.course_id = c.course_id
+LEFT JOIN 
+  student_progress sp ON sp.lecture_id = l.lecture_id AND sp.student_id = ?
+WHERE 
+  s.course_id = ?
+ORDER BY 
+  s.session_id, l.lecture_id;`;
 
   // Execute the SQL query and return a Promise that resolves to the course details
   return new Promise<dataResponse<ICourseDetail>>((resolve, reject) => {
     db.connectionDB.query(
       sql,
-      [course_id, user_id],
+      [user_id, course_id],
       (err, result: RowDataPacket[]) => {
         if (err) {
           reject(err);
@@ -291,16 +298,16 @@ const getOverviewCourse = async (
 ): Promise<dataResponse<any>> => {
   try {
     const sql = `SELECT c.course_id ,c.title as course_name,c.description as course_description,s.session_id, s.name AS session_name, l.lecture_id, l.name AS lecture_name, l.description, l.source, l.type, l.duration, c.price, c.discount, c.study, c.requirement, c.level, c.language, c.image, tc.teacher_id, us.full_name, tc.educational_level, us.avatar, GROUP_CONCAT(DISTINCT ot.student_id) as student_id
-  FROM educonnectdb.Session s
-  JOIN educonnectdb.Lecture l ON s.session_id = l.session_id
-  JOIN educonnectdb.Course c ON s.course_id = c.course_id
-  JOIN educonnectdb.Teacher tc on c.teacher_id = tc.teacher_id
-  JOIN educonnectdb.user us on tc.username = us.username
-  JOIN educonnectdb.order_items ot on ot.course_id = c.course_id
-  WHERE s.course_id = ?
-  GROUP BY
-  c.course_id, c.title, c.description, s.session_id, s.name, l.lecture_id, l.name, l.description, l.source, l.type, l.duration, c.price, c.discount,c.study,c.requirement,c.level,c.language,c.image,tc.teacher_id,us.full_name,tc.educational_level,us.avatar
-  ORDER BY s.session_id, l.lecture_id;`;
+    FROM educonnectdb.session s
+    JOIN educonnectdb.lecture l ON s.session_id = l.session_id
+    JOIN educonnectdb.course c ON s.course_id = c.course_id
+    JOIN educonnectdb.teacher tc on c.teacher_id = tc.teacher_id
+    JOIN educonnectdb.user us on tc.username = us.username
+    LEFT JOIN educonnectdb.order_items ot on ot.course_id = c.course_id
+    WHERE s.course_id = ?
+    GROUP BY
+    c.course_id, c.title, c.description, s.session_id, s.name, l.lecture_id, l.name, l.description, l.source, l.type, l.duration, c.price, c.discount,c.study,c.requirement,c.level,c.language,c.image,tc.teacher_id,us.full_name,tc.educational_level,us.avatar
+    ORDER BY s.session_id, l.lecture_id;`;
 
     return new Promise<any>((resolve, reject) => {
       db.connectionDB.query(
@@ -518,9 +525,11 @@ const complaintCourse = (
         })
       );
     }
-    if (fileData) {
-      data.image = fileData;
-    }
+    // if (fileData) {
+    //   console.log(fileData);
+    //   data.image = fileData;
+    // }
+    data.image = fileData;
     const sql = `INSERT INTO complaint SET ?`;
     return new Promise<dataResponse<any>>((resolve, reject) => {
       db.connectionDB.query(sql, data, (err, result) => {
@@ -542,15 +551,16 @@ const complaintCourse = (
   }
 };
 
-const getComplaintCourse = (): Promise<any> => {
+const getComplaintCourse = (page: number, pageSize: number): Promise<any> => {
   try {
-    const query = `SELECT complaint.complaint_id, complaint.title, complaint.content, complaint.createdAt ,complaint.student_id, complaint.course_id, course.title as course_name, user.full_name FROM educonnectdb.complaint join educonnectdb.student on complaint.student_id = student.student_id
+    const offset = (page - 1) * pageSize;
+    const countQuery = "SELECT COUNT(*) as total FROM complaint";
+    const query = `SELECT complaint.complaint_id, complaint.title, complaint.content, complaint.image, complaint.createdAt ,complaint.student_id, complaint.course_id, course.title as course_name, user.full_name, complaint.status FROM educonnectdb.complaint join educonnectdb.student on complaint.student_id = student.student_id
     join educonnectdb.course on course.course_id = complaint.course_id
-    join educonnectdb.user on user.username = student.username`;
+    join educonnectdb.user on user.username = student.username order by createdAt LIMIT ?, ?`;
     return new Promise((resolve, reject) => {
       db.connectionDB.query(
-        query,
-        [""],
+        countQuery,
         (error, complaints: RowDataPacket[], fields) => {
           if (error) {
             reject({
@@ -560,11 +570,119 @@ const getComplaintCourse = (): Promise<any> => {
             });
             return;
           }
-          resolve({
-            status: true,
-            data: complaints,
-            message: "Get complaint success",
-          });
+          db.connectionDB.query(
+            query,
+            [offset, pageSize],
+            (dataErr, result: RowDataPacket[]) => {
+              if (dataErr) {
+                reject({
+                  status: false,
+                  data: {},
+                  message: error,
+                });
+              } else {
+                resolve({
+                  status: true,
+                  data: result,
+                  totalPage: complaints[0],
+                  message: "Get complaint success",
+                });
+              }
+            }
+          );
+        }
+      );
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getComplaintDetail = (complaint_id: string): Promise<any> => {
+  try {
+    const query = `SELECT complaint.complaint_id, complaint.status, complaint.student_id, user.full_name, user.email, complaint.createdAt,
+    complaint.title as complaint_title, complaint.content, complaint.image as image_complaint, complaint.session_id, session.session_id, session.name as session_name,
+    lecture.lecture_id, lecture.name as lecture_name, lecture.type, lecture.source, complaint.course_id, course.title as course_title, course.teacher_id, course.image as image_course
+    FROM educonnectdb.complaint join educonnectdb.student on complaint.student_id = student.student_id
+    join educonnectdb.course on course.course_id = complaint.course_id
+    join educonnectdb.user on user.username = student.username 
+    join educonnectdb.session on session.session_id = complaint.session_id 
+    join educonnectdb.lecture on lecture.lecture_id = complaint.lecture_id
+    where complaint.complaint_id = ?`;
+    return new Promise((resolve, reject) => {
+      db.connectionDB.query(
+        query,
+        [complaint_id],
+        (error, complaint: RowDataPacket[], fields) => {
+          if (error) {
+            reject({
+              status: false,
+              data: {},
+              message: error,
+            });
+            return;
+          } else {
+            if (complaint.length === 0) {
+              resolve({
+                status: false,
+                data: {},
+                message: "Complaint not found",
+              });
+            } else {
+              resolve({
+                status: true,
+                data: complaint[0],
+                message: "Get complaint success",
+              });
+            }
+          }
+        }
+      );
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+const resolveComplaintCourse = (
+  complaint_id: string,
+  course_id: string
+): Promise<any> => {
+  try {
+    console.log(complaint_id, course_id);
+    const query = `UPDATE educonnectdb.course SET status = "0" WHERE course_id = ?`;
+    return new Promise((resolve, reject) => {
+      db.connectionDB.query(
+        query,
+        [course_id],
+        (error, complaint: RowDataPacket[], fields) => {
+          if (error) {
+            reject({
+              status: false,
+              data: {},
+              message: error,
+            });
+            return;
+          } else {
+            db.connectionDB.query(
+              `UPDATE educonnectdb.complaint SET status = "1" WHERE complaint_id = ?`,
+              [complaint_id],
+              (dataErr, result: RowDataPacket[]) => {
+                if (dataErr) {
+                  reject({
+                    status: false,
+                    data: {},
+                    message: dataErr,
+                  });
+                  return;
+                }
+                resolve({
+                  status: true,
+                  message: "Resolve success",
+                });
+              }
+            );
+          }
         }
       );
     });
@@ -587,4 +705,6 @@ export default {
   addToCourse,
   complaintCourse,
   getComplaintCourse,
+  getComplaintDetail,
+  resolveComplaintCourse,
 };

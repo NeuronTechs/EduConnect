@@ -119,7 +119,9 @@ export interface IComment {
       }[]
     | null;
   timestamp: string;
+  isReply?: string;
   avatar?: string | null;
+  reply_count?: number;
 }
 export interface ISession {
   session_id: string;
@@ -133,10 +135,12 @@ export interface ILecture {
   lecture_name: string;
   description: string;
   source: string;
+  course_id: string;
   session_id: string;
   type: string;
   comments: IComment[] | null;
   duration: string;
+  has_watched?: string;
 }
 
 export interface IConventionChat {
@@ -203,6 +207,14 @@ export interface ILesson {
   totalReview: number;
   createdAt: Date;
   updateAt: Date;
+}
+
+export interface IStudentProgress {
+  student_id: string;
+  course_id: string;
+  session_id: string;
+  lecture_id: string;
+  progress: number;
 }
 
 export interface IDiscuss {
@@ -337,4 +349,24 @@ export interface addReview {
   author_id: string;
   rating: number;
   title: string;
+}
+
+export interface TransformedData {
+  teacher_id: string;
+  course: CourseOfTeacher[];
+}
+
+export interface CourseOfTeacher {
+  course_id?: string;
+  course_name?: string;
+  student?: StudentOfCourse[];
+}
+
+export interface StudentOfCourse {
+  student_id?: string;
+  username?: string;
+  avatar?: string;
+  address?: string;
+  timeStart?: string;
+  student_name?: string;
 }

@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { login } from "../features/auth/authSlice";
 import { Auth } from "../type";
 import { AppDispatch } from "../redux/store";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   Books,
@@ -89,7 +89,7 @@ const Login = () => {
 
         <div>
           <div className="mb-5">
-            <h6>Email</h6>
+            <h6>Tên Đăng nhập</h6>
             <input
               type="text"
               value={username}
@@ -156,7 +156,6 @@ const Login = () => {
               </button>
             </div>
           </div>
-          <ToastContainer />
         </div>
       </div>
     </div>
