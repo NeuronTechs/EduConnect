@@ -4,8 +4,13 @@ import CardThree from "@/components/DashboardAdmin/CardThree";
 import CardTwo from "@/components/DashboardAdmin/CardTwo";
 import TableStatisticTopTeacher from "@/components/DashboardAdmin/TableStatisticTopTeacher";
 import { configRouter } from "@/configs/router";
+import { getTransactionReport } from "@/features/admin/adminSlice";
+import { AppDispatch } from "@/redux/store";
+import { ITransactionReport } from "@/types/type";
 import { formatCurrency } from "@/utils/const";
 import { Files } from "@phosphor-icons/react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   LineChart,
@@ -19,20 +24,24 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const data = [
-  { name: "Apr", uv: parseInt(formatCurrency(50)) },
-  { name: "Feb", uv: parseInt(formatCurrency(100)) },
-  { name: "Mar", uv: parseInt(formatCurrency(150)) },
-  { name: "Apr", uv: parseInt(formatCurrency(200)) },
-  { name: "May", uv: parseInt(formatCurrency(550)) },
-  { name: "Jun", uv: parseInt(formatCurrency(300)) },
-  { name: "Jul", uv: parseInt(formatCurrency(350)) },
-  { name: "Aug", uv: parseInt(formatCurrency(400)) },
-  { name: "Sep", uv: parseInt(formatCurrency(350)) },
-];
+// const data = [
+//   { name: "Apr", uv: parseInt(formatCurrency(50)) },
+//   { name: "Feb", uv: parseInt(formatCurrency(100)) },
+//   { name: "Mar", uv: parseInt(formatCurrency(150)) },
+//   { name: "Apr", uv: parseInt(formatCurrency(200)) },
+//   { name: "May", uv: parseInt(formatCurrency(550)) },
+//   { name: "Jun", uv: parseInt(formatCurrency(300)) },
+//   { name: "Jul", uv: parseInt(formatCurrency(350)) },
+//   { name: "Aug", uv: parseInt(formatCurrency(400)) },
+//   { name: "Sep", uv: parseInt(formatCurrency(350)) },
+// ];
 
 const DashboardAdmin = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const nav = useNavigate();
+  const [dataRevenue, setDataRevenue] = useState([]);
+  const [dataStudent, setDataStudent] = useState([]);
+
   const handleRedirectReportSales = () => {
     nav(configRouter.reportSale);
   };
@@ -40,6 +49,29 @@ const DashboardAdmin = () => {
   const handleRedirectReportMember = () => {
     nav(configRouter.reportMember);
   };
+
+  const getData = async () => {
+    const res = await dispatch(getTransactionReport());
+    const array = res.payload.data.map((item: ITransactionReport) => {
+      return {
+        name: item.month,
+        uv: formatCurrency(item.revenue),
+      };
+    });
+    const array2 = res.payload.data.map((item: ITransactionReport) => {
+      return {
+        name: item.month,
+        uv: item.total_student,
+      };
+    });
+    setDataStudent(array2.reverse());
+    setDataRevenue(array.reverse());
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <div className="w-full h-full">
       {/* statistic */}
@@ -72,7 +104,7 @@ const DashboardAdmin = () => {
           <div className="w-full h-[350px] mt-5">
             <ResponsiveContainer width="100%" height={350}>
               <LineChart
-                data={data}
+                data={dataRevenue}
                 margin={{ top: 0, right: 20, left: 0, bottom: 0 }}
               >
                 <Line type="monotone" dataKey="uv" stroke="#8884d8" />
@@ -102,7 +134,7 @@ const DashboardAdmin = () => {
           </div>
           <div className="w-full h-[350px] mt-5">
             <ResponsiveContainer width="100%" height={350}>
-              <BarChart data={data}>
+              <BarChart data={dataStudent}>
                 <XAxis dataKey="name" stroke="#8884d8" interval={0} />
                 <YAxis />
                 <Tooltip />

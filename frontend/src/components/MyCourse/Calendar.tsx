@@ -10,7 +10,6 @@ function Calendar() {
   useEffect(() => {
     let firstDay = new Date(year, month, 1).getDay();
     if (firstDay === 0) firstDay = 7;
-    console.log(firstDay);
     const array = [];
     let items = [];
     for (let index = 0; index < firstDay - 1; index++) {
