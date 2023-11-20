@@ -12,7 +12,9 @@ db.connectionDB.connect((err) => {
   }
 
   console.log("Connected to the database.");
+
   const app = express();
+
   const port = 3000;
   app.use(express.json());
   app.use(

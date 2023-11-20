@@ -46,7 +46,7 @@ const publicRoutes: IRouter[] = [
     path: configRouter.registerInformation,
     component: lazy(() => import("../pages/RegisterInformation")),
     layout: BlankLayout,
-    role: null,
+    role: "null",
   },
   // user
   {

@@ -93,7 +93,8 @@ const StepperCreateCourse = ({
       teacher_id: useCurrentUser.user_id,
     };
     try {
-      const res = await courseApi.createCourse(dataCourse);
+      await courseApi.createCourse(dataCourse);
+
       navigate(configRouter.manageCourse);
       notifySuccess();
     } catch (error) {

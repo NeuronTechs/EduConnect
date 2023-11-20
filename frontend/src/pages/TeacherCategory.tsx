@@ -9,24 +9,40 @@ const TeacherCategory = (): ReactElement => {
   const [data, setData] = React.useState<ITeacher>();
   React.useEffect(() => {
     setData({
-      id: "1",
-      name: "Jose Portilla",
-      avatar: "https://img-c.udemycdn.com/user/200_H/6456344_6e1d_2.jpg",
-      position: "Trưởng phòng Khoa học dữ liệu tại Pierian Training",
-      school: "Đại học Santa Clara",
-      totalStudent: 3548718,
-      scoreReview: 4.5,
-      totalReview: 3486845,
+      teacher_id: "t123",
+      username: "Jionson whet",
       introduce:
-        "Jose Marcial Portilla có bằng Cử nhân và Thạc sĩ Kỹ thuật Cơ khí củaĐại học Santa Clara và có nhiều năm kinh nghiệm làm giảng viên và huấnluyện viên chuyên nghiệp về Khoa học Dữ liệu, Học máy và Lập trìnhPython. Ông có các ấn phẩm và bằng sáng chế trong nhiều lĩnh vực khácnhau như vi lỏng, khoa học vật liệu và khoa học dữ liệu. Trong suốt sựnghiệp của mình, anh ấy đã phát triển bộ kỹ năng phân tích dữ liệu vàanh ấy hy vọng sẽ sử dụng kinh nghiệm giảng dạy và khoa học dữ liệucủa mình để giúp những người khác tìm hiểu sức mạnh của lập trình, khảnăng phân tích dữ liệu và các kỹ năng cần thiết để trình bày dữ liệutrực quan rõ ràng và đẹp mắt. Hiện tại, anh ấy làm Trưởng phòng Khoahọc Dữ liệu cho Đào tạo Pierian và cung cấp các khóa đào tạo trực tiếpvề khoa học dữ liệu và lập trình python cho nhân viên làm việc tại cáccông ty hàng đầu, bao gồm General Electric, Cigna, SalesForce,Starbucks, McKinsey và nhiều công ty khác. Vui lòng kiểm tra liên kết trang web để tìm hiểu thêm thông tin về các dịch vụ đào tạo.",
-      linkWeb: "https://www.pieriandata.com/",
-      linkFacebook: "https://www.facebook.com/",
-      linkYoutube: "https://www.youtube.com/",
-      linkLinkedin: "https://www.linkedin.com/",
-      subject: "Khoa học dữ liệu",
-      totalCourse: 10,
-      email: "abc@gmail.com",
-      phone: "09689301343",
+        "I am a professional UI/UX designer with 10 years of experience.",
+      subject: "Ui/UX thiết kế",
+      educational_level: "12",
+      email: "tu21591@gmail.com",
+      phone: "123-456-7890",
+      avatar: "fallback",
+      course: "UI/UX Design",
+      major: "IT",
+      school: "HCMUTE",
+      address_school: "HCM",
+      amount: 100,
+      totalStudent: 100,
+      scoreReview: 4.5,
+      totalReview: 100,
+      totalCourse: 100,
+      linkWeb: "https://jionsonwhet.com",
+      linkFacebook: "",
+      linkYoutube: "",
+      linkLinkedin: "",
+      user: {
+        username: "tu21591",
+        full_name: "Nguyễn Văn Tú",
+        email: "",
+        avatar: "",
+        phone: "",
+        role: "student",
+        birthday: "",
+        address: "",
+        created_at: "",
+        updated_at: "",
+      },
     }); // get data from api
   }, []);
 
@@ -40,7 +56,7 @@ const TeacherCategory = (): ReactElement => {
           <TeacherInformation data={data} />
         )}
 
-        <TabsTeacherCategory idTeacher={data?.id} />
+        <TabsTeacherCategory idTeacher={data?.teacher_id} />
         {/* tab course review student */}
       </div>
     </PageTransition>

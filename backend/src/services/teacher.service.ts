@@ -47,6 +47,8 @@ interface ICourse {
   language: string;
   discount: number;
   ranking?: number;
+  status?: string;
+  show?: string;
   total_ranking?: number;
   total_enrollment?: number;
   total_lecture?: number;
@@ -57,6 +59,8 @@ interface ICourse {
   teacher?: ITeacher;
   user?: IUser;
   topic?: ITopic;
+  created_at?: string;
+  updated_at?: string;
 }
 interface IUser {
   username: string;
@@ -90,6 +94,7 @@ const getTeacherRecommendations = async (limit: string) => {
     return new Promise<dataListResponse<ITeacher>>((resolve, reject) => {
       db.connectionDB.query(
         { sql: query, nestTables: true },
+
         (error, course: ITeacherResult[], fields) => {
           if (error) {
             reject({
@@ -231,9 +236,43 @@ const getCourseTeacher = async (id: string, limit: number) => {
     });
   } catch (error) {}
 };
+const updateCourseTeacher = async (id: string, data: ICourse) => {
+  console.log(data);
+  try {
+    const query = `UPDATE course SET teacher_id='${data.teacher_id}', title = '${data.title}', description='${data.description}', image='${data.image}', price='${data.price}', topic_id = '${data.topic_id}', discount='${data.discount}', study='${data.study}',  level = '${data.level}', requirement='${data.requirement}', language='${data.language}', show='${data.show}', create_at='${data.created_at}', update_at='${data.updated_at}' WHERE course_id = '${id}';`;
+    return new Promise<dataResponse<ICourse>>((resolve, reject) => {
+      db.connectionDB.query(
+        { sql: query },
+
+        (error, course: ICourse, fields) => {
+          const dataTmp = {
+            ...data,
+            course_id: id,
+          };
+          if (error) {
+            reject({
+              status: 500,
+              data: [],
+              message: error,
+            });
+            return;
+          }
+          resolve({
+            status: 201,
+            data: dataTmp as ICourse,
+            message: "Get teacher successfully",
+          });
+        }
+      );
+    });
+  } catch (error) {
+    throw error;
+  }
+};
 export default {
   getTeacherRecommendations,
   getTeacherDetail,
   createCourseTeacher,
   getCourseTeacher,
+  updateCourseTeacher,
 };

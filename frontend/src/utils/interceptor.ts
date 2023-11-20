@@ -52,14 +52,15 @@ export const setupInterceptor = (store: Store, dispatch: AppDispatch): void => {
   //           isRefreshing = true;
   refreshPromise = null;
   isRefreshing = false;
-
   // handle request call aceess token
   httpRequest.default.interceptors.request.use(
     async (config) => {
       if (config.url?.includes("user/refreshToken")) {
         return config;
       }
-
+      if (config.url?.includes("user/login")) {
+        return config;
+      }
       if (config.url?.includes("user/logout")) {
         return config;
       }
@@ -77,30 +78,22 @@ export const setupInterceptor = (store: Store, dispatch: AppDispatch): void => {
       }
 
       const user: User = store.getState().authSlice?.currentUser;
-
       // store.dispatch(refetchTokenStore(accessToken));
       if (user?.accessToken) {
         const accessToken: IAccessToken = jwtDecode(user?.accessToken);
         if (accessToken?.exp < getTimeNow()) {
           if (!isRefreshing) {
             isRefreshing = true;
-            try {
-              if (!refreshPromise) {
-                refreshPromise = refetchToken();
-              }
-              const data = await refreshPromise;
-              console.log(data);
-              if (data) {
-                const dataTemplate: User = {
-                  ...user,
-                  accessToken: data.accessToken,
-                };
-                dispatch(refetchTokenStore(dataTemplate));
-                config.headers.Authorization = "Bearer " + data.accessToken;
-              }
-            } catch (error) {
-              console.log(error);
+            if (!refreshPromise) {
+              refreshPromise = refetchToken();
             }
+            const data = await refreshPromise;
+            const dataTemplate: User = {
+              ...user,
+              accessToken: data.accessToken,
+            };
+            dispatch(refetchTokenStore(dataTemplate));
+            config.headers.Authorization = "Bearer " + data.accessToken;
             isRefreshing = false;
             refreshPromise = null;
             return config;
@@ -110,27 +103,21 @@ export const setupInterceptor = (store: Store, dispatch: AppDispatch): void => {
       } else {
         if (!isRefreshing) {
           isRefreshing = true;
-          try {
-            if (!refreshPromise) {
-              refreshPromise = refetchToken();
-            }
-            const data = await refreshPromise;
-            if (data) {
-              const dataTemplate: User = {
-                ...user,
-                accessToken: data.accessToken,
-              };
-              store.dispatch(refetchTokenStore(dataTemplate));
-              config.headers.Authorization = "Bearer " + data.accessToken;
-            }
-          } catch (error) {
-            Promise.reject(error);
+          if (!refreshPromise) {
+            refreshPromise = refetchToken();
           }
-          isRefreshing = false;
-          refreshPromise = null;
+          const data = await refreshPromise;
+          const dataTemplate: User = {
+            ...user,
+            accessToken: data.accessToken,
+          };
+          store.dispatch(refetchTokenStore(dataTemplate));
+          config.headers.Authorization = "Bearer " + data.accessToken;
         }
       }
 
+      isRefreshing = false;
+      refreshPromise = null;
       return config;
     },
     (error: AxiosError): Promise<AxiosError> => {

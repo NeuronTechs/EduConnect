@@ -1,10 +1,11 @@
-import { ILessonInfo, ISectionInfo } from "@/types/type";
+import { ICourseDetail, ILessonInfo, ISectionInfo } from "@/types/type";
 import React from "react";
 
 interface ICurriculum {
   lessons: ILessonInfo[];
   sections: ISectionInfo[];
 }
+
 const dataCurriculum: ICurriculum = {
   lessons: [],
   sections: [
@@ -102,8 +103,10 @@ const dataCurriculum: ICurriculum = {
 };
 
 export interface ICreateCourseContext {
+  dataDescription: ICourseDetail | undefined;
   dataSection: ISectionInfo[];
   selectLesson: ILessonInfo | undefined;
+  handleSetDataDescription: (data: ICourseDetail) => void;
   setDataSection: React.Dispatch<React.SetStateAction<ISectionInfo[]>>;
   handleAddNewSection: () => void;
   handleDeleteSection: (id: string) => void; // add handleDeleteSection property
@@ -116,8 +119,10 @@ export interface ICreateCourseContext {
 }
 
 export const CreateCourseContext = React.createContext<ICreateCourseContext>({
+  dataDescription: undefined,
   dataSection: [],
   selectLesson: undefined,
+  handleSetDataDescription: () => {},
   setDataSection: () => {},
   handleAddNewSection: () => {},
   handleDeleteSection: () => {},
@@ -132,12 +137,19 @@ export const CreateCourseContext = React.createContext<ICreateCourseContext>({
 // add handleAddNewLesson property
 
 const CreateCourseProvider = (props: { children: React.ReactNode }) => {
+  const [dataDescription, setDataDescription] = React.useState<ICourseDetail>();
   const [dataSection, setDataSection] = React.useState<ISectionInfo[]>(
     dataCurriculum.sections
   );
   const [selectLesson, setSelectLesson] = React.useState<
     ILessonInfo | undefined
   >();
+  // description
+  const handleSetDataDescription = (data: ICourseDetail) => {
+    setDataDescription(data);
+  };
+
+  // curriculums
   const handleAddNewSection = () => {
     setDataSection((cur) => [
       ...cur,
@@ -217,8 +229,10 @@ const CreateCourseProvider = (props: { children: React.ReactNode }) => {
   return (
     <CreateCourseContext.Provider
       value={{
+        dataDescription,
         dataSection,
         selectLesson,
+        handleSetDataDescription,
         setDataSection,
         handleAddNewSection,
         handleDeleteSection,

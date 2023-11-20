@@ -1,6 +1,5 @@
 import CreateCourseContainer from "@/components/CreateCourse/CreateCourseContainer";
 import { configRouter } from "@/configs/router";
-import CreateCourseProvider from "@/context/CreateCourseContext";
 import { ArrowLineLeft } from "@phosphor-icons/react";
 
 // import CreateCourseTitle from "@/components/CreateCourse/CreateCourseTitle";
@@ -11,14 +10,13 @@ const CreateCourseTeacher = (): React.ReactElement => {
   // const [activeCreate, setActiveCreate] = React.useState<number>(0);
 
   return (
-    <CreateCourseProvider>
-      <LayoutCreateCourse>
-        <div className=" w-full h-full space-y-4">
-          {/* <CreateCourseTitle /> */}
-          <CreateCourseContainer />
-        </div>
-      </LayoutCreateCourse>
-    </CreateCourseProvider>
+    // <CreateCourseProvider>
+    <LayoutCreateCourse>
+      <div className=" w-full h-full space-y-4">
+        {/* <CreateCourseTitle /> */}
+        <CreateCourseContainer />
+      </div>
+    </LayoutCreateCourse>
   );
 };
 

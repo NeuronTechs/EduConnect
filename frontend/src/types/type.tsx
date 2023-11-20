@@ -35,7 +35,7 @@ export interface ICourseDetail {
   course_id: string;
   title: string;
   description: string;
-  image: string;
+  image: string | FileList;
   price: number;
   study: string;
   requirement: string;
@@ -44,6 +44,9 @@ export interface ICourseDetail {
   discount: number;
   ranking?: number;
   status?: string;
+  show?: string;
+  duration?: number;
+  duration_type?: string;
   total_ranking?: number;
   total_enrollment?: number;
   total_lecture?: number;
@@ -54,6 +57,8 @@ export interface ICourseDetail {
   teacher?: ITeacher;
   user?: IUser;
   topic?: ITopic;
+  created_at?: string;
+  updated_at?: string;
 }
 export interface IUser {
   username: string;
