@@ -19,7 +19,7 @@ const CreateLessonVideo = () => {
     const lesson = selectLesson;
     lesson!.title = data.title;
     if (!lesson) return;
-    handleEditLesson(lesson.idSection, lesson);
+    handleEditLesson(lesson.lesson_idSection, lesson);
   };
   const [selectTypeVideo, setSelectTypeVideo] =
     React.useState<string>("default");

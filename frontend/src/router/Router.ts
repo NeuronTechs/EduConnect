@@ -115,6 +115,7 @@ const publicRoutes: IRouter[] = [
     path: configRouter.allTask,
     component: lazy(() => import("../pages/MyCourse/AllTask")),
     layout: DefaultLayout,
+    role: "0",
   },
   {
     path: configRouter.profile,

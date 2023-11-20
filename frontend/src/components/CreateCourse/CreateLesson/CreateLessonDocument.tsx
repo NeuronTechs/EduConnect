@@ -18,7 +18,7 @@ const CreateLessonDocument = (): React.ReactElement => {
     const lesson = selectLesson;
     lesson!.title = data.title;
     if (!lesson) return;
-    handleEditLesson(lesson.idSection, lesson);
+    handleEditLesson(lesson.lesson_idSection, lesson);
   };
   return (
     <div className="w-full h-full">

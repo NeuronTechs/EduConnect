@@ -1,35 +1,22 @@
 import React from "react";
 
-import SectionList from "./SectionList";
-import {
-  ClipboardText,
-  File,
-  MonitorPlay,
-  PlusCircle,
-} from "@phosphor-icons/react";
-import {
-  CreateCourseContext,
-  ICreateCourseContext,
-} from "@/context/CreateCourseContext";
-import CreateLessonQuiz from "./CreateLesson/CreateLessonQuiz";
-import CreateLessonVideo from "./CreateLesson/CreateLessonVideo";
-import CreateLessonDocument from "./CreateLesson/CreateLessonDocument";
-import CreateQuizProvider from "@/context/CreateQuizContext";
+import { PlusCircle } from "@phosphor-icons/react";
+
 import DescriptionCreateCourseTeacher from "./DescriptionCreateCourseTeacher";
-import courseApi from "@/api/courseApi";
+
+import CreateContentCourse from "./CreateContentCourse";
 
 const CreateCourseContainer = (): React.ReactElement => {
   const [isOpenModal, setIsOpenModal] = React.useState<boolean>(false);
   const [tab, setTab] = React.useState<string>("description");
 
   // data section
-
   return (
-    <div className="w-full flex flex-col gap-2 h-full ">
-      <div className="bg-white flex items-center justify-center px-4 sticky top-[60px] shadow-sm">
+    <div className="w-full flex flex-col gap-2 h-full overflow-auto">
+      <div className="bg-white flex items-center justify-center px-4 sticky top-[0px] shadow-sm">
         <TabContentCreateCourseTeacher tab={tab} setTab={setTab} />
       </div>
-      <div className="flex w-full flex-1 gap-2 pb-5 px-2 pt-2">
+      <div className="flex w-full h-full flex-1 gap-2 pb-5 px-2 pt-2 overflow-auto">
         <ContainerCreateCourseTeacher
           isOpenModal={isOpenModal}
           setIsOpenModal={setIsOpenModal}
@@ -147,136 +134,6 @@ const TabContentCreateCourseTeacher = (props: {
           </a>
         </li>
       </ul>
-    </div>
-  );
-};
-
-const LessonInformation = (props: {
-  isOpenModal: boolean;
-  setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
-}): React.ReactElement => {
-  const { handleAddNewLesson } =
-    React.useContext<ICreateCourseContext>(CreateCourseContext);
-
-  const [idSectionCreate, setIdSectionCreate] = React.useState<string>("");
-
-  const handlerCloseModal = () => {
-    props.setIsOpenModal(false);
-  };
-
-  const handlerAddNewLesson = (type: string) => {
-    if (idSectionCreate === "") return;
-    handleAddNewLesson(idSectionCreate, type);
-    props.setIsOpenModal(false);
-  };
-
-  return (
-    <>
-      <SectionList
-        setIsOpenModal={props.setIsOpenModal}
-        setIdSectionCreate={setIdSectionCreate}
-      />
-      {/* modal add new lesson */}
-      <div
-        id="popup-modal"
-        tabIndex={-1}
-        className={`fixed top-0 left-0 right-0 z-50 bottom-0 ${
-          !props.isOpenModal && "hidden"
-        } p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-screen max-h-full bg-gray-500 bg-opacity-75 transition-opacity`}
-      >
-        <div className="relative w-full h-full  flex items-center justify-center">
-          <div className="relative bg-white rounded-lg shadow dark:bg-gray-700  min-w-[30%] gap-4">
-            <button
-              onClick={handlerCloseModal}
-              type="button"
-              className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-              data-modal-hide="popup-modal"
-            >
-              <svg
-                className="w-3 h-3"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 14 14"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                />
-              </svg>
-              <span className="sr-only">Close modal</span>
-            </button>
-            <div className="p-6 flex flex-col gap-6">
-              <div className="flex flex-col">
-                <h5 className="text-lg font-bold">Chọn loại bài học</h5>
-                <p className="text-xs font-normal text-gray-500">
-                  Chọn loại vật liệu để tiếp tục
-                </p>
-              </div>
-
-              {/* content type */}
-              <div className="flex flex-col  gap-4">
-                <div className="flex flex-col  gap-2">
-                  <h5 className="text-xs font-bold text-gray-600">
-                    NỘI DUNG HỌC TẬP
-                  </h5>
-                  <div className="flex items-center justify-start gap-4">
-                    <LessonTypeItem
-                      icon={<File />}
-                      title="bài học văn bản"
-                      onClick={() => {
-                        handlerAddNewLesson("document");
-                      }}
-                    />
-                    <LessonTypeItem
-                      icon={<MonitorPlay />}
-                      title="bài học video"
-                      onClick={() => {
-                        handlerAddNewLesson("video");
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className="flex flex-col  gap-2">
-                  <h5 className="text-xs font-bold text-gray-600">KIỂM TRA</h5>
-                  <div className="flex items-center justify-start gap-4">
-                    <LessonTypeItem
-                      icon={<ClipboardText />}
-                      title="Bài Kiểm Tra"
-                      onClick={() => {
-                        handlerAddNewLesson("quiz");
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-};
-// modal add new item type lesson
-const LessonTypeItem = (props: {
-  title: string;
-  icon: React.ReactNode;
-  onClick?: React.MouseEventHandler;
-}): React.ReactElement => {
-  return (
-    <div
-      className="py-4 flex flex-col items-center justify-center border hover:border-blue-500 gap-3 rounded-md h-30 w-30 cursor-pointer px-6"
-      onClick={props.onClick}
-    >
-      {React.cloneElement(props.icon as React.ReactElement, {
-        size: 40,
-        className: "text-blue-500",
-      })}
-
-      <p className="text-xs font-medium text-gray-600">{props.title}</p>
     </div>
   );
 };
@@ -464,61 +321,4 @@ const FAQCreateCourseTeacher = (): React.ReactElement => {
 
 const NoticeCreateCourseTeacher = (): React.ReactElement => {
   return <></>;
-};
-
-const CreateContentCourse = (props: {
-  isOpenModal: boolean;
-  setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
-}): React.ReactElement => {
-  const { selectLesson } =
-    React.useContext<ICreateCourseContext>(CreateCourseContext);
-  // loading section
-  const [isLoading, setIsLoading] = React.useState(false);
-
-  // React.useEffect(() => {
-  //   // Simulate loading content for 2 seconds
-  //   const timer = setTimeout(() => {
-  //     setIsLoading(false);
-  //   }, 2000);
-  //   return () => clearTimeout(timer);
-  // }, []);
-  // api get data section of course
-  React.useEffect(() => {
-    const requestApi = async () => {
-      try {
-        const res = await courseApi.getSectionCourse(props.idCourse);
-        console.log(res);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    requestApi();
-  }, []);
-  return (
-    <>
-      <div className="w-[25%] h-full overflow-auto">
-        <LessonInformation
-          isOpenModal={props.isOpenModal}
-          setIsOpenModal={props.setIsOpenModal}
-        />
-      </div>
-      <div className="h-full overflow-auto bg-white p-2 flex-1">
-        {isLoading ? (
-          <div className="w-full flex items-center justify-center">
-            <p>Loading...</p>
-          </div>
-        ) : selectLesson?.type === "document" ? (
-          <CreateLessonDocument />
-        ) : selectLesson?.type === "video" ? (
-          <CreateLessonVideo />
-        ) : selectLesson?.type === "quiz" ? (
-          <CreateQuizProvider>
-            <CreateLessonQuiz />
-          </CreateQuizProvider>
-        ) : (
-          <div className="w-full flex items-center justify-center"></div>
-        )}
-      </div>
-    </>
-  );
 };

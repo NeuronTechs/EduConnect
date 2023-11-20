@@ -12,7 +12,9 @@ import { logoutThunk } from "@/features/auth/authSlice";
 import { resetStoreCart } from "@/features/cart/cartSlice";
 import { resetStoreCourseOverview } from "@/features/overviewCourse/courseOverviewSlice";
 import { resetCheckOutCart } from "@/features/checkoutCourse/checkoutSlice";
-import { SliceState } from "@/types/type";
+import { User } from "@/type";
+import ImageWithError from "../ImageWithError";
+import assets from "@/assets";
 
 const AccountHeader = () => {
   const nav = useNavigate();

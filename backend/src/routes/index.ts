@@ -12,6 +12,7 @@ import topicRouter from "./topic.route";
 import teacherRouter from "./teacher.route";
 import searchRouter from "./search.route";
 import adminRouter from "./admin.route";
+import coursesRouter from "./courses.router";
 const router = express.Router();
 router.use("/user", userRoutes);
 router.use("/course", courseRouter);
@@ -27,5 +28,6 @@ router.use("/topics", topicRouter);
 router.use("/teachers", teacherRouter);
 router.use("/search", searchRouter);
 router.use("/admin", adminRouter);
+router.use("/courses", coursesRouter);
 
 export default router;

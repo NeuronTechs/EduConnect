@@ -105,7 +105,7 @@ const StepperCreateCourse = ({
   };
   return (
     <div className="p-2 space-y-2 h-[calc(100%-70px)] flex flex-col w-full ">
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <div className="w-full px-4 py-2 flex items-center justify-center bg-white rounded-md">
         <ol className="flex items-center w-full text-sm font-medium text-center text-gray-500 dark:text-gray-400 sm:text-base">
           <li className="flex md:w-full items-center text-blue-600 dark:text-blue-500 sm:after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10 dark:after:border-gray-700">

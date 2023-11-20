@@ -61,7 +61,8 @@ const LayoutCreateCourse = (props: {
   children: React.ReactElement;
 }): React.ReactElement => {
   return (
-    <div className="h-full w-full flex flex-col">
+    <div className="h-screen w-screen flex flex-col">
+      {/* header */}
       <div className="w-full h-[60px] bg-blue-gray-900 flex items-center justify-between sticky top-0">
         <div className="flex items-center">
           <Link to={configRouter.courseMyTeacher}>
@@ -95,7 +96,8 @@ const LayoutCreateCourse = (props: {
           </button>
         </div>
       </div>
-      <div className="w-full h-auto">{props.children}</div>
+      {/* content */}
+      <div className="w-full h-[calc(100vh-60px)]">{props.children}</div>
     </div>
   );
 };

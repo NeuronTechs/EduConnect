@@ -248,15 +248,16 @@ export interface IStudent {
 }
 // section quiz
 export interface ISectionInfo {
-  id: string;
-  title: string;
+  section_id: string;
+  name: string;
+  course_id: string;
   lessons: ILessonInfo[];
 }
 export interface ILessonInfo {
-  id: string;
-  title: string;
+  lesson_id: string;
+  name: string;
   type?: string;
-  idSection: string;
+  section_id: string;
   draff?: boolean;
 }
 
