@@ -54,4 +54,6 @@ export interface IComplaint {
   content?: string;
   image?: string | undefined;
   createdAt?: string;
+  session_id?: string;
+  lecture_id?: string;
 }

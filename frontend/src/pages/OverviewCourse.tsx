@@ -35,6 +35,8 @@ const OverviewCourse = () => {
   const [title, setTitle] = useState<string>("");
   const [problem, setProblem] = useState<string>("");
   const [image, setImage] = useState<File[]>([]);
+  const [sessionProblem, setSessionProblem] = useState<string>("");
+  const [lectureProblem, setLectureProblem] = useState<string>("");
   const dispatch = useDispatch<AppDispatch>();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -83,6 +85,8 @@ const OverviewCourse = () => {
     formData.append("title", title);
     formData.append("student_id", currentUser?.user_id as string);
     formData.append("course_id", currentCourse?.course_id as string);
+    formData.append("lecture_id", lectureProblem as string);
+    formData.append("session_id", sessionProblem as string);
     formData.append("content", problem);
     image.forEach((img) => {
       formData.append("files", img);
@@ -169,6 +173,40 @@ const OverviewCourse = () => {
                         ))}
                       </select>
                     </div>
+                    <select
+                      className="w-full rounded-md mb-3"
+                      placeholder="Lựa chọn session"
+                      onChange={(e) => setSessionProblem(e.target.value)}
+                    >
+                      {currentCourse?.sessions.map((session) => (
+                        <option
+                          key={session?.session_id}
+                          value={session?.session_id}
+                        >
+                          {session?.name}
+                        </option>
+                      ))}
+                    </select>
+                    {sessionProblem && (
+                      <select
+                        className="w-full rounded-md mb-3"
+                        placeholder="Lựa chọn lecture"
+                        onChange={(e) => setLectureProblem(e.target.value)}
+                      >
+                        {currentCourse?.sessions
+                          ?.filter(
+                            (session) => session?.session_id === sessionProblem
+                          )[0]
+                          ?.lectures?.map((lecture) => (
+                            <option
+                              key={lecture?.lecture_id}
+                              value={lecture?.lecture_id}
+                            >
+                              {lecture?.lecture_name}
+                            </option>
+                          ))}
+                      </select>
+                    )}
                     <div className="w-full max-h-[200px]">
                       <textarea
                         className="w-full max-h-[200px] rounded-md"

@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import assets from "../../assets";
 import {
   Menu,
   MenuHandler,
@@ -7,12 +6,13 @@ import {
   MenuItem,
 } from "@material-tailwind/react";
 import { configRouter } from "@/configs/router";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { logoutThunk } from "@/features/auth/authSlice";
 import { resetStoreCart } from "@/features/cart/cartSlice";
 import { resetStoreCourseOverview } from "@/features/overviewCourse/courseOverviewSlice";
 import { resetCheckOutCart } from "@/features/checkoutCourse/checkoutSlice";
+import { SliceState } from "@/types/type";
 
 const AccountHeader = () => {
   const nav = useNavigate();
@@ -24,6 +24,9 @@ const AccountHeader = () => {
     await dispatch(resetCheckOutCart());
     nav(configRouter.login);
   };
+  const currentUser = useSelector(
+    (state: SliceState) => state.authSlice.currentUser
+  );
   const handleRedirectTeacher = () => {
     nav(configRouter.dashboardTeacher);
   };
@@ -31,14 +34,16 @@ const AccountHeader = () => {
     <div>
       <div className="flex items-center justify-center px-3 py-2 gap-3">
         <div className="account-info flex flex-col justify-center items-end">
-          <h5 className="text-sm font-medium">Nguyen Van Tu</h5>
-          <p className="text-xs font-normal text-gray-600">HCMUTE</p>
+          <h5 className="text-sm font-medium">{currentUser?.full_name}</h5>
+          <p className="text-xs font-normal text-gray-600">
+            {currentUser?.username}
+          </p>
         </div>
         <Menu>
           <MenuHandler>
             <div className="avatar-account cursor-pointer">
               <img
-                src={assets.images.avatar1}
+                src={currentUser?.avatar}
                 alt="avatar"
                 className="rounded-full h-[40px] w-[40px]"
               />
