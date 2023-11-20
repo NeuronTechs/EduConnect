@@ -1,4 +1,4 @@
-import { IComment, addReview } from "@/types/type";
+import { addReview } from "@/types/type";
 import * as httpRequest from "../../utils/httpRequest";
 import { AxiosRequestHeaders } from "axios";
 

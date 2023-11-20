@@ -1,13 +1,48 @@
-import CreateCourseContainer from "@/components/CreateCourse/CreateCourseContainer";
-import { configRouter } from "@/configs/router";
-import { ArrowLineLeft } from "@phosphor-icons/react";
-
-// import CreateCourseTitle from "@/components/CreateCourse/CreateCourseTitle";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { ArrowLineLeft } from "@phosphor-icons/react";
+// components
+import CreateCourseContainer from "@/components/CreateCourse/CreateCourseContainer";
+// type
+import { RootState } from "@/redux/store";
+import { User } from "@/type";
+import { configRouter } from "@/configs/router";
+import { CreateCourseContext } from "@/context/CreateCourseContext";
+// api
+import * as teacehrApi from "@/api/teacherApi/teacherApi";
 
 const CreateCourseTeacher = (): React.ReactElement => {
   // const [activeCreate, setActiveCreate] = React.useState<number>(0);
+  const { dataDescription, handleSetDataDescription } =
+    React.useContext(CreateCourseContext);
+
+  const currentUser = useSelector<RootState, User>(
+    (state) => state.authSlice.currentUser as User
+  );
+  const param = useParams<{ id: string }>();
+  React.useEffect(() => {
+    if (dataDescription === undefined) {
+      const requestApi = async () => {
+        try {
+          const res = await teacehrApi.getCourseTeacherById({
+            teacherId: currentUser.user_id,
+            courseId: param.id ? param.id : "",
+          });
+          console.log(res.data);
+          handleSetDataDescription(res.data);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      requestApi();
+    }
+  }, [
+    currentUser.user_id,
+    dataDescription,
+    handleSetDataDescription,
+    param.id,
+  ]);
 
   return (
     // <CreateCourseProvider>
@@ -60,7 +95,7 @@ const LayoutCreateCourse = (props: {
           </button>
         </div>
       </div>
-      <div className="w-full h-full bg-blue-200/30">{props.children}</div>
+      <div className="w-full h-auto">{props.children}</div>
     </div>
   );
 };

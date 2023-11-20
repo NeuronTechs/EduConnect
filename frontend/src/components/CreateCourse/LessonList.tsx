@@ -47,6 +47,12 @@ const LessonList = (props: ILessonList): React.ReactElement => {
 
   return (
     <div className="flex flex-col items-center justify-start py-2 w-full overflow-hidden">
+      {props.data.lessons.length === 0 && (
+        <div className="flex w-full py-4 items-center justify-center">
+          <p className="text-sm font-medium text-black "></p>
+          Chưa có bài giảng được tạo
+        </div>
+      )}
       <DndContext onDragEnd={handlerDragEnd}>
         <SortableContext items={props.data.lessons}>
           {props.data.lessons.map((item) => (

@@ -44,7 +44,7 @@ export interface ICourseDetail {
   discount: number;
   ranking?: number;
   status?: string;
-  show?: string;
+  status_show?: string;
   duration?: number;
   duration_type?: string;
   total_ranking?: number;

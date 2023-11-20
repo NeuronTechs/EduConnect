@@ -16,6 +16,7 @@ import CreateLessonVideo from "./CreateLesson/CreateLessonVideo";
 import CreateLessonDocument from "./CreateLesson/CreateLessonDocument";
 import CreateQuizProvider from "@/context/CreateQuizContext";
 import DescriptionCreateCourseTeacher from "./DescriptionCreateCourseTeacher";
+import courseApi from "@/api/courseApi";
 
 const CreateCourseContainer = (): React.ReactElement => {
   const [isOpenModal, setIsOpenModal] = React.useState<boolean>(false);
@@ -471,19 +472,31 @@ const CreateContentCourse = (props: {
 }): React.ReactElement => {
   const { selectLesson } =
     React.useContext<ICreateCourseContext>(CreateCourseContext);
-  const [isLoading, setIsLoading] = React.useState(true);
+  // loading section
+  const [isLoading, setIsLoading] = React.useState(false);
 
+  // React.useEffect(() => {
+  //   // Simulate loading content for 2 seconds
+  //   const timer = setTimeout(() => {
+  //     setIsLoading(false);
+  //   }, 2000);
+  //   return () => clearTimeout(timer);
+  // }, []);
+  // api get data section of course
   React.useEffect(() => {
-    // Simulate loading content for 2 seconds
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-    return () => clearTimeout(timer);
+    const requestApi = async () => {
+      try {
+        const res = await courseApi.getSectionCourse(props.idCourse);
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    requestApi();
   }, []);
-
   return (
     <>
-      <div className=" bg-white rounded-md w-[25%] h-full overflow-auto">
+      <div className="w-[25%] h-full overflow-auto">
         <LessonInformation
           isOpenModal={props.isOpenModal}
           setIsOpenModal={props.setIsOpenModal}

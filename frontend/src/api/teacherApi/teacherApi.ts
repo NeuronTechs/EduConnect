@@ -32,10 +32,14 @@ export const updateCourseTeacher = async (data: ICourseDetail) => {
   if (typeof data.image === "string") {
     formData.append("image", data.image);
   } else {
-    for (let i = 0; i < data.image.length; i++) {
-      formData.append("image", data.image[i]);
+    if (data.image.length > 0) {
+      formData.append("image", data.image[0]);
     }
   }
+  formData.append(
+    "teacher_id",
+    data.teacher_id ? data.teacher_id.toString() : ""
+  );
   formData.append("price", data.price ? data.price.toString() : "");
   formData.append("discount", data.discount ? data.discount.toString() : "");
   formData.append("topic_id", data.topic_id ? data.topic_id.toString() : "");
@@ -47,13 +51,16 @@ export const updateCourseTeacher = async (data: ICourseDetail) => {
   );
   formData.append("language", data.language ? data.language.toString() : "");
 
-  formData.append("status", data.status ? data.status.toString() : "");
+  formData.append(
+    "status_show",
+    data.status_show ? data.status_show.toString() : ""
+  );
 
   formData.append(
-    "create_at",
-    data.created_at ? data.created_at : new Date().toISOString()
+    "created_at",
+    data.created_at ? data.created_at : Date.now().toString()
   );
-  formData.append("update_at", new Date().toISOString());
+  formData.append("updated_at", Date.now().toString());
   // add form data
   const headers = {
     Accept: "application/json",
@@ -67,6 +74,20 @@ export const updateCourseTeacher = async (data: ICourseDetail) => {
       headers as AxiosRequestHeaders
     );
 
+    return res;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const getCourseTeacherById = async (params: {
+  teacherId: string;
+  courseId: string;
+}) => {
+  try {
+    const res = await httpRequest.get(
+      `/teachers/${params.teacherId}/courses/${params.courseId}`
+    );
     return res;
   } catch (error) {
     return Promise.reject(error);

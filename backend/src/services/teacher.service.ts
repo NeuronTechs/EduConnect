@@ -2,6 +2,7 @@ import { dataListResponse, dataResponse } from "../constant/type";
 import db from "../config/connectDB";
 import { v4 as uuidv4 } from "uuid";
 import { title } from "process";
+import { QueryError } from "mysql2";
 
 // topic
 interface ITopic {
@@ -39,7 +40,14 @@ interface ICourse {
   course_id: string;
   title: string;
   description: string;
-  image: string;
+  image: {
+    fieldname: string;
+    originalname: string;
+    encoding: string;
+    mimetype: string;
+    filename: string;
+    path: string;
+  };
   price: number;
   study: string;
   requirement: string;
@@ -48,7 +56,7 @@ interface ICourse {
   discount: number;
   ranking?: number;
   status?: string;
-  show?: string;
+  status_show?: string;
   total_ranking?: number;
   total_enrollment?: number;
   total_lecture?: number;
@@ -201,7 +209,7 @@ const getCourseTeacher = async (id: string, limit: number) => {
           values: [`${id}`, limit ? limit : 10],
           nestTables: true,
         },
-        (error, results: ICourseResult[]) => {
+        (error: QueryError, results: ICourseResult[]) => {
           if (error) {
             reject({
               status: 500,
@@ -238,13 +246,27 @@ const getCourseTeacher = async (id: string, limit: number) => {
 };
 const updateCourseTeacher = async (id: string, data: ICourse) => {
   console.log(data);
+
   try {
-    const query = `UPDATE course SET teacher_id='${data.teacher_id}', title = '${data.title}', description='${data.description}', image='${data.image}', price='${data.price}', topic_id = '${data.topic_id}', discount='${data.discount}', study='${data.study}',  level = '${data.level}', requirement='${data.requirement}', language='${data.language}', show='${data.show}', create_at='${data.created_at}', update_at='${data.updated_at}' WHERE course_id = '${id}';`;
+    const query = `UPDATE course SET teacher_id='${
+      data.teacher_id
+    }', title = '${data.title}', description='${data.description}', image='${
+      data.image.path
+    }', price='${
+      data.price ? parseInt(data.price.toString()) : 0
+    }', topic_id = '${data.topic_id}', discount='${
+      data.price ? parseFloat(data.discount.toString()) : 0
+    }', study='${JSON.stringify(data.study)}',  level = '${
+      data.level
+    }', requirement='${JSON.stringify(data.requirement)}', language='${
+      data.language
+    }', create_at='2023-07-07 15:15:15', update_at='2023-07-07 15:15:15'
+    , status_show='${data.status_show}' WHERE course_id = '${id}';`;
     return new Promise<dataResponse<ICourse>>((resolve, reject) => {
       db.connectionDB.query(
         { sql: query },
 
-        (error, course: ICourse, fields) => {
+        (error: QueryError, course: ICourse) => {
           const dataTmp = {
             ...data,
             course_id: id,
@@ -260,7 +282,54 @@ const updateCourseTeacher = async (id: string, data: ICourse) => {
           resolve({
             status: 201,
             data: dataTmp as ICourse,
-            message: "Get teacher successfully",
+            message: "update course successfully",
+          });
+        }
+      );
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+const getCourseTeacherById = async (id: string) => {
+  try {
+    const query = `SELECT course.*, teacher.*, user.*, topic.* FROM course JOIN teacher ON course.teacher_id = teacher.teacher_id JOIN user ON teacher.username = user.username JOIN topic ON course.topic_id = topic.topic_id WHERE course.course_id = ?;`;
+    return new Promise<dataResponse<ICourse>>((resolve, reject) => {
+      db.connectionDB.query(
+        {
+          sql: query,
+          values: [`${id}`],
+          nestTables: true,
+        },
+        (error: QueryError, results: ICourseResult[]) => {
+          if (error) {
+            reject({
+              status: 500,
+              data: [],
+              message: error,
+            });
+            return;
+          }
+          const dataResult = results.map((result) => {
+            return {
+              ...result?.course,
+              teacher: result.teacher,
+              user: result.user,
+              topic: result.topic,
+            };
+          });
+          if (error) {
+            reject({
+              status: 500,
+              data: [],
+              message: error,
+            });
+            return;
+          }
+          resolve({
+            status: 200,
+            data: dataResult[0] ? dataResult[0] : ({} as ICourse),
+            message: "Get courses successfully",
           });
         }
       );
@@ -273,6 +342,7 @@ export default {
   getTeacherRecommendations,
   getTeacherDetail,
   createCourseTeacher,
+  getCourseTeacherById,
   getCourseTeacher,
   updateCourseTeacher,
 };

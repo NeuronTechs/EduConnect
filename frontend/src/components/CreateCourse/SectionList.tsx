@@ -1,6 +1,5 @@
 import {
   Binoculars,
-  CaretCircleDown,
   DotsSixVertical,
   Pencil,
   PlusCircle,
@@ -13,7 +12,6 @@ import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { insertArrayElements } from "@/utils/utils";
-import { Collapse } from "@material-tailwind/react";
 import { ISectionInfo } from "@/types/type";
 import {
   CreateCourseContext,
@@ -43,8 +41,8 @@ const SectionList = (props: {
   };
 
   return (
-    <div className="h-full px-1 py-2 flex flex-col items-stretch">
-      <div className="flex-1 w-full overflow-auto space-y-2">
+    <div className="h-full px-1 flex flex-col items-stretch space-y-4">
+      <div className="flex-1 w-full overflow-auto space-y-3">
         <DndContext onDragEnd={handleDragEnd}>
           <SortableContext items={dataSection}>
             {dataSection.map((item) => {
@@ -61,7 +59,7 @@ const SectionList = (props: {
           </SortableContext>
         </DndContext>
       </div>
-      <div className="w-full flex items-center justify-center">
+      <div className="w-full flex items-center justify-center p-4 shadow-md bg-white">
         <button
           onClick={handleAddNewSection}
           className="px-2 py-1 flex items-center justify-center gap text-sm font-bold text-white bg-blue-400 hover:bg-blue-500 rounded-md"
@@ -83,13 +81,10 @@ const ItemSection = (props: {
 }): React.ReactElement => {
   const [isHovered, setIsHovered] = React.useState(false);
   const [isEditing, setIsEditing] = React.useState(false);
-  const [open, setOpen] = React.useState<boolean>(true);
 
   const { handleDeleteSection } = React.useContext(
     CreateCourseContext
   ) as ICreateCourseContext;
-
-  const toggleOpen = () => setOpen((cur) => !cur);
 
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: props.data.id });
@@ -121,14 +116,14 @@ const ItemSection = (props: {
 
   return (
     <div
-      className="w-full bg-white  rounded-sm"
+      className="w-full bg-white  rounded-md shadow-sm"
       style={style}
       ref={setNodeRef}
       {...attributes}
     >
       {/* header */}
       <div
-        className="w-full flex justify-between items-center p-2 gap-2"
+        className="w-full flex justify-between items-center p-2 gap-2 min-h-[40px]"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
@@ -165,38 +160,27 @@ const ItemSection = (props: {
               <Trash size={15} />
             </div>
           )}
-
-          <div
-            className={`bg-blue-gray-50 p-1 rounded-full text-gray-700 cursor-pointer ${
-              open ? "rotate-180" : "rotate-0"
-            } ani transition ease-in-out delay-150`}
-            onClick={toggleOpen}
-          >
-            <CaretCircleDown size={15} />
-          </div>
         </div>
       </div>
       <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700"></hr>
       {/* children list */}
-      <Collapse open={open}>
-        <div className="flex flex-col w-full">
-          <LessonList data={props.data} />
-          <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700"></hr>
-          <div className="flex p-1 justify-between">
-            <button
-              onClick={handleNewLessonClick}
-              className="text-blue-500 bg-blue-100 text-xs font-bold px-4 py-1.5 flex items-center justify-center space-x-2 cursor-pointer hover:bg-blue-200 rounded-md"
-            >
-              <PlusCircle size={20} />
-              <p>thêm bài giảng</p>
-            </button>
-            <button className="text-gray-500 bg-gray-100 text-xs font-bold px-4 py-1.5 flex items-center justify-center cursor-pointer hover:bg-gray-200 rounded-md">
-              <Binoculars size={20} />
-              <p>Tìm tài liệu</p>
-            </button>
-          </div>
+      <div className="flex flex-col w-full">
+        <LessonList data={props.data} />
+        <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700"></hr>
+        <div className="flex p-2 justify-between">
+          <button
+            onClick={handleNewLessonClick}
+            className="text-blue-500 bg-blue-100 text-xs font-bold px-4 py-1.5 flex items-center justify-center space-x-2 cursor-pointer hover:bg-blue-200 rounded-md"
+          >
+            <PlusCircle size={20} />
+            <p>thêm bài giảng</p>
+          </button>
+          <button className="text-gray-500 bg-gray-100 text-xs font-bold px-4 py-1.5 flex items-center justify-center cursor-pointer hover:bg-gray-200 rounded-md">
+            <Binoculars size={20} />
+            <p>Tìm tài liệu</p>
+          </button>
         </div>
-      </Collapse>
+      </div>
       {/* content */}
     </div>
   );

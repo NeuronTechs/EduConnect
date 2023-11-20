@@ -3,7 +3,7 @@ import {
   ICreateCourseContext,
 } from "@/context/CreateCourseContext";
 import { ICourseDetail, ITopic } from "@/types/type";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as topicApi from "@/api/topicApi/topicApi";
 import * as teacherApi from "@/api/teacherApi/teacherApi";
@@ -12,11 +12,17 @@ const DescriptionCreateCourseTeacher = (): React.ReactElement => {
   const { dataDescription } =
     React.useContext<ICreateCourseContext>(CreateCourseContext);
 
-  const { register, watch, handleSubmit } = useForm<ICourseDetail>({
+  const { register, watch, handleSubmit, reset } = useForm<ICourseDetail>({
     defaultValues: dataDescription,
   });
+  useEffect(() => {
+    if (dataDescription) {
+      reset(dataDescription);
+    }
+  }, [dataDescription, reset]);
 
   const [dataTypes, setDataTypes] = React.useState<ITopic[]>([]);
+  // get all topic
   React.useEffect(() => {
     const fetchData = async () => {
       try {
