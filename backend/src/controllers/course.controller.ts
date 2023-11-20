@@ -110,13 +110,14 @@ const getOverviewCourse = async (req: Request, res: Response) => {
 };
 
 const addTransactionInCourse = async (req: Request, res: Response) => {
-  const { student_id, course_id, amount, status } = req.body;
+  const { student_id, course_id, amount, status, transaction_id } = req.body;
   try {
     const transaction = await CourseService.addTransactionInCourse(
       student_id,
       course_id,
       amount,
-      status
+      status,
+      transaction_id
     );
     const addToCourse = await CourseService.addToCourse(
       student_id,
@@ -149,10 +150,19 @@ const complaintCourse = async (req: Request, res: Response) => {
       { content, course_id, student_id, title, session_id, lecture_id },
       files
     );
-    res.status(data.status).json(data);
+    if (data?.status === 200) {
+      res.status(200).json({
+        status: 200,
+        data: data?.data,
+        message: data?.message,
+      });
+    }
   } catch (error) {
     if (error) {
-      res.status(400).json({ error: error });
+      res.status(400).json({
+        status: 400,
+        error: error,
+      });
     } else {
       res.status(500).json({ error: "Internal server error" });
     }

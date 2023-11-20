@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { configRouter } from "@/configs/router";
-import { Button, Typography } from "@material-tailwind/react";
+import { Button, Spinner, Typography } from "@material-tailwind/react";
 import * as authApi from "../api/authApi/authApi";
 
 function ForgetPassword() {
   const [gmail, setEmail] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const nav = useNavigate();
 
   useEffect(() => {
@@ -15,6 +16,7 @@ function ForgetPassword() {
   }, [gmail]);
 
   const handleForgetPass = async () => {
+    setLoading(true);
     if (gmail === "") {
       setError("Hãy nhập email!!!");
       if (inputRef.current) inputRef.current.focus();
@@ -22,10 +24,12 @@ function ForgetPassword() {
       try {
         const data = await authApi.forgetPassword(gmail);
         if (data?.status === 200) {
+          setLoading(false);
           alert("Vui lòng kiểm tra email của bạn để thay đổi mật khẩu");
           nav(configRouter.login);
         }
       } catch (error: any) {
+        setLoading(false);
         alert(
           "Tìm kiếm không trả về kết quả nào. Vui lòng thử lại với email khác."
         );
@@ -75,7 +79,9 @@ function ForgetPassword() {
           </Link>
         </div>
         <div className="m-[10px_15px] flex flex-row justify-end">
-          <Button onClick={handleForgetPass}>Tìm kiếm</Button>
+          <Button onClick={handleForgetPass}>
+            {loading ? <Spinner /> : "Tìm kiếm"}
+          </Button>
         </div>
       </div>
     </div>

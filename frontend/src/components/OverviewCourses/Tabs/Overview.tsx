@@ -77,7 +77,9 @@ const Overview = () => {
           <span className="font-semibold">{currentCourse?.totalLecture}</span>{" "}
           bài học • Thời lượng{" "}
           <span className="font-semibold">
-            {convertTimeToTemplate(currentCourse?.totalTime as number)}
+            {currentCourse?.totalTime !== null
+              ? convertTimeToTemplate(currentCourse?.totalTime as number)
+              : convertTimeToTemplate(0)}
           </span>
         </p>
         <div className="w-full px-3 p-[5px_10px]">
@@ -129,7 +131,7 @@ const Overview = () => {
                         }. ${lecture.lecture_name}`}</p>
                       </div>
                       <p className="text-[15px]">{`${convertTimeToTemplate(
-                        lecture.time
+                        lecture.time !== null ? lecture.time : 0
                       )}`}</p>
                     </li>
                   ))}

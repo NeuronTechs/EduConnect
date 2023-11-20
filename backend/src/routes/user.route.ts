@@ -9,6 +9,9 @@ router.route("/register").post(AuthController.register);
 router.route("/forgetpassword").post(AuthController.isValidEmail);
 router.route("/reset-password").post(AuthController.resetPassword);
 router
+  .route("/change-password")
+  .post(middlewareController.verifyToken, AuthController.changePassword);
+router
   .route("/updateinformation")
   .post(middlewareController.verifyToken, AuthController.updateInformation);
 router

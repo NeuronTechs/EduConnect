@@ -1,9 +1,9 @@
 import assets from "@/assets";
 import { Books } from "@phosphor-icons/react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import bg from "../../public/bgLogin.png";
+// import bg from "../../public/bgLogin.png";
 import { signup } from "../features/auth/authSlice";
 import { AppDispatch } from "../redux/store";
 import { signupState } from "../type";
@@ -13,7 +13,7 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
   const [fitPassword, setFitPassword] = useState(true);
-  const fullName = "asd";
+  const full_name = "test";
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const signupHandler = async () => {
@@ -23,7 +23,7 @@ const SignUp = () => {
         username: username,
         email: email,
         password: password,
-        fullname: fullName,
+        full_name: full_name,
       };
       const signupStatus = await dispatch(signup(signupValue));
       if (signupStatus.type === "auth/signup/fulfilled") {

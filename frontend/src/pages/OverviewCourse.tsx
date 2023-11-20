@@ -81,34 +81,45 @@ const OverviewCourse = () => {
 
   const handleReport = async () => {
     setLoading(true);
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("student_id", currentUser?.user_id as string);
-    formData.append("course_id", currentCourse?.course_id as string);
-    formData.append("lecture_id", lectureProblem as string);
-    formData.append("session_id", sessionProblem as string);
-    formData.append("content", problem);
-    image.forEach((img) => {
-      formData.append("files", img);
-    });
-    const data = await courseApi.addComplaint(formData);
-    if (data?.status === 200) {
-      // await toast.success("Khiếu nại thành công");
-      alert("Khiếu nại thành công");
-      setLoading(false);
+    if (
+      title !== "" &&
+      currentUser?.user_id !== "" &&
+      currentCourse?.course_id !== "" &&
+      lectureProblem !== "" &&
+      sessionProblem !== "" &&
+      problem !== "" &&
+      image.length > 0
+    ) {
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("student_id", currentUser?.user_id as string);
+      formData.append("course_id", currentCourse?.course_id as string);
+      formData.append("lecture_id", lectureProblem as string);
+      formData.append("session_id", sessionProblem as string);
+      formData.append("content", problem);
+      image.forEach((img) => {
+        formData.append("files", img);
+      });
+      try {
+        const data = await courseApi.addComplaint(formData);
+        if (data?.status === 200) {
+          alert("Khiếu nại thành công");
+          setLoading(false);
+        }
+      } catch (error: any) {
+        alert("Khiếu nại thất bại. Mã lỗi: " + error?.message);
+        setLoading(false);
+      }
+      setProblem("");
+      setTitle("");
+      setLectureProblem("")
+      setSessionProblem("")
+      setImage([]);
+      setOpen(!open);
     } else {
-      // toast.error("Khiếu nại thất bại");
-      alert("Khiếu nại thất bại");
       setLoading(false);
+      alert("Vui lòng nhập đầy đủ các trường");
     }
-    // console.log(data);
-    // console.log(formData.getAll("files"));
-    // toast.success("sss");
-    // alert(title + " " + problem + " " + image);
-    setProblem("");
-    setTitle("");
-    setImage([]);
-    setOpen(!open);
   };
 
   const handleGetTitle = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -227,6 +238,7 @@ const OverviewCourse = () => {
                         <input
                           type="file"
                           id="file"
+                          accept="image/*"
                           className="hidden"
                           onChange={(e) => handleGetImage(e)}
                         />
