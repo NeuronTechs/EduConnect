@@ -59,3 +59,12 @@ export const setStatusUser = async (status: string, username: string) => {
     return Promise.reject(error);
   }
 };
+
+export const getTransactionReport = async () => {
+  try {
+    const res = await httpRequest.get(`/transaction/report`);
+    return res;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};

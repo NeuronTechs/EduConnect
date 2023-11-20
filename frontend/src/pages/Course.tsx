@@ -18,7 +18,7 @@ const Course = () => {
   const [currentTime, setCurrentTime] = useState(0);
   const [isFullQuiz, setIsFullQuiz] = useState(false);
   useEffect(() => {
-    if (id !== undefined)
+    if (id !== undefined && currentUser.currentUser?.user_id)
       dispatch(
         getCourseDetails({ id: id, user_id: currentUser.currentUser?.user_id })
       );

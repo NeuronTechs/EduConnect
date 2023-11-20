@@ -240,6 +240,7 @@ const Comments = ({ setCurrentTime, currentTime }: Props) => {
         {currentCourse?.comments?.map((comment) => {
           return (
             <Comment
+              key={comment.comment_id}
               comment={comment}
               currentTime={currentTime}
               setCurrentTime={setCurrentTime}

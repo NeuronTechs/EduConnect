@@ -16,8 +16,8 @@ interface Props {
 const Video = ({ currentLecture, currentTime, setCurrentTime }: Props) => {
   const { currentUser } = useSelector((state: SliceState) => state.authSlice);
   const [currentId, setCurrentId] = useState({
-    lecture_id: currentLecture.lecture_id,
-    session_id: currentLecture.session_id,
+    lecture_id: currentLecture?.lecture_id || 0,
+    session_id: currentLecture?.session_id || 0,
   });
   const videoRef = useRef<HTMLVideoElement>(null);
   const ytbRef = useRef<HTMLIFrameElement>(null);
@@ -44,8 +44,8 @@ const Video = ({ currentLecture, currentTime, setCurrentTime }: Props) => {
       dispatch(
         createStudentProgress({
           course_id: currentLecture.course_id,
-          lecture_id: currentId.lecture_id,
-          session_id: currentId.session_id,
+          lecture_id: currentId.lecture_id.toString(), // Convert lecture_id to string
+          session_id: currentId.session_id.toString(),
           progress: currentTime,
           student_id: currentUser?.user_id,
         })
@@ -62,8 +62,8 @@ const Video = ({ currentLecture, currentTime, setCurrentTime }: Props) => {
       dispatch(
         updateStudentProgress({
           course_id: currentLecture.course_id,
-          lecture_id: currentId.lecture_id,
-          session_id: currentId.session_id,
+          lecture_id: currentId.lecture_id.toString(), // Convert lecture_id to string
+          session_id: currentId.session_id.toString(),
           progress: currentTime,
           student_id: currentUser?.user_id,
         })

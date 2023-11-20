@@ -1,6 +1,6 @@
 import { CommentLecture } from "@/features/course/courseSlice";
 import { AppDispatch } from "@/redux/store";
-import { IComment, SliceState } from "@/types/type";
+import { SliceState } from "@/types/type";
 import { Avatar } from "@material-tailwind/react";
 import React, { useState } from "react";
 import { useDropzone, FileWithPath } from "react-dropzone";
@@ -27,7 +27,7 @@ const WYSIWYGEditor = ({
   }, []);
 
   const { getRootProps, isDragActive } = useDropzone({ onDrop });
-  const submitHandler = (e) => {
+  const submitHandler = (e: { preventDefault: () => void }) => {
     e.preventDefault();
     if (currentUser != null && currentLecture != null) {
       const formData = new FormData();

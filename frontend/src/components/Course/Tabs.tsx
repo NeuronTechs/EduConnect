@@ -6,9 +6,9 @@ import {
   TabsHeader,
 } from "@material-tailwind/react";
 import React from "react";
-import Overview from "../OverviewCourses/Tabs/Overview";
 import { ILecture } from "@/types/type";
 import Comments from "./Comments";
+import Overviews from "./Overviews";
 interface Props {
   currentLecture: ILecture | null;
   setCurrentTime: React.Dispatch<React.SetStateAction<number>>;
@@ -55,7 +55,7 @@ const TabsInfo = ({ currentLecture, setCurrentTime, currentTime }: Props) => {
           </TabsHeader>
           <TabsBody>
             <TabPanel key={"Tổng quan"} value={"Tổng quan"}>
-              <Overview />
+              <Overviews />
             </TabPanel>
 
             <TabPanel key={"Thảo Luận"} value={"Thảo Luận"}>

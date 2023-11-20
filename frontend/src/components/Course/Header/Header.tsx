@@ -1,12 +1,19 @@
-import { CourseState } from "@/features/course/courseSlice";
 import { ICourse } from "@/types/type";
 import { ArrowLeft, BookOpenText } from "@phosphor-icons/react";
-import React, { useState } from "react";
 import { CircularProgressbarWithChildren } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { useNavigate } from "react-router-dom";
-const Header = (currentCourse: { currentCourse: ICourse }) => {
-  const percentage = 66;
+const Header = (currentCourse: { currentCourse: ICourse | null }) => {
+  let percentage = 0;
+  if (
+    currentCourse.currentCourse?.total_lectures &&
+    currentCourse.currentCourse?.completed_lectures
+  ) {
+    percentage =
+      (currentCourse.currentCourse?.completed_lectures /
+        currentCourse.currentCourse?.total_lectures) *
+      100;
+  }
   const navigate = useNavigate();
 
   return (
@@ -49,10 +56,15 @@ const Header = (currentCourse: { currentCourse: ICourse }) => {
           </div>
           <div style={{ width: 35, height: 35 }}>
             <CircularProgressbarWithChildren value={percentage}>
-              <p className="text-[5px]">{percentage}%</p>
+              <p className="text-[5px]">{percentage.toFixed(0)}%</p>
             </CircularProgressbarWithChildren>
           </div>
-          <p className="w-[]">1/69 bài học</p>
+          <p className="w-[]">
+            {currentCourse.currentCourse?.completed_lectures +
+              " trên " +
+              currentCourse.currentCourse?.total_lectures}{" "}
+            bài học
+          </p>
         </div>
       </div>
     </div>

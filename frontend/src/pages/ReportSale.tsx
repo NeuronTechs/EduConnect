@@ -11,22 +11,40 @@ import {
   YAxis,
   Tooltip,
 } from "recharts";
-const data = [
-  { name: "Apr", uv: parseInt(formatCurrency(50)) },
-  { name: "Feb", uv: parseInt(formatCurrency(100)) },
-  { name: "Mar", uv: parseInt(formatCurrency(150)) },
-  { name: "Apr", uv: parseInt(formatCurrency(200)) },
-  { name: "May", uv: parseInt(formatCurrency(550)) },
-  { name: "Jun", uv: parseInt(formatCurrency(300)) },
-  { name: "Jul", uv: parseInt(formatCurrency(350)) },
-  { name: "Aug", uv: parseInt(formatCurrency(400)) },
-  { name: "Sep", uv: parseInt(formatCurrency(350)) },
-];
+import { useEffect, useState } from "react";
+import { ITransactionReport, SliceState } from "@/types/type";
+import { useSelector } from "react-redux";
+// const data = [
+//   { name: "Apr", uv: parseInt(formatCurrency(50)) },
+//   { name: "Feb", uv: parseInt(formatCurrency(100)) },
+//   { name: "Mar", uv: parseInt(formatCurrency(150)) },
+//   { name: "Apr", uv: parseInt(formatCurrency(200)) },
+//   { name: "May", uv: parseInt(formatCurrency(550)) },
+//   { name: "Jun", uv: parseInt(formatCurrency(300)) },
+//   { name: "Jul", uv: parseInt(formatCurrency(350)) },
+//   { name: "Aug", uv: parseInt(formatCurrency(400)) },
+//   { name: "Sep", uv: parseInt(formatCurrency(350)) },
+// ];
 const headers = [
   { label: "name", key: "name" },
   { label: "giá trị", key: "uv" },
 ];
 const ReportSale = () => {
+  const report = useSelector((state: SliceState) => state.adminSlice.report);
+  const [data, setData] = useState<{ name: string; uv: number }[]>([]);
+  useEffect(() => {
+    if (Array.isArray(report)) {
+      const array = report?.map((item: ITransactionReport) => {
+        return {
+          name: item.month.toString() + "/" + item.year.toString(),
+          uv: parseInt(formatCurrency(item.revenue)),
+        };
+      });
+
+      setData(array.reverse());
+    }
+  }, []);
+
   return (
     <div className="w-full h-full">
       <div className="mb-4 flex flex-col justify-between gap-8 md:flex-row md:items-center px-5">
