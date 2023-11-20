@@ -91,10 +91,10 @@ const DetailCourse = () => {
               {currentCourse?.discount ? (
                 <>
                   <p className="line-through">
-                    {formatCurrency(currentCourse?.price)}
+                    {currentCourse?.price!==null ? formatCurrency(currentCourse?.price) : 'Chưa xác định'}
                   </p>
                   <p className="font-semibold text-blue-500">
-                    {formatCurrency(currentCourse?.discount)}
+                    {currentCourse?.discount!==null ? formatCurrency(currentCourse?.discount) : 'Chưa xác định'}
                   </p>
                 </>
               ) : (

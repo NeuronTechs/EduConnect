@@ -39,6 +39,7 @@ export const logoutThunk = createAsyncThunk<any>(
 export const signup = createAsyncThunk(
   "auth/signup",
   async (params: signupState) => {
+    console.log(params);
     const res = await authApi.signup({
       username: params.username,
       password: params.password,

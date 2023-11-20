@@ -18,6 +18,8 @@ export interface ICourseDetail {
   course_id: string;
   title: string;
   description: string;
+  total_lectures: string;
+  completed_lectures: string;
   sessions: ISession[];
 }
 

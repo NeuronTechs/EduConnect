@@ -202,7 +202,11 @@ const getCourseDetails = async (
       WHEN sp.progress IS NULL THEN 'No'
       ELSE sp.progress
   END AS has_watched,
-  CEIL((SELECT COUNT(*) FROM comments WHERE lecture_id = l.lecture_id AND isReply="false") / 5) as comment_pages
+  CEIL((SELECT COUNT(*) FROM comments WHERE lecture_id = l.lecture_id AND isReply="false") / 5) as comment_pages,
+  (SELECT COUNT(*) FROM lecture l JOIN session ss ON l.session_id = ss.session_id WHERE ss.course_id = c.course_id) as total_lectures ,
+  (SELECT COUNT(*) FROM lecture l2 
+   LEFT JOIN student_progress sp2 ON sp2.lecture_id = l2.lecture_id AND sp2.student_id = ? join session ss on l.session_id = ss.session_id
+   WHERE ss.course_id = c.course_id AND sp2.progress IS NOT NULL) as completed_lectures
 FROM 
   Session s
 JOIN 
@@ -220,7 +224,7 @@ ORDER BY
   return new Promise<dataResponse<ICourseDetail>>((resolve, reject) => {
     db.connectionDB.query(
       sql,
-      [user_id, course_id],
+      [user_id, user_id, course_id],
       (err, result: RowDataPacket[]) => {
         if (err) {
           reject(err);
@@ -230,7 +234,6 @@ ORDER BY
         if (result.length === 0)
           resolve({
             status: 404,
-
             message: "Course not found",
           });
         else {
@@ -238,6 +241,8 @@ ORDER BY
             course_id: result[0].course_id,
             title: result[0].course_name,
             description: result[0].course_description,
+            completed_lectures: result[0].completed_lectures,
+            total_lectures: result[0].total_lectures,
             sessions: [],
           };
           // Iterate over the query result and group lectures by session
@@ -418,12 +423,12 @@ const addTransactionInCourse = (
   student_id: String,
   course_id: String,
   amount: Number,
-  status: String
+  status: String,
+  transaction_id: string
 ): Promise<any> => {
   try {
     const query = `INSERT INTO transactions (transaction_id, student_id,course_id,amount,status,createdAt) VALUES (?,?,?,?,?,?)
       `;
-    const transaction_id = "trans_" + generateID();
     const nowString = convertTimestampToDateTime();
     return new Promise((resolve, reject) => {
       db.connectionDB.query(
@@ -531,10 +536,13 @@ const complaintCourse = (
     // }
     data.image = fileData;
     const sql = `INSERT INTO complaint SET ?`;
-    return new Promise<dataResponse<any>>((resolve, reject) => {
+    return new Promise<any>((resolve, reject) => {
       db.connectionDB.query(sql, data, (err, result) => {
         if (err) {
-          reject(err);
+          reject({
+            status: 400,
+            message: err,
+          });
           return;
         }
         resolve({
@@ -545,8 +553,6 @@ const complaintCourse = (
       });
     });
   } catch (error) {
-    console.log(error);
-
     throw error;
   }
 };

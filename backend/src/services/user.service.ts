@@ -307,7 +307,7 @@ const isValidEmail = async (
               });
               return;
             } else {
-              const resetLink: string = `${process.env.URL}/reset-password`;
+              const resetLink: string = `${process.env.BASE_URL}/reset-password`;
               // Send reset email
               transporter.sendMail(
                 {
@@ -442,6 +442,36 @@ const getInforTeacher = (teacher_id: string): Promise<any> => {
   }
 };
 
+const changePassword = async (
+  username: string,
+  password: string
+): Promise<any> => {
+  try {
+    const nowString = convertTimestampToDateTime();
+    const insertNewUser =
+      "UPDATE user SET password = ?, updatedAt = ? WHERE username = ?";
+    return new Promise((resolve, reject) => {
+      db.connectionDB.query(
+        insertNewUser,
+        [password, nowString, username],
+        (error, results, fields) => {
+          if (error) {
+            console.log(error);
+            reject(error);
+            return;
+          }
+          resolve({
+            status: true,
+            message: "change password success",
+          });
+        }
+      );
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
 export default {
   login,
   register,
@@ -449,4 +479,5 @@ export default {
   isValidEmail,
   resetPassword,
   getInforTeacher,
+  changePassword,
 };

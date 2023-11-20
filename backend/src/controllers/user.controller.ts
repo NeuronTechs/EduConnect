@@ -47,7 +47,7 @@ const register = async (req: Request, res: Response) => {
       !req.body?.username ||
       !req.body?.password ||
       !req.body?.email ||
-      !req.body?.fullName
+      !req.body?.full_name
     ) {
       res.status(400).json({
         status: 400,
@@ -55,14 +55,14 @@ const register = async (req: Request, res: Response) => {
         message: "username, password, email and fullName is require!",
       });
     } else {
-      const { username, password, fullName, email } = req.body;
+      const { username, password, full_name, email } = req.body;
       let result: registerResponse;
       const salt = await bcrypt.genSalt(10);
       const passwordHashed = await bcrypt.hash(password, salt);
       result = await UserService.register(
         username,
         passwordHashed,
-        fullName,
+        full_name,
         email
       );
 
@@ -110,78 +110,151 @@ const register = async (req: Request, res: Response) => {
 
 const login = async (req: Request, res: Response) => {
   try {
-    const { username, password } = req.body;
-    if (req.body?.username && req.body?.password) {
-      if (username.trim() === "" || password.trim() === "") {
-        res.status(400).json({
+    // const { username, password } = req.body;
+    // if (req.body?.username && req.body?.password) {
+    //   if (username.trim() === "" || password.trim() === "") {
+    //     res.status(400).json({
+    //       status: 400,
+    //       data: {},
+    //       message: "field is require!",
+    //     });
+    //   } else {
+    //     let result: User[];
+    //     result = await UserService.login(username);
+    //     if (result.length > 0) {
+    //       if (await isValidPassword(password, result[0]?.password)) {
+    //         const accessToken: string = generateAccessToken(
+    //           result[0]?.username,
+    //           result[0]?.role
+    //         );
+    //         const refreshToken: string = generatefreshToken(
+    //           result[0]?.username,
+    //           result[0]?.role
+    //         );
+    //         refreshTokens.push(refreshToken);
+    //         res.setHeader("authorization", "Bearer " + accessToken);
+    //         res.cookie("refreshToken", refreshToken, {
+    //           httpOnly: true,
+    //           secure: false,
+    //           path: "/",
+    //           sameSite: "strict",
+    //         });
+    //         const { password, ...others } = result[0];
+    //         res.status(200).json({
+    //           status: 200,
+    //           data: { ...others, accessToken },
+    //           message: "get value success",
+    //         });
+    //       } else {
+    //         res.status(400).json({
+    //           status: 400,
+    //           data: {},
+    //           message: "incorrect password",
+    //         });
+    //       }
+    //     } else {
+    //       res.status(400).json({
+    //         status: 400,
+    //         data: {},
+    //         message: "incorrect username",
+    //       });
+    //     }
+    //   }
+    // } else if (!req.body?.username && req.body?.password) {
+    //   res.status(400).json({
+    //     status: 400,
+    //     data: {},
+    //     message: "The username field is require!",
+    //   });
+    // } else if (req.body?.username && !req.body?.password) {
+    //   res.status(400).json({
+    //     status: 400,
+    //     data: {},
+    //     message: "The password field is require!",
+    //   });
+    // } else {
+    //   res.status(400).json({
+    //     status: 400,
+    //     data: {},
+    //     message: "The username and password field is require!",
+    //   });
+    // }
+    // else  {
+    //   if (!req.body?.username && req.body?.password) {
+    //     res.status(400).json({
+    //       status: 400,
+    //       data: {},
+    //       message: "The username field is require!",
+    //     });
+    //   }
+    //   if (req.body?.username && !req.body?.password) {
+    //     res.status(400).json({
+    //       status: 400,
+    //       data: {},
+    //       message: "The password field is require!",
+    //     });
+    //   }
+    //   if (!req.body?.username && !req.body?.password) {
+    //     res.status(400).json({
+    //       status: 400,
+    //       data: {},
+    //       message: "The username and password field is require!",
+    //     });
+    //   }
+    // }
+    const { username, password } = req.body; //1
+    if (!username) { //2
+      return res.status(400).json({ //3
+        status: 400,
+        data: {},
+        message: "The username field is required!",
+      });
+    } else if (!password) { //4
+      return res.status(400).json({ //5
+        status: 400,
+        data: {},
+        message: "The password field is required!",
+      });
+    } 
+    else {
+      const result = await UserService.login(username); //6
+      if (result.length === 0) { //7
+        return res.status(400).json({//8
+          status: 400, 
+          data: {},
+          message: "Incorrect username",
+        });
+      }
+      const isValid = await isValidPassword(password, result[0]?.password); //9
+      if (!isValid) { //10
+        return res.status(400).json({  //11
           status: 400,
           data: {},
-          message: "field is require!",
-        });
-      } else {
-        let result: User[];
-        result = await UserService.login(username);
-        if (result.length > 0) {
-          if (await isValidPassword(password, result[0]?.password)) {
-            const accessToken: string = generateAccessToken(
-              result[0]?.username,
-              result[0]?.role
-            );
-            const refreshToken: string = generatefreshToken(
-              result[0]?.username,
-              result[0]?.role
-            );
-            refreshTokens.push(refreshToken);
-            res.setHeader("authorization", "Bearer " + accessToken);
-            res.cookie("refreshToken", refreshToken, {
-              httpOnly: true,
-              secure: false,
-              path: "/",
-              sameSite: "strict",
-            });
-            const { password, ...others } = result[0];
-            res.status(200).json({
-              status: 200,
-              data: { ...others, accessToken },
-              message: "get value success",
-            });
-          } else {
-            res.status(400).json({
-              status: 400,
-              data: {},
-              message: "incorrect password",
-            });
-          }
-        } else {
-          res.status(400).json({
-            status: 400,
-            data: {},
-            message: "incorrect username",
-          });
-        }
-      }
-    } else {
-      if (!req.body?.username && req.body?.password) {
-        res.status(400).json({
-          status: 400,
-          data: {},
-          message: "The username field is require!",
+          message: "Incorrect password",
         });
       }
-      if (req.body?.username && !req.body?.password) {
-        res.status(400).json({
-          status: 400,
-          data: {},
-          message: "The password field is require!",
-        });
-      }
-      if (!req.body?.username && !req.body?.password) {
-        res.status(400).json({
-          status: 400,
-          data: {},
-          message: "The username and password field is require!",
-        });
-      }
+      const accessToken = generateAccessToken( //12
+        result[0]?.username,
+        result[0]?.role
+      );
+      const refreshToken = generatefreshToken(
+        result[0]?.username,
+        result[0]?.role
+      );
+      refreshTokens.push(refreshToken);
+      res.setHeader("authorization", "Bearer " + accessToken);
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: false,
+        path: "/",
+        sameSite: "strict",
+      });
+      const { password: _, ...others } = result[0];
+      res.status(200).json({
+        status: 200,
+        data: { ...others, accessToken },
+        message: "Get value success",
+      });
     }
   } catch (error) {
     res.status(500).json({
@@ -487,6 +560,30 @@ const getInforTeacher = async (req: Request, res: Response) => {
   }
 };
 
+const changePassword = async (req: Request, res: Response) => {
+  try {
+    const { username, password } = req.body;
+    const salt = await bcrypt.genSalt(10);
+    const passwordHashed = await bcrypt.hash(password, salt);
+    const changePass = await UserService.changePassword(
+      username,
+      passwordHashed
+    );
+    if (changePass?.status) {
+      res.status(200).json({
+        status: 200,
+        message: changePass.message,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      status: 500,
+      data: {},
+      message: error,
+    });
+  }
+};
+
 export default {
   login,
   refreshToken,
@@ -496,4 +593,5 @@ export default {
   isValidEmail,
   resetPassword,
   getInforTeacher,
+  changePassword,
 };
