@@ -423,12 +423,12 @@ const addTransactionInCourse = (
   student_id: String,
   course_id: String,
   amount: Number,
-  status: String
+  status: String,
+  transaction_id: string
 ): Promise<any> => {
   try {
     const query = `INSERT INTO transactions (transaction_id, student_id,course_id,amount,status,createdAt) VALUES (?,?,?,?,?,?)
       `;
-    const transaction_id = "trans_" + generateID();
     const nowString = convertTimestampToDateTime();
     return new Promise((resolve, reject) => {
       db.connectionDB.query(
@@ -536,10 +536,13 @@ const complaintCourse = (
     // }
     data.image = fileData;
     const sql = `INSERT INTO complaint SET ?`;
-    return new Promise<dataResponse<any>>((resolve, reject) => {
+    return new Promise<any>((resolve, reject) => {
       db.connectionDB.query(sql, data, (err, result) => {
         if (err) {
-          reject(err);
+          reject({
+            status: 400,
+            message: err,
+          });
           return;
         }
         resolve({
@@ -550,8 +553,6 @@ const complaintCourse = (
       });
     });
   } catch (error) {
-    console.log(error);
-
     throw error;
   }
 };

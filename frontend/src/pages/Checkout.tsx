@@ -98,6 +98,7 @@ const Checkout = () => {
                 course_id: currentCourse?.course_id,
                 amount: currentCourse?.discount,
                 status: "Thành công",
+                transaction_id: result?.paymentIntent?.id,
               });
             console.log(addTransactionInCourse);
             if (addTransactionInCourse.status === 200) {
@@ -147,7 +148,7 @@ const Checkout = () => {
               <div className="form-group ">
                 <label htmlFor="card_num_field">Card Number</label>
                 <CardNumberElement
-                  type="text"
+                  // type="text"
                   id="card_num_field"
                   className="w-full border p-3 "
                   options={options}
@@ -156,7 +157,7 @@ const Checkout = () => {
               <div className="form-group">
                 <label htmlFor="card_exp_field">Card Expiry</label>
                 <CardExpiryElement
-                  type="text"
+                  // type="text"
                   id="card_exp_field"
                   className="w-full border p-3"
                   options={options}
@@ -165,7 +166,7 @@ const Checkout = () => {
               <div className="form-group">
                 <label htmlFor="card_cvc_field">Card CVC</label>
                 <CardCvcElement
-                  type="text"
+                  // type="text"
                   id="card_cvc_field"
                   className="w-full border p-3"
                   options={options}
@@ -223,7 +224,7 @@ const Checkout = () => {
             </div>
             <div className="my-3">
               {loading ? (
-                <Spinner />
+                <Spinner className="flex justify-center" />
               ) : (
                 <button
                   onClick={submitHandler}

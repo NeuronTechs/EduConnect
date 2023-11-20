@@ -21,7 +21,7 @@ export const signup = async (params: signupState) => {
       username: params.username,
       email: params.email,
       password: params.password,
-      fullName: params.fullname,
+      full_name: params.full_name,
     });
     console.log(res);
 

@@ -165,7 +165,11 @@ const BuyCourse = () => {
                   <p className="text-[16px]">Thời gian</p>
                 </div>
                 <p className="text-[16px]">
-                  {convertTimeToTemplate(currentCourse?.totalTime as number)}
+                  {convertTimeToTemplate(
+                    currentCourse?.totalTime !== null
+                      ? (currentCourse?.totalTime as number)
+                      : 0
+                  )}
                 </p>
               </li>
               <li className="flex items-center justify-between border-b border-b-solid border-b-gray-400 p-[5px]">
@@ -198,10 +202,14 @@ const BuyCourse = () => {
           <div className="p-[10px] gap-2">
             <div className="flex justify-between items-center py-2">
               <p className="line-through">
-                {formatCurrency(currentCourse?.price as number)}
+                {currentCourse?.price !== null
+                  ? formatCurrency(currentCourse?.price as number)
+                  : "Chưa xác định"}
               </p>
               <p className="font-semibold">
-                {formatCurrency(currentCourse?.discount as number)}
+                {currentCourse?.discount !== null
+                  ? formatCurrency(currentCourse?.discount as number)
+                  : "Chưa xác định"}
               </p>
             </div>
             <div className="flex flex-col justify-center items-center gap-2">
