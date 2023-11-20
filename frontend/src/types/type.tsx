@@ -37,7 +37,7 @@ export interface ICourseDetail {
   course_id: string;
   title: string;
   description: string;
-  image: string;
+  image: string | FileList;
   price: number;
   study: string;
   requirement: string;
@@ -46,6 +46,9 @@ export interface ICourseDetail {
   discount: number;
   ranking?: number;
   status?: string;
+  status_show?: string;
+  duration?: number;
+  duration_type?: string;
   total_ranking?: number;
   total_enrollment?: number;
   total_lecture?: number;
@@ -56,6 +59,8 @@ export interface ICourseDetail {
   teacher?: ITeacher;
   user?: IUser;
   topic?: ITopic;
+  created_at?: string;
+  updated_at?: string;
 }
 export interface IUser {
   username: string;
@@ -245,15 +250,16 @@ export interface IStudent {
 }
 // section quiz
 export interface ISectionInfo {
-  id: string;
-  title: string;
+  section_id: string;
+  name: string;
+  course_id: string;
   lessons: ILessonInfo[];
 }
 export interface ILessonInfo {
-  id: string;
-  title: string;
+  lesson_id: string;
+  name: string;
   type?: string;
-  idSection: string;
+  section_id: string;
   draff?: boolean;
 }
 

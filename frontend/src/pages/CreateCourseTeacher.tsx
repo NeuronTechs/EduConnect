@@ -1,24 +1,57 @@
-import CreateCourseContainer from "@/components/CreateCourse/CreateCourseContainer";
-import { configRouter } from "@/configs/router";
-import CreateCourseProvider from "@/context/CreateCourseContext";
-import { ArrowLineLeft } from "@phosphor-icons/react";
-
-// import CreateCourseTitle from "@/components/CreateCourse/CreateCourseTitle";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { ArrowLineLeft } from "@phosphor-icons/react";
+// components
+import CreateCourseContainer from "@/components/CreateCourse/CreateCourseContainer";
+// type
+import { RootState } from "@/redux/store";
+import { User } from "@/type";
+import { configRouter } from "@/configs/router";
+import { CreateCourseContext } from "@/context/CreateCourseContext";
+// api
+import * as teacehrApi from "@/api/teacherApi/teacherApi";
 
 const CreateCourseTeacher = (): React.ReactElement => {
   // const [activeCreate, setActiveCreate] = React.useState<number>(0);
+  const { dataDescription, handleSetDataDescription } =
+    React.useContext(CreateCourseContext);
+
+  const currentUser = useSelector<RootState, User>(
+    (state) => state.authSlice.currentUser as User
+  );
+  const param = useParams<{ id: string }>();
+  React.useEffect(() => {
+    if (dataDescription === undefined) {
+      const requestApi = async () => {
+        try {
+          const res = await teacehrApi.getCourseTeacherById({
+            teacherId: currentUser.user_id,
+            courseId: param.id ? param.id : "",
+          });
+          console.log(res.data);
+          handleSetDataDescription(res.data);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      requestApi();
+    }
+  }, [
+    currentUser.user_id,
+    dataDescription,
+    handleSetDataDescription,
+    param.id,
+  ]);
 
   return (
-    <CreateCourseProvider>
-      <LayoutCreateCourse>
-        <div className=" w-full h-full space-y-4">
-          {/* <CreateCourseTitle /> */}
-          <CreateCourseContainer />
-        </div>
-      </LayoutCreateCourse>
-    </CreateCourseProvider>
+    // <CreateCourseProvider>
+    <LayoutCreateCourse>
+      <div className=" w-full h-full space-y-4">
+        {/* <CreateCourseTitle /> */}
+        <CreateCourseContainer />
+      </div>
+    </LayoutCreateCourse>
   );
 };
 
@@ -28,7 +61,8 @@ const LayoutCreateCourse = (props: {
   children: React.ReactElement;
 }): React.ReactElement => {
   return (
-    <div className="h-full w-full flex flex-col">
+    <div className="h-screen w-screen flex flex-col">
+      {/* header */}
       <div className="w-full h-[60px] bg-blue-gray-900 flex items-center justify-between sticky top-0">
         <div className="flex items-center">
           <Link to={configRouter.courseMyTeacher}>
@@ -62,7 +96,8 @@ const LayoutCreateCourse = (props: {
           </button>
         </div>
       </div>
-      <div className="w-full h-full bg-blue-200/30">{props.children}</div>
+      {/* content */}
+      <div className="w-full h-[calc(100vh-60px)]">{props.children}</div>
     </div>
   );
 };

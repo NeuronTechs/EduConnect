@@ -30,10 +30,10 @@ const LessonList = (props: ILessonList): React.ReactElement => {
     const dataList = props.data.lessons;
     if (over) {
       const overIndex = dataList.findIndex(
-        (lesson: ILessonInfo) => lesson.id === over.id?.toString()
+        (lesson: ILessonInfo) => lesson.lesson_id === over.id?.toString()
       );
       const activeIndex = dataList.findIndex(
-        (lesson: ILessonInfo) => lesson.id === active.id?.toString()
+        (lesson: ILessonInfo) => lesson.lesson_id === active.id?.toString()
       );
 
       // insertArrayElements<T>(arr: T[], dragIndex: number, hoverIndex: number): T[]
@@ -47,6 +47,12 @@ const LessonList = (props: ILessonList): React.ReactElement => {
 
   return (
     <div className="flex flex-col items-center justify-start py-2 w-full overflow-hidden">
+      {props.data.lessons.length === 0 && (
+        <div className="flex w-full py-4 items-center justify-center">
+          <p className="text-sm font-medium text-black "></p>
+          Chưa có bài giảng được tạo
+        </div>
+      )}
       <DndContext onDragEnd={handlerDragEnd}>
         <SortableContext items={props.data.lessons}>
           {props.data.lessons.map((item) => (
@@ -70,12 +76,12 @@ const LessonItem = (props: ILessonInfoItem) => {
     React.useContext(CreateCourseContext) as ICreateCourseContext;
 
   const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: props.data.id });
+    useSortable({ id: props.data.lesson_id });
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
   };
-  const active = selectLesson?.id === props.data.id;
+  const active = selectLesson?.lesson_id === props.data.lesson_id;
 
   return (
     <div
@@ -118,7 +124,7 @@ const LessonItem = (props: ILessonInfoItem) => {
         <div
           className="bg-blue-gray-50 p-1 rounded-full text-gray-700 cursor-pointer"
           onClick={() =>
-            handleDeleteLesson(props.data.idSection, props.data.id)
+            handleDeleteLesson(props.data.section_id, props.data.lesson_id)
           }
         >
           <Trash size={15} />

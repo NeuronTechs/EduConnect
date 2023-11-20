@@ -3,6 +3,14 @@ export const configRouter = {
   login: "/login",
   signUp: "/signUp",
   registerInformation: "/register-information",
+
+  forgetPassword: "/forget-password",
+  resetPassword: "/reset-password",
+  // student
+  myCourse: "/myCourse",
+  learning: "/course/learn/:id",
+  profile: "/profile",
+  allTask: "/myCourse/allTask",
   course: "/course/:id",
   coursesCart: "/courses-cart",
   checkout: "/checkout",
@@ -10,18 +18,15 @@ export const configRouter = {
   search: "/search",
   teacherCategory: "/teacher-category/:id",
   chat: "/chat",
-  dashboardTeacher: "/teacher/dashboard",
+
   payout: "/teacher/payout",
   // teacher
+  dashboardTeacher: "/teacher/dashboard",
   liststudent: "/teacher/liststudent",
   courseMyTeacher: "/teacher/course",
   createCourse: "/teacher/course/create",
   manageCourse: "/teacher/manage/course/:id",
-  // student
-  myCourse: "/myCourse",
-  allTask: "/myCourse/allTask",
-  learning: "/course/learn/:id",
-  profile: "/profile",
+  // admin
   dashboardAdmin: "/admin/dashboard",
   reportSale: "/admin/reportsale",
   reportMember: "/admin/reportmember",
@@ -29,6 +34,4 @@ export const configRouter = {
   myCourseDetails: "/myCourse/:id",
   managerComplaintCourse: "/admin/complaint",
   complaintCourseDetail: "/admin/complaint/:id",
-  forgetPassword: "/forget-password",
-  resetPassword: "/reset-password",
 };

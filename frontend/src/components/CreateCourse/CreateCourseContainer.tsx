@@ -1,29 +1,22 @@
 import React from "react";
 
-import SectionList from "./SectionList";
-import { ClipboardText, File, MonitorPlay } from "@phosphor-icons/react";
-import {
-  CreateCourseContext,
-  ICreateCourseContext,
-} from "@/context/CreateCourseContext";
-import CreateLessonQuiz from "./CreateLesson/CreateLessonQuiz";
-import CreateLessonVideo from "./CreateLesson/CreateLessonVideo";
-import CreateLessonDocument from "./CreateLesson/CreateLessonDocument";
-import CreateQuizProvider from "@/context/CreateQuizContext";
-import TextEditor from "./CreateLesson/TextEditor/TextEditor";
+import { PlusCircle } from "@phosphor-icons/react";
+
+import DescriptionCreateCourseTeacher from "./DescriptionCreateCourseTeacher";
+
+import CreateContentCourse from "./CreateContentCourse";
 
 const CreateCourseContainer = (): React.ReactElement => {
   const [isOpenModal, setIsOpenModal] = React.useState<boolean>(false);
   const [tab, setTab] = React.useState<string>("description");
 
   // data section
-
   return (
-    <div className="w-full flex flex-col gap-2 h-full ">
-      <div className="bg-white flex items-center justify-center px-4 sticky top-[60px] shadow-sm">
+    <div className="w-full flex flex-col gap-2 h-full overflow-auto">
+      <div className="bg-white flex items-center justify-center px-4 sticky top-[0px] shadow-sm">
         <TabContentCreateCourseTeacher tab={tab} setTab={setTab} />
       </div>
-      <div className="flex w-full flex-1 gap-2 pb-5 px-2 pt-2">
+      <div className="flex w-full h-full flex-1 gap-2 pb-5 px-2 pt-2 overflow-auto">
         <ContainerCreateCourseTeacher
           isOpenModal={isOpenModal}
           setIsOpenModal={setIsOpenModal}
@@ -44,6 +37,8 @@ const ContainerCreateCourseTeacher = (props: {
   switch (props.tab) {
     case "description":
       return <DescriptionCreateCourseTeacher />;
+    case "target":
+      return <TargetCreateCourseTeacher />;
     case "content":
       return <CreateContentCourse {...props} />;
     case "price":
@@ -74,6 +69,19 @@ const TabContentCreateCourseTeacher = (props: {
             } group`}
           >
             Mô tả
+          </a>
+        </li>
+        <li className="mr-2" onClick={() => props.setTab("target")}>
+          <a
+            href="#"
+            className={`inline-flex items-center justify-center p-4 ${
+              props.tab === "target"
+                ? " text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500 "
+                : "hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+            } group`}
+            aria-current="page"
+          >
+            Mục Tiêu
           </a>
         </li>
         <li className="mr-2" onClick={() => props.setTab("content")}>
@@ -130,273 +138,83 @@ const TabContentCreateCourseTeacher = (props: {
   );
 };
 
-const LessonInformation = (props: {
-  isOpenModal: boolean;
-  setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
-}): React.ReactElement => {
-  const { handleAddNewLesson } =
-    React.useContext<ICreateCourseContext>(CreateCourseContext);
+const TargetCreateCourseTeacher = (): React.ReactElement => {
+  const [dataTarget, setDataTarget] = React.useState<{
+    study: string[];
+    requirement: string[];
+  }>({ study: ["1"], requirement: ["2"] });
 
-  const [idSectionCreate, setIdSectionCreate] = React.useState<string>("");
-
-  const handlerCloseModal = () => {
-    props.setIsOpenModal(false);
-  };
-
-  const handlerAddNewLesson = (type: string) => {
-    if (idSectionCreate === "") return;
-    handleAddNewLesson(idSectionCreate, type);
-    props.setIsOpenModal(false);
-  };
-
-  return (
-    <>
-      <SectionList
-        setIsOpenModal={props.setIsOpenModal}
-        setIdSectionCreate={setIdSectionCreate}
-      />
-      {/* modal add new lesson */}
-      <div
-        id="popup-modal"
-        tabIndex={-1}
-        className={`fixed top-0 left-0 right-0 z-50 bottom-0 ${
-          !props.isOpenModal && "hidden"
-        } p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-screen max-h-full bg-gray-500 bg-opacity-75 transition-opacity`}
-      >
-        <div className="relative w-full h-full  flex items-center justify-center">
-          <div className="relative bg-white rounded-lg shadow dark:bg-gray-700  min-w-[30%] gap-4">
-            <button
-              onClick={handlerCloseModal}
-              type="button"
-              className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-              data-modal-hide="popup-modal"
-            >
-              <svg
-                className="w-3 h-3"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 14 14"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                />
-              </svg>
-              <span className="sr-only">Close modal</span>
-            </button>
-            <div className="p-6 flex flex-col gap-6">
-              <div className="flex flex-col">
-                <h5 className="text-lg font-bold">Chọn loại bài học</h5>
-                <p className="text-xs font-normal text-gray-500">
-                  Chọn loại vật liệu để tiếp tục
-                </p>
-              </div>
-
-              {/* content type */}
-              <div className="flex flex-col  gap-4">
-                <div className="flex flex-col  gap-2">
-                  <h5 className="text-xs font-bold text-gray-600">
-                    NỘI DUNG HỌC TẬP
-                  </h5>
-                  <div className="flex items-center justify-start gap-4">
-                    <LessonTypeItem
-                      icon={<File />}
-                      title="bài học văn bản"
-                      onClick={() => {
-                        handlerAddNewLesson("document");
-                      }}
-                    />
-                    <LessonTypeItem
-                      icon={<MonitorPlay />}
-                      title="bài học video"
-                      onClick={() => {
-                        handlerAddNewLesson("video");
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className="flex flex-col  gap-2">
-                  <h5 className="text-xs font-bold text-gray-600">KIỂM TRA</h5>
-                  <div className="flex items-center justify-start gap-4">
-                    <LessonTypeItem
-                      icon={<ClipboardText />}
-                      title="Bài Kiểm Tra"
-                      onClick={() => {
-                        handlerAddNewLesson("quiz");
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-};
-// modal add new item type lesson
-const LessonTypeItem = (props: {
-  title: string;
-  icon: React.ReactNode;
-  onClick?: React.MouseEventHandler;
-}): React.ReactElement => {
-  return (
-    <div
-      className="px-3 py-4 flex flex-col items-center justify-center border hover:border-blue-500 gap-3 rounded-md h-30 w-30 cursor-pointer px-6"
-      onClick={props.onClick}
-    >
-      {React.cloneElement(props.icon as React.ReactElement, {
-        size: 40,
-        className: "text-blue-500",
-      })}
-
-      <p className="text-xs font-medium text-gray-600">{props.title}</p>
-    </div>
-  );
-};
-
-const DescriptionCreateCourseTeacher = (): React.ReactElement => {
   return (
     <div className="flex items-start justify-center w-full">
       <div className="flex flex-col gap-4 bg-white p-2 min-w-[50%] px-6">
-        <h5 className="text-base font-bold text-black">Thông tin khóa học</h5>
-        <div className="mb-2">
-          <label
-            htmlFor="confirm_password"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Tên khóa học
-          </label>
-          <input
-            type="password"
-            id="confirm_password"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          />
-        </div>
-        <div className="mb-2">
-          <label
-            htmlFor="confirm_password"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Chủ đề khoá học
-          </label>
-          <input
-            type="password"
-            id="confirm_password"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          />
-        </div>
-        <div className="mb-2">
-          <label
-            htmlFor="confirm_password"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Mức độ
-          </label>
-          <input
-            type="password"
-            id="confirm_password"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          />
-        </div>
-        <div className="mb-2">
-          <label
-            htmlFor="confirm_password"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Hình ảnh
-          </label>
-          <div className="flex items-center justify-center w-full">
-            <label
-              htmlFor="dropzone-file"
-              className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
-            >
-              <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                <svg
-                  className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 20 16"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                  />
-                </svg>
-                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                  <span className="font-semibold">Click to upload</span> or drag
-                  and drop
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  SVG, PNG, JPG or GIF (MAX. 800x400px)
-                </p>
-              </div>
-              <input id="dropzone-file" type="file" className="hidden" />
-            </label>
-          </div>
-        </div>
+        <h5 className="text-base font-bold text-black">Học viên mục tiêu</h5>
+        <p className="text-black font-normal text-sm">
+          Các mô tả sau sẽ hiển thị công khai trên Trang tổng quan khóa học của
+          bạn và sẽ tác động trực tiếp đến thành tích khóa học, đồng thời giúp
+          học viên quyết định xem khóa học đó có phù hợp với họ hay không.
+        </p>
 
-        <div className="grid gap-6 mb-2 md:grid-cols-2">
-          <div>
-            <label
-              htmlFor="first_name"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Thời lượng khóa học
-            </label>
-            <input
-              type="text"
-              id="first_name"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="last_name"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Thời lượng video
-            </label>
-            <input
-              type="text"
-              id="last_name"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            />
-          </div>
-        </div>
-
-        <div className="mb-2">
+        <div className="mb-2 space-y-4">
           <label
             htmlFor="confirm_password"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            className="block mb-2 text-sm font-bold text-gray-900 dark:text-white"
           >
-            Miêu tả
+            Học viên sẽ học được gì trong khóa học của bạn?
           </label>
-          <TextEditor />
+          <p className="text-black font-normal text-sm">
+            Bạn phải nhập ít nhất 4 mục tiêu hoặc kết quả học tập mà học viên có
+            thể mong đợi đạt được sau khi hoàn thành khóa học.
+          </p>
+          {dataTarget.study.map((item) => {
+            return (
+              <input
+                type="text"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                value={item}
+              />
+            );
+          })}
+          {/* <input
+            type="text"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          /> */}
+          <p className="text-base font-normal text-blue-500 py-3 flex gap-2 items-center leading-3 cursor-pointer">
+            <PlusCircle size={20} />
+            Thêm nội dung vào phản hồi của bạn
+          </p>
         </div>
-        <div className="mb-2">
+        <div className="mb-2 space-y-4">
           <label
             htmlFor="confirm_password"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            className="block mb-2 text-sm font-bold text-gray-900 dark:text-white"
           >
-            Học viên sẽ học nhận được gì khi tham gia khoá học?
+            Yêu cầu hoặc điều kiện tiên quyết để tham gia khóa học của bạn là
+            gì?
           </label>
-          <TextEditor />
+          <p className="text-black font-normal text-sm">
+            Liệt kê các kỹ năng, kinh nghiệm, công cụ hoặc thiết bị mà học viên
+            bắt buộc phải có trước khi tham gia khóa học. Nếu bạn không có yêu
+            cầu nào, hãy tận dụng phần này và coi đây là cơ hội để bạn hạ thấp
+            tiêu chuẩn cho người mới bắt đầu.
+          </p>
+          {dataTarget.requirement.map((item) => {
+            return (
+              <input
+                type="text"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                value={item}
+              />
+            );
+          })}
+          <p className="text-base font-normal text-blue-500 py-3 flex gap-2 items-center leading-3 cursor-pointer">
+            <PlusCircle size={20} />
+            Thêm nội dung vào phản hồi của bạn
+          </p>
         </div>
       </div>
     </div>
   );
 };
-
 const PriceCreateCourseTeacher = (): React.ReactElement => {
   return (
     <div className="flex items-start justify-center w-full">
@@ -503,49 +321,4 @@ const FAQCreateCourseTeacher = (): React.ReactElement => {
 
 const NoticeCreateCourseTeacher = (): React.ReactElement => {
   return <></>;
-};
-
-const CreateContentCourse = (props: {
-  isOpenModal: boolean;
-  setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
-}): React.ReactElement => {
-  const { selectLesson } =
-    React.useContext<ICreateCourseContext>(CreateCourseContext);
-  const [isLoading, setIsLoading] = React.useState(true);
-
-  React.useEffect(() => {
-    // Simulate loading content for 2 seconds
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  return (
-    <>
-      <div className=" bg-white rounded-md w-[25%] h-full overflow-auto">
-        <LessonInformation
-          isOpenModal={props.isOpenModal}
-          setIsOpenModal={props.setIsOpenModal}
-        />
-      </div>
-      <div className="h-full overflow-auto bg-white p-2 flex-1">
-        {isLoading ? (
-          <div className="w-full flex items-center justify-center">
-            <p>Loading...</p>
-          </div>
-        ) : selectLesson?.type === "document" ? (
-          <CreateLessonDocument />
-        ) : selectLesson?.type === "video" ? (
-          <CreateLessonVideo />
-        ) : selectLesson?.type === "quiz" ? (
-          <CreateQuizProvider>
-            <CreateLessonQuiz />
-          </CreateQuizProvider>
-        ) : (
-          <div className="w-full flex items-center justify-center"></div>
-        )}
-      </div>
-    </>
-  );
 };

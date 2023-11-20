@@ -1,11 +1,11 @@
-import { ICourse } from "@/types/type";
+import { ICourse, ICourseDetail } from "@/types/type";
 import { MagnifyingGlass } from "@phosphor-icons/react";
 import React from "react";
 interface IProps {
   isOpen: boolean;
   dataSearch: {
     keyword: string[];
-    course: ICourse[];
+    course: ICourseDetail[];
   };
 }
 const SearchHeaderResult = (props: IProps): React.ReactElement => {
@@ -38,18 +38,14 @@ const SearchHeaderResult = (props: IProps): React.ReactElement => {
                 return (
                   <div className="rounded-sm bg-white hover:bg-gray-100 min-h-[50px] flex items-center justify-start px-4 space-x-3">
                     <div className=" h-[40px] w-[40px]">
-                      <img
-                        src={data.thumbnail}
-                        alt=""
-                        className=" w-full h-full"
-                      />
+                      <img src={data.image} alt="" className=" w-full h-full" />
                     </div>
                     <div className=" flex flex-col justify-start items-start w-ful pb-3">
                       <h5 className="text-sm font-bold overflow-hidden text-ellipsis">
                         {data.title}
                       </h5>
                       <p className="text-sm  font-normal text-gray-500 overflow-hidden text-ellipsis">
-                        {data.teacher}
+                        {data.user?.full_name}
                       </p>
                     </div>
                   </div>

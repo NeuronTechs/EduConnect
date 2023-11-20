@@ -12,7 +12,7 @@ export interface User {
   userId: string;
   username: string;
   role: string | null;
-  fullName: string;
+  full_name: string;
   createdAt: string;
   updatedAt: string;
   avatar: string;

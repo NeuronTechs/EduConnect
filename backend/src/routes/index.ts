@@ -12,6 +12,7 @@ import topicRouter from "./topic.route";
 import teacherRouter from "./teacher.route";
 import searchRouter from "./search.route";
 import adminRouter from "./admin.route";
+import coursesRouter from "./courses.router";
 import transactionRouter from "./transaction.route";
 const router = express.Router();
 router.use("/user", userRoutes);
@@ -28,6 +29,7 @@ router.use("/topics", topicRouter);
 router.use("/teachers", teacherRouter);
 router.use("/search", searchRouter);
 router.use("/admin", adminRouter);
+router.use("/courses", coursesRouter);
 router.use("/transaction", transactionRouter);
 
 export default router;

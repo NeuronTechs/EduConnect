@@ -2,13 +2,7 @@ import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import DefaultLayout from "./layout/DefaultLayout/defaultLayout";
 import { setupInterceptor } from "./utils/interceptor";
-import {
-  IRouter,
-  adminRoutes,
-  privateRoutes,
-  publicRoutes,
-  teacherRoutes,
-} from "./router/Router";
+import { publicRoutes } from "./router/Router";
 import { AppDispatch, store } from "./redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { configRouter } from "./configs/router";
@@ -26,21 +20,12 @@ function App() {
   const dispatch = useDispatch<AppDispatch>();
   // const location = useLocation();
   setupInterceptor(store, dispatch);
-  let routerCheck: IRouter[];
+  const routerCheck = publicRoutes;
   const useCurrentUser = useSelector(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (state: any) => state.authSlice.currentUser
   );
-  routerCheck = publicRoutes;
-  if (useCurrentUser?.role === "0") {
-    routerCheck = [...privateRoutes];
-  } else if (useCurrentUser?.role === "1") {
-    routerCheck = [...privateRoutes, ...teacherRoutes];
-  } else if (useCurrentUser?.role === "2") {
-    routerCheck = [...privateRoutes, ...adminRoutes];
-  } else {
-    routerCheck = [...publicRoutes, ...privateRoutes];
-  }
+
   return (
     // <Router>
     <div className="App">
@@ -61,7 +46,7 @@ function App() {
                 element={
                   <>
                     <RequireAuth
-                      requiredRole={useCurrentUser?.role}
+                      requiredRole={route.role}
                       user={useCurrentUser}
                     >
                       <Layout>
