@@ -8,8 +8,8 @@ import {
   dataResponse,
   updateResponse,
 } from "../constant/type";
-import { Multer } from "multer";
 import { v4 as uuidv4 } from "uuid";
+import { Multer } from "multer";
 
 const create = async (
   data: IComment,

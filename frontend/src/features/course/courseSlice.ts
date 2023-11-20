@@ -214,7 +214,7 @@ export const courseSlice = createSlice({
     builder.addCase(getReplyByCommentId.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(getReplyByCommentId.fulfilled, (state, action) => {
+    builder.addCase(getReplyByCommentId.fulfilled, (state) => {
       state.loading = false;
       state.error = undefined;
       state.isError = false;

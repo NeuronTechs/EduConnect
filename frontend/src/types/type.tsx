@@ -1,3 +1,4 @@
+import { AdminState } from "@/features/admin/adminSlice";
 import { AuthState } from "@/features/auth/authSlice";
 import { CartState } from "@/features/cart/cartSlice";
 import { CheckoutState } from "@/features/checkoutCourse/checkoutSlice";
@@ -10,6 +11,7 @@ export interface SliceState {
   cartSlice: CartState;
   courseOverviewSlice: CourseOverviewState;
   checkoutSlice: CheckoutState;
+  adminSlice: AdminState;
 }
 export interface ICourse {
   course_id: string;
@@ -364,4 +366,10 @@ export interface StudentOfCourse {
   address?: string;
   timeStart?: string;
   student_name?: string;
+}
+export interface ITransactionReport {
+  year: number;
+  month: number;
+  revenue: number;
+  total_student: number;
 }

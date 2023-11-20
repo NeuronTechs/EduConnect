@@ -15,6 +15,7 @@ import cartSlice from "../features/cart/cartSlice";
 import courseSlice from "@/features/course/courseSlice";
 import courseOverviewSlice from "@/features/overviewCourse/courseOverviewSlice";
 import checkoutSlice from "@/features/checkoutCourse/checkoutSlice";
+import adminSlice from "@/features/admin/adminSlice";
 
 const persistConfig = {
   key: "root",
@@ -30,6 +31,7 @@ export default configureStore({
     course: courseSlice,
     courseOverview: courseOverviewSlice,
     checkoutSlice: checkoutSlice,
+    admin: adminSlice,
   },
 });
 // auth: authReducer
@@ -39,6 +41,7 @@ const rootReducer = combineReducers({
   courseSlice,
   courseOverviewSlice,
   checkoutSlice,
+  adminSlice,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
