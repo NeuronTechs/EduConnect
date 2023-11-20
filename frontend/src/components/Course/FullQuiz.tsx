@@ -1,5 +1,4 @@
 import { Info } from "@phosphor-icons/react";
-import React from "react";
 const data = [
   {
     id: 1,
