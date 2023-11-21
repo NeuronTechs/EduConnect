@@ -107,23 +107,27 @@ const Reviews = () => {
   };
 
   const handleAddReview = async () => {
-    let params: addReview = {
-      course_id: id as string,
-      content: content,
-      author_id: currentUser?.username as string,
-      rating: rated,
-      title: title,
-    };
-    await courseApi.addToReview(params);
-    const data = await courseApi.getReviewCourse(
-      currentCourse?.course_id as string
-    );
-    setReviews([...data?.data]);
-    const getStatistic = await courseApi.getStatisticStar(id as string);
-    setTatistic(getStatistic?.data);
-    setContent("");
-    setTitle("");
-    setRated(0);
+    if (title.trim() === "" || content.trim() === "" || rated === 0) {
+      alert("Tiêu đề và nội dung không được để trống");
+    } else {
+      let params: addReview = {
+        course_id: id as string,
+        content: content,
+        author_id: currentUser?.username as string,
+        rating: rated,
+        title: title,
+      };
+      await courseApi.addToReview(params);
+      const data = await courseApi.getReviewCourse(
+        currentCourse?.course_id as string
+      );
+      setReviews([...data?.data]);
+      const getStatistic = await courseApi.getStatisticStar(id as string);
+      setTatistic(getStatistic?.data);
+      setContent("");
+      setTitle("");
+      setRated(0);
+    }
   };
 
   return (

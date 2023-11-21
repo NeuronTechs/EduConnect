@@ -82,7 +82,7 @@ const Checkout = () => {
           payment_method: {
             card: cardElement,
             billing_details: {
-              name: currentUser?.fullName,
+              name: currentUser?.full_name,
               email: currentUser?.email,
             },
           },
@@ -128,8 +128,8 @@ const Checkout = () => {
         <div>
           <h1 className="font-semibold text-[30px] my-3 w-full">Thanh toán</h1>
         </div>
-        <div className="flex items-center justify-around w-full">
-          <div className="w-[50%] shadow-lg px-5 py-3">
+        <div className="flex items-center justify-around w-full ">
+          <div className="w-[50%] shadow-lg px-5 py-3 bg-white rounded-lg">
             <form onSubmit={submitHandler}>
               <h1 className="mb-4 font-semibold my-3 text-[20px]">
                 Phương thức thanh toán
