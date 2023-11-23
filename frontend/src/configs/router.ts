@@ -31,6 +31,7 @@ export const configRouter = {
   reportSale: "/admin/reportsale",
   reportMember: "/admin/reportmember",
   adminListStudent: "/admin/list-student",
+  courseManager: "/admin/course-manager",
   myCourseDetails: "/myCourse/:id",
   managerComplaintCourse: "/admin/complaint",
   complaintCourseDetail: "/admin/complaint/:id",

@@ -185,6 +185,12 @@ const publicRoutes: IRouter[] = [
     layout: DefaultLayout,
     role: "2",
   },
+  {
+    path: configRouter.courseManager,
+    component: lazy(() => import("@/pages/Admin/CourseManager")),
+    layout: DefaultLayout,
+    role: "2",
+  },
   // admin
   {
     path: configRouter.dashboardTeacher,

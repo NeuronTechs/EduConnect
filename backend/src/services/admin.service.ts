@@ -1,5 +1,6 @@
 import db from "../config/connectDB";
 import { RowDataPacket } from "mysql2";
+import { dataListResponse } from "../constant/type";
 
 const getAllUser = (
   page: number,
@@ -105,7 +106,96 @@ const setStatusUser = (status: string, username: string): Promise<any> => {
   }
 };
 
+interface ICourse {
+  course_id: string;
+  teacher_id: string;
+  title: string;
+  description: string;
+  image: string;
+  price: string;
+  discount: string;
+  level: string;
+  status: string;
+  username: string;
+  total_page: number;
+  language: string;
+  createdAt: Date;
+}
+
+const getAllCourseWithTeacherData = async (
+  page: number,
+  pageSize: number,
+  txtSearch: string,
+  status: string
+): Promise<dataListResponse<ICourse>> => {
+  const offset = (page - 1) * pageSize;
+  const sql =
+    " Select c.*,t.username,t.teacher_id,CEIL((SELECT COUNT(*) FROM course c join teacher t on c.teacher_id = t.teacher_id where (c.title like  Concat('%',?,'%') or t.username like Concat('%', ? ,'%')) and (? = '2' or c.status = ?))/3) as total_page  from course c join teacher t on c.teacher_id = t.teacher_id where ( c.title like  Concat('%', ? ,'%') or t.username like Concat('%',?,'%'))  and (? = '2' or c.status = ?) limit ?,?";
+  return new Promise<dataListResponse<ICourse>>((resolve, reject) => {
+    db.connectionDB.query(
+      sql,
+      [
+        txtSearch,
+        txtSearch,
+        status,
+        status,
+        txtSearch,
+        txtSearch,
+        status,
+        status,
+        offset,
+        pageSize,
+      ],
+      (err, result: RowDataPacket[]) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve({
+          status: 200,
+          data: result as ICourse[],
+          message: "Success",
+        });
+      }
+    );
+  });
+};
+
+const setStatusCourse = async (
+  status: string,
+  course_id: string
+): Promise<any> => {
+  try {
+    const query = `UPDATE course SET status = ? WHERE course_id = ?`;
+    return new Promise((resolve, reject) => {
+      db.connectionDB.query(
+        query,
+        [status, course_id],
+        (error, result: RowDataPacket[], fields) => {
+          if (error) {
+            reject({
+              status: false,
+              data: {},
+              message: error,
+            });
+            return;
+          } else {
+            resolve({
+              status: true,
+              message: "Update success",
+            });
+          }
+        }
+      );
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
 export default {
   getAllUser,
   setStatusUser,
+  getAllCourseWithTeacherData,
+  setStatusCourse,
 };
