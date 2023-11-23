@@ -99,6 +99,11 @@ const ITEM_ADMIN_SIDEBAR = [
     to: configRouter.adminListStudent,
   },
   {
+    title: "Quản lý Khóa Học",
+    icon: <BookOpenText size={25} />,
+    to: configRouter.courseManager,
+  },
+  {
     title: "Khiếu nại",
     icon: <MaskSad size={25} />,
     to: configRouter.managerComplaintCourse,

@@ -68,3 +68,30 @@ export const getTransactionReport = async () => {
     return Promise.reject(error);
   }
 };
+
+export const getAllCourseWithTeacherData = async (
+  page: number,
+  txtSearch: string,
+  status: string
+) => {
+  try {
+    const res = await httpRequest.get(
+      `/admin/list-course?page=${page}&txtSearch=${txtSearch}&status=${status}`
+    );
+    return res;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const setStatusCourse = async (status: string, course_id: string) => {
+  try {
+    const res = await httpRequest.post(`/admin/set-status-course`, {
+      status,
+      course_id,
+    });
+    return res;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
