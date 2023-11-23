@@ -55,7 +55,66 @@ const setStatusUser = async (req: Request, res: Response) => {
   }
 };
 
+const getAllCourseWithTeacherData = async (req: Request, res: Response) => {
+  const { page, txtSearch, status } = req.query;
+  console.log(page, txtSearch);
+
+  const pageSize = 3;
+  try {
+    const result = await adminService.getAllCourseWithTeacherData(
+      Number(page),
+      pageSize,
+      txtSearch as string,
+      status as string
+    );
+    if (result?.status) {
+      res.status(200).json({
+        status: 200,
+        data: result?.data,
+        message: result?.message,
+      });
+    } else {
+      res.status(400).json({
+        status: 400,
+        data: result?.data,
+        message: result?.message,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      status: 500,
+      message: error,
+    });
+  }
+};
+
+const setStatusCourse = async (req: Request, res: Response) => {
+  try {
+    const { status, course_id } = req.body;
+    console.log(req.body);
+
+    const result = await adminService.setStatusCourse(status, course_id);
+    if (result.status)
+      res.status(200).json({
+        status: 200,
+        message: result?.message,
+      });
+    else
+      res.status(400).json({
+        status: 400,
+        message: result?.message,
+      });
+  } catch (error) {
+    if (error) {
+      res.status(400).json({ error: error });
+    } else {
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+};
 export default {
   getAllUser,
   setStatusUser,
+  getAllCourseWithTeacherData,
+  setStatusCourse,
 };
