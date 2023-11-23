@@ -1,6 +1,5 @@
 import {
   Card,
-  CardHeader,
   Typography,
   CardBody,
   Chip,
@@ -8,41 +7,31 @@ import {
   Spinner,
 } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
-import { CSVLink } from "react-csv";
-import { ArrowDown } from "@phosphor-icons/react";
+import * as authApi from "../../api/authApi/authApi";
 import { useSelector } from "react-redux";
 import { SliceState } from "@/types/type";
-import { transaction } from "@/components/Profile/CheckoutHistory";
-import * as teacherApi from "../api/teacherApi/teacherApi";
 import { formatCurrency, formatTimeStamp } from "@/utils/const";
 
-const TABLE_HEAD = [
-  "ID",
-  "Số tiền",
-  "Ngày",
-  "Trạng thái",
-  "Tài khoản",
-  "Khóa học",
-  "Học viên",
-];
-const headers = [
-  { label: "transaction_id", key: "transaction_id" },
-  { label: "Số tiền", key: "amount" },
-  { label: "Khóa học", key: "title" },
-  { label: "Học viên", key: "full_name" },
-  { label: "Ngày", key: "createdAt" },
-  { label: "Trạng thái", key: "status" },
-  { label: "Loại thẻ", key: "cardDetails.brand" },
-  { label: "Tháng hết hạn", key: "cardDetails.expMonth" },
-  { label: "Năm hết hạn", key: "cardDetails.expYear" },
-];
-
-interface transactionsTeacher extends transaction {
-  full_name: string;
+const TABLE_HEAD = ["ID", "Số tiền", "Ngày", "Trạng thái", "Tài khoản"];
+export interface transaction {
+  student_id: string;
+  transaction_id: string;
+  course_id: string;
+  title: string;
+  amount: number;
+  status: string;
+  createdAt: string;
+  cardDetails?: cardDetails;
+}
+interface cardDetails {
+  brand?: string;
+  expMonth?: number;
+  expYear?: number;
+  last4?: string;
 }
 
-const Payout = () => {
-  const [transaction, setTransaction] = useState<transactionsTeacher[]>([]);
+const CheckoutHistory = () => {
+  const [transaction, setTransaction] = useState<transaction[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const currentUser = useSelector(
     (state: SliceState) => state.authSlice?.currentUser
@@ -52,8 +41,8 @@ const Payout = () => {
     const getTransactions = async () => {
       try {
         setLoading(true);
-        const data = await teacherApi.getPaymentByPaymentTeacherId(
-          currentUser?.user_id as string
+        const data = await authApi.getTransactionByStudent(
+          currentUser?.username as string
         );
         if (data?.status === 200) {
           setLoading(false);
@@ -68,28 +57,11 @@ const Payout = () => {
   }, []);
 
   return (
-    <div>
-      <Card className="h-full w-full">
-        <CardHeader floated={false} shadow={false} className="rounded-none">
-          <div className="mb-4 flex flex-col justify-between gap-8 md:flex-row md:items-center">
-            <div>
-              <Typography variant="h5" color="blue-gray">
-                Lịch sử giao dịch
-              </Typography>
-            </div>
-            <div className="flex w-full shrink-0 gap-2 md:w-max">
-              <CSVLink
-                data={transaction}
-                headers={headers}
-                filename={"report_payout.csv"}
-                className="flex items-center gap-3 bg-gray-800 text-white px-3 py-2 rounded-md"
-                target="_blank"
-              >
-                <ArrowDown strokeWidth={2} className="h-4 w-4" /> Tải xuống
-              </CSVLink>
-            </div>
-          </div>
-        </CardHeader>
+    <div className="h-full">
+      <div className="text-center border-b-2 border-gray-500">
+        <h1 className="font-bold text-black mb-3">Lịch sử thanh toán</h1>
+      </div>
+      <Card className="h-[500px] w-full">
         <CardBody className="overflow-auto px-0">
           {loading ? (
             <div className="flex justify-center">
@@ -200,24 +172,6 @@ const Payout = () => {
                           </div>
                         </div>
                       </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {trans.title}
-                        </Typography>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {trans.full_name}
-                        </Typography>
-                      </td>
                     </tr>
                   );
                 })}
@@ -229,4 +183,5 @@ const Payout = () => {
     </div>
   );
 };
-export default Payout;
+
+export default CheckoutHistory;

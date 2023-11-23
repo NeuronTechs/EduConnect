@@ -32,7 +32,9 @@ export const convertTimeToTemplate = (seconds: number): string => {
 
 export const formatTimeStamp = (utcTimestamp: string): string => {
   const date = new Date(utcTimestamp);
-  const localDateString = date.toLocaleString();
+  const localDateString = date.toLocaleString("en-US", {
+    timeZone: "Asia/Ho_Chi_Minh",
+  });
   return localDateString;
 };
 

@@ -74,3 +74,26 @@ export const resetPassword = async (newPass: string, token: string) => {
     return Promise.reject(error);
   }
 };
+
+export const changePassword = async (username: string, password: string) => {
+  try {
+    const res = await httpRequest.post("/user/change-password", {
+      username: username,
+      password: password,
+    });
+    console.log(res);
+    return res;
+  } catch (error: any) {
+    return Promise.reject(error);
+  }
+};
+
+export const getTransactionByStudent = async (username: string) => {
+  try {
+    const res = await httpRequest.get(`payment/get-payment/${username}`);
+    console.log(res);
+    return res;
+  } catch (error: any) {
+    return Promise.reject(error);
+  }
+};

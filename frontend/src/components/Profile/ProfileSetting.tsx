@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Tabs,
   TabsHeader,
@@ -7,38 +6,32 @@ import {
   TabPanel,
 } from "@material-tailwind/react";
 import PublicProfile from "./PublicProfile";
-import Notification from "./Notification";
-import Privacy from "./Privacy";
+import ChangePassword from "./ChangePassword";
+import CheckoutHistory from "./CheckoutHistory";
 const ProfileSetting = () => {
   return (
     <div className="w-full xl:w-[75%] h-[90vh] bg-white shadow-2xl p-10 m-5 mt-5 rounded-xl">
       <Tabs value="PublicProfile">
         <TabsHeader>
           <Tab key={"PublicProfile"} value={"PublicProfile"}>
-            Public Profile
+            Thông tin cá nhân
           </Tab>
-          <Tab key={"Notification"} value={"Notification"}>
-            Notification
-          </Tab>
-          <Tab key={"Privacy"} value={"Privacy"}>
-            Privacy
+          <Tab key={"ChangePassword"} value={"ChangePassword"}>
+            Mật khẩu
           </Tab>
           <Tab key={"Payment"} value={"Payment"}>
-            Payment
+            Thanh toán
           </Tab>
         </TabsHeader>
         <TabsBody>
           <TabPanel key={"PublicProfile"} value={"PublicProfile"}>
             <PublicProfile />
           </TabPanel>
-          <TabPanel key={"Notification"} value={"Notification"}>
-            <Notification />
-          </TabPanel>
-          <TabPanel key={"Privacy"} value={"Privacy"}>
-            <Privacy />
+          <TabPanel key={"ChangePassword"} value={"ChangePassword"}>
+            <ChangePassword />
           </TabPanel>
           <TabPanel key={"Payment"} value={"Payment"}>
-            Payment
+            <CheckoutHistory />
           </TabPanel>
         </TabsBody>
       </Tabs>

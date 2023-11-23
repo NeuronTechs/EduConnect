@@ -1,4 +1,3 @@
-import React from "react";
 import ProfileInfo from "../components/Profile/ProfileInfo";
 import ProfileSetting from "../components/Profile/ProfileSetting";
 
