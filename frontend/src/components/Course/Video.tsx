@@ -8,6 +8,7 @@ import {
 } from "@/features/course/courseSlice";
 import { AppDispatch } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
+import YouTube, { YouTubeProps } from "react-youtube";
 interface Props {
   currentLecture: ILecture | null;
   currentTime: number;
@@ -20,7 +21,6 @@ const Video = ({ currentLecture, currentTime, setCurrentTime }: Props) => {
     session_id: currentLecture?.session_id || 0,
   });
   const videoRef = useRef<HTMLVideoElement>(null);
-  const ytbRef = useRef<HTMLIFrameElement>(null);
   const location = useLocation();
   const dispatch = useDispatch<AppDispatch>();
   const getCurrentTime = () => {
@@ -37,15 +37,16 @@ const Video = ({ currentLecture, currentTime, setCurrentTime }: Props) => {
   }, [currentTime]);
   useEffect(() => {
     if (
+      currentUser &&
       currentLecture?.has_watched === "No" &&
       currentLecture.type !== "Quiz" &&
-      currentUser
+      currentTime > 0
     ) {
       dispatch(
         createStudentProgress({
           course_id: currentLecture.course_id,
-          lecture_id: currentId.lecture_id.toString(), // Convert lecture_id to string
-          session_id: currentId.session_id.toString(),
+          lecture_id: currentId.lecture_id?.toString(), // Convert lecture_id to string
+          session_id: currentId.session_id?.toString(),
           progress: currentTime,
           student_id: currentUser?.user_id,
         })
@@ -62,8 +63,8 @@ const Video = ({ currentLecture, currentTime, setCurrentTime }: Props) => {
       dispatch(
         updateStudentProgress({
           course_id: currentLecture.course_id,
-          lecture_id: currentId.lecture_id.toString(), // Convert lecture_id to string
-          session_id: currentId.session_id.toString(),
+          lecture_id: currentId.lecture_id?.toString(), // Convert lecture_id to string
+          session_id: currentId.session_id?.toString(),
           progress: currentTime,
           student_id: currentUser?.user_id,
         })
@@ -81,27 +82,28 @@ const Video = ({ currentLecture, currentTime, setCurrentTime }: Props) => {
   }, [currentLecture, location]);
   const getEmbedUrl = (url: string) => {
     const videoId = url.split("v=")[1].split("&")[0];
-    return `https://www.youtube.com/embed/${videoId}`;
+    return videoId;
+    // return `https://www.youtube.com/embed/${videoId}`;
   };
 
+  const onReady: YouTubeProps["onReady"] = (event) => {
+    // access to player in all event handlers via event.target
+    event.target.seekTo(currentLecture?.has_watched || 0);
+    event.target.pauseVideo();
+  };
+  const onPause: YouTubeProps["onPause"] = (event) => {
+    setCurrentTime(event.target.getCurrentTime());
+  };
   return (
     <div className=" h-auto flex justify-center bg-black relative shadow-xl ">
       {currentLecture?.source.includes("youtube") ? (
-        <iframe
-          ref={ytbRef}
+        <YouTube
+          videoId={getEmbedUrl(currentLecture?.source)}
+          opts={{ height: "100%", width: "100%" }}
           className="w-[90%] aspect-video"
-          src={getEmbedUrl(currentLecture?.source)}
-          title="YouTube video player"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          onClick={() => {
-            setCurrentTime(getCurrentTime());
-            console.log(getCurrentTime());
-          }}
-          onSeeked={() => {
-            setCurrentTime(getCurrentTime());
-          }}
-        ></iframe>
+          onReady={onReady}
+          onPause={onPause}
+        />
       ) : (
         <video
           src={currentLecture?.source}

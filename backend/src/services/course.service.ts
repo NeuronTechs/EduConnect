@@ -216,15 +216,15 @@ JOIN
 LEFT JOIN 
   student_progress sp ON sp.lecture_id = l.lecture_id AND sp.student_id = ?
 WHERE 
-  s.course_id = ?
+  s.course_id = ? and  c.course_id IN (SELECT course_id FROM order_items WHERE student_id = ?)
 ORDER BY 
-  s.session_id, l.lecture_id;`;
+  s.createdAt,s.session_id, l.lecture_id;`;
 
   // Execute the SQL query and return a Promise that resolves to the course details
   return new Promise<dataResponse<ICourseDetail>>((resolve, reject) => {
     db.connectionDB.query(
       sql,
-      [user_id, user_id, course_id],
+      [user_id, user_id, course_id, user_id],
       (err, result: RowDataPacket[]) => {
         if (err) {
           reject(err);

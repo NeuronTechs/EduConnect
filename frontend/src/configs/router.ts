@@ -3,7 +3,7 @@ export const configRouter = {
   login: "/login",
   signUp: "/signUp",
   registerInformation: "/register-information",
-
+  notFound: "/404",
   forgetPassword: "/forget-password",
   resetPassword: "/reset-password",
   // student

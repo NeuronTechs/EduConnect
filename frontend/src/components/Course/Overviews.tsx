@@ -17,7 +17,6 @@ const Overviews = () => {
   useEffect(() => {
     if (id) dispatch(getCourseOverview(id));
   }, [id]);
-  console.log(currentCourse);
 
   return (
     <div>

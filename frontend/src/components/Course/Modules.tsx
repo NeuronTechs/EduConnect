@@ -61,11 +61,12 @@ const LectureCard = (props: { Lecture: ILecture; index: number }) => {
             <MonitorPlay size={16} />
             <p> {props.Lecture.duration + " phút"}</p>
           </div>
-          {props.Lecture.has_watched === "yes" && (
-            <div className="rounded-full border-[0.5px] w-5 h-5 flex justify-center items-center border-green-500 bg-green-500">
-              <Check size={14} color="white" />
-            </div>
-          )}
+          {props.Lecture.has_watched !== "No" &&
+            props.Lecture.has_watched !== undefined && (
+              <div className="rounded-full border-[0.5px] w-5 h-5 flex justify-center items-center border-green-500 bg-green-500">
+                <Check size={14} color="white" />
+              </div>
+            )}
           {/* <div className="rounded-full border-[0.5px] w-5 h-5 flex justify-center items-center border-black ">
             <Check size={14} color="white" />
           </div> */}
@@ -98,7 +99,13 @@ const Session = (props: LectureProps) => {
         </AccordionHeader>
         <AccordionBody>
           {props.lectures?.map((Lecture, index) => {
-            return <LectureCard Lecture={Lecture} index={index} />;
+            return (
+              <LectureCard
+                key={Lecture.lecture_id}
+                Lecture={Lecture}
+                index={index}
+              />
+            );
           })}
         </AccordionBody>
       </Accordion>
@@ -117,6 +124,7 @@ const Modules = ({ currentCourse }: Props) => {
         {currentCourse?.sessions?.map((session) => {
           return (
             <Session
+              key={session.session_id}
               isOpen={session.session_id === "1"}
               title={session.name}
               time={session.name.length}

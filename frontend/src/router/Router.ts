@@ -50,6 +50,12 @@ const publicRoutes: IRouter[] = [
   },
   // user
   {
+    path: configRouter.notFound,
+    component: lazy(() => import("../pages/NotFound")),
+    layout: BlankLayout,
+    role: "0",
+  },
+  {
     path: configRouter.course,
     component: lazy(() => import("../pages/OverviewCourse")),
     layout: DefaultLayout,
