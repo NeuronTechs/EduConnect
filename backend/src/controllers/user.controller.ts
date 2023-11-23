@@ -203,37 +203,45 @@ const login = async (req: Request, res: Response) => {
     //   }
     // }
     const { username, password } = req.body; //1
-    if (!username) { //2
-      return res.status(400).json({ //3
+    if (!username) {
+      //2
+      return res.status(400).json({
+        //3
         status: 400,
         data: {},
         message: "The username field is required!",
       });
-    } else if (!password) { //4
-      return res.status(400).json({ //5
+    } else if (!password) {
+      //4
+      return res.status(400).json({
+        //5
         status: 400,
         data: {},
         message: "The password field is required!",
       });
-    } 
-    else {
+    } else {
       const result = await UserService.login(username); //6
-      if (result.length === 0) { //7
-        return res.status(400).json({//8
-          status: 400, 
+      if (result.length === 0) {
+        //7
+        return res.status(400).json({
+          //8
+          status: 400,
           data: {},
           message: "Incorrect username",
         });
       }
       const isValid = await isValidPassword(password, result[0]?.password); //9
-      if (!isValid) { //10
-        return res.status(400).json({  //11
+      if (!isValid) {
+        //10
+        return res.status(400).json({
+          //11
           status: 400,
           data: {},
           message: "Incorrect password",
         });
       }
-      const accessToken = generateAccessToken( //12
+      const accessToken = generateAccessToken(
+        //12
         result[0]?.username,
         result[0]?.role
       );

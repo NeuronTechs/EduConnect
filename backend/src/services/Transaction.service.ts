@@ -60,6 +60,72 @@ month DESC;`;
   }
 };
 
+const getTransactionByStudent = async (username: string): Promise<any> => {
+  try {
+    const query = `SELECT	student.student_id, transactions.transaction_id, course.course_id, course.title, transactions.amount, transactions.status, transactions.createdAt
+      FROM educonnectdb.student join educonnectdb.user on student.username = user.username
+      join educonnectdb.transactions on student.student_id = transactions.student_id
+      join educonnectdb.course on transactions.course_id = course.course_id where user.username = ?`;
+    return new Promise((resolve, reject) => {
+      db.connectionDB.query(
+        query,
+        [username],
+        (error, transactions: RowDataPacket[], fields) => {
+          if (error) {
+            reject({
+              status: false,
+              data: {},
+              message: error,
+            });
+            return;
+          }
+          resolve({
+            status: true,
+            data: transactions,
+            message: "Get transactions success",
+          });
+        }
+      );
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getTransactionByTeacher = async (teacher_id: string): Promise<any> => {
+  try {
+    const query = `SELECT	student.student_id, transactions.transaction_id, course.course_id, course.title, transactions.amount, transactions.status, transactions.createdAt, user.full_name
+    FROM educonnectdb.student join educonnectdb.user on student.username = user.username
+    join educonnectdb.transactions on student.student_id = transactions.student_id
+    join educonnectdb.course on transactions.course_id = course.course_id where course.teacher_id = ?`;
+    return new Promise((resolve, reject) => {
+      db.connectionDB.query(
+        query,
+        [teacher_id],
+        (error, transactions: RowDataPacket[], fields) => {
+          if (error) {
+            reject({
+              status: false,
+              data: {},
+              message: error,
+            });
+            return;
+          }
+          resolve({
+            status: true,
+            data: transactions,
+            message: "Get transactions success",
+          });
+        }
+      );
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
 export default {
   getTransactionReport,
+  getTransactionByStudent,
+  getTransactionByTeacher,
 };

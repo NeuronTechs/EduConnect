@@ -31,6 +31,7 @@ function ResetPassword() {
       }
     }
   };
+  
   return (
     <div className="h-full w-full bg-gray-200">
       <div className="w-1/2 h-auto flex flex-col justify-center color-black shadow-md absolute top-[20%] left-1/4 bg-white rounded-lg">
