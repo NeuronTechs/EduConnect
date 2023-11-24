@@ -69,7 +69,7 @@ const CreateQuizProvider = ({ children }: { children: React.ReactNode }) => {
       if (res) {
         setDataQuiz({
           ...dataQuiz,
-          questions: [...dataQuiz.questions, question],
+          questions: [...dataQuiz.questions, { ...res, answers: [] }],
         });
       }
     } catch (error) {

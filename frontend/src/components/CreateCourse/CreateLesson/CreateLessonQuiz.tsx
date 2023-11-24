@@ -357,6 +357,16 @@ const QuestionItem = ({
       question: dataQuestion,
     });
   };
+
+  const renderTextType = (type: string) => {
+    if (type === "single_choice") return "Lựa Chọn Duy Nhất";
+    if (type === "multiple_choice") return "Nhiều Lựa Chọn";
+    if (type === "true_false") return "Đúng - Sai";
+    if (type === "matching") return "Kết Hợp";
+    if (type === "matching_image") return "Kết Hợp Hình Ảnh";
+    if (type === "keyword") return "Từ Khoá";
+    if (type === "fill") return "Điền Vào Khoảng Trống";
+  };
   return (
     <div
       className=" px-2 pt-2 rounded-md border border-transparent bg-blue-200/30 relative  flex flex-col justify-center items-center"
@@ -389,6 +399,9 @@ const QuestionItem = ({
                 value={data.question ? data.question : "nhập câu hỏi"}
                 onSubmit={handleEditQuestionTitle}
               />
+            </div>
+            <div className="flex items-center justify-start text-gray-500 text-sm font-medium">
+              {renderTextType(data.type)}
             </div>
             {/* =========================================================================== update last ===========================================================*/}
             {/* <div className="flex items-center justify-start gap-4">

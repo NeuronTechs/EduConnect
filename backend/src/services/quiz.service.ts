@@ -162,7 +162,6 @@ const updateQuiz = async (lecture_id: string, section: IQuiz) => {
 // question
 const createQuestionQuiz = async (question: IQuestion) => {
   question.question_id = uuidv4();
-  console.log(question);
   const query = `INSERT INTO quiz_question SET ?`;
   return new Promise<dataResponse<IQuestion>>((resolve, rejects) => {
     try {
