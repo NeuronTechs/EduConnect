@@ -50,6 +50,12 @@ const publicRoutes: IRouter[] = [
   },
   // user
   {
+    path: configRouter.notFound,
+    component: lazy(() => import("../pages/NotFound")),
+    layout: BlankLayout,
+    role: "0",
+  },
+  {
     path: configRouter.course,
     component: lazy(() => import("../pages/OverviewCourse")),
     layout: DefaultLayout,
@@ -176,6 +182,12 @@ const publicRoutes: IRouter[] = [
   {
     path: configRouter.managerComplaintCourse,
     component: lazy(() => import("@/pages/ManagerComplaintCourse")),
+    layout: DefaultLayout,
+    role: "2",
+  },
+  {
+    path: configRouter.courseManager,
+    component: lazy(() => import("@/pages/Admin/CourseManager")),
     layout: DefaultLayout,
     role: "2",
   },

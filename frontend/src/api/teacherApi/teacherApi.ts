@@ -102,3 +102,12 @@ export const getStudentByTeacher = async (teacher_id: string) => {
     return Promise.reject(error);
   }
 };
+
+export const getPaymentByPaymentTeacherId = async (teacher_id: string) => {
+  try {
+    const res = await httpRequest.get(`payment/teacher-payment/${teacher_id}`);
+    return res;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};

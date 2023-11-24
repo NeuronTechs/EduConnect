@@ -2,7 +2,7 @@ import TabsInfo from "@/components/Course/Tabs";
 import Modules from "@/components/Course/Modules";
 import Video from "@/components/Course/Video";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getCourseDetails } from "@/features/course/courseSlice";
 import { AppDispatch } from "@/redux/store";
@@ -17,11 +17,19 @@ const Course = () => {
   const currentCourse = useSelector((state: SliceState) => state.courseSlice);
   const [currentTime, setCurrentTime] = useState(0);
   const [isFullQuiz, setIsFullQuiz] = useState(false);
-  useEffect(() => {
-    if (id !== undefined && currentUser.currentUser?.user_id)
-      dispatch(
+  const navigate = useNavigate();
+  const getCourseDetailsStatus = async () => {
+    if (id !== undefined && currentUser.currentUser?.user_id) {
+      const res = await dispatch(
         getCourseDetails({ id: id, user_id: currentUser.currentUser?.user_id })
       );
+      if (res.payload === undefined) {
+        navigate("/404");
+      }
+    }
+  };
+  useEffect(() => {
+    getCourseDetailsStatus();
   }, [id]);
 
   return (
@@ -62,7 +70,7 @@ const Course = () => {
           </div>
         </div>
       </div>
-      {/* )} */}
+      {/* )}{" "} */}
     </div>
   );
 };

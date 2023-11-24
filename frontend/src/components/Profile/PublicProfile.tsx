@@ -1,12 +1,16 @@
-import React from "react";
+// import { useSelector } from "react-redux";
 import assets from "../../assets";
 import { Input } from "@material-tailwind/react";
+// import { SliceState } from "@/types/type";
 const PublicProfile = () => {
+  // const currentUser = useSelector(
+  //   (state: SliceState) => state.authSlice?.currentUser
+  // );
+
   return (
     <div className="flex flex-col items-center">
       <div className="text-center w-full border-b-2 border-gray-500">
-        <h1 className="font-bold text-black"> Public profile </h1>
-        Add information about yourself
+        <h1 className="font-bold text-black mb-3"> Thông tin cá nhân </h1>
       </div>
       <div className="relative w-full flex items-center justify-center mb-4 mt-8">
         <img src={assets.images.task} alt="" className="h-[80px]" />
@@ -33,10 +37,10 @@ const PublicProfile = () => {
       </div>
       <div className="flex space-x-7 m-10 font-bold">
         <button className="w-44 h-10 bg-gray-900 text-white rounded-lg ">
-          Save Profile
+          Hủy
         </button>
         <button className="w-44 h-10 border-2 border-gray-900 text-gray-900 rounded-lg ">
-          Save Profile
+          Lưu
         </button>
       </div>
     </div>
