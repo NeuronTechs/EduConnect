@@ -1,5 +1,5 @@
 import { CreateQuizContext } from "@/context/CreateQuizContext";
-import { IQuestionInfo } from "@/types/type";
+import { IAnswerInfo, IQuestionInfo } from "@/types/type";
 import { DndContext } from "@dnd-kit/core";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -20,24 +20,21 @@ interface IInputAnswer {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ContentQuestionMultiplyChoice = (props: { data: IQuestionInfo }) => {
   const [typeAnswer, setTypeAnswer] = React.useState<string>("answer");
-  const { handleEditQuestion } = React.useContext(CreateQuizContext);
+  const { handleAddNewAnswerQuestion } = React.useContext(CreateQuizContext);
   const { register, handleSubmit, reset } = useForm<IInputAnswer>();
   const onSubmit = (data: IInputAnswer) => {
     if (data.title === "") return;
-    handleEditQuestion({
-      ...props.data,
-      type: "multiple_choice",
-      answers: [
-        ...props.data.answers,
-        {
-          id: props.data.answers.length + 1,
-          answer: data.title,
-          isCorrect: false,
-          image: null,
-          question: null,
-        },
-      ],
-    });
+    handleAddNewAnswerQuestion(
+      {
+        answer_id: `${props.data.answers.length + 1}`,
+        question_id: props.data.question_id,
+        answer: data.title,
+        isCorrect: false,
+        image: null,
+        question: null,
+      },
+      "keyword"
+    );
     reset();
   };
   return (
@@ -69,13 +66,19 @@ const ContentQuestionMultiplyChoice = (props: { data: IQuestionInfo }) => {
         </div>
       ) : (
         <DndContext>
-          <SortableContext items={[{ id: 1 }, { id: 2 }, { id: 3 }]}>
+          <SortableContext
+            items={props.data.answers.map((item) => item.answer_id)}
+          >
             <div className="space-y-2 w-full">
               {typeAnswer === "answer" ? (
                 <>
                   {props.data.answers.map((item) => {
                     return (
-                      <ItemAnswer key={item.id} id={item.id} data={item} />
+                      <ItemAnswer
+                        key={item.answer_id}
+                        id={item.answer_id}
+                        data={item}
+                      />
                     );
                   })}
                 </>
@@ -83,7 +86,11 @@ const ContentQuestionMultiplyChoice = (props: { data: IQuestionInfo }) => {
                 <>
                   {props.data.answers.map((item) => {
                     return (
-                      <ItemAnswerImage key={item.id} id={item.id} data={item} />
+                      <ItemAnswerImage
+                        key={item.answer_id}
+                        id={item.answer_id}
+                        data={item}
+                      />
                     );
                   })}
                 </>
@@ -124,14 +131,9 @@ const ContentQuestionMultiplyChoice = (props: { data: IQuestionInfo }) => {
 
 export default ContentQuestionMultiplyChoice;
 
-interface IItemAnswer {
-  id: number;
-  answer: string;
-  isCorrect: boolean;
-}
 const ItemAnswer = (props: {
-  id: number;
-  data: IItemAnswer;
+  id: string;
+  data: IAnswerInfo;
 }): React.ReactElement => {
   const [hover, setHover] = React.useState<boolean>(false);
 
@@ -188,8 +190,8 @@ const ItemAnswer = (props: {
 };
 
 const ItemAnswerImage = (props: {
-  id: number;
-  data: IItemAnswer;
+  id: string;
+  data: IAnswerInfo;
 }): React.ReactElement => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: props.id });

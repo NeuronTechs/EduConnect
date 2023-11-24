@@ -29,10 +29,10 @@ const SectionList = (props: {
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
     if (over && dataSection.length > 0) {
       const overIndex = dataSection.findIndex(
-        (section: ISectionInfo) => section.section_id === over.id?.toString()
+        (section: ISectionInfo) => section.session_id === over.id?.toString()
       );
       const activeIndex = dataSection.findIndex(
-        (section: ISectionInfo) => section.section_id === active.id?.toString()
+        (section: ISectionInfo) => section.session_id === active.id?.toString()
       );
       console.log(activeIndex, overIndex);
       const newList = insertArrayElements(dataSection, activeIndex, overIndex);
@@ -46,27 +46,27 @@ const SectionList = (props: {
         <div className="w-full flex items-center justify-between p-2 gap-2 min-h-[40px] bg-white">
           <p className="text-sm font-bold">Phần khoá học</p>
         </div>
-        <DndContext onDragEnd={handleDragEnd}>
-          <SortableContext items={[1, 2, 3]}>
-            {!dataSection || dataSection?.length === 0 ? (
-              <div className="w-full flex items-center justify-center p-2 gap-2 min-h-[40px] bg-white">
-                <p className="text-sm font-bold">Chưa có phần khoá học</p>
-              </div>
-            ) : (
-              dataSection.map((item) => {
+        {dataSection?.length === 0 ? (
+          <div className="w-full flex items-center justify-center p-2 gap-2 min-h-[40px] bg-white">
+            <p className="text-sm font-bold">Chưa có phần khoá học</p>
+          </div>
+        ) : (
+          <DndContext onDragEnd={handleDragEnd}>
+            <SortableContext items={dataSection.map((item) => item.session_id)}>
+              {dataSection.map((item) => {
                 return (
                   <ItemSection
-                    key={item.section_id}
+                    key={item.session_id}
                     setIsOpenModal={props.setIsOpenModal}
                     setIdSectionCreate={props.setIdSectionCreate}
                     // data section
                     data={item}
                   />
                 );
-              })
-            )}
-          </SortableContext>
-        </DndContext>
+              })}
+            </SortableContext>
+          </DndContext>
+        )}
       </div>
       <div className="w-full flex items-center justify-center p-4 shadow-md bg-white">
         <button
@@ -96,7 +96,7 @@ const ItemSection = (props: {
   ) as ICreateCourseContext;
 
   const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: props.data.section_id });
+    useSortable({ id: props.data.session_id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -119,7 +119,8 @@ const ItemSection = (props: {
   };
 
   const handleNewLessonClick = () => {
-    props.setIdSectionCreate(props.data.section_id);
+    console.log(props.data.session_id);
+    props.setIdSectionCreate(props.data.session_id);
     props.setIsOpenModal(true);
   };
 
@@ -164,7 +165,7 @@ const ItemSection = (props: {
           {isHovered && (
             <div
               className="bg-blue-gray-50 p-1 rounded-full text-gray-700 cursor-pointer"
-              onClick={() => handleDeleteSection(props.data.section_id)}
+              onClick={() => handleDeleteSection(props.data.session_id)}
             >
               <Trash size={15} />
             </div>

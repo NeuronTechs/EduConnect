@@ -9,4 +9,13 @@ router.route("/sections").put(coursesController.updateSectionOfCourse);
 router
   .route("/sections/:idSection")
   .delete(coursesController.deleteSectionOfCourse);
+router
+  .route("/sections/:idSection/lessons")
+  .post(coursesController.createCourseSectionLesson);
+router
+  .route("/lessons/:idLecture")
+  .put(coursesController.updateCourseSectionLesson);
+router
+  .route("/lessons/:idLecture")
+  .delete(coursesController.deleteCourseSectionLesson);
 export default router;

@@ -83,7 +83,6 @@ const StepperCreateCourse = ({
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const onCreateCourse = async (data: IFormInput) => {
     setIsLoading(true);
-    console.log(data);
     // call api create course
     const dataCourse = {
       title: data.title,

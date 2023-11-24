@@ -250,22 +250,26 @@ export interface IStudent {
 }
 // section quiz
 export interface ISectionInfo {
-  section_id: string;
+  session_id: string;
   name: string;
   course_id: string;
   lessons: ILessonInfo[];
 }
 export interface ILessonInfo {
-  lesson_id: string;
+  lecture_id: string;
   name: string;
+  description: string;
+  source: string | FileList;
+  duration: number;
   type?: string;
-  section_id: string;
+  session_id: string;
   draff?: boolean;
 }
 
 // quiz
 export interface IAnswerInfo {
-  id: number;
+  answer_id: string;
+  question_id: string;
   question: string | null;
   answer: string;
   image: string | null;
@@ -273,16 +277,19 @@ export interface IAnswerInfo {
   explain?: string | null;
 }
 export interface IQuestionInfo {
-  id: number;
-  question: string | null;
-  images: string[] | null;
+  question_id: string;
+  lecture_id: string;
+  quiz_id: string;
+  question: string;
+  images: string | null;
   type: string;
   answers: IAnswerInfo[];
 }
 export interface IQuizInfo {
-  id: number;
-  title: string;
-  descriptionShort: string;
+  resource_id: string;
+  lecture_id: string;
+  description: string;
+  timeout: string;
   duration: number;
   durationUnit: string;
   isRandom: boolean;
@@ -292,6 +299,8 @@ export interface IQuizInfo {
   retakePercent: number;
   content: string;
   questions: IQuestionInfo[];
+  created_at?: string;
+  updated_at?: string;
 }
 // overview course
 export interface ICourseOverview {

@@ -23,26 +23,24 @@ const ContentQuestionSingleChoice = (props: {
 }): React.ReactElement => {
   const [typeAnswer, setTypeAnswer] = React.useState<string>("answer");
   const { register, handleSubmit, reset } = useForm<IInputAnswer>();
-  const { handleEditQuestion } = React.useContext(CreateQuizContext);
+  const { handleEditQuestion, handleAddNewAnswerQuestion } =
+    React.useContext(CreateQuizContext);
   const [selected, setSelected] = React.useState<string>("");
 
   const onSubmit = (data: IInputAnswer) => {
     console.log(data);
     if (data.title === "") return;
-    handleEditQuestion({
-      ...props.data,
-      type: "single_choice",
-      answers: [
-        ...props.data.answers,
-        {
-          id: props.data.answers.length + 1,
-          answer: data.title,
-          isCorrect: false,
-          image: null,
-          question: null,
-        },
-      ],
-    });
+    handleAddNewAnswerQuestion(
+      {
+        answer_id: (props.data.answers.length + 1).toString(),
+        question_id: props.data.question_id,
+        answer: data.title,
+        isCorrect: false,
+        image: null,
+        question: null,
+      },
+      typeAnswer
+    );
     reset();
   };
   React.useEffect(() => {
@@ -50,7 +48,7 @@ const ContentQuestionSingleChoice = (props: {
     handleEditQuestion({
       ...props.data,
       answers: props.data.answers.map((answer) => {
-        if (answer.id === Number(selected)) {
+        if (answer.answer_id === selected) {
           return {
             ...answer,
             isCorrect: true,
@@ -98,10 +96,10 @@ const ContentQuestionSingleChoice = (props: {
                 <>
                   {props.data.answers.map((item) => (
                     <ItemAnswer
-                      id={item.id}
-                      idQuestion={props.data.id}
+                      id={item.answer_id}
+                      idQuestion={props.data.question_id}
                       data={item}
-                      key={item.id}
+                      key={item.answer_id}
                       checked={item.isCorrect}
                       onchange={(e) => setSelected(e.target.value)}
                     />
@@ -111,10 +109,10 @@ const ContentQuestionSingleChoice = (props: {
                 <>
                   {props.data.answers.map((item) => (
                     <ItemAnswerImage
-                      id={item.id}
-                      idQuestion={props.data.id}
+                      id={item.answer_id}
+                      idQuestion={props.data.question_id}
                       data={item}
-                      key={item.id}
+                      key={item.answer_id}
                       checked={item.isCorrect}
                       onchange={(e) => setSelected(e.target.value)}
                     />
@@ -157,8 +155,8 @@ const ContentQuestionSingleChoice = (props: {
 export default ContentQuestionSingleChoice;
 
 const ItemAnswer = (props: {
-  id: number;
-  idQuestion: number;
+  id: string;
+  idQuestion: string;
   data: IAnswerInfo;
   checked?: boolean;
   onchange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -212,7 +210,7 @@ const ItemAnswer = (props: {
             <button
               className=" p-1  text-gray-500 hover:text-gray-600"
               onClick={() => {
-                handleDeleteAnswerQuestion(props.idQuestion, props.data.id);
+                handleDeleteAnswerQuestion(props.data);
               }}
             >
               <Trash size={15} />
@@ -222,7 +220,7 @@ const ItemAnswer = (props: {
         <p className="text-sm font-medium text-gray-500">Đúng</p>
         <input
           type="radio"
-          value={props.data.id}
+          value={props.data.answer_id}
           name="bordered-radio"
           checked={props.data.isCorrect}
           onChange={props.onchange}
@@ -234,8 +232,8 @@ const ItemAnswer = (props: {
 };
 
 const ItemAnswerImage = (props: {
-  id: number;
-  idQuestion: number;
+  id: string;
+  idQuestion: string;
   data: IAnswerInfo;
   checked?: boolean;
   onchange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -327,9 +325,7 @@ const ItemAnswerImage = (props: {
         </button>
         <button
           className=" p-1  text-gray-500 hover:text-gray-600"
-          onClick={() =>
-            handleDeleteAnswerQuestion(props.idQuestion, props.data.id)
-          }
+          onClick={() => handleDeleteAnswerQuestion(props.data)}
         >
           <Trash size={15} />
         </button>
