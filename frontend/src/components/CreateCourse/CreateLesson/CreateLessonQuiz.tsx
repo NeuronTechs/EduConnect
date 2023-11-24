@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   CaretDown,
   DotsSixVertical,
@@ -21,27 +21,48 @@ import {
   MenuList,
 } from "@material-tailwind/react";
 import TextEditor from "./TextEditor/TextEditor";
-import { IQuestionInfo } from "@/types/type";
+import { IQuestionInfo, IQuizInfo } from "@/types/type";
 import { CreateQuizContext } from "@/context/CreateQuizContext";
 import InputEditTitle from "./Quiz/InputEditTitle";
+import { CreateCourseContext } from "@/context/CreateCourseContext";
+import quizApi from "@/api/quizApi";
 
-interface IInputTitle {
+interface IInputQuiz {
   title: string;
 }
 
 const CreateLessonQuiz = (): React.ReactElement => {
-  const { register, handleSubmit } = useForm<IInputTitle>();
   const [indexTab, setIndexTab] = React.useState<number>(0);
-  const { dataQuiz, handleChangeTitleQuiz } =
-    React.useContext(CreateQuizContext);
-
-  const onSubmitTitle = (data: IInputTitle) => {
+  //
+  const { dataQuiz, setDataQuiz } = React.useContext(CreateQuizContext);
+  const { selectLesson, handleEditLesson } =
+    React.useContext(CreateCourseContext);
+  //
+  const { register, handleSubmit } = useForm<IInputQuiz>({
+    defaultValues: { title: selectLesson?.name },
+  });
+  const onSubmitTitle = (data: IInputQuiz) => {
     if (data.title.trim() === "") return;
-    handleChangeTitleQuiz(data.title);
+    if (selectLesson) {
+      handleEditLesson({
+        ...selectLesson,
+        name: data.title,
+      });
+    }
   };
   React.useEffect(() => {
     console.log(dataQuiz);
   }, [dataQuiz]);
+  React.useEffect(() => {
+    if (selectLesson) {
+      const requestApi = async () => {
+        const res = await quizApi.getQuiz(selectLesson.lecture_id);
+        console.log(res);
+        setDataQuiz(res);
+      };
+      requestApi();
+    }
+  }, [selectLesson, setDataQuiz]);
   return (
     <div className="w-full h-full space-y-2">
       {/* header */}
@@ -121,11 +142,21 @@ const CreateLessonQuiz = (): React.ReactElement => {
 export default CreateLessonQuiz;
 
 const SettingQuiz = (): React.ReactElement => {
+  const { dataQuiz } = React.useContext(CreateQuizContext);
+  const { register, handleSubmit, setValue } = useForm<IQuizInfo>({
+    defaultValues: dataQuiz,
+  });
+  const handleUpdateInfoQuiz = (data: IQuizInfo) => {
+    if (dataQuiz.lecture_id) {
+      quizApi.updateQuiz(data);
+    }
+  };
   return (
     <div className="w-full space-y-3 px-2">
       <div className="space-y-2">
         <p className="text-xs font-bold text-black">Mô Tả</p>
         <textarea
+          {...register("content")}
           rows={4}
           className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder="Viết Mô Tả Về Bài Kiếm Tra..."
@@ -137,6 +168,7 @@ const SettingQuiz = (): React.ReactElement => {
             Thời lượng bài kiểm tra
           </p>
           <input
+            {...register("duration")}
             type="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
@@ -144,6 +176,7 @@ const SettingQuiz = (): React.ReactElement => {
         <div className="space-y-2">
           <p className="text-xs font-bold text-black">Đơn vị thời gian</p>
           <select
+            {...register("durationUnit")}
             id="countries"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
@@ -153,7 +186,7 @@ const SettingQuiz = (): React.ReactElement => {
           </select>
         </div>
       </div>
-      <div className="space-y-2">
+      {/* <div className="space-y-2">
         <p className="text-xs font-bold text-black">Loại bài Kiểm Tra</p>
         <select
           id="countries"
@@ -163,18 +196,28 @@ const SettingQuiz = (): React.ReactElement => {
           <option value={"global"}>toàn cầu</option>
           <option value={"Pagination"}>Phân trang</option>
         </select>
-      </div>
+      </div> */}
 
       <div className="flex items-center justify-start gap-2">
         <label className="relative inline-flex items-center mb-4 cursor-pointer">
-          <input type="checkbox" value="" className="sr-only peer" />
+          <input
+            type="checkbox"
+            value=""
+            className="sr-only peer"
+            {...register("isRandom")}
+          />
           <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
           <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
             Chọn ngẫu nhiên các câu hỏi
           </span>
         </label>
         <label className="relative inline-flex items-center mb-4 cursor-pointer">
-          <input type="checkbox" value="" className="sr-only peer" />
+          <input
+            type="checkbox"
+            value=""
+            className="sr-only peer"
+            {...register("isShowAnswer")}
+          />
           <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
           <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
             Hiển thị câu trả lời đúng
@@ -185,6 +228,7 @@ const SettingQuiz = (): React.ReactElement => {
         <div className="space-y-2">
           <p className="text-xs font-bold text-black">Đạt điểm (%)</p>
           <input
+            {...register("passPercent")}
             type="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
@@ -194,6 +238,7 @@ const SettingQuiz = (): React.ReactElement => {
             Bị cắt điểm sau khi thi lại (%)
           </p>
           <input
+            {...register("retakePercent")}
             type="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
@@ -202,7 +247,21 @@ const SettingQuiz = (): React.ReactElement => {
 
       <div className="space-y-2">
         <p className="text-xs font-bold text-black">Nội dung bài học</p>
-        <TextEditor />
+        <TextEditor
+          value={dataQuiz.description}
+          onEditorChange={(data) => {
+            setValue("description", data);
+          }}
+        />
+      </div>
+      <div className="flex w-full py-4 px-2">
+        <button
+          onClick={handleSubmit(handleUpdateInfoQuiz)}
+          type="button"
+          className="text-white bg-blue-600 hover:bg-blue-400 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+        >
+          Lưu
+        </button>
       </div>
     </div>
   );
@@ -221,7 +280,7 @@ const ContainerQuestion = ({
         </div>
       ) : (
         data.map((item) => (
-          <div key={item.id} className="w-full">
+          <div key={item.question_id} className="w-full">
             <QuestionItem data={item} />
           </div>
         ))
@@ -235,54 +294,61 @@ const QuestionItem = ({
 }: {
   data: IQuestionInfo;
 }): React.ReactElement => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [questionType, setQuestionType] = React.useState<string>(data.type); // set type question
-  const [isHover, setIsHover] = React.useState<boolean>(false); // set is hover show button add question
+  // ===================================================== update last ===========================================
+  // const [questionType, setQuestionType] = React.useState<string>(data.type); // set type question
+  // ==============================================================================================================
+
+  const [isHover, setIsHover] = React.useState<boolean>(false);
   const { handleEditQuestion, handleDeleteQuestion } =
     React.useContext(CreateQuizContext);
-  useEffect(() => {
-    if (questionType === "fill")
-      handleEditQuestion({
-        ...data,
-        answers: [
-          {
-            id: Math.floor(Math.random() * 1000000),
-            answer: "nhập câu trả lời",
-            isCorrect: true,
-            image: null,
-            question: null,
-          },
-        ],
-      });
-    else if (questionType === "true_false")
-      handleEditQuestion({
-        ...data,
-        answers: [
-          {
-            id: Math.floor(Math.random() * 1000000),
-            answer: "true",
-            isCorrect: true,
-            image: null,
-            question: null,
-          },
-          {
-            id: Math.floor(Math.random() * 1000000),
-            answer: "false",
-            isCorrect: false,
-            image: null,
-            question: null,
-          },
-        ],
-      });
-    else
-      handleEditQuestion({
-        ...data,
-        answers: [],
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [questionType]);
+  // =======================================================update last==========================================
+  // useEffect(() => {
+  //   if (questionType === "fill")
+  //     handleEditQuestion({
+  //       ...data,
+  //       answers: [
+  //         {
+  //           answer_id: `${Math.floor(Math.random() * 1000000)}`,
+  //           question_id: data.question_id,
+  //           answer: "nhập câu trả lời",
+  //           isCorrect: true,
+  //           image: null,
+  //           question: null,
+  //         },
+  //       ],
+  //     });
+  //   else if (questionType === "true_false")
+  //     handleEditQuestion({
+  //       ...data,
+  //       answers: [
+  //         {
+  //           answer_id: ` ${Math.floor(Math.random() * 1000000)} `,
+  //           question_id: data.question_id,
+  //           answer: "true",
+  //           isCorrect: true,
+  //           image: null,
+  //           question: "",
+  //         },
+  //         {
+  //           answer_id: `${Math.floor(Math.random() * 1000000)}`,
+  //           question_id: data.question_id,
+  //           answer: "false",
+  //           isCorrect: false,
+  //           image: null,
+  //           question: null,
+  //         },
+  //       ],
+  //     });
+  //   else
+  //     handleEditQuestion({
+  //       ...data,
+  //       answers: [],
+  //     });
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [questionType]);
+  // ============================================================================================================
   const handleClickDeleteQuestion = () => {
-    handleDeleteQuestion(data.id);
+    handleDeleteQuestion(data.question_id);
   };
 
   const handleEditQuestionTitle = (dataQuestion: string) => {
@@ -324,7 +390,8 @@ const QuestionItem = ({
                 onSubmit={handleEditQuestionTitle}
               />
             </div>
-            <div className="flex items-center justify-start gap-4">
+            {/* =========================================================================== update last ===========================================================*/}
+            {/* <div className="flex items-center justify-start gap-4">
               <select
                 onChange={(e) => setQuestionType(e.target.value)}
                 value={questionType}
@@ -338,15 +405,8 @@ const QuestionItem = ({
                 <option value={"keyword"}>Từ Khoá</option>
                 <option value={"fill"}>Điền Vào Khoảng Trống</option>
               </select>
-              {/* <select className="bg-white border border-transparent text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-1 px-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <option value="">Chọn Thể Loại</option>
-                <option value="">Nhiều Lựa Chọn</option>
-                <option value="CA">Đúng - Sai</option>
-                <option value="FR">Kết Hợp</option>
-                <option value="DE">Từ Khóa</option>
-                <option value="DE">Điền Vào Khoảng Trống</option>
-              </select> */}
-            </div>
+            </div> */}
+            {/* ================================================================================================================================================== */}
           </div>
         </div>
         <div className="flex items-center justify-center pr-10">
@@ -370,7 +430,7 @@ const QuestionItem = ({
       <hr className="h-px my-4 bg-gray-300 border-0 dark:bg-gray-700 w-full"></hr>
       {/* answer */}
       <div className="w-full">
-        <RenderContentQuestion type={questionType} data={data} />
+        <RenderContentQuestion type={data.type} data={data} />
       </div>
     </div>
   );
@@ -394,51 +454,64 @@ const RenderContentQuestion = (props: {
   if (props.type === "fill") return <ContentQuestionFill data={props.data} />;
 };
 const AddQuestion = (): React.ReactElement => {
-  const { handleAddNewQuestion } = React.useContext(CreateQuizContext);
+  const { handleAddNewQuestion, dataQuiz } =
+    React.useContext(CreateQuizContext);
   // set the dropdown menu element
   const handleAddQuestion = (type: string) => {
     if (type === "fill") {
+      const question_id = `${Math.floor(Math.random() * 1000000)}`;
       handleAddNewQuestion({
-        id: Math.floor(Math.random() * 1000000),
+        question_id: question_id,
+        lecture_id: dataQuiz.lecture_id,
+        quiz_id: dataQuiz.resource_id,
         question: "nhập câu hỏi",
         type: type,
         answers: [
           {
-            id: Math.floor(Math.random() * 1000000),
+            answer_id: Math.floor(Math.random() * 1000000).toString(),
+            question_id: question_id,
             answer: "nhập câu trả lời",
             isCorrect: true,
             image: null,
             question: null,
           },
         ],
-        images: null,
+        images: "",
       }); // add new question fill
     } else if (type === "true_false") {
+      const question_id = `${Math.floor(Math.random() * 1000000)}`;
       handleAddNewQuestion({
-        id: Math.floor(Math.random() * 1000000),
+        question_id: question_id,
+
+        lecture_id: dataQuiz.lecture_id,
+        quiz_id: dataQuiz.resource_id,
         question: "nhập câu hỏi",
         type: type,
         answers: [
           {
-            id: Math.floor(Math.random() * 1000000),
+            answer_id: Math.floor(Math.random() * 1000000).toString(),
+            question_id: question_id,
             answer: "true",
             isCorrect: true,
             image: null,
             question: null,
           },
           {
-            id: Math.floor(Math.random() * 1000000),
+            answer_id: Math.floor(Math.random() * 1000000).toString(),
+            question_id: question_id,
             answer: "false",
             isCorrect: false,
             image: null,
             question: null,
           },
         ],
-        images: null,
+        images: "",
       });
     } else {
       handleAddNewQuestion({
-        id: Math.floor(Math.random() * 1000000),
+        question_id: Math.floor(Math.random() * 1000000).toString(),
+        lecture_id: dataQuiz.lecture_id,
+        quiz_id: dataQuiz.resource_id,
         question: "nhập câu hỏi",
         type: type,
         answers: [],

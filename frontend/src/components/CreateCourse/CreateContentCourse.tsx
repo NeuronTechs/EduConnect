@@ -23,12 +23,13 @@ const CreateContentCourse = (props: {
   React.useEffect(() => {
     const requestApi = async () => {
       if (dataDescription?.course_id) {
-        console.log("test");
         try {
           const res = await courseManageApi.getSectionCourse(
             dataDescription.course_id
           );
-          setDataSection(res.data ? res.data : []);
+          if (res) {
+            setDataSection(res);
+          }
         } catch (error) {
           console.log(error);
         }

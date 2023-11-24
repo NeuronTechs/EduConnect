@@ -2,15 +2,22 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
 import Editor from "ckeditor5/build/ckeditor";
 import React from "react";
 
-export default function TextEditor() {
+export default function TextEditor({
+  value,
+  onEditorChange,
+}: {
+  value: string;
+  onEditorChange: (data: string) => void;
+}) {
   const [editorData, setEditorData] = React.useState(
-    "<p>Hello from CKEditor 5!</p>"
+    value ? value : "<p>Start writing your content here...</p>"
   );
 
-  const handleEditorChange = (event, editor) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleEditorChange = (event: any, editor: any) => {
     const data = editor.getData();
-    console.log(data);
     setEditorData(data);
+    onEditorChange(data);
   };
   return (
     <div className="editor-container">

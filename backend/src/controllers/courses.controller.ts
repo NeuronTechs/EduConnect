@@ -129,57 +129,153 @@ interface ILecture {
   created_at?: string;
   updated_at?: string;
 }
-
+// section
 const createSectionCourse = async (req: Request, res: Response) => {
   const { body } = req;
   try {
-    const data = await coursesService.createCourseSection({ ...body });
-    res.status(data.status).json({ data });
-  } catch (error) {
-    if (error) {
-      res.status(400).json({ error: error });
+    const result = await coursesService.createCourseSection({ ...body });
+    if (result.status) {
+      res.status(201).json({
+        status: 201,
+        data: result?.data,
+        message: result?.message,
+      });
     } else {
-      res.status(500).json({ error: "Internal server error" });
+      res.status(400).json({
+        status: 400,
+        data: result?.data,
+        message: result?.message,
+      });
     }
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error", message: error });
   }
 };
 const getSectionOfCourse = async (req: Request, res: Response) => {
   const { idCourse } = req.params;
   try {
-    const data = await coursesService.getSectionOfCourse(idCourse);
-    res.status(data.status).json({ data });
-  } catch (error) {
-    if (error) {
-      res.status(400).json({ error: error });
+    const result = await coursesService.getSectionOfCourse(idCourse);
+    if (result.status) {
+      res.status(200).json({
+        status: 200,
+        data: result?.data,
+        message: result?.message,
+      });
     } else {
-      res.status(500).json({ error: "Internal server error" });
+      res.status(400).json({
+        status: 400,
+        data: result?.data,
+        message: result?.message,
+      });
     }
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error", message: error });
   }
 };
 const updateSectionOfCourse = async (req: Request, res: Response) => {
   const { body } = req;
   try {
-    const data = await coursesService.updateSectionOfCourse({ ...body });
-    res.status(data.status).json({ data });
-  } catch (error) {
-    if (error) {
-      res.status(400).json({ error: error });
+    const result = await coursesService.updateSectionOfCourse({ ...body });
+    if (result.status) {
+      res.status(200).json({
+        status: 200,
+        data: result?.data,
+        message: result?.message,
+      });
     } else {
-      res.status(500).json({ error: "Internal server error" });
+      res.status(400).json({
+        status: 400,
+        data: result?.data,
+        message: result?.message,
+      });
     }
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error", message: error });
   }
 };
 const deleteSectionOfCourse = async (req: Request, res: Response) => {
   const { idSection } = req.params;
   try {
-    const data = await coursesService.deleteSectionOfCourse(idSection);
-    res.status(data.status).json({ data });
-  } catch (error) {
-    if (error) {
-      res.status(400).json({ error: error });
+    const result = await coursesService.deleteSectionOfCourse(idSection);
+    if (result.status) {
+      res.status(200).json({
+        status: 200,
+        data: result?.data,
+        message: result?.message,
+      });
     } else {
-      res.status(500).json({ error: "Internal server error" });
+      res.status(400).json({
+        status: 400,
+        data: result?.data,
+        message: result?.message,
+      });
     }
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error", message: error });
+  }
+};
+// lesson
+const createCourseSectionLesson = async (req: Request, res: Response) => {
+  const { body } = req;
+  try {
+    const result = await coursesService.createCourseSectionLesson({ ...body });
+    if (result.status) {
+      res.status(201).json({
+        status: 201,
+        data: result?.data,
+        message: result?.message,
+      });
+    } else {
+      res.status(400).json({
+        status: 400,
+        data: result?.data,
+        message: result?.message,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error", message: error });
+  }
+};
+const updateCourseSectionLesson = async (req: Request, res: Response) => {
+  const { body } = req;
+  try {
+    const result = await coursesService.updateCourseSectionLesson({ ...body });
+    if (result.status) {
+      res.status(200).json({
+        status: 200,
+        data: result?.data,
+        message: result?.message,
+      });
+    } else {
+      res.status(400).json({
+        status: 400,
+        data: result?.data,
+        message: result?.message,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error", message: error });
+  }
+};
+const deleteCourseSectionLesson = async (req: Request, res: Response) => {
+  const { idLecture } = req.params;
+  try {
+    const result = await coursesService.deleteCourseSectionLesson(idLecture);
+    if (result.status) {
+      res.status(200).json({
+        status: 200,
+        data: result?.data,
+        message: result?.message,
+      });
+    } else {
+      res.status(400).json({
+        status: 400,
+        data: result?.data,
+        message: result?.message,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error", message: error });
   }
 };
 export default {
@@ -187,4 +283,7 @@ export default {
   getSectionOfCourse,
   updateSectionOfCourse,
   deleteSectionOfCourse,
+  createCourseSectionLesson,
+  updateCourseSectionLesson,
+  deleteCourseSectionLesson,
 };

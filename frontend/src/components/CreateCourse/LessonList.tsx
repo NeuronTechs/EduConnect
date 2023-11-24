@@ -22,24 +22,24 @@ import {
 interface ILessonList {
   data: ISectionInfo;
 }
-const LessonList = (props: ILessonList): React.ReactElement => {
+const LessonList = ({ data }: ILessonList): React.ReactElement => {
   const { handleEditSection } = React.useContext(
     CreateCourseContext
   ) as ICreateCourseContext;
   const handlerDragEnd = ({ active, over }: DragEndEvent) => {
-    const dataList = props.data.lessons;
+    const dataList = data.lessons;
     if (over) {
       const overIndex = dataList.findIndex(
-        (lesson: ILessonInfo) => lesson.lesson_id === over.id?.toString()
+        (lesson: ILessonInfo) => lesson.lecture_id === over.id?.toString()
       );
       const activeIndex = dataList.findIndex(
-        (lesson: ILessonInfo) => lesson.lesson_id === active.id?.toString()
+        (lesson: ILessonInfo) => lesson.lecture_id === active.id?.toString()
       );
 
       // insertArrayElements<T>(arr: T[], dragIndex: number, hoverIndex: number): T[]
       const newList = insertArrayElements(dataList, activeIndex, overIndex);
-      const sectionNew = { ...props.data, lessons: newList };
-      handleEditSection(props.data.id, sectionNew);
+      const sectionNew = { ...data, lessons: newList };
+      handleEditSection(data.session_id, sectionNew);
       // setDataSection(newSectionList);
     }
     //
@@ -47,19 +47,20 @@ const LessonList = (props: ILessonList): React.ReactElement => {
 
   return (
     <div className="flex flex-col items-center justify-start py-2 w-full overflow-hidden">
-      {props.data.lessons.length === 0 && (
+      {!data.lessons || data.lessons?.length === 0 ? (
         <div className="flex w-full py-4 items-center justify-center">
           <p className="text-sm font-medium text-black "></p>
           Chưa có bài giảng được tạo
         </div>
+      ) : (
+        <DndContext onDragEnd={handlerDragEnd}>
+          <SortableContext items={data.lessons.map((item) => item.lecture_id)}>
+            {data.lessons.map((item) => (
+              <LessonItem key={item.lecture_id} data={item} type={item.type} />
+            ))}
+          </SortableContext>
+        </DndContext>
       )}
-      <DndContext onDragEnd={handlerDragEnd}>
-        <SortableContext items={props.data.lessons}>
-          {props.data.lessons.map((item) => (
-            <LessonItem key={item.id} data={item} type={item.type} />
-          ))}
-        </SortableContext>
-      </DndContext>
     </div>
   );
 };
@@ -76,12 +77,12 @@ const LessonItem = (props: ILessonInfoItem) => {
     React.useContext(CreateCourseContext) as ICreateCourseContext;
 
   const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: props.data.lesson_id });
+    useSortable({ id: props.data.lecture_id });
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
   };
-  const active = selectLesson?.lesson_id === props.data.lesson_id;
+  const active = selectLesson?.lecture_id === props.data.lecture_id;
 
   return (
     <div
@@ -112,7 +113,7 @@ const LessonItem = (props: ILessonInfoItem) => {
         </div>
         <div className="w-full text-xs font-medium overflow-hidden  ">
           <p className="w-full overflow-hidden text-ellipsis whitespace-nowrap">
-            Phần 1: Giới thiệu về khoá học
+            {props.data.name}
           </p>
         </div>
         <div></div>
@@ -124,7 +125,7 @@ const LessonItem = (props: ILessonInfoItem) => {
         <div
           className="bg-blue-gray-50 p-1 rounded-full text-gray-700 cursor-pointer"
           onClick={() =>
-            handleDeleteLesson(props.data.section_id, props.data.lesson_id)
+            handleDeleteLesson(props.data.session_id, props.data.lecture_id)
           }
         >
           <Trash size={15} />
