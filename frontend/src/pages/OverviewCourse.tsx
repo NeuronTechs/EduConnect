@@ -121,6 +121,15 @@ const OverviewCourse = () => {
       setImage([]);
       setOpen(!open);
     } else {
+      console.log(
+        title !== "",
+        currentUser?.user_id !== "",
+        currentCourse?.course_id !== "",
+        lectureProblem !== "",
+        sessionProblem !== "",
+        problem !== "",
+        image.length > 0
+      );
       setLoading(false);
       alert("Vui lòng nhập đầy đủ các trường");
     }
