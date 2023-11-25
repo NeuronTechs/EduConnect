@@ -141,13 +141,73 @@ const TabContentCreateCourseTeacher = (props: {
     </div>
   );
 };
-
+interface IInputTarget {
+  study: {
+    study1: string;
+    study2: string;
+    study3: string;
+    study4: string;
+    study5: string;
+    study6: string;
+  };
+  requirement: {
+    requirement1: string;
+    requirement2: string;
+    requirement3: string;
+    requirement4: string;
+    requirement5: string;
+    requirement6: string;
+  };
+}
 const TargetCreateCourseTeacher = (): React.ReactElement => {
-  const [dataTarget, setDataTarget] = React.useState<{
-    study: string[];
-    requirement: string[];
-  }>({ study: ["1"], requirement: ["2"] });
+  const initialData: IInputTarget = {
+    study: {
+      study1: "",
+      study2: "",
+      study3: "",
+      study4: "",
+      study5: "",
+      study6: "",
+    },
+    requirement: {
+      requirement1: "",
+      requirement2: "",
+      requirement3: "",
+      requirement4: "",
+      requirement5: "",
+      requirement6: "",
+    },
+  };
+  const { dataDescription } = React.useContext(CreateCourseContext);
 
+  const { register, handleSubmit, setValue } = useForm<IInputTarget>({
+    defaultValues: {
+      study: dataDescription?.study ? dataDescription.study : initialData.study,
+      requirement: dataDescription?.requirement
+        ? dataDescription.requirement
+        : initialData.requirement,
+    },
+  });
+  const saveTarget = async (data: IInputTarget) => {
+    console.log(data);
+    if (!dataDescription) return;
+    try {
+      await teacherApi.updateCourseTeacher({
+        ...dataDescription,
+        study: data.study,
+        requirement: data.requirement,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  React.useEffect(() => {
+    console.log(dataDescription);
+    if (dataDescription) {
+      setValue("study", dataDescription.study);
+      setValue("requirement", dataDescription.requirement);
+    }
+  }, [dataDescription, setValue]);
   return (
     <div className="flex items-start justify-center w-full">
       <div className="flex flex-col gap-4 bg-white p-2 min-w-[50%] px-6">
@@ -166,18 +226,47 @@ const TargetCreateCourseTeacher = (): React.ReactElement => {
             Học viên sẽ học được gì trong khóa học của bạn?
           </label>
           <p className="text-black font-normal text-sm">
-            Bạn phải nhập ít nhất 4 mục tiêu hoặc kết quả học tập mà học viên có
-            thể mong đợi đạt được sau khi hoàn thành khóa học.
+            Bạn phải nhập 6 mục tiêu hoặc kết quả học tập mà học viên có thể
+            mong đợi đạt được sau khi hoàn thành khóa học.
           </p>
-          {dataTarget.study.map((item) => {
-            return (
-              <input
-                type="text"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                value={item}
-              />
-            );
-          })}
+
+          <input
+            {...register("study.study1", { required: true })}
+            placeholder="Ví dụ: Học viên sẽ có thể tạo ra một ứng dụng web đơn giản..."
+            type="text"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+          <input
+            {...register("study.study2", { required: true })}
+            placeholder="Ví dụ: Học viên sẽ có thể tạo ra một ứng dụng web đơn giản..."
+            type="text"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+          <input
+            {...register("study.study3", { required: true })}
+            placeholder="Ví dụ: Học viên sẽ có thể tạo ra một ứng dụng web đơn giản..."
+            type="text"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+          <input
+            {...register("study.study4", { required: true })}
+            placeholder="Ví dụ: Học viên sẽ có thể tạo ra một ứng dụng web đơn giản..."
+            type="text"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+          <input
+            {...register("study.study5", { required: true })}
+            placeholder="Ví dụ: Học viên sẽ có thể tạo ra một ứng dụng web đơn giản..."
+            type="text"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+          <input
+            {...register("study.study6", { required: true })}
+            placeholder="Ví dụ: Học viên sẽ có thể tạo ra một ứng dụng web đơn giản..."
+            type="text"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+
           {/* <input
             type="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -201,19 +290,56 @@ const TargetCreateCourseTeacher = (): React.ReactElement => {
             cầu nào, hãy tận dụng phần này và coi đây là cơ hội để bạn hạ thấp
             tiêu chuẩn cho người mới bắt đầu.
           </p>
-          {dataTarget.requirement.map((item) => {
-            return (
-              <input
-                type="text"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                value={item}
-              />
-            );
-          })}
+
+          <input
+            {...register("requirement.requirement1", { required: true })}
+            placeholder="Ví dụ: Không có yêu cầu hoặc điều kiện tiên quyết nào..."
+            type="text"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+          <input
+            {...register("requirement.requirement2", { required: true })}
+            placeholder="Ví dụ: Không có yêu cầu hoặc điều kiện tiên quyết nào..."
+            type="text"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+          <input
+            {...register("requirement.requirement3", { required: true })}
+            placeholder="Ví dụ: Không có yêu cầu hoặc điều kiện tiên quyết nào..."
+            type="text"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+          <input
+            {...register("requirement.requirement4", { required: true })}
+            placeholder="Ví dụ: Không có yêu cầu hoặc điều kiện tiên quyết nào..."
+            type="text"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+          <input
+            {...register("requirement.requirement5", { required: true })}
+            placeholder="Ví dụ: Không có yêu cầu hoặc điều kiện tiên quyết nào..."
+            type="text"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+          <input
+            {...register("requirement.requirement6", { required: true })}
+            placeholder="Ví dụ: Không có yêu cầu hoặc điều kiện tiên quyết nào..."
+            type="text"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
           <p className="text-base font-normal text-blue-500 py-3 flex gap-2 items-center leading-3 cursor-pointer">
             <PlusCircle size={20} />
             Thêm nội dung vào phản hồi của bạn
           </p>
+        </div>
+        <div className="flex items-center justify-start py-5 px-4">
+          <button
+            onClick={handleSubmit(saveTarget)}
+            type="button"
+            className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          >
+            Lưu
+          </button>
         </div>
       </div>
     </div>

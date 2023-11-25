@@ -38,9 +38,23 @@ export interface ICourseDetail {
   title: string;
   description: string;
   image: string | FileList;
-  price: number;
-  study: string;
-  requirement: string;
+  price: object;
+  study: {
+    study1: string;
+    study2: string;
+    study3: string;
+    study4: string;
+    study5: string;
+    study6: string;
+  };
+  requirement: {
+    requirement1: string;
+    requirement2: string;
+    requirement3: string;
+    requirement4: string;
+    requirement5: string;
+    requirement6: string;
+  };
   level: string;
   language: string;
   discount: number;

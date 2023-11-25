@@ -240,32 +240,29 @@ const getCourseTeacher = async (id: string, limit: number) => {
               message: error,
             });
             return;
-          }
-          const dataResult = results.map((result) => {
-            return {
-              ...result?.course,
-              teacher: result.teacher,
-              user: result.user,
-              topic: result.topic,
-            };
-          });
-          if (error) {
-            reject({
-              status: 500,
-              data: [],
-              message: error,
+          } else {
+            const dataResult = results.map((result) => {
+              return {
+                ...result.course,
+                // study: JSON.parse(result?.course?.study),
+                // requirement: JSON.parse(result?.course?.requirement),
+                teacher: result.teacher,
+                user: result.user,
+                topic: result.topic,
+              };
             });
-            return;
+            resolve({
+              status: 200,
+              data: dataResult as ICourse[],
+              message: "Get courses successfully",
+            });
           }
-          resolve({
-            status: 200,
-            data: dataResult as ICourse[],
-            message: "Get courses successfully",
-          });
         }
       );
     });
-  } catch (error) {}
+  } catch (error) {
+    throw error;
+  }
 };
 const updateCourseTeacher = async (id: string, data: ICourse) => {
   data.update_at = new Date().toISOString().slice(0, 19).replace("T", " ");
@@ -326,19 +323,13 @@ const getCourseTeacherById = async (id: string) => {
           const dataResult = results.map((result) => {
             return {
               ...result?.course,
+              study: JSON.parse(result?.course?.study),
+              requirement: JSON.parse(result?.course?.requirement),
               teacher: result.teacher,
               user: result.user,
               topic: result.topic,
             };
           });
-          if (error) {
-            reject({
-              status: 500,
-              data: [],
-              message: error,
-            });
-            return;
-          }
           resolve({
             status: 200,
             data: dataResult[0] ? dataResult[0] : ({} as ICourse),
@@ -351,7 +342,6 @@ const getCourseTeacherById = async (id: string) => {
     throw error;
   }
 };
-
 const getStudentByTeacher = (teacher_id: string): Promise<any> => {
   try {
     const query = `SELECT 

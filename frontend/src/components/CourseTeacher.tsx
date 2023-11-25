@@ -12,25 +12,30 @@ import { configRouter } from "@/configs/router";
 import { ICourseDetail } from "@/types/type";
 import ImageWithError from "./ImageWithError";
 import assets from "@/assets";
-import { CreateCourseContext } from "@/context/CreateCourseContext";
+// import { CreateCourseContext } from "@/context/CreateCourseContext";
 interface IProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: ICourseDetail;
 }
 const CourseTeacher = (props: IProps): React.ReactElement => {
-  const { handleSetDataDescription } = React.useContext(CreateCourseContext);
+  // const { handleSetDataDescription } = React.useContext(CreateCourseContext);
+
   return (
     <div className="rounded-2xl bg-white p-2 flex flex-col gap-2 shadow-sm w-full justify-between">
       <div className=" flex flex-col w-full gap-2">
         <div className="w-full max-h-[150px] relative">
           <ImageWithError
-            src={props.data.image ? props.data.image : assets.images.noBg}
+            src={
+              props.data.image
+                ? props.data.image.toString()
+                : assets.images.noBg
+            }
             alt={props.data.title}
             fallbackSrc={assets.images.noBg}
             className="w-full h-full object-fill rounded-2xl"
           />
           <div className="bg-blue-500 absolute top-1 right-2 text-xs font-bold text-white px-2 py-1 rounded-full">
-            {props.data.status}
+            {props.data.status_show ? "Đang công khai" : "Đang ẩn"}
           </div>
         </div>
         <div className="w-full flex justify-between">
@@ -113,7 +118,7 @@ const CourseTeacher = (props: IProps): React.ReactElement => {
           <div className="flex w-full justify-between ">
             <Link
               to={configRouter.manageCourse.slice(0, -3) + props.data.course_id}
-              onClick={() => handleSetDataDescription(props.data)}
+              // onClick={() => handleSetDataDescription(props.data)}
             >
               <div className="flex items-center gap-2 text-gray-500 p-2 bg-gray-200 hover:bg-gray-300 rounded-md cursor-pointer">
                 <PencilSimple size={20} />

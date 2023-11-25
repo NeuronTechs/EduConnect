@@ -51,15 +51,13 @@ export const updateCourseTeacher = async (data: ICourseDetail) => {
   }
   formData.append("topic_id", data.topic_id ? data.topic_id.toString() : "");
   formData.append("level", data.level ? data.level.toString() : "");
-  formData.append("study", data.study);
-  formData.append("requirement", data.requirement);
+  formData.append("study", JSON.stringify(data.study));
+  formData.append("requirement", JSON.stringify(data.requirement));
   formData.append("language", data.language ? data.language.toString() : "");
-
   formData.append(
     "status_show",
     data.status_show ? data.status_show.toString() : "0"
   );
-
   formData.append(
     "create_at",
     data.created_at ? data.created_at : Date.now().toString()
@@ -74,6 +72,7 @@ export const updateCourseTeacher = async (data: ICourseDetail) => {
   try {
     const res = await httpRequest.put(
       `/teachers/${data.teacher_id}/courses/${data.course_id}`,
+
       formData,
       headers as AxiosRequestHeaders
     );
