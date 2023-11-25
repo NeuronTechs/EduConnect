@@ -11,7 +11,7 @@ import {
   Plus,
   Trash,
 } from "@phosphor-icons/react";
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import InputEditTitle from "./InputEditTitle";
 
@@ -23,109 +23,119 @@ const ContentQuestionSingleChoice = (props: {
 }): React.ReactElement => {
   const [typeAnswer, setTypeAnswer] = React.useState<string>("answer");
   const { register, handleSubmit, reset } = useForm<IInputAnswer>();
-  const { handleEditQuestion, handleAddNewAnswerQuestion } =
-    React.useContext(CreateQuizContext);
-  const [selected, setSelected] = React.useState<string>("");
+  const {
+    handleAddNewAnswerQuestion,
+    handleEditAnswerQuestionAll,
+    handleEditAnswerQuestion,
+  } = React.useContext(CreateQuizContext);
 
   const onSubmit = (data: IInputAnswer) => {
-    console.log(data);
     if (data.title === "") return;
-    handleAddNewAnswerQuestion(
-      {
-        answer_id: (props.data.answers.length + 1).toString(),
-        question_id: props.data.question_id,
-        answer: data.title,
-        isCorrect: false,
-        image: null,
-        question: null,
-      },
-      typeAnswer
-    );
+    handleAddNewAnswerQuestion({
+      answer_id: (props.data.answers.length + 1).toString(),
+      question_id: props.data.question_id,
+      answer: data.title,
+      isCorrect: 0,
+      image: null,
+      question: null,
+    });
     reset();
   };
-  React.useEffect(() => {
-    if (selected === "") return;
-    handleEditQuestion({
-      ...props.data,
-      answers: props.data.answers.map((answer) => {
-        if (answer.answer_id === selected) {
-          return {
-            ...answer,
-            isCorrect: true,
-          };
-        } else {
-          return {
-            ...answer,
-            isCorrect: false,
-          };
+  const onChangeSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    if (!e.target.value) return;
+    const findIndexCorrect = props.data.answers.findIndex(
+      (item) => item.isCorrect === 1
+    );
+    const findIndexSelect = props.data.answers.findIndex(
+      (item) => item.answer_id === e.target.value && item.isCorrect === 0
+    );
+    if (findIndexSelect === -1) return;
+    if (findIndexCorrect === -1) {
+      handleEditAnswerQuestion(props.data.question_id, {
+        ...props.data.answers[findIndexSelect],
+        isCorrect: 1,
+      });
+    } else {
+      handleEditAnswerQuestionAll(
+        props.data.question_id,
+        {
+          ...props.data.answers[findIndexSelect],
+          isCorrect: 1,
+        },
+        {
+          ...props.data.answers[findIndexCorrect],
+          isCorrect: 0,
         }
-      }),
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selected]);
-  return (
-    <div className="flex flex-col items-center justify-center py-2 space-y-2">
-      <div className="flex items-center justify-between w-full ">
-        <p className="text-sm font-bold text-gray-500">Câu Trả Lời</p>
-        <div className="flex items-center justify-end gap-2">
-          <List
-            size={15}
-            className={`${
-              typeAnswer === "answer" ? "text-blue-500" : "hover:text-blue-400"
-            }`}
-            onClick={() => setTypeAnswer("answer")}
-          />
-          <Image
-            size={15}
-            className={`${
-              typeAnswer === "image" ? "text-blue-500" : "hover:text-blue-400"
-            }`}
-            onClick={() => setTypeAnswer("image")}
-          />
-        </div>
-      </div>
-      {props.data.answers.length === 0 ? (
-        <div className="flex items-center justify-center w-full p-2 rounded-md border border-transparent relative min-h-[45px]">
-          <p className="text-sm font-normal ">Chưa có câu trả lời nào</p>
-        </div>
-      ) : (
-        <DndContext>
-          <SortableContext items={[{ id: 1 }, { id: 2 }, { id: 3 }]}>
-            <div className="space-y-2 w-full">
-              {typeAnswer === "answer" ? (
-                <>
-                  {props.data.answers.map((item) => (
-                    <ItemAnswer
-                      id={item.answer_id}
-                      idQuestion={props.data.question_id}
-                      data={item}
-                      key={item.answer_id}
-                      checked={item.isCorrect}
-                      onchange={(e) => setSelected(e.target.value)}
-                    />
-                  ))}
-                </>
-              ) : (
-                <>
-                  {props.data.answers.map((item) => (
-                    <ItemAnswerImage
-                      id={item.answer_id}
-                      idQuestion={props.data.question_id}
-                      data={item}
-                      key={item.answer_id}
-                      checked={item.isCorrect}
-                      onchange={(e) => setSelected(e.target.value)}
-                    />
-                  ))}
-                </>
-              )}
-            </div>
-          </SortableContext>
-        </DndContext>
-      )}
+      );
+    }
+  };
 
-      <div className="w-full  mb-4 mt-4 ">
-        <form className="flex items-center">
+  return (
+    <form>
+      <div className="flex flex-col items-center justify-center py-2 space-y-2">
+        <div className="flex items-center justify-between w-full ">
+          <p className="text-sm font-bold text-gray-500">Câu Trả Lời</p>
+          <div className="flex items-center justify-end gap-2">
+            <List
+              size={15}
+              className={`${
+                typeAnswer === "answer"
+                  ? "text-blue-500"
+                  : "hover:text-blue-400"
+              }`}
+              onClick={() => setTypeAnswer("answer")}
+            />
+            <Image
+              size={15}
+              className={`${
+                typeAnswer === "image" ? "text-blue-500" : "hover:text-blue-400"
+              }`}
+              onClick={() => setTypeAnswer("image")}
+            />
+          </div>
+        </div>
+        {props.data.answers.length === 0 ? (
+          <div className="flex items-center justify-center w-full p-2 rounded-md border border-transparent relative min-h-[45px]">
+            <p className="text-sm font-normal ">Chưa có câu trả lời nào</p>
+          </div>
+        ) : (
+          <DndContext>
+            <SortableContext items={[{ id: 1 }, { id: 2 }, { id: 3 }]}>
+              <div className="space-y-2 w-full">
+                {typeAnswer === "answer" ? (
+                  <>
+                    {props.data.answers.map((item) => (
+                      <ItemAnswer
+                        id={item.answer_id}
+                        idQuestion={props.data.question_id}
+                        data={item}
+                        key={item.answer_id}
+                        checked={item.isCorrect ? true : false}
+                        onchange={onChangeSelect}
+                      />
+                    ))}
+                  </>
+                ) : (
+                  <>
+                    {props.data.answers.map((item) => (
+                      <ItemAnswerImage
+                        id={item.answer_id}
+                        idQuestion={props.data.question_id}
+                        data={item}
+                        key={item.answer_id}
+                        checked={item.isCorrect ? true : false}
+                        onchange={onChangeSelect}
+                      />
+                    ))}
+                  </>
+                )}
+              </div>
+            </SortableContext>
+          </DndContext>
+        )}
+
+        <div className="w-full  mb-4 pt-5  flex">
           <label htmlFor="simple-search" className="sr-only">
             add
           </label>
@@ -146,9 +156,9 @@ const ContentQuestionSingleChoice = (props: {
             <Plus size={15} />
             <span className="sr-only">Thêm</span>
           </button>
-        </form>
+        </div>
       </div>
-    </div>
+    </form>
   );
 };
 
@@ -221,8 +231,7 @@ const ItemAnswer = (props: {
         <input
           type="radio"
           value={props.data.answer_id}
-          name="bordered-radio"
-          checked={props.data.isCorrect}
+          checked={props.checked}
           onChange={props.onchange}
           className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
         />

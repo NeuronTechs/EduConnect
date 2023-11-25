@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { dataListResponse, dataResponse } from "../constant/type";
 import { QueryError, ResultSetHeader } from "mysql2";
 interface IQuiz {
-  resource_id: string;
+  quiz_id: string;
   lecture_id: string;
   timeout?: string;
   description: string;
@@ -15,7 +15,6 @@ interface IQuiz {
   passPercent: number;
   retakePercent: number;
   content: string;
-  quiz_id: string;
   questions?: [];
   created_at?: string;
   updated_at?: string;
@@ -43,7 +42,7 @@ interface IAnswer {
 }
 // quiz
 const createQuiz = async (quiz: IQuiz) => {
-  quiz.resource_id = uuidv4();
+  quiz.quiz_id = uuidv4();
 
   const query = `INSERT INTO lecture_quiz SET ?`;
   return new Promise<dataResponse<IQuiz>>((resolve, rejects) => {
@@ -310,14 +309,12 @@ const deleteQuestionQuiz = async (question_id: string) => {
 // answer
 const createAnswerQuestion = async (answer: IAnswer) => {
   answer.answer_id = uuidv4();
-  answer.isCorrect = answer.isCorrect ? answer.isCorrect : false;
   const query = `INSERT INTO quiz_answer SET ?`;
   return new Promise<dataResponse<IAnswer>>((resolve, rejects) => {
     try {
       connectDB.connectionDB.query(
         { sql: query, values: [answer] },
         (err: QueryError, result: IAnswer) => {
-          console.log(err);
           if (err) {
             rejects({
               status: 400,
@@ -453,7 +450,52 @@ const getAnswerQuestion = async (questionId: IAnswer) => {
     }
   });
 };
-
+const updateAnswerQuestionMultiply = async (
+  answer1: string,
+  answer2: string,
+  question_id: string
+) => {
+  const query = ` UPDATE quiz_answer SET isCorrect = CASE quiz_answer.answer_id WHEN ? THEN true WHEN ? THEN false ELSE false END WHERE quiz_answer.answer_id IN (?, ?) and quiz_answer.question_id = ?;`;
+  return new Promise<dataListResponse<IAnswer>>((resolve, rejects) => {
+    try {
+      connectDB.connectionDB.query(
+        {
+          sql: query,
+          values: [answer1, answer2, answer1, answer2, question_id],
+        },
+        (err: QueryError, result: ResultSetHeader) => {
+          if (err) {
+            rejects({
+              status: 400,
+              data: [],
+              message: err.message,
+            });
+          }
+          if (result.affectedRows === 0) {
+            rejects({
+              status: 400,
+              data: [],
+              message: "Answer not found",
+            });
+          } else {
+            resolve({
+              status: 200,
+              data: [] as IAnswer[],
+              message: "Updated successfully",
+            });
+          }
+        }
+      );
+    } catch (err) {
+      rejects({
+        status: 500,
+        data: [],
+        message: err,
+      });
+    }
+    return;
+  });
+};
 export default {
   createQuiz,
   getQuiz,
@@ -468,4 +510,6 @@ export default {
   updateAnswerQuestion,
   deleteAnswerQuestion,
   getAnswerQuestion,
+  //
+  updateAnswerQuestionMultiply,
 };

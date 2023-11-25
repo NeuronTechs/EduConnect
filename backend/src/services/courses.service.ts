@@ -288,7 +288,7 @@ const createCourseSectionLesson = async (lecture: ILecture) => {
       if (lecture.type === "quiz") {
         console.log("test");
         const data = {
-          resource_id: uuidv4(),
+          quiz_id: uuidv4(),
           lecture_id: lecture.lecture_id,
           timeout: new Date().toISOString().slice(0, 19).replace("T", " "),
           duration: 0,

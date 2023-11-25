@@ -273,7 +273,7 @@ export interface IAnswerInfo {
   question: string | null;
   answer: string;
   image: string | null;
-  isCorrect: boolean;
+  isCorrect: number;
   explain?: string | null;
 }
 export interface IQuestionInfo {
@@ -286,7 +286,7 @@ export interface IQuestionInfo {
   answers: IAnswerInfo[];
 }
 export interface IQuizInfo {
-  resource_id: string;
+  quiz_id: string;
   lecture_id: string;
   description: string;
   timeout: string;
