@@ -50,9 +50,6 @@ const CreateLessonQuiz = (): React.ReactElement => {
       });
     }
   };
-  // React.useEffect(() => {
-  //   console.log(dataQuiz);
-  // }, [dataQuiz]);
   React.useEffect(() => {
     if (selectLesson) {
       const requestApi = async () => {

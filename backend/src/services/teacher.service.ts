@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { title } from "process";
 import { QueryError } from "mysql2";
 import { RowDataPacket } from "mysql2";
+import teacherController from "../controllers/teacher.controller";
 
 // topic
 interface ITopic {
@@ -57,7 +58,7 @@ interface ICourse {
   discount: number;
   ranking?: number;
   status?: string;
-  status_show?: string;
+  status_show?: number;
   total_ranking?: number;
   total_enrollment?: number;
   total_lecture?: number;
@@ -68,8 +69,8 @@ interface ICourse {
   teacher?: ITeacher;
   user?: IUser;
   topic?: ITopic;
-  created_at?: string;
-  updated_at?: string;
+  create_at?: string;
+  update_at?: string;
 }
 interface IUser {
   username: string;
@@ -195,7 +196,7 @@ const createCourseTeacher = async (data: ICourseTeacher) => {
       db.connectionDB.query(
         { sql: query },
 
-        (error, course: ICourseTeacher, fields) => {
+        (error: QueryError, course: ICourseTeacher, fields) => {
           const dataTmp = {
             ...data,
             course_id: course_id,
@@ -267,30 +268,20 @@ const getCourseTeacher = async (id: string, limit: number) => {
   } catch (error) {}
 };
 const updateCourseTeacher = async (id: string, data: ICourse) => {
-  console.log(data);
-
+  data.update_at = new Date().toISOString().slice(0, 19).replace("T", " ");
+  data.create_at = new Date().toISOString().slice(0, 19).replace("T", " ");
+  data.study = data.study ? JSON.stringify(data.study) : "";
+  data.requirement = data.requirement ? JSON.stringify(data.requirement) : "";
   try {
-    const query = `UPDATE course SET teacher_id='${
-      data.teacher_id
-    }', title = '${data.title}', description='${data.description}', image='${
-      data.image.path
-    }', price='${
-      data.price ? parseInt(data.price.toString()) : 0
-    }', topic_id = '${data.topic_id}', discount='${
-      data.price ? parseFloat(data.discount.toString()) : 0
-    }', study='${JSON.stringify(data.study)}',  level = '${
-      data.level
-    }', requirement='${JSON.stringify(data.requirement)}', language='${
-      data.language
-    }', create_at='2023-07-07 15:15:15', update_at='2023-07-07 15:15:15'
-    , status_show='${data.status_show}' WHERE course_id = '${id}';`;
+    const query = `UPDATE course SET ? WHERE course_id = ?;`;
     return new Promise<dataResponse<ICourse>>((resolve, reject) => {
       db.connectionDB.query(
-        { sql: query },
+        { sql: query, values: [{ ...data, image: data.image.path }, id] },
 
         (error: QueryError, course: ICourse) => {
           const dataTmp = {
             ...data,
+            image: data.image.path,
             course_id: id,
           };
           if (error) {
@@ -303,7 +294,7 @@ const updateCourseTeacher = async (id: string, data: ICourse) => {
           }
           resolve({
             status: 201,
-            data: dataTmp as ICourse,
+            data: dataTmp as unknown as ICourse,
             message: "update course successfully",
           });
         }

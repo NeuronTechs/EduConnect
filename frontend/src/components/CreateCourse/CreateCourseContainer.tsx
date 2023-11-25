@@ -5,6 +5,10 @@ import { PlusCircle } from "@phosphor-icons/react";
 import DescriptionCreateCourseTeacher from "./DescriptionCreateCourseTeacher";
 
 import CreateContentCourse from "./CreateContentCourse";
+import { CreateCourseContext } from "@/context/CreateCourseContext";
+import { useForm } from "react-hook-form";
+import { ICourseDetail } from "@/types/type";
+import * as teacherApi from "@/api/teacherApi/teacherApi";
 
 const CreateCourseContainer = (): React.ReactElement => {
   const [isOpenModal, setIsOpenModal] = React.useState<boolean>(false);
@@ -43,10 +47,10 @@ const ContainerCreateCourseTeacher = (props: {
       return <CreateContentCourse {...props} />;
     case "price":
       return <PriceCreateCourseTeacher />;
-    case "faq":
-      return <FAQCreateCourseTeacher />;
-    case "notice":
-      return <NoticeCreateCourseTeacher />;
+    // case "faq":
+    //   return <FAQCreateCourseTeacher />;
+    // case "notice":
+    //   return <NoticeCreateCourseTeacher />;
     default:
       return <div className="flex items-center justify-center "></div>;
   }
@@ -109,7 +113,7 @@ const TabContentCreateCourseTeacher = (props: {
             Giá Cả
           </a>
         </li>
-        <li className="mr-2" onClick={() => props.setTab("faq")}>
+        {/* <li className="mr-2" onClick={() => props.setTab("faq")}>
           <a
             href="#"
             className={`inline-flex items-center justify-center p-4 ${
@@ -132,7 +136,7 @@ const TabContentCreateCourseTeacher = (props: {
           >
             Lưu ý
           </a>
-        </li>
+        </li> */}
       </ul>
     </div>
   );
@@ -216,6 +220,22 @@ const TargetCreateCourseTeacher = (): React.ReactElement => {
   );
 };
 const PriceCreateCourseTeacher = (): React.ReactElement => {
+  const { dataDescription } = React.useContext(CreateCourseContext);
+  const { register, handleSubmit } = useForm<ICourseDetail>({
+    defaultValues: {
+      ...dataDescription,
+    },
+  });
+  console.log(dataDescription);
+  const onSubmitTitle = (data: ICourseDetail) => {
+    try {
+      console.log(data);
+      const res = teacherApi.updateCourseTeacher(data);
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="flex items-start justify-center w-full">
       <div className="flex flex-col gap-4 bg-white p-2 min-w-[50%] px-6">
@@ -225,11 +245,10 @@ const PriceCreateCourseTeacher = (): React.ReactElement => {
             htmlFor="confirm_password"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
-            Giá ($)
+            Giá (VND)
           </label>
           <input
-            type="password"
-            id="confirm_password"
+            {...register("price")}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
         </div>
@@ -238,15 +257,14 @@ const PriceCreateCourseTeacher = (): React.ReactElement => {
             htmlFor="confirm_password"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
-            Giá bán ($)
+            Giá bán (VND)
           </label>
           <input
-            type="password"
-            id="confirm_password"
+            {...register("discount")}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
         </div>
-        <div className="grid gap-6 mb-2 md:grid-cols-2">
+        {/* <div className="grid gap-6 mb-2 md:grid-cols-2">
           <div>
             <label
               htmlFor="first_name"
@@ -265,7 +283,7 @@ const PriceCreateCourseTeacher = (): React.ReactElement => {
                 >
                   <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
                 </svg>
-              </div> */}
+              </div> *
               <input
                 data-date-format="dd/mm/yyyy"
                 type="date"
@@ -288,8 +306,8 @@ const PriceCreateCourseTeacher = (): React.ReactElement => {
               placeholder="Select date"
             />
           </div>
-        </div>
-        <div className="mb-2">
+        </div> */}
+        {/* <div className="mb-2">
           <label
             htmlFor="confirm_password"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -301,9 +319,10 @@ const PriceCreateCourseTeacher = (): React.ReactElement => {
             id="confirm_password"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
-        </div>
+        </div> */}
         <div className="flex items-center justify-end">
           <button
+            onClick={handleSubmit(onSubmitTitle)}
             type="button"
             className="px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
@@ -314,11 +333,11 @@ const PriceCreateCourseTeacher = (): React.ReactElement => {
     </div>
   );
 };
+// =============================================================update=================================================================
+// const FAQCreateCourseTeacher = (): React.ReactElement => {
+//   return <></>;
+// };
 
-const FAQCreateCourseTeacher = (): React.ReactElement => {
-  return <></>;
-};
-
-const NoticeCreateCourseTeacher = (): React.ReactElement => {
-  return <></>;
-};
+// const NoticeCreateCourseTeacher = (): React.ReactElement => {
+//   return <></>;
+// };

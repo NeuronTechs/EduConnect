@@ -6,11 +6,13 @@ const InputEditTitle = (props: {
   onSubmit?: (data: string) => void;
   className?: string;
 }) => {
+  const inputRef = React.useRef<HTMLInputElement>(null);
   const [value, setValue] = React.useState<string>(props.value || "");
   const [enableEditTitle, setEnableEditTitle] = React.useState<boolean>(false);
   React.useEffect(() => {
     // if the onSubmit callback is defined
     if (props.onSubmit) {
+      inputRef.current?.focus();
       // and if the enableEditTitle state is false
       if (enableEditTitle === false) {
         // and if the value state is not equal to the value prop
@@ -43,6 +45,7 @@ const InputEditTitle = (props: {
       ) : (
         <input
           className="border border-gray-300 rounded-md px-2"
+          ref={inputRef}
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onBlur={() => setEnableEditTitle(false)}
