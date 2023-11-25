@@ -59,7 +59,10 @@ const DescriptionCreateCourseTeacher = (): React.ReactElement => {
   };
   const onSave = async (data: ICourseDetail) => {
     try {
-      const res = await teacherApi.updateCourseTeacher(data);
+      const res = await teacherApi.updateCourseTeacher({
+        ...data,
+      });
+
       console.log(res);
     } catch (error) {
       console.log(error);

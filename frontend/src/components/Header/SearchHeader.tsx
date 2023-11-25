@@ -4,13 +4,23 @@ import { useDebounce } from "../../hooks/useDebounce ";
 import { searchService } from "@/api";
 import { useNavigate } from "react-router-dom";
 import SearchHeaderResult from "./SearchHeaderResult";
-import { dataSearch } from "@/types/constans";
+import { ICourseDetail } from "@/types/type";
+import { useOnClickOutside } from "@/hooks/useOnClickOutside";
 
 interface Inputs {
   dataInput: string;
 }
+interface iSearchHeader {
+  course: ICourseDetail[];
+  keyword: string[];
+}
 const SearchHeader = (): React.ReactElement => {
-  // const [dataSearch, setDataSearch] = React.useState<string>("");
+  const [dataSearch, setDataSearch] = React.useState<iSearchHeader>();
+  const [isFocus, setIsFocus] = React.useState<boolean>(false);
+  const refDiv = React.useRef<HTMLDivElement>(null);
+  useOnClickOutside(refDiv, () => {
+    setIsFocus(false);
+  });
   const {
     register,
     handleSubmit,
@@ -18,30 +28,40 @@ const SearchHeader = (): React.ReactElement => {
     // formState: { errors },
   } = useForm<Inputs>();
   const navigate = useNavigate();
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    if (!data) return;
-    navigate(`/search?query=${encodeURIComponent(data.dataInput)}`);
-    // inputRef.current.blur();
-  };
 
   const debouncedValue = useDebounce<string>(watch("dataInput"), 500);
-  // const inputRef = React.useRef();
+  // const inputRef = React.useRef<HTMLInputElement>(null);
   React.useEffect(() => {
-    // console.log(debouncedValue);
     if (debouncedValue !== undefined) {
       const callApi = async () => {
         try {
-          const data = await searchService.search(debouncedValue);
-          return data;
+          const data = await searchService.suggestionSearch(debouncedValue);
+          setDataSearch((prev) => ({
+            ...prev,
+            keyword: [],
+            course: data.courses,
+          }));
         } catch (error) {
           Promise.reject(error);
         }
       };
       callApi();
+    } else {
+      setDataSearch({
+        keyword: [],
+        course: [],
+      });
     }
   }, [debouncedValue]);
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    if (!data) return;
+    // inputRef.current?.blur();
+    navigate(`/search?query=${encodeURIComponent(debouncedValue)}`);
+    // inputRef.current.blur();
+    setIsFocus(false);
+  };
   return (
-    <div className="relative">
+    <div className="relative" ref={refDiv}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <label
           htmlFor="search"
@@ -70,11 +90,11 @@ const SearchHeader = (): React.ReactElement => {
           <input
             // ref={inputRef}
             {...register("dataInput")}
-            type="search"
-            id="search"
+            onFocus={() => setIsFocus(true)}
+            // onBlur={() => setIsFocus(false)}
+            type="text"
             className="block w-full  pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Nhập từ khoá tim kiếm"
-            required
           />
           {/* <button
           type="submit"
@@ -85,8 +105,12 @@ const SearchHeader = (): React.ReactElement => {
         </div>
       </form>
       <SearchHeaderResult
-        dataSearch={{ keyword: dataSearch.keywords, course: dataSearch.course }}
-        isOpen={false}
+        dataSearch={{
+          keyword: dataSearch?.keyword ? dataSearch?.keyword : [],
+          course: dataSearch?.course ? dataSearch?.course : [],
+        }}
+        setIsFocus={setIsFocus}
+        isOpen={isFocus && dataSearch?.course?.length !== 0}
       />
     </div>
   );

@@ -126,7 +126,7 @@ const getCourseTeacher = async (req: Request, res: Response) => {
 };
 const updateCourseTeacher = async (req: Request, res: Response) => {
   const { courseId } = req.params;
-  const { body, file } = req;
+  const { body } = req;
   let imageT = null;
   if (!req.file) {
     imageT = {
