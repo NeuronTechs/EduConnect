@@ -19,7 +19,7 @@ const createQuiz = async (idLectures: string, quiz: IQuizInfo) => {
 };
 const updateQuiz = async (quiz: IQuizInfo) => {
   const response = await httpRequests.put(`/quiz/lectures/${quiz.lecture_id}`, {
-    resource_id: quiz.resource_id,
+    quiz_id: quiz.quiz_id,
     lecture_id: quiz.lecture_id,
     description: quiz.description,
     timeout: quiz.timeout,
@@ -86,7 +86,7 @@ const createAnswerQuestionQuiz = async (answer: IAnswerInfo) => {
         answer: answer.answer ? answer.answer : "",
         image: answer.image ? answer.image : "",
         explain: answer.explain ? answer.explain : "",
-        isCorrect: answer.isCorrect ? answer.isCorrect : false,
+        isCorrect: answer.isCorrect ? answer.isCorrect : 0,
       }
     );
     return response.data;
@@ -95,7 +95,6 @@ const createAnswerQuestionQuiz = async (answer: IAnswerInfo) => {
   }
 };
 const updateAnswerQuestionQuiz = async (answer: IAnswerInfo) => {
-  console.log(answer);
   try {
     const response = await httpRequests.put(
       `/quiz/questions/${answer.question_id}/answers`,
@@ -105,7 +104,7 @@ const updateAnswerQuestionQuiz = async (answer: IAnswerInfo) => {
         answer: answer.answer ? answer.answer : "",
         image: answer.image ? answer.image : "",
         explain: answer.explain ? answer.explain : "",
-        isCorrect: answer.isCorrect,
+        isCorrect: answer.isCorrect ? answer.isCorrect : 0,
       }
     );
     return response.data;
@@ -117,6 +116,23 @@ const deleteAnswerQuestionQuiz = async (answer: IAnswerInfo) => {
   try {
     const response = await httpRequests.deleted(
       `/quiz/questions/${answer.question_id}/answers/${answer.answer_id}`
+    );
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+const updateAnswerQuestionMultiply = async (
+  answer1: IAnswerInfo,
+  answer2: IAnswerInfo
+) => {
+  try {
+    const response = await httpRequests.put(
+      `/quiz/questions/${answer1.question_id}/answers/all`,
+      {
+        answer1: answer1.answer_id,
+        answer2: answer2.answer_id,
+      }
     );
     return response.data;
   } catch (error) {
@@ -166,6 +182,7 @@ export default {
   createAnswerQuestionQuiz,
   updateAnswerQuestionQuiz,
   deleteAnswerQuestionQuiz,
+  updateAnswerQuestionMultiply,
   // result
   createQuizResult,
   getResults,

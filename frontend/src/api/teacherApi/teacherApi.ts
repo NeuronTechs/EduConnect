@@ -26,6 +26,7 @@ export const getCourseTeacherApi = async (params: {
 };
 
 export const updateCourseTeacher = async (data: ICourseDetail) => {
+  console.log(data);
   const formData = new FormData();
   formData.append("title", data.title ? data.title : "");
   formData.append("description", data.description ? data.description : "");
@@ -40,27 +41,28 @@ export const updateCourseTeacher = async (data: ICourseDetail) => {
     "teacher_id",
     data.teacher_id ? data.teacher_id.toString() : ""
   );
-  formData.append("price", data.price ? data.price.toString() : "");
-  formData.append("discount", data.discount ? data.discount.toString() : "");
-  formData.append("topic_id", data.topic_id ? data.topic_id.toString() : "");
-  formData.append("study", data.study ? JSON.stringify(data.study) : "");
-  formData.append("level", data.level ? data.level.toString() : "");
-  formData.append(
-    "requirement",
-    data.requirement ? JSON.stringify(data.requirement) : ""
-  );
-  formData.append("language", data.language ? data.language.toString() : "");
 
+  if (data.discount) {
+    formData.append("discount", data.discount ? data.discount.toString() : "0");
+  }
+
+  if (data.price) {
+    formData.append("price", data.price ? data.price.toString() : "0");
+  }
+  formData.append("topic_id", data.topic_id ? data.topic_id.toString() : "");
+  formData.append("level", data.level ? data.level.toString() : "");
+  formData.append("study", JSON.stringify(data.study));
+  formData.append("requirement", JSON.stringify(data.requirement));
+  formData.append("language", data.language ? data.language.toString() : "");
   formData.append(
     "status_show",
-    data.status_show ? data.status_show.toString() : ""
+    data.status_show ? data.status_show.toString() : "0"
   );
-
   formData.append(
-    "created_at",
+    "create_at",
     data.created_at ? data.created_at : Date.now().toString()
   );
-  formData.append("updated_at", Date.now().toString());
+  formData.append("update_at", Date.now().toString());
   // add form data
   const headers = {
     Accept: "application/json",
@@ -70,6 +72,7 @@ export const updateCourseTeacher = async (data: ICourseDetail) => {
   try {
     const res = await httpRequest.put(
       `/teachers/${data.teacher_id}/courses/${data.course_id}`,
+
       formData,
       headers as AxiosRequestHeaders
     );

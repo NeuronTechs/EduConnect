@@ -16,17 +16,14 @@ const ContentQuestionKeyword = (props: { data: IQuestionInfo }) => {
   const onSubmit = (data: IInputAnswer) => {
     if (data.title === "") return;
 
-    handleAddNewAnswerQuestion(
-      {
-        answer_id: `${props.data.answers.length + 1}`,
-        question_id: props.data.question_id,
-        answer: data.title,
-        isCorrect: false,
-        image: null,
-        question: null,
-      },
-      "keyword"
-    );
+    handleAddNewAnswerQuestion({
+      answer_id: `${props.data.answers.length + 1}`,
+      question_id: props.data.question_id,
+      answer: data.title,
+      isCorrect: false,
+      image: null,
+      question: null,
+    });
     reset();
   };
   return (

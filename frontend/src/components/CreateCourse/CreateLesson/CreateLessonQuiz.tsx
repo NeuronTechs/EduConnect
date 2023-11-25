@@ -51,13 +51,9 @@ const CreateLessonQuiz = (): React.ReactElement => {
     }
   };
   React.useEffect(() => {
-    console.log(dataQuiz);
-  }, [dataQuiz]);
-  React.useEffect(() => {
     if (selectLesson) {
       const requestApi = async () => {
         const res = await quizApi.getQuiz(selectLesson.lecture_id);
-        console.log(res);
         setDataQuiz(res);
       };
       requestApi();
@@ -351,10 +347,10 @@ const QuestionItem = ({
     handleDeleteQuestion(data.question_id);
   };
 
-  const handleEditQuestionTitle = (dataQuestion: string) => {
+  const handleEditQuestionTitle = (title: string) => {
     handleEditQuestion({
       ...data,
-      question: dataQuestion,
+      question: title,
     });
   };
 
@@ -471,66 +467,15 @@ const AddQuestion = (): React.ReactElement => {
     React.useContext(CreateQuizContext);
   // set the dropdown menu element
   const handleAddQuestion = (type: string) => {
-    if (type === "fill") {
-      const question_id = `${Math.floor(Math.random() * 1000000)}`;
-      handleAddNewQuestion({
-        question_id: question_id,
-        lecture_id: dataQuiz.lecture_id,
-        quiz_id: dataQuiz.resource_id,
-        question: "nhập câu hỏi",
-        type: type,
-        answers: [
-          {
-            answer_id: Math.floor(Math.random() * 1000000).toString(),
-            question_id: question_id,
-            answer: "nhập câu trả lời",
-            isCorrect: true,
-            image: null,
-            question: null,
-          },
-        ],
-        images: "",
-      }); // add new question fill
-    } else if (type === "true_false") {
-      const question_id = `${Math.floor(Math.random() * 1000000)}`;
-      handleAddNewQuestion({
-        question_id: question_id,
-
-        lecture_id: dataQuiz.lecture_id,
-        quiz_id: dataQuiz.resource_id,
-        question: "nhập câu hỏi",
-        type: type,
-        answers: [
-          {
-            answer_id: Math.floor(Math.random() * 1000000).toString(),
-            question_id: question_id,
-            answer: "true",
-            isCorrect: true,
-            image: null,
-            question: null,
-          },
-          {
-            answer_id: Math.floor(Math.random() * 1000000).toString(),
-            question_id: question_id,
-            answer: "false",
-            isCorrect: false,
-            image: null,
-            question: null,
-          },
-        ],
-        images: "",
-      });
-    } else {
-      handleAddNewQuestion({
-        question_id: Math.floor(Math.random() * 1000000).toString(),
-        lecture_id: dataQuiz.lecture_id,
-        quiz_id: dataQuiz.resource_id,
-        question: "nhập câu hỏi",
-        type: type,
-        answers: [],
-        images: null,
-      });
-    }
+    handleAddNewQuestion({
+      question_id: Math.floor(Math.random() * 1000000).toString(),
+      lecture_id: dataQuiz.lecture_id,
+      quiz_id: dataQuiz.quiz_id,
+      question: "nhập câu hỏi",
+      type: type,
+      answers: [],
+      images: null,
+    });
   };
   return (
     <div className="border-dashed border-2 border-sky-500 px-5 py-4 flex items-center justify-center gap-2">
@@ -563,7 +508,8 @@ const AddQuestion = (): React.ReactElement => {
               <p className="text-sm font-semibold">Nhiều Lựa Chọn</p>
             </div>
           </MenuItem>
-          <MenuItem>
+          {/* ===============================================================================update lase================================================== */}
+          {/* <MenuItem>
             <div
               className="flex items-center justify-start gap-2"
               onClick={() => handleAddQuestion("true_false")}
@@ -594,7 +540,8 @@ const AddQuestion = (): React.ReactElement => {
             >
               <p className="text-sm font-semibold">Từ Khoá</p>
             </div>
-          </MenuItem>
+          </MenuItem> */}
+          {/* ================================================================================================================================================== */}
           <MenuItem>
             <div
               className="flex items-center justify-start gap-2"
