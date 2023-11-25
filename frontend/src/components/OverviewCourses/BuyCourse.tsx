@@ -17,12 +17,18 @@ import { configRouter } from "@/configs/router";
 import {
   CourseCheckout,
   getCoureCheckout,
+  resetCheckOutCart,
 } from "@/features/checkoutCourse/checkoutSlice";
 import BuyCourseLoading from "./Loading/BuyCourseLoading";
+import * as courseApi from "../../api/courseApi/courseApi";
+import { resetStoreCourseOverview } from "@/features/overviewCourse/courseOverviewSlice";
+import { useState } from "react";
+import { Spinner } from "@material-tailwind/react";
 
 const BuyCourse = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const [loadingCheckout, setLoadingCheckout] = useState<boolean>(false);
   const { id } = useParams();
 
   const currentCourse = useSelector(
@@ -52,24 +58,62 @@ const BuyCourse = () => {
   };
 
   const handleRedirectCheckoutPage = async () => {
-    const courseCurrent: CourseCheckout = {
-      course_id: currentCourse?.course_id,
-      teacher_id: currentCourse?.teacher_id,
-      full_name: currentCourse?.fullName,
-      discount: currentCourse?.discount,
-      price: currentCourse?.price,
-      title: currentCourse?.title,
-      image: currentCourse?.image,
-    };
-    await dispatch(getCoureCheckout(courseCurrent));
-    navigate(configRouter.checkout);
+    if (currentCourse?.discount === 0) {
+      try {
+        const addTransactionInCourse = await courseApi.addTransactionInCourse({
+          student_id: currentUser?.user_id,
+          course_id: currentCourse?.course_id,
+          amount: currentCourse?.discount,
+          status: "Thành công",
+          transaction_id: generateRandomString(),
+        });
+        if (addTransactionInCourse.status === 200) {
+          setLoadingCheckout(false);
+          dispatch(resetCheckOutCart());
+          dispatch(resetStoreCourseOverview());
+          alert("Thanh toán thành công");
+          navigate(`/course/learn/${currentCourse?.course_id}`);
+        } else {
+          setLoadingCheckout(false);
+          alert(addTransactionInCourse.message);
+        }
+      } catch (err: any) {
+        console.log(err);
+        setLoadingCheckout(false);
+        alert(err.message);
+      }
+    } else {
+      const courseCurrent: CourseCheckout = {
+        course_id: currentCourse?.course_id,
+        teacher_id: currentCourse?.teacher_id,
+        full_name: currentCourse?.fullName,
+        discount: currentCourse?.discount,
+        price: currentCourse?.price,
+        title: currentCourse?.title,
+        image: currentCourse?.image,
+      };
+      await dispatch(getCoureCheckout(courseCurrent));
+      navigate(configRouter.checkout);
+    }
   };
 
   const handleRedirectToCouse = (course_id: string) => {
     navigate(`/course/learn/${course_id}`);
   };
 
-  const handleRedirectToCart = () => {
+  const generateRandomString = () => {
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
+    for (let i = 0; i < 10; i++) {
+      result += characters.charAt(
+        Math.floor(Math.random() * characters.length)
+      );
+    }
+    return result;
+  };
+
+  const handleRedirectToCart = async () => {
     navigate(`/courses-cart`);
   };
 
@@ -247,8 +291,16 @@ const BuyCourse = () => {
                     onClick={handleRedirectCheckoutPage}
                     className="flex items-center justify-center border text-white w-full py-2 rounded-lg bg-blue-300"
                   >
-                    Mua khóa học
-                    <ArrowRight size={18} />
+                    {loadingCheckout ? (
+                      <div className="flex justify-center">
+                        <Spinner />
+                      </div>
+                    ) : (
+                      <>
+                        Mua khóa học
+                        <ArrowRight size={18} />
+                      </>
+                    )}
                   </button>
                 </>
               )}

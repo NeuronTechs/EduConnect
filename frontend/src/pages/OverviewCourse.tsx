@@ -54,6 +54,10 @@ const OverviewCourse = () => {
     (state: SliceState) => state.courseOverviewSlice.courseCurrent
   );
 
+  const loadingGetOverviewCourse = useSelector(
+    (state: SliceState) => state.courseOverviewSlice.loading
+  );
+
   const currentUser = useSelector(
     (state: SliceState) => state.authSlice.currentUser
   );
@@ -112,11 +116,20 @@ const OverviewCourse = () => {
       }
       setProblem("");
       setTitle("");
-      setLectureProblem("")
-      setSessionProblem("")
+      setLectureProblem("");
+      setSessionProblem("");
       setImage([]);
       setOpen(!open);
     } else {
+      console.log(
+        title !== "",
+        currentUser?.user_id !== "",
+        currentCourse?.course_id !== "",
+        lectureProblem !== "",
+        sessionProblem !== "",
+        problem !== "",
+        image.length > 0
+      );
       setLoading(false);
       alert("Vui lòng nhập đầy đủ các trường");
     }
@@ -149,141 +162,154 @@ const OverviewCourse = () => {
           </a>
         </Breadcrumbs>
       </div>
-      {currentCourse ? (
+      {loadingGetOverviewCourse ? (
+        <div className="flex justify-center">
+          <Spinner className="h-16 w-16 text-gray-900/50" />
+        </div>
+      ) : (
         <>
-          <div className="lg:w-full h-auto flex flex-col justify-center items-center lg:flex lg:flex-row lg:justify-center lg:items-start lg:space-x-2">
-            <DetailCourse />
-            <BuyCourse />
-          </div>
-          {currentCourse?.student_id !== null &&
-            currentCourse?.student_id?.includes(
-              currentUser?.user_id as string
-            ) && (
-              <div className="absolute bottom-10 right-10">
-                <Tooltip content="Báo cáo" placement="top">
-                  <button
-                    onClick={handleOpen}
-                    className="rounded-[50%] bg-blue-500 p-2 text-white text-center"
-                  >
-                    <WarningOctagon size={32} color="#ffffff" weight="fill" />
-                  </button>
-                </Tooltip>
-                <Dialog open={open} handler={handleOpen}>
-                  <DialogHeader>Báo cáo</DialogHeader>
-                  <DialogBody>
-                    <div className="w-full my-3">
-                      <select
-                        className="w-full rounded-md"
-                        placeholder="Lựa chọn vấn đề"
-                        onChange={(e) => handleGetTitle(e)}
+          {currentCourse ? (
+            <>
+              <div className="lg:w-full h-auto flex flex-col justify-center items-center lg:flex lg:flex-row lg:justify-center lg:items-start lg:space-x-2">
+                <DetailCourse />
+                <BuyCourse />
+              </div>
+              {currentCourse?.student_id !== null &&
+                currentCourse?.student_id?.includes(
+                  currentUser?.user_id as string
+                ) && (
+                  <div className="absolute bottom-10 right-10">
+                    <Tooltip content="Báo cáo" placement="top">
+                      <button
+                        onClick={handleOpen}
+                        className="rounded-[50%] bg-blue-500 p-2 text-white text-center"
                       >
-                        {titleDataReport.map((title) => (
-                          <option key={title} value={title}>
-                            {title}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <select
-                      className="w-full rounded-md mb-3"
-                      placeholder="Lựa chọn session"
-                      onChange={(e) => setSessionProblem(e.target.value)}
-                    >
-                      {currentCourse?.sessions.map((session) => (
-                        <option
-                          key={session?.session_id}
-                          value={session?.session_id}
+                        <WarningOctagon
+                          size={32}
+                          color="#ffffff"
+                          weight="fill"
+                        />
+                      </button>
+                    </Tooltip>
+                    <Dialog open={open} handler={handleOpen}>
+                      <DialogHeader>Báo cáo</DialogHeader>
+                      <DialogBody>
+                        <div className="w-full my-3">
+                          <select
+                            className="w-full rounded-md"
+                            placeholder="Lựa chọn vấn đề"
+                            onChange={(e) => handleGetTitle(e)}
+                          >
+                            {titleDataReport.map((title) => (
+                              <option key={title} value={title}>
+                                {title}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <select
+                          className="w-full rounded-md mb-3"
+                          placeholder="Lựa chọn session"
+                          onChange={(e) => setSessionProblem(e.target.value)}
                         >
-                          {session?.name}
-                        </option>
-                      ))}
-                    </select>
-                    {sessionProblem && (
-                      <select
-                        className="w-full rounded-md mb-3"
-                        placeholder="Lựa chọn lecture"
-                        onChange={(e) => setLectureProblem(e.target.value)}
-                      >
-                        {currentCourse?.sessions
-                          ?.filter(
-                            (session) => session?.session_id === sessionProblem
-                          )[0]
-                          ?.lectures?.map((lecture) => (
+                          {currentCourse?.sessions.map((session) => (
                             <option
-                              key={lecture?.lecture_id}
-                              value={lecture?.lecture_id}
+                              key={session?.session_id}
+                              value={session?.session_id}
                             >
-                              {lecture?.lecture_name}
+                              {session?.name}
                             </option>
                           ))}
-                      </select>
-                    )}
-                    <div className="w-full max-h-[200px]">
-                      <textarea
-                        className="w-full max-h-[200px] rounded-md"
-                        placeholder="vấn đề"
-                        onChange={(e) => setProblem(e.target.value)}
-                      />
-                    </div>
-                    {image.length === 0 ? (
-                      <div className="w-full h-[50px] my-3">
-                        <input
-                          type="file"
-                          placeholder="Image"
-                          onChange={(e) => handleGetImage(e)}
-                        />
-                      </div>
-                    ) : (
-                      <div className="w-full h-[200px] my-3">
-                        <input
-                          type="file"
-                          id="file"
-                          accept="image/*"
-                          className="hidden"
-                          onChange={(e) => handleGetImage(e)}
-                        />
-                        <label htmlFor="file">
-                          <img
-                            className="w-full h-full object-contain"
-                            src={URL.createObjectURL(image[0])}
-                            alt="image"
+                        </select>
+                        {sessionProblem && (
+                          <select
+                            className="w-full rounded-md mb-3"
+                            placeholder="Lựa chọn lecture"
+                            onChange={(e) => setLectureProblem(e.target.value)}
+                          >
+                            {currentCourse?.sessions
+                              ?.filter(
+                                (session) =>
+                                  session?.session_id === sessionProblem
+                              )[0]
+                              ?.lectures?.map((lecture) => (
+                                <option
+                                  key={lecture?.lecture_id}
+                                  value={lecture?.lecture_id}
+                                >
+                                  {lecture?.lecture_name}
+                                </option>
+                              ))}
+                          </select>
+                        )}
+                        <div className="w-full max-h-[200px]">
+                          <textarea
+                            className="w-full max-h-[200px] rounded-md"
+                            placeholder="vấn đề"
+                            onChange={(e) => setProblem(e.target.value)}
                           />
-                        </label>
-                      </div>
-                    )}
-                  </DialogBody>
-                  <DialogFooter>
-                    <Button
-                      variant="text"
-                      color="red"
-                      onClick={handleClose}
-                      className="mr-1"
-                    >
-                      <span>Hủy</span>
-                    </Button>
-                    <Button
-                      variant="gradient"
-                      color="green"
-                      onClick={handleReport}
-                    >
-                      <span>{loading ? <Spinner /> : "Báo cáo"}</span>
-                    </Button>
-                  </DialogFooter>
-                </Dialog>
-              </div>
-            )}
+                        </div>
+                        {image.length === 0 ? (
+                          <div className="w-full h-[50px] my-3">
+                            <input
+                              type="file"
+                              placeholder="Image"
+                              onChange={(e) => handleGetImage(e)}
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-full h-[200px] my-3">
+                            <input
+                              type="file"
+                              id="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={(e) => handleGetImage(e)}
+                            />
+                            <label htmlFor="file">
+                              <img
+                                className="w-full h-full object-contain"
+                                src={URL.createObjectURL(image[0])}
+                                alt="image"
+                              />
+                            </label>
+                          </div>
+                        )}
+                      </DialogBody>
+                      <DialogFooter>
+                        <Button
+                          variant="text"
+                          color="red"
+                          onClick={handleClose}
+                          className="mr-1"
+                        >
+                          <span>Hủy</span>
+                        </Button>
+                        <Button
+                          variant="gradient"
+                          color="green"
+                          onClick={handleReport}
+                        >
+                          <span>{loading ? <Spinner /> : "Báo cáo"}</span>
+                        </Button>
+                      </DialogFooter>
+                    </Dialog>
+                  </div>
+                )}
+            </>
+          ) : (
+            <div className="w-full h-[400px] flex flex-col justify-center items-center">
+              <Video size={100} />
+              <p>Khóa học không tồn tại</p>
+              <button
+                onClick={handleRedirectHomePage}
+                className="py-2 px-3 bg-blue-500 text-white rounded-md my-3"
+              >
+                Xem thêm khóa học
+              </button>
+            </div>
+          )}
         </>
-      ) : (
-        <div className="w-full h-[400px] flex flex-col justify-center items-center">
-          <Video size={100} />
-          <p>Khóa học không tồn tại</p>
-          <button
-            onClick={handleRedirectHomePage}
-            className="py-2 px-3 bg-blue-500 text-white rounded-md my-3"
-          >
-            Xem thêm khóa học
-          </button>
-        </div>
       )}
     </div>
   );

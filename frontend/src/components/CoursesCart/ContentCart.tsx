@@ -21,9 +21,9 @@ const ContentCart = () => {
   const cartCurrent = useSelector(
     (state: SliceState) => state.cartSlice.cartCurrent
   );
-  // let totalPrice = cartCurrent?.reduce((total: number,cart: Cart) => {
-  //   return total + parseInt(cart?.discount)
-  // }, 0);
+  let totalPrice = cartCurrent?.reduce((total: number, cart: Cart) => {
+    return total + (cart?.discount ? cart?.discount : 0);
+  }, 0);
   const dispatch = useDispatch<AppDispatch>();
 
   const handleRedirectHomePage = () => {
@@ -76,10 +76,10 @@ const ContentCart = () => {
                     </div>
                     <div className="hidden md:block">
                       <p className="text-[14px] text-blue-600 line-through">
-                        {/* {formatCurrency(data?.price as number)} */}
+                        {formatCurrency(data?.price ? data?.price : 0)}
                       </p>
                       <p className="text-[14px] text-blue-600 font-semibold">
-                        {/* {formatCurrency(data?.discount as number)} */}
+                        {formatCurrency(data?.discount ? data?.discount : 0)}
                       </p>
                     </div>
                     <div>
@@ -132,7 +132,7 @@ const ContentCart = () => {
                   {formatCurrency(0)}
                 </div>
               </div>
-              <div className="flex items-center justify-between my-5 mx-2 w-full">
+              {/* <div className="flex items-center justify-between my-5 mx-2 w-full">
                 <input
                   type="text"
                   className="w-[60%] outline-none border border-gray-400 p-2 rounded-md hover:border-blue-300 active:border-blue-300 focus:border-blue-300"
@@ -141,11 +141,11 @@ const ContentCart = () => {
                 <button className=" w-[35%] bg-blue-500 text-white py-2 px-3 rounded-md">
                   Áp dụng
                 </button>
-              </div>
+              </div> */}
               <div className="flex items-start justify-between my-2">
                 <div className="text-[15px]">Tổng cộng</div>
                 <div className="text-[15px] font-semibold flex flex-col items-end justify-center">
-                  {/* <p>{formatCurrency(totals / 2)}</p> */}
+                  <p>{formatCurrency(totalPrice ? totalPrice : 0)}</p>
                   <p className="font-normal">Đã bao gồm VAT (nếu có)</p>
                 </div>
               </div>

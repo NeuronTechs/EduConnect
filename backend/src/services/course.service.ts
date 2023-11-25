@@ -664,11 +664,16 @@ const getComplaintDetail = (complaint_id: string): Promise<any> => {
 
 const resolveComplaintCourse = (
   complaint_id: string,
-  course_id: string
+  course_id: string,
+  option: string
 ): Promise<any> => {
   try {
-    console.log(complaint_id, course_id);
-    const query = `UPDATE educonnectdb.course SET status = "0" WHERE course_id = ?`;
+    let query: string;
+    if (option === "0") {
+      query = `UPDATE educonnectdb.course SET status = "0" WHERE course_id = ?`;
+    } else {
+      query = `UPDATE educonnectdb.course SET status = "1" WHERE course_id = ?`;
+    }
     return new Promise((resolve, reject) => {
       db.connectionDB.query(
         query,
