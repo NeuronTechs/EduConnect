@@ -9,6 +9,7 @@ interface IProps {
     keyword: string[];
     course: ICourseDetail[];
   };
+  setIsFocus: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const SearchHeaderResult = (props: IProps): React.ReactElement => {
   return (
@@ -52,7 +53,10 @@ const SearchHeaderResult = (props: IProps): React.ReactElement => {
               )}
               {props.dataSearch.course?.map((data) => {
                 return (
-                  <Link to={`/course/${data.course_id}`}>
+                  <Link
+                    to={`/course/${data.course_id}`}
+                    onClick={() => props.setIsFocus(false)}
+                  >
                     <div className="rounded-sm bg-white hover:bg-gray-100 min-h-[50px] flex items-center justify-start px-4 space-x-3">
                       <div className=" h-[40px] w-[40px]">
                         <ImageWithError

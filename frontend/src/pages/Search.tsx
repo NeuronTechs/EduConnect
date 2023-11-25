@@ -4,7 +4,6 @@ import ListCourse from "../components/Home/ListCourse";
 import ListTeacher from "../components/Home/ListTeacher";
 import ListCategory from "../components/Home/ListCategory";
 import { useSearchParams } from "react-router-dom";
-import { dataCategoryT, dataCourseT, dataTeacherT } from "@/types/constans";
 import { searchService } from "@/api";
 import { ICourseDetail, ITeacher, ITopic } from "@/types/type";
 interface IResultSearch {
