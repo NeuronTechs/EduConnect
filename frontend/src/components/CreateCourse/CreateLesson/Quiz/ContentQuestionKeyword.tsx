@@ -11,24 +11,22 @@ interface IInputAnswer {
   title: string;
 }
 const ContentQuestionKeyword = (props: { data: IQuestionInfo }) => {
-  const { handleEditQuestion } = React.useContext(CreateQuizContext);
+  const { handleAddNewAnswerQuestion } = React.useContext(CreateQuizContext);
   const { register, handleSubmit, reset } = useForm<IInputAnswer>();
   const onSubmit = (data: IInputAnswer) => {
     if (data.title === "") return;
-    handleEditQuestion({
-      ...props.data,
-      type: "keyword",
-      answers: [
-        ...props.data.answers,
-        {
-          id: props.data.answers.length + 1,
-          answer: data.title,
-          isCorrect: false,
-          image: null,
-          question: null,
-        },
-      ],
-    });
+
+    handleAddNewAnswerQuestion(
+      {
+        answer_id: `${props.data.answers.length + 1}`,
+        question_id: props.data.question_id,
+        answer: data.title,
+        isCorrect: false,
+        image: null,
+        question: null,
+      },
+      "keyword"
+    );
     reset();
   };
   return (
@@ -46,7 +44,11 @@ const ContentQuestionKeyword = (props: { data: IQuestionInfo }) => {
               </div>
             )}
             {props.data.answers.map((item) => (
-              <ItemAnswer key={item.id} id={item.id} data={item} />
+              <ItemAnswer
+                key={item.answer_id}
+                id={item.answer_id}
+                data={item}
+              />
             ))}
           </div>
         </SortableContext>
@@ -82,7 +84,7 @@ const ContentQuestionKeyword = (props: { data: IQuestionInfo }) => {
 
 export default ContentQuestionKeyword;
 
-const ItemAnswer = (props: { id: number; data: IAnswerInfo }) => {
+const ItemAnswer = (props: { id: string; data: IAnswerInfo }) => {
   const [hover, setHover] = React.useState<boolean>(false);
 
   const { attributes, listeners, setNodeRef, transform, transition } =

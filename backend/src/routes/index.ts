@@ -14,6 +14,8 @@ import searchRouter from "./search.route";
 import adminRouter from "./admin.route";
 import coursesRouter from "./courses.router";
 import transactionRouter from "./transaction.route";
+import quizRouter from "./quiz.route";
+import quizResultRoute from "./quizResult.route";
 const router = express.Router();
 router.use("/user", userRoutes);
 router.use("/course", courseRouter);
@@ -31,5 +33,6 @@ router.use("/search", searchRouter);
 router.use("/admin", adminRouter);
 router.use("/courses", coursesRouter);
 router.use("/transaction", transactionRouter);
-
+router.use("/quiz", quizRouter);
+router.use("/quiz-result", quizResultRoute);
 export default router;

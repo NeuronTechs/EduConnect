@@ -13,12 +13,16 @@ const CreateLessonDocument = (): React.ReactElement => {
   const { selectLesson, handleEditLesson } =
     React.useContext<ICreateCourseContext>(CreateCourseContext);
 
-  const { register, handleSubmit } = useForm<IInputTitle>();
+  const { register, handleSubmit } = useForm<IInputTitle>({
+    defaultValues: {
+      title: selectLesson?.name,
+    },
+  });
   const onSubmitTitle = (data: IInputTitle) => {
     const lesson = selectLesson;
-    lesson!.title = data.title;
+    lesson!.name = data.title;
     if (!lesson) return;
-    handleEditLesson(lesson.lesson_idSection, lesson);
+    handleEditLesson(lesson);
   };
   return (
     <div className="w-full h-full">
@@ -78,7 +82,7 @@ const CreateLessonDocument = (): React.ReactElement => {
           >
             Mô tả về bài giảng
           </label>
-          <TextEditor />
+          <TextEditor value="" onEditorChange={() => {}} />
         </div>
         <div className="w-full">
           <label

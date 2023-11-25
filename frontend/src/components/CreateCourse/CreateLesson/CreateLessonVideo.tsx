@@ -4,22 +4,45 @@ import {
 } from "@/context/CreateCourseContext";
 import { Video } from "@phosphor-icons/react";
 import React from "react";
-import { useForm } from "react-hook-form";
+import { UseFormRegister, useForm } from "react-hook-form";
 import TextEditor from "./TextEditor/TextEditor";
 
-interface IInputTitle {
+interface IInputLesson {
   title: string;
+  description: string;
+  duration: number;
+  source: string | FileList;
 }
 const CreateLessonVideo = () => {
   const { selectLesson, handleEditLesson } =
     React.useContext<ICreateCourseContext>(CreateCourseContext);
 
-  const { register, handleSubmit } = useForm<IInputTitle>();
-  const onSubmitTitle = (data: IInputTitle) => {
+  const { register, handleSubmit, setValue } = useForm<IInputLesson>({
+    defaultValues: {
+      title: selectLesson?.name,
+      description: selectLesson?.description,
+      duration: selectLesson?.duration ? selectLesson?.duration : 0,
+      source: selectLesson?.source,
+    },
+  });
+  const onSubmitTitle = (data: IInputLesson) => {
     const lesson = selectLesson;
-    lesson!.title = data.title;
+    lesson!.name = data.title;
     if (!lesson) return;
-    handleEditLesson(lesson.lesson_idSection, lesson);
+    handleEditLesson(lesson);
+  };
+  const onSubmitData = (data: IInputLesson) => {
+    console.log(data);
+    if (!selectLesson) return;
+    handleEditLesson({
+      lecture_id: selectLesson?.lecture_id ? selectLesson?.lecture_id : "",
+      session_id: selectLesson?.session_id ? selectLesson?.session_id : "",
+      name: data.title,
+      description: data.description,
+      duration: data.duration,
+      source: data.source,
+      type: "video",
+    });
   };
   const [selectTypeVideo, setSelectTypeVideo] =
     React.useState<string>("default");
@@ -43,7 +66,7 @@ const CreateLessonVideo = () => {
         <button
           onClick={handleSubmit(onSubmitTitle)}
           type="button"
-          disabled={true}
+          // disabled={true}
           className="text-white bg-blue-500 hover:bg-blue-300 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
         >
           Lưu
@@ -72,7 +95,10 @@ const CreateLessonVideo = () => {
             <option value="Embed">Embed</option>
           </select>
         </div>
-        <UploadVideoType selectTypeVideo={selectTypeVideo} />
+        <UploadVideoType
+          selectTypeVideo={selectTypeVideo}
+          register={register}
+        />
         <div className="w-full">
           <label
             form="first_name"
@@ -81,8 +107,8 @@ const CreateLessonVideo = () => {
             Thời lượng bài học
           </label>
           <input
+            {...register("duration")}
             type="text"
-            id="first_name"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Thời lượng bài học"
           />
@@ -105,7 +131,12 @@ const CreateLessonVideo = () => {
           >
             Mô tả về bài giảng
           </label>
-          <TextEditor />
+          <TextEditor
+            value={selectLesson?.description ? selectLesson?.description : ""}
+            onEditorChange={(data) => {
+              setValue("description", data);
+            }}
+          />
         </div>
         <div className="w-full">
           <label
@@ -143,7 +174,7 @@ const CreateLessonVideo = () => {
                   MP4 (MAX. 1G)
                 </p>
               </div>
-              <input id="dropzone-file" type="file" className="hidden" />
+              <input type="file" className="hidden" />
             </label>
           </div>
         </div>
@@ -151,6 +182,7 @@ const CreateLessonVideo = () => {
       <div className="h-50px] w-full relative">
         <div className="sticky bottom-0 left-0 w-full flex justify-end">
           <button
+            onClick={handleSubmit(onSubmitData)}
             type="button"
             className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
           >
@@ -166,6 +198,7 @@ export default CreateLessonVideo;
 
 const UploadVideoType = (props: {
   selectTypeVideo: string;
+  register: UseFormRegister<IInputLesson>;
 }): React.ReactElement => {
   console.log(props.selectTypeVideo);
   return (
@@ -207,7 +240,12 @@ const UploadVideoType = (props: {
                   MP4 (MAX. 1G)
                 </p>
               </div>
-              <input id="dropzone-file" type="file" className="hidden" />
+              <input
+                id="dropzone-file"
+                type="file"
+                className="hidden"
+                {...props.register("source")}
+              />
             </label>
           </div>
         </>
@@ -221,7 +259,7 @@ const UploadVideoType = (props: {
             Video URL
           </label>
           <textarea
-            id="message"
+            {...props.register("source")}
             rows={4}
             className="block p-2.5 w-full text-xs text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="video URL..."
@@ -237,7 +275,7 @@ const UploadVideoType = (props: {
             Video URL
           </label>
           <textarea
-            id="message"
+            {...props.register("source")}
             rows={4}
             className="block p-2.5 w-full text-xs text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="video URL..."
@@ -253,7 +291,7 @@ const UploadVideoType = (props: {
             Video URL
           </label>
           <textarea
-            id="message"
+            {...props.register("source")}
             rows={4}
             className="block p-2.5 w-full text-xs text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="video URL..."
