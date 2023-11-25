@@ -270,13 +270,13 @@ const CourseManager = () => {
                           >
                             {u?.level}
                           </Typography>
-                          <Typography
+                          {/* <Typography
                             variant="small"
                             color="blue-gray"
                             className="font-normal"
                           >
                             {u?.language}
-                          </Typography>
+                          </Typography> */}
                         </div>
                       </td>
                       <td className={classes}>

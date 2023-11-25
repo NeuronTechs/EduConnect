@@ -1,13 +1,18 @@
 // import SearchHeader from "../Header/SearchHeader";
 import NotificationHeader from "../Header/NotificationHeader";
-import MessageHeader from "../Header/MessageHeader";
+// import MessageHeader from "../Header/MessageHeader";
 import CourseCart from "../Header/CourseCart";
 import AccountHeader from "../Header/AccountHeader";
 import assets from "../../assets";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { SliceState } from "@/types/type";
 
 const HeaderCart = () => {
   const navigate = useNavigate();
+  const currentUser = useSelector(
+    (state: SliceState) => state.authSlice.currentUser
+  );
   const handleRedirectHomePage = () => {
     navigate("/");
   };
@@ -28,8 +33,9 @@ const HeaderCart = () => {
       </div> */}
       <div className="flex items-center justify-center gap-3 pr-3">
         <NotificationHeader />
-        <MessageHeader />
-        <CourseCart />
+        {/* <MessageHeader /> */}
+        {/* <CourseCart /> */}
+        {currentUser?.role === "0" && <CourseCart />}
         <AccountHeader />
       </div>
     </div>

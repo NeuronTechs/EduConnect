@@ -168,36 +168,42 @@ const Payout = () => {
                       </td>
                       <td className={classes}>
                         <div className="flex items-center gap-3">
-                          <div className="h-9 w-12 rounded-md border border-blue-gray-50 p-1">
-                            <Avatar
-                              src={
-                                trans?.cardDetails?.brand === "visa"
-                                  ? "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/logos/visa.png"
-                                  : "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/logos/mastercard.png"
-                              }
-                              size="sm"
-                              alt={trans?.cardDetails?.brand}
-                              variant="square"
-                              className="h-full w-full object-contain p-1"
-                            />
-                          </div>
-                          <div className="flex flex-col">
-                            <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-normal capitalize"
-                            >
-                              {trans?.cardDetails?.brand}
-                            </Typography>
-                            <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-normal opacity-70"
-                            >
-                              {trans?.cardDetails?.expMonth} /{" "}
-                              {trans?.cardDetails?.expYear}
-                            </Typography>
-                          </div>
+                          {trans?.cardDetails?.brand ? (
+                            <>
+                              <div className="h-9 w-12 rounded-md border border-blue-gray-50 p-1">
+                                <Avatar
+                                  src={
+                                    trans?.cardDetails?.brand === "visa"
+                                      ? "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/logos/visa.png"
+                                      : "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/logos/mastercard.png"
+                                  }
+                                  size="sm"
+                                  alt={trans?.cardDetails?.brand}
+                                  variant="square"
+                                  className="h-full w-full object-contain p-1"
+                                />
+                              </div>
+                              <div className="flex flex-col">
+                                <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-normal capitalize"
+                                >
+                                  {trans?.cardDetails?.brand}
+                                </Typography>
+                                <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-normal opacity-70"
+                                >
+                                  {trans?.cardDetails?.expMonth} /{" "}
+                                  {trans?.cardDetails?.expYear}
+                                </Typography>
+                              </div>
+                            </>
+                          ) : (
+                            <>Miễn phí</>
+                          )}
                         </div>
                       </td>
                       <td className={classes}>

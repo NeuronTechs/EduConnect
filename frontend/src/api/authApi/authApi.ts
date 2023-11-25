@@ -97,3 +97,13 @@ export const getTransactionByStudent = async (username: string) => {
     return Promise.reject(error);
   }
 };
+
+export const getProcessCourseByStudentId = async (student_id: string) => {
+  try {
+    const res = await httpRequest.get(`user/process-course/${student_id}`);
+    console.log(res);
+    return res;
+  } catch (error: any) {
+    return Promise.reject(error);
+  }
+};

@@ -20,4 +20,6 @@ export interface User {
   email: string;
   accessToken: string;
   user_id: string;
+  address: string;
+  birthday: string;
 }
