@@ -38,7 +38,7 @@ function ForgetPassword() {
     }
   };
   return (
-    <div className="w-full h-full bg-gray-200">
+    <div className="w-full h-full bg-gray-400">
       <div className="w-1/2 h-[300px] flex flex-col justify-center text-black absolute top-1/4 left-1/4 shadow-md bg-white rounded-lg p-3">
         <div className="m-[10px_15px]">
           <Typography className="font-semibold text-[25px]">
