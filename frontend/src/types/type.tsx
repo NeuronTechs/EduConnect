@@ -388,3 +388,44 @@ export interface ITransactionReport {
   revenue: number;
   total_student: number;
 }
+
+export interface IQuiz {
+  resource_id: string;
+  lecture_id: string;
+  timeout?: string;
+  description: string;
+  duration: number;
+  durationUnit: string;
+  isRandom: boolean;
+  isShowAnswer: boolean;
+  type: string;
+  passPercent: number;
+  retakePercent: number;
+  content: string;
+  quiz_id: string;
+  questions: IQuestion[];
+  created_at?: string;
+  updated_at?: string;
+}
+export interface IQuestion {
+  question_id: string;
+  quiz_id: string;
+  lecture_id: string;
+  image: string;
+  question: string;
+  type: string;
+  answers: IAnswer[];
+  created_at?: string;
+  updated_at?: string;
+}
+export interface IAnswer {
+  answer_id: string;
+  answer: string;
+  question_id: string;
+  image: string;
+  question: string;
+  isCorrect: number;
+  explain: string;
+  created_at?: string;
+  updated_at?: string;
+}

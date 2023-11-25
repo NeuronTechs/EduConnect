@@ -1,7 +1,8 @@
+import { answer } from "@/components/Course/Quiz";
 import { IAnswerInfo, IQuestionInfo, IQuizInfo } from "@/types/type";
 import * as httpRequests from "@/utils/httpRequest";
 
-const getQuiz = async (idLectures: string) => {
+export const getQuiz = async (idLectures: string) => {
   try {
     const response = await httpRequests.get(`/quiz/lectures/${idLectures}`);
     return response.data;
@@ -122,6 +123,37 @@ const deleteAnswerQuestionQuiz = async (answer: IAnswerInfo) => {
     return Promise.reject(error);
   }
 };
+
+export const createQuizResult = async (
+  student_id: string,
+  quiz_id: string,
+  answer: answer[],
+  score: string
+) => {
+  try {
+    const response = await httpRequests.post(`/quiz-result/create`, {
+      student_id,
+      quiz_id,
+      answer,
+      score,
+    });
+    return response.data;
+  } catch (error) {
+    return error;
+    // return Promise.reject(error);
+  }
+};
+
+export const getResults = async (student_id: string, quiz_id: string) => {
+  try {
+    const response = await httpRequests.get(
+      `/quiz-result/lectures/${student_id}/${quiz_id}`
+    );
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
 export default {
   getQuiz,
   createQuiz,
@@ -134,4 +166,7 @@ export default {
   createAnswerQuestionQuiz,
   updateAnswerQuestionQuiz,
   deleteAnswerQuestionQuiz,
+  // result
+  createQuizResult,
+  getResults,
 };

@@ -16,13 +16,16 @@ const Course = () => {
   const dispatch = useDispatch<AppDispatch>();
   const currentCourse = useSelector((state: SliceState) => state.courseSlice);
   const [currentTime, setCurrentTime] = useState(0);
-  const [isFullQuiz, setIsFullQuiz] = useState(false);
   const navigate = useNavigate();
   const getCourseDetailsStatus = async () => {
     if (id !== undefined && currentUser.currentUser?.user_id) {
+      setLoading(true);
       const res = await dispatch(
         getCourseDetails({ id: id, user_id: currentUser.currentUser?.user_id })
       );
+      if (res.payload !== undefined) {
+        setLoading(false);
+      }
       if (res.payload === undefined) {
         navigate("/404");
       }
@@ -54,10 +57,8 @@ const Course = () => {
                   currentTime={currentTime}
                   setCurrentTime={setCurrentTime}
                 />
-              ) : isFullQuiz ? (
-                <FullQuiz />
               ) : (
-                <Quiz setIsFullQuiz={setIsFullQuiz} />
+                <Quiz currentLecture={currentCourse.currentLecture} />
               )}
 
               <TabsInfo
@@ -70,7 +71,7 @@ const Course = () => {
           </div>
         </div>
       </div>
-      {/* )}{" "} */}
+      {/* )} */}
     </div>
   );
 };
