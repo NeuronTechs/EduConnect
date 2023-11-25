@@ -6,7 +6,13 @@ import {
   AccordionHeader,
   AccordionBody,
 } from "@material-tailwind/react";
-import { BookOpenText, Check, Clock, MonitorPlay } from "@phosphor-icons/react";
+import {
+  BookOpenText,
+  Check,
+  Clock,
+  Keyboard,
+  MonitorPlay,
+} from "@phosphor-icons/react";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 
@@ -58,11 +64,13 @@ const LectureCard = (props: { Lecture: ILecture; index: number }) => {
         </div>
         <div className="flex justify-between w-full mt-2 items-center">
           <div className="flex items-center text-xs space-x-2">
-            <MonitorPlay size={16} />
+            {props.Lecture.type === "video" && <MonitorPlay size={16} />}
+            {props.Lecture.type === "quiz" && <Keyboard size={16} />}
             <p> {props.Lecture.duration + " phút"}</p>
           </div>
           {props.Lecture.has_watched !== "No" &&
-            props.Lecture.has_watched !== undefined && (
+            props.Lecture.has_watched !== undefined &&
+            props.Lecture.has_watched !== "0" && (
               <div className="rounded-full border-[0.5px] w-5 h-5 flex justify-center items-center border-green-500 bg-green-500">
                 <Check size={14} color="white" />
               </div>

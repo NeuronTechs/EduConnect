@@ -10,6 +10,7 @@ import { SliceState } from "@/types/type";
 import Quiz from "@/components/Course/Quiz";
 import FullQuiz from "@/components/Course/FullQuiz";
 import Header from "@/components/Course/Header/Header";
+import { login } from "@/features/auth/authSlice";
 const Course = () => {
   const { id } = useParams();
   const currentUser = useSelector((state: SliceState) => state.authSlice);
@@ -19,13 +20,10 @@ const Course = () => {
   const navigate = useNavigate();
   const getCourseDetailsStatus = async () => {
     if (id !== undefined && currentUser.currentUser?.user_id) {
-      setLoading(true);
       const res = await dispatch(
         getCourseDetails({ id: id, user_id: currentUser.currentUser?.user_id })
       );
-      if (res.payload !== undefined) {
-        setLoading(false);
-      }
+      console.log(res);
       if (res.payload === undefined) {
         navigate("/404");
       }

@@ -199,8 +199,16 @@ const getCourseDetails = async (
   l.type,
   l.duration,
   CASE 
-      WHEN sp.progress IS NULL THEN 'No'
-      ELSE sp.progress
+      WHEN l.type = 'video' THEN
+          CASE 
+              WHEN sp.progress IS NULL THEN "No"
+              ELSE sp.progress
+          END
+      WHEN l.type = 'quiz' THEN
+          CASE 
+              WHEN qr.score IS NULL THEN "No"
+              ELSE "Yes"
+          END
   END AS has_watched,
   CEIL((SELECT COUNT(*) FROM comments WHERE lecture_id = l.lecture_id AND isReply="false") / 5) as comment_pages,
   (SELECT COUNT(*) FROM lecture l JOIN session ss ON l.session_id = ss.session_id WHERE ss.course_id = c.course_id) as total_lectures ,
@@ -215,6 +223,10 @@ JOIN
   Course c ON s.course_id = c.course_id
 LEFT JOIN 
   student_progress sp ON sp.lecture_id = l.lecture_id AND sp.student_id = ?
+LEFT JOIN
+  lecture_quiz lq ON lq.lecture_id = l.lecture_id AND l.type = 'quiz'
+LEFT JOIN
+  quiz_result qr ON qr.quiz_id = lq.quiz_id AND qr.student_id = ? AND l.type = 'quiz'
 WHERE 
   s.course_id = ? and  c.course_id IN (SELECT course_id FROM order_items WHERE student_id = ?)
 ORDER BY 
@@ -224,7 +236,7 @@ ORDER BY
   return new Promise<dataResponse<ICourseDetail>>((resolve, reject) => {
     db.connectionDB.query(
       sql,
-      [user_id, user_id, course_id, user_id],
+      [user_id, user_id, user_id, course_id, user_id],
       (err, result: RowDataPacket[]) => {
         if (err) {
           reject(err);

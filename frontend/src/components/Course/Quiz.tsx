@@ -1,102 +1,15 @@
 import { createQuizResult, getQuiz, getResults } from "@/api/quizApi";
 import { IAnswer, ILecture, IQuestion, IQuiz, SliceState } from "@/types/type";
-import { Cake, CaretRight, Check, Info, X } from "@phosphor-icons/react";
-import React, { Dispatch, SetStateAction, useEffect } from "react";
+import { CaretRight, Info } from "@phosphor-icons/react";
+import React, { useEffect } from "react";
 import QuizSingleChoice from "./QuizSingleChoice";
 import QuizMutiChoice from "./QuizMutiChoice";
 import QuizFill from "./QuizFill";
 import FullQuiz from "./FullQuiz";
 import { useSelector } from "react-redux";
-import { set } from "react-hook-form";
+import QuizCompleted from "./QuizComplete";
+import QuizList from "./QuizList";
 
-const QuizList = ({
-  quiz,
-  setCurrentQuestionIndex,
-  setCurrentQuestion,
-  setOpenQuizList,
-  answerList,
-}: {
-  quiz: IQuiz;
-  setCurrentQuestionIndex: Dispatch<SetStateAction<number>>;
-  setCurrentQuestion: Dispatch<SetStateAction<IQuestion | undefined>>;
-  setOpenQuizList: Dispatch<SetStateAction<boolean>>;
-  answerList: answer[];
-}) => {
-  const array = [];
-  for (let index = 0; index < quiz.questions.length; index++) {
-    array.push(index);
-  }
-  return (
-    <div className="w-[35vw] left-50 top-0  absolute  bg-white p-2 border  border-gray-400 mx-auto">
-      <p className="font-bold my-5">Tất cả câu hỏi</p>
-      <div className={"grid pl-8 py-5  grid-cols-5 h-[35vh] overflow-auto"}>
-        {array.map((item, index) => {
-          return (
-            <div
-              key={index}
-              onClick={() => {
-                setCurrentQuestionIndex(index);
-                setCurrentQuestion(quiz.questions[index]);
-                setOpenQuizList(false);
-              }}
-              className={
-                answerList[index].answer.length > 0
-                  ? " shadow-lg w-12 h-12 flex justify-center cursor-pointer text-sm font-bold items-center bg-blue-500/90 text-white  rounded-full"
-                  : "bg-gray-400/60 shadow-lg w-12 h-12 flex justify-center cursor-pointer text-sm font-bold items-center hover:bg-blue-500/90 hover:text-white  rounded-full"
-              }
-            >
-              {item + 1}
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
-
-const QuizCompleted = ({
-  scoreQuiz,
-  quiz,
-  setQuizComplete,
-}: {
-  scoreQuiz: number;
-  quiz: IQuiz;
-  setQuizComplete: Dispatch<SetStateAction<boolean>>;
-}) => {
-  return (
-    <div className="text-center flex bg-[#151c3b] w-full items-center justify-center flex-col gap-1 h-[500px]">
-      <h1 className=" text-white">Quiz Scorecard</h1>
-      <div className="w-[55%] h-40 rounded-md bg-[#111730] flex flex-col items-center justify-center gap-3">
-        <h1 className="text-5xl text-green-400 font-extrabold ">100%</h1>
-        <div className="flex items-center gap-1">
-          <Cake size={20} color="white" />{" "}
-          <p className="text-sm text-white">Great Job</p>
-        </div>
-      </div>
-      <div className="flex gap-1 w-[55%] font-bold text-white">
-        <div className="w-[100%] h-14 rounded-md bg-green-800/60 flex justify-between items-center p-5">
-          <Check size={20} color="green" />
-          <p>{scoreQuiz}</p>
-        </div>
-        <div className="w-[100%] h-14 rounded-md bg-red-800/60 flex justify-between items-center p-5">
-          <X size={20} color="red" />
-          <p>{quiz.questions.length}</p>
-        </div>
-      </div>
-      <button className="w-[55%] bg-[#6300df] rounded-sm text-white text-sm p-1 mt-10">
-        Xác nhận
-      </button>
-      <button
-        onClick={() => {
-          setQuizComplete(false);
-        }}
-        className="w-[55%] bg-[#151c39] rounded-sm text-white text-sm border-[2px] border-gray-100 p-1 mt-10"
-      >
-        Xem lại bài làm
-      </button>
-    </div>
-  );
-};
 interface QuizProps {
   currentLecture: ILecture | null;
 }
@@ -262,7 +175,6 @@ const Quiz = ({ currentLecture }: QuizProps) => {
     }
     // setQuizComplete(true);
   };
-  console.log(answerList);
 
   return (
     <div className="bg-gray-500 h-auto py-5 flex justify-center  ">

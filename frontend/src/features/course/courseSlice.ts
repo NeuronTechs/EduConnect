@@ -111,9 +111,9 @@ export const courseSlice = createSlice({
     });
     builder.addCase(getCourseDetails.fulfilled, (state, action) => {
       state.loading = false;
-
       state.currentCourse = action.payload;
-      state.error = undefined;
+      state.currentLecture =
+        action.payload?.sessions?.[0]?.lectures?.[0] ?? null;
       state.isError = false;
     });
     builder.addCase(getCourseDetails.rejected, (state, action) => {
