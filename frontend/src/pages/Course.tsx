@@ -10,19 +10,20 @@ import { SliceState } from "@/types/type";
 import Quiz from "@/components/Course/Quiz";
 import FullQuiz from "@/components/Course/FullQuiz";
 import Header from "@/components/Course/Header/Header";
+import { login } from "@/features/auth/authSlice";
 const Course = () => {
   const { id } = useParams();
   const currentUser = useSelector((state: SliceState) => state.authSlice);
   const dispatch = useDispatch<AppDispatch>();
   const currentCourse = useSelector((state: SliceState) => state.courseSlice);
   const [currentTime, setCurrentTime] = useState(0);
-  const [isFullQuiz, setIsFullQuiz] = useState(false);
   const navigate = useNavigate();
   const getCourseDetailsStatus = async () => {
     if (id !== undefined && currentUser.currentUser?.user_id) {
       const res = await dispatch(
         getCourseDetails({ id: id, user_id: currentUser.currentUser?.user_id })
       );
+      console.log(res);
       if (res.payload === undefined) {
         navigate("/404");
       }
@@ -54,10 +55,8 @@ const Course = () => {
                   currentTime={currentTime}
                   setCurrentTime={setCurrentTime}
                 />
-              ) : isFullQuiz ? (
-                <FullQuiz />
               ) : (
-                <Quiz setIsFullQuiz={setIsFullQuiz} />
+                <Quiz currentLecture={currentCourse.currentLecture} />
               )}
 
               <TabsInfo
@@ -70,7 +69,7 @@ const Course = () => {
           </div>
         </div>
       </div>
-      {/* )}{" "} */}
+      {/* )} */}
     </div>
   );
 };

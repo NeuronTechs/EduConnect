@@ -202,6 +202,7 @@ const deleteAnswerQuestionQuiz = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal server error", message: error });
   }
 };
+
 export default {
   createQuiz,
   updateQuiz,

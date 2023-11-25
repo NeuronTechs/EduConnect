@@ -1,80 +1,29 @@
-import { Info } from "@phosphor-icons/react";
-const data = [
-  {
-    id: 1,
-    question: "What frame do we need to create a web ...",
-    type: "single",
-    answers: [
-      {
-        id: 1,
-        answer: "Tablet",
-        isCorrect: false,
-      },
-      {
-        id: 2,
-        answer: "Presentation",
-        isCorrect: false,
-      },
-      {
-        id: 3,
-        answer: "Desktop",
-        isCorrect: false,
-      },
-      {
-        id: 4,
-        answer: "Paper",
-        isCorrect: true,
-      },
-    ],
-  },
-  {
-    id: 2,
-    question:
-      "What is the name of the process that sends one of information using two bit of classical information?",
-    type: "multiple",
-    answers: [
-      {
-        id: 1,
-        answer: "Đề xuất món ăn",
-        isCorrect: false,
-      },
-      {
-        id: 2,
-        answer: "Đề xuất món ăn",
-        isCorrect: false,
-      },
-      {
-        id: 3,
-        answer: "Đề xuất món ăn",
-        isCorrect: false,
-      },
-      {
-        id: 4,
-        answer: "Đề xuất món ăn",
-        isCorrect: true,
-      },
-    ],
-  },
-];
-interface QuizProps {
-  currentQuestion: {
-    id: number;
-    question: string;
-    type: string;
-    answers: {
-      id: number;
-      answer: string;
-      isCorrect: boolean;
-    }[];
-  };
+import { IQuestion, IQuiz } from "@/types/type";
+import { CaretRight, Info } from "@phosphor-icons/react";
+import QuizFill from "./QuizFill";
+import QuizSingleChoice from "./QuizSingleChoice";
+import QuizMutiChoice from "./QuizMutiChoice";
+import { answer } from "./Quiz";
+
+interface quizProps {
+  currentQuestion: IQuestion;
+  currentQuestionIndex: number;
+  answerList: answer[];
+  setAnswerList: React.Dispatch<React.SetStateAction<answer[]>>;
 }
-const Quiz = ({ currentQuestion }: QuizProps) => {
+
+const Quiz = ({
+  currentQuestion,
+  currentQuestionIndex,
+  answerList,
+  setAnswerList,
+}: quizProps) => {
   return (
     <div className="h-11/12 w-11/12 bg-white p-5 ">
       <div className="flex justify-between ">
         <div className="flex h-10 items-center gap-2 text-sm rounded-lg bg-gray-50 p-3 border-2 border-gray-300">
           <Info size={20} />
-          Question No.5 of 10
+          Câu hỏi thứ {currentQuestionIndex + 1}
         </div>
       </div>
       <div className="shadow-sm my-5 shadow-gray-700 w-full border-y-2 border-gray-300 h-10 p-3 flex items-center">
@@ -84,52 +33,92 @@ const Quiz = ({ currentQuestion }: QuizProps) => {
         Please choose one of the following answers:
       </h6>
       <div className="border-[0.5px] rounded-md m-5 text-sm font-medium border-gray-300  ">
-        {currentQuestion.type === "single"
-          ? currentQuestion.answers.map((answer, index) => {
-              return (
-                <div
-                  role="button"
-                  tabIndex={0}
-                  className="flex items-center border-b-[0.5px] border-gray-300 first-letter: h-12 w-full p-3 rounded-sm text-start leading-tight transition-all hover:bg-blue-50 hover:bg-opacity-80 focus:bg-blue-500 focus:text-white focus:bg-opacity-80 active:bg-blue-50 active:bg-opacity-80 hover:text-blue-900  active:text-blue-900 outline-none"
-                >
-                  {index + 1} . {answer.answer}
-                </div>
-              );
-            })
-          : currentQuestion.answers.map((answer, index) => {
-              return (
-                <div
-                  role="button"
-                  tabIndex={0}
-                  className="flex items-center border-b-[0.5px] border-gray-300 first-letter: h-12 w-full p-3 rounded-sm text-start leading-tight transition-all hover:bg-blue-50 hover:bg-opacity-80 focus:bg-blue-500 focus:text-white focus:bg-opacity-80 active:bg-blue-50 active:bg-opacity-80 hover:text-blue-900  active:text-blue-900 outline-none"
-                >
-                  <input
-                    id={"bordered-checkbox-" + index}
-                    type="checkbox"
-                    value=""
-                    name="bordered-checkbox"
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                  ></input>
-                  <label
-                    htmlFor={"bordered-checkbox-" + index}
-                    className="w-full py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                  >
-                    {answer.answer}
-                  </label>
-                </div>
-              );
-            })}
+        {currentQuestion && currentQuestion.type === "fill" ? (
+          <QuizFill
+            currentQuestion={currentQuestion}
+            currentQuestionIndex={currentQuestionIndex}
+            answerList={answerList}
+            setAnswerList={setAnswerList}
+          />
+        ) : (
+          <div className="border-[0.5px] rounded-md m-5 text-sm font-medium border-gray-300  ">
+            {currentQuestion && currentQuestion.type === "single_choice" ? (
+              <QuizSingleChoice
+                currentQuestion={currentQuestion}
+                currentQuestionIndex={currentQuestionIndex}
+                answerList={answerList}
+                setAnswerList={setAnswerList}
+              />
+            ) : (
+              currentQuestion &&
+              currentQuestion.type === "multiple_choice" && (
+                <QuizMutiChoice
+                  currentQuestion={currentQuestion}
+                  currentQuestionIndex={currentQuestionIndex}
+                  answerList={answerList}
+                  setAnswerList={setAnswerList}
+                />
+              )
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
 };
-const FullQuiz = () => {
+interface QuizProps {
+  currentQuiz: IQuiz;
+  answerList: answer[];
+  setAnswerList: React.Dispatch<React.SetStateAction<answer[]>>;
+  handleComplete: () => void;
+  setIsFullQuiz: React.Dispatch<React.SetStateAction<boolean>>;
+  error: string;
+}
+const FullQuiz = ({
+  currentQuiz,
+  answerList,
+  setAnswerList,
+  handleComplete,
+  setIsFullQuiz,
+  error,
+}: QuizProps) => {
   return (
-    <div className="bg-gray-500 flex justify-center py-5">
+    <div className="bg-gray-500 w-full flex justify-center  ">
       <div className="h-[500px] overflow-auto w-11/12 bg-white p-5 ">
-        {data.map((question) => {
-          return <Quiz currentQuestion={question} />;
+        <div className="flex justify-end">
+          <p
+            className="p-4 text-sm cursor-pointer text-gray-600"
+            onClick={() => {
+              setIsFullQuiz(false);
+            }}
+          >
+            Quay lại danh sách câu hỏi
+          </p>
+        </div>
+        {currentQuiz.questions.map((question, index) => {
+          return (
+            <Quiz
+              currentQuestion={question}
+              currentQuestionIndex={index}
+              answerList={answerList}
+              setAnswerList={setAnswerList}
+            />
+          );
         })}
+        <div className={error ? "flex justify-between" : "flex justify-end"}>
+          {error && (
+            <div className="bg-red-500 text-white p-2 h-10 rounded-md text-sm">
+              {error}
+            </div>
+          )}
+          <button
+            onClick={handleComplete}
+            className="text-white   flex gap-2 items-center bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-4 py-2.5 text-center  mb-2"
+          >
+            Finish
+            <CaretRight size={16} />
+          </button>
+        </div>
       </div>
     </div>
   );
