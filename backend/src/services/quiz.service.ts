@@ -1,7 +1,7 @@
 import connectDB from "../config/connectDB";
 import { v4 as uuidv4 } from "uuid";
 import { dataListResponse, dataResponse } from "../constant/type";
-import { QueryError, ResultSetHeader } from "mysql2";
+import { QueryError, ResultSetHeader, RowDataPacket } from "mysql2";
 interface IQuiz {
   quiz_id: string;
   lecture_id: string;
@@ -30,7 +30,7 @@ interface IQuestion {
   created_at?: string;
   updated_at?: string;
 }
-interface IAnswer {
+export interface IAnswer {
   answer_id: string;
   question_id: string;
   image: string;
@@ -450,6 +450,8 @@ const getAnswerQuestion = async (questionId: IAnswer) => {
     }
   });
 };
+
+/// Sang ///////////////////////////////////
 const updateAnswerQuestionMultiply = async (
   answer1: string,
   answer2: string,
@@ -512,4 +514,6 @@ export default {
   getAnswerQuestion,
   //
   updateAnswerQuestionMultiply,
+
+  //query sang
 };
