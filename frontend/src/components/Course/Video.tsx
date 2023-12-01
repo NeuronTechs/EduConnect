@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import { ILecture, SliceState } from "@/types/type";
+import { ICourse, ILecture, SliceState } from "@/types/type";
 import { useLocation } from "react-router-dom";
 import {
   createStudentProgress,
+  handleStudentProgress,
   updateStudentProgress,
 } from "@/features/course/courseSlice";
 import { AppDispatch } from "@/redux/store";
@@ -13,15 +14,18 @@ interface Props {
   currentLecture: ILecture | null;
   currentTime: number;
   setCurrentTime: React.Dispatch<React.SetStateAction<number>>;
+  currentCourse: ICourse;
 }
-const Video = ({ currentLecture, currentTime, setCurrentTime }: Props) => {
+const Video = ({
+  currentLecture,
+  currentTime,
+  setCurrentTime,
+  currentCourse,
+}: Props) => {
   const { currentUser } = useSelector((state: SliceState) => state.authSlice);
-  const [currentId, setCurrentId] = useState({
-    lecture_id: currentLecture?.lecture_id || 0,
-    session_id: currentLecture?.session_id || 0,
-  });
+
+  const [currentId, setCurrentId] = useState(currentLecture);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const location = useLocation();
   const dispatch = useDispatch<AppDispatch>();
   const getCurrentTime = () => {
     if (videoRef.current) {
@@ -36,50 +40,53 @@ const Video = ({ currentLecture, currentTime, setCurrentTime }: Props) => {
     }
   }, [currentTime]);
   useEffect(() => {
+    dispatch(
+      handleStudentProgress({
+        lecture_id: currentId?.lecture_id,
+        has_watched: currentTime,
+      })
+    );
     if (
+      (currentId?.has_watched === "No" ||
+        currentId?.has_watched === undefined) &&
+      currentId !== null &&
       currentUser &&
-      currentLecture?.has_watched === "No" &&
-      currentLecture.type !== "Quiz" &&
       currentTime > 0
     ) {
       dispatch(
         createStudentProgress({
-          course_id: currentLecture.course_id,
+          course_id: currentCourse.course_id,
           lecture_id: currentId.lecture_id?.toString(), // Convert lecture_id to string
           session_id: currentId.session_id?.toString(),
           progress: currentTime,
           student_id: currentUser?.user_id,
         })
       );
-      setCurrentId({
-        lecture_id: currentLecture.lecture_id,
-        session_id: currentLecture.session_id,
-      });
+      setCurrentId(currentLecture);
     } else if (
-      currentLecture?.has_watched !== "No" &&
-      currentLecture !== null &&
-      currentUser
+      currentId?.has_watched !== "No" &&
+      currentId !== null &&
+      currentUser &&
+      currentTime > 0
     ) {
       dispatch(
         updateStudentProgress({
-          course_id: currentLecture.course_id,
+          course_id: currentId.course_id,
           lecture_id: currentId.lecture_id?.toString(), // Convert lecture_id to string
           session_id: currentId.session_id?.toString(),
           progress: currentTime,
           student_id: currentUser?.user_id,
         })
       );
-      setCurrentId({
-        lecture_id: currentLecture.lecture_id,
-        session_id: currentLecture.session_id,
-      });
+      setCurrentId(currentLecture);
     }
+
     if (videoRef.current && currentLecture?.has_watched !== "No") {
       videoRef.current.currentTime = parseFloat(
         currentLecture?.has_watched || "0"
       );
     }
-  }, [currentLecture, location]);
+  }, [currentLecture]);
   const getEmbedUrl = (url: string) => {
     const videoId = url.split("v=")[1].split("&")[0];
     return videoId;
@@ -94,6 +101,10 @@ const Video = ({ currentLecture, currentTime, setCurrentTime }: Props) => {
   const onPause: YouTubeProps["onPause"] = (event) => {
     setCurrentTime(event.target.getCurrentTime());
   };
+  const onStateChange: YouTubeProps["onStateChange"] = (event) => {
+    // 3 is the state code for BUFFERING
+    setCurrentTime(event.target.getCurrentTime());
+  };
   return (
     <div className=" h-auto flex justify-center bg-black relative shadow-xl ">
       {currentLecture?.source.includes("youtube") ? (
@@ -103,6 +114,7 @@ const Video = ({ currentLecture, currentTime, setCurrentTime }: Props) => {
           className="w-[90%] aspect-video"
           onReady={onReady}
           onPause={onPause}
+          onStateChange={onStateChange}
         />
       ) : (
         <video

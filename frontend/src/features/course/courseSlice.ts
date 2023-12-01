@@ -104,6 +104,27 @@ export const courseSlice = createSlice({
       state.currentLecture = action.payload;
       state.loading = false;
     },
+    handleStudentProgress: (state, action) => {
+      let count = 0;
+      if (state.currentCourse) {
+        state.currentCourse.sessions?.forEach((session) => {
+          session.lectures?.forEach((lecture) => {
+            if (lecture.has_watched) {
+              count++;
+            } else if (
+              lecture.lecture_id === action.payload.lecture_id &&
+              !lecture.has_watched
+            ) {
+              count++;
+            }
+            if (lecture.lecture_id === action.payload.lecture_id) {
+              lecture.has_watched = action.payload.has_watched;
+            }
+          });
+        });
+        state.currentCourse.completed_lectures = count;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getCourseDetails.pending, (state) => {
@@ -227,5 +248,6 @@ export const courseSlice = createSlice({
     });
   },
 });
-export const { resetStoreCourse, selectLecture } = courseSlice.actions;
+export const { resetStoreCourse, selectLecture, handleStudentProgress } =
+  courseSlice.actions;
 export default courseSlice.reducer;

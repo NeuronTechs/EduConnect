@@ -282,6 +282,7 @@ ORDER BY
                 lecture_id: item.lecture_id,
                 lecture_name: item.lecture_name,
                 description: item.description,
+                session_id: item.session_id,
                 source: item.source,
                 type: item.type,
               });

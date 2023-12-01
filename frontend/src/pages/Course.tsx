@@ -54,6 +54,7 @@ const Course = () => {
                   currentLecture={currentCourse.currentLecture}
                   currentTime={currentTime}
                   setCurrentTime={setCurrentTime}
+                  currentCourse={currentCourse.currentCourse}
                 />
               ) : (
                 <Quiz currentLecture={currentCourse.currentLecture} />
