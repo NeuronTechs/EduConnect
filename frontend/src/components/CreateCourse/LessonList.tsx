@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  CaretCircleDown,
   DotsSixVertical,
   Files,
   Question,
@@ -119,9 +118,9 @@ const LessonItem = (props: ILessonInfoItem) => {
         <div></div>
       </div>
       <div className="flex gap-2">
-        <div className="bg-blue-gray-50 p-1 rounded-full text-gray-700 cursor-pointer">
+        {/* <div className="bg-blue-gray-50 p-1 rounded-full text-gray-700 cursor-pointer">
           <CaretCircleDown size={15} />
-        </div>
+        </div> */}
         <div
           className="bg-blue-gray-50 p-1 rounded-full text-gray-700 cursor-pointer"
           onClick={() =>

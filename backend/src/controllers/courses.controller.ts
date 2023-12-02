@@ -52,7 +52,6 @@ interface ICourse {
   discount: number;
   ranking?: number;
   status?: string;
-  status_show?: string;
   total_ranking?: number;
   total_enrollment?: number;
   total_lecture?: number;

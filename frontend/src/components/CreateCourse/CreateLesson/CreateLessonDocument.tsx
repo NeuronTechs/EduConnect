@@ -18,6 +18,7 @@ const CreateLessonDocument = (): React.ReactElement => {
       title: selectLesson?.name,
     },
   });
+  console.log(selectLesson?.name);
   const onSubmitTitle = (data: IInputTitle) => {
     const lesson = selectLesson;
     lesson!.name = data.title;
@@ -84,7 +85,7 @@ const CreateLessonDocument = (): React.ReactElement => {
           </label>
           <TextEditor value="" onEditorChange={() => {}} />
         </div>
-        <div className="w-full">
+        {/* <div className="w-full">
           <label
             form="message"
             className="block mb-2 text-xs font-bold text-gray-700 dark:text-white"
@@ -123,7 +124,7 @@ const CreateLessonDocument = (): React.ReactElement => {
               <input id="dropzone-file" type="file" className="hidden" />
             </label>
           </div>
-        </div>
+        </div> */}
         <div className="h-50px] w-full relative">
           <div className="sticky bottom-0 left-0 w-full flex justify-end">
             <button

@@ -62,10 +62,7 @@ export const updateCourseTeacher = async (data: ICourseDetail) => {
   formData.append("study", JSON.stringify(data.study));
   formData.append("requirement", JSON.stringify(data.requirement));
   formData.append("language", data.language ? data.language.toString() : "");
-  formData.append(
-    "status_show",
-    data.status_show ? data.status_show.toString() : "0"
-  );
+
   formData.append(
     "create_at",
     data.created_at ? data.created_at : Date.now().toString()
