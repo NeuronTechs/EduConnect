@@ -53,12 +53,12 @@ const TeacherItem = (props: props): React.ReactElement => {
             Xem chi tiết
           </div>
         </Link>
-        <div className=" flex items-center justify-center rounded-md bg-gray-300/50 p-2">
+        {/* <div className=" flex items-center justify-center rounded-md bg-gray-300/50 p-2">
           <EnvelopeSimpleOpen size={24} />
         </div>
         <div className=" flex items-center justify-center rounded-md bg-gray-300/50 p-2">
           <DotsThreeOutlineVertical size={24} />
-        </div>
+        </div> */}
       </div>
     </div>
   );

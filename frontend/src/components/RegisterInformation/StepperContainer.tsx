@@ -114,20 +114,7 @@ const StepperContainer = (): React.ReactElement => {
     }
   };
   // avatar
-  const urlFile = watch("avatar");
-  const [urlAvatar, setUrlAvatar] = React.useState<
-    string | undefined | FileList
-  >(currentUser?.avatar);
-  useEffect(() => {
-    if (
-      urlFile !== undefined &&
-      urlFile.length > 0 &&
-      urlFile instanceof FileList
-    ) {
-      setUrlAvatar(URL.createObjectURL(urlFile[0]));
-    }
-  }, [urlFile]);
-  // handle submit api
+  const urlAvatar = watch("avatar");
   const onSubmit = async (data: IFormInput) => {
     setIsLoad(true);
     try {
@@ -272,15 +259,15 @@ const ContentStepper = (props: propsContentStepper): React.ReactElement => {
   const maxDate = new Date();
 
   // ...
-
+  console.log(props.urlAvatar);
   return (
     <div className="w-full">
       {props.activeStep === 0 && (
         <div className="content w-full flex flex-col items-center justify-center space-y-10">
           <div className="logo flex flex-col items-center justify-center space-y-1">
-            <div className="w-[80px] h-[80px] overflow-hidden">
+            <div className="w-[80px] h-[80px] overflow-hidden rounded-full">
               <ImageWithError
-                src={imageURL !== "" ? imageURL : assets.images.noAvatar}
+                src={imageURL !== null ? imageURL : assets.images.noAvatar}
                 alt="avatar"
                 fallbackSrc={assets.images.noAvatar}
                 className="w-full h-full object-cover"

@@ -1,7 +1,5 @@
 import React from "react";
 
-import { PlusCircle } from "@phosphor-icons/react";
-
 import DescriptionCreateCourseTeacher from "./DescriptionCreateCourseTeacher";
 
 import CreateContentCourse from "./CreateContentCourse";
@@ -276,10 +274,10 @@ const TargetCreateCourseTeacher = (): React.ReactElement => {
             type="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           /> */}
-          <p className="text-base font-normal text-blue-500 py-3 flex gap-2 items-center leading-3 cursor-pointer">
+          {/* <p className="text-base font-normal text-blue-500 py-3 flex gap-2 items-center leading-3 cursor-pointer">
             <PlusCircle size={20} />
             Thêm nội dung vào phản hồi của bạn
-          </p>
+          </p> */}
         </div>
         <div className="mb-2 space-y-4">
           <label
@@ -332,10 +330,10 @@ const TargetCreateCourseTeacher = (): React.ReactElement => {
             type="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
-          <p className="text-base font-normal text-blue-500 py-3 flex gap-2 items-center leading-3 cursor-pointer">
+          {/* <p className="text-base font-normal text-blue-500 py-3 flex gap-2 items-center leading-3 cursor-pointer">
             <PlusCircle size={20} />
             Thêm nội dung vào phản hồi của bạn
-          </p>
+          </p> */}
         </div>
         <div className="flex items-center justify-start py-5 px-4">
           {isLoading ? (

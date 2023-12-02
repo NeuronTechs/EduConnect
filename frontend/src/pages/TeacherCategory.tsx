@@ -19,6 +19,7 @@ const TeacherCategory = (): React.ReactElement => {
           id: params.id ? params.id : "",
         });
         setData(res);
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
       }
@@ -31,7 +32,7 @@ const TeacherCategory = (): React.ReactElement => {
     <PageTransition>
       <div className="flex flex-col space-y-5">
         {/* profile */}
-        {!isLoading ? (
+        {isLoading ? (
           <InfoTeacherCategoryLoading />
         ) : (
           <TeacherInformation data={data ? data : ({} as ITeacher)} />

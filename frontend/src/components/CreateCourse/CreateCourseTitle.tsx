@@ -262,7 +262,7 @@ const ContentStepperCreateCourse = (props: {
     const fetchData = async () => {
       try {
         const res = await topicApi.getAllTopic();
-        setDataTypes(res.data);
+        setDataTypes(res);
       } catch (error) {
         console.log(error);
       }
