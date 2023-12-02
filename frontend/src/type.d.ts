@@ -24,4 +24,5 @@ export interface User {
   birthday?: string;
   address: string;
   birthday: string;
+  status?: string;
 }
