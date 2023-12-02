@@ -20,6 +20,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { SliceState } from "@/types/type";
 import { configRouter } from "@/configs/router";
 import * as courseApi from "../api/courseApi/courseApi";
+import { toast } from "react-toastify";
 // import { toast } from "react-toastify";
 
 const OverviewCourse = () => {
@@ -45,7 +46,6 @@ const OverviewCourse = () => {
     dispatch(getCourseOverview(id as string));
 
     return () => {
-      // Dispatch action để xóa dữ liệu khi thoát trang
       dispatch(resetStoreCourseOverview());
     };
   }, [dispatch]);
@@ -107,11 +107,11 @@ const OverviewCourse = () => {
       try {
         const data = await courseApi.addComplaint(formData);
         if (data?.status === 200) {
-          alert("Khiếu nại thành công");
+          toast.success("Khiếu nại thành công");
           setLoading(false);
         }
       } catch (error: any) {
-        alert("Khiếu nại thất bại. Mã lỗi: " + error?.message);
+        toast.error("Khiếu nại thất bại. Mã lỗi: " + error?.message);
         setLoading(false);
       }
       setProblem("");
@@ -141,6 +141,14 @@ const OverviewCourse = () => {
 
   const handleRedirectHomePage = () => {
     navigate(configRouter.home);
+  };
+
+  const handleGetSession = (e: ChangeEvent<HTMLSelectElement>) => {
+    setSessionProblem(e.target.value);
+    const data: string | undefined = currentCourse?.sessions?.filter(
+      (session) => session?.session_id === e.target.value
+    )[0]?.lectures[0]?.lecture_id;
+    setLectureProblem(data ? data : "");
   };
 
   return (
@@ -210,7 +218,7 @@ const OverviewCourse = () => {
                         <select
                           className="w-full rounded-md mb-3"
                           placeholder="Lựa chọn session"
-                          onChange={(e) => setSessionProblem(e.target.value)}
+                          onChange={(e) => handleGetSession(e)}
                         >
                           {currentCourse?.sessions.map((session) => (
                             <option

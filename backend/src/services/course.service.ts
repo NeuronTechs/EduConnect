@@ -599,10 +599,14 @@ const getComplaintCourse = (page: number, pageSize: number): Promise<any> => {
                   message: error,
                 });
               } else {
+                const totalPage =
+                  complaints[0].total / pageSize < 1
+                    ? 1
+                    : Math.ceil(complaints[0].total / pageSize);
                 resolve({
                   status: true,
                   data: result,
-                  totalPage: complaints[0],
+                  totalPage: totalPage,
                   message: "Get complaint success",
                 });
               }

@@ -7,7 +7,6 @@ export const loginPass = async (params: Auth) => {
       username: params.username,
       password: params.password,
     });
-    console.log(res);
     return res?.data;
   } catch (error) {
     console.log(error);
@@ -23,7 +22,6 @@ export const signup = async (params: signupState) => {
       password: params.password,
       full_name: params.full_name,
     });
-    console.log(res);
 
     return res?.data;
   } catch (error) {
@@ -35,7 +33,6 @@ export const signup = async (params: signupState) => {
 export const test = async () => {
   try {
     const res = await httpRequest.get("/user/listServerOfUser");
-    console.log(res);
     return res?.result;
   } catch (error) {
     return Promise.reject(error);
@@ -56,7 +53,6 @@ export const forgetPassword = async (email: string) => {
     const res = await httpRequest.post("/user/forgetpassword", {
       email: email,
     });
-    console.log(res);
     return res;
   } catch (error: any) {
     return Promise.reject(error);
@@ -81,7 +77,6 @@ export const changePassword = async (username: string, password: string) => {
       username: username,
       password: password,
     });
-    console.log(res);
     return res;
   } catch (error: any) {
     return Promise.reject(error);
@@ -91,7 +86,6 @@ export const changePassword = async (username: string, password: string) => {
 export const getTransactionByStudent = async (username: string) => {
   try {
     const res = await httpRequest.get(`payment/get-payment/${username}`);
-    console.log(res);
     return res;
   } catch (error: any) {
     return Promise.reject(error);
@@ -101,7 +95,6 @@ export const getTransactionByStudent = async (username: string) => {
 export const getProcessCourseByStudentId = async (student_id: string) => {
   try {
     const res = await httpRequest.get(`user/process-course/${student_id}`);
-    console.log(res);
     return res;
   } catch (error: any) {
     return Promise.reject(error);

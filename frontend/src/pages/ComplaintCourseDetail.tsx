@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Dialog, DialogBody, Typography, Card } from "@material-tailwind/react";
 import * as adminApi from "../api/adminApi/adminApi";
+import { toast } from "react-toastify";
 
 const TABLE_HEAD = ["Username", "Họ và tên", "Gmail", "Ngày khiếu nại"];
 
@@ -35,20 +36,23 @@ const ComplaintCourseDetail = () => {
   const [complaint, setComplaint] = useState<complaintDetail>();
   const [option, setOption] = useState<string>("0");
   const [loadingData, setLoadingData] = useState<boolean>(false);
+  const [resolve, setResolve] = useState<boolean>(false);
   const { id } = useParams();
 
+  const getComplaint = async () => {
+    setLoadingData(true);
+    try {
+      const data = await adminApi.getComplaintDetail(id as string);
+      setLoadingData(false);
+      setComplaint(data?.data);
+      setResolve(data?.data?.status === "1" ? true : false);
+    } catch (err: any) {
+      setLoadingData(false);
+      toast.error(err?.message);
+    }
+  };
+
   useEffect(() => {
-    const getComplaint = async () => {
-      setLoadingData(true);
-      try {
-        const data = await adminApi.getComplaintDetail(id as string);
-        setLoadingData(false);
-        setComplaint(data?.data);
-      } catch (err: any) {
-        setLoadingData(false);
-        alert(err?.message);
-      }
-    };
     getComplaint();
   }, []);
 
@@ -62,14 +66,15 @@ const ComplaintCourseDetail = () => {
       );
       if (data?.status) {
         setLoading(false);
-        alert("Giải quyết khiếu nại thành công");
+        setResolve(true);
+        toast.success("Giải quyết khiếu nại thành công");
       } else {
         setLoading(false);
-        alert("Giải quyết khiếu nại thất bại");
+        toast.error("Giải quyết khiếu nại thất bại");
       }
     } catch (err: any) {
       setLoading(false);
-      alert("Giải quyết khiếu nại thất bại: " + err?.message);
+      toast.error("Giải quyết khiếu nại thất bại: " + err?.message);
     }
   };
 
@@ -118,7 +123,7 @@ const ComplaintCourseDetail = () => {
                     {complaint?.complaint_id}
                   </span>
                 </p>
-                {complaint?.status === null || complaint?.status === "0" ? (
+                {resolve !== true ? (
                   <p className="bg-red-600 text-white px-2 py-1 text-[13px] rounded-lg italic">
                     Chưa xử lý
                   </p>
@@ -265,7 +270,9 @@ const ComplaintCourseDetail = () => {
                 />
                 <div className="text-center my-3">
                   <p className="font-semibold text-[20px]">
-                    {complaint?.course_title}
+                    <a href={`/course/learn/${complaint?.course_id}`}>
+                      {complaint?.course_title}
+                    </a>
                   </p>
                   <p className="my-3">
                     <span className="font-semibold">Giáo viên ID: </span>

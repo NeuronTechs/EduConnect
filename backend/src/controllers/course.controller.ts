@@ -216,7 +216,7 @@ const complaintCourse = async (req: Request, res: Response) => {
 const getComplaintCourse = async (req: Request, res: Response) => {
   try {
     const { page } = req.query;
-    const pageSize = 10;
+    const pageSize = 5;
     const data = await CourseService.getComplaintCourse(Number(page), pageSize);
     res.status(200).json(data);
   } catch (error) {

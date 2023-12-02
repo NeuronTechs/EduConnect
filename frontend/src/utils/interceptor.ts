@@ -69,7 +69,7 @@ export const setupInterceptor = (store: Store, dispatch: AppDispatch): void => {
         return config;
       }
 
-      if (config.url?.includes("user/forget-password")) {
+      if (config.url?.includes("user/forgetpassword")) {
         return config;
       }
 

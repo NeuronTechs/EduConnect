@@ -110,17 +110,17 @@ const Login = () => {
               className="border-2 border-slate-500 rounded-md w-[350px] h-[40px] pl-3 pr-3"
             />
           </div>
-          <div className="mt-5 flex w-[350px] items-center justify-between">
-            <div className="space-x-3 flex  items-center">
+          <div className="mt-5 flex w-[350px] items-center justify-end">
+            {/* <div className="space-x-3 flex  items-center">
               <input
                 type="checkbox"
                 className="w-4 h-4 bg-gradient-to-r from-blue-500 to-purple-500"
                 id="RememberCheck"
               />
               <label htmlFor="RememberCheck">Ghi nhớ đăng nhập</label>
-            </div>
+            </div> */}
             <h6
-              className="underline cursor-pointer"
+              className="underline cursor-pointer "
               onClick={handleRedirectForgetPassword}
             >
               Quên mật khẩu?
