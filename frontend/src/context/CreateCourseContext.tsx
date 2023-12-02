@@ -86,12 +86,22 @@ const CreateCourseProvider = (props: { children: React.ReactNode }) => {
       toast.error("Thêm phần mới thất bại");
     }
   };
-  const handleEditTitleSection = (id: string, title: string) => {
-    setDataSection((cur) =>
-      cur.map((section) =>
-        section.session_id === id ? { ...section, title: title } : section
-      )
-    );
+  const handleEditTitleSection = async (id: string, title: string) => {
+    try {
+      const res = await courseManageApi.updateSectionCourse(id, {
+        name: title,
+      });
+      if (res) {
+        setDataSection((cur) =>
+          cur.map((section) =>
+            section.session_id === id ? { ...section, title: title } : section
+          )
+        );
+        toast.success("Cập nhật phần thành công");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
   const handleEditSection = (id: string, section: ISectionInfo) => {
     setDataSection((cur) =>
@@ -99,10 +109,19 @@ const CreateCourseProvider = (props: { children: React.ReactNode }) => {
     );
   };
 
-  const handleDeleteSection = (sectionId: string) => {
-    setDataSection((cur) =>
-      cur.filter((section) => section.session_id !== sectionId)
-    );
+  const handleDeleteSection = async (sectionId: string) => {
+    try {
+      const res = await courseManageApi.deleteSectionCourse(sectionId);
+      if (res) {
+        setDataSection((cur) =>
+          cur.filter((section) => section.session_id !== sectionId)
+        );
+        toast.success("Xóa phần thành công");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Xóa phần thất bại");
+    }
   };
 
   const handleAddNewLesson = async (id: string, type: string) => {
@@ -124,7 +143,7 @@ const CreateCourseProvider = (props: { children: React.ReactNode }) => {
             section.session_id === id
               ? {
                   ...section,
-                  lessons: [...section.lessons, res],
+                  lessons: section.lessons ? [...section.lessons, res] : [res],
                 }
               : section
           );

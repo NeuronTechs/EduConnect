@@ -10,7 +10,7 @@ import * as teacherApi from "@/api/teacherApi/teacherApi";
 import { toast } from "react-toastify";
 
 const DescriptionCreateCourseTeacher = (): React.ReactElement => {
-  const { dataDescription } =
+  const { dataDescription, handleSetDataDescription } =
     React.useContext<ICreateCourseContext>(CreateCourseContext);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
@@ -84,17 +84,19 @@ const DescriptionCreateCourseTeacher = (): React.ReactElement => {
     }
     setIsLoading(true);
     try {
-      await teacherApi.updateCourseTeacher({
+      const res = await teacherApi.updateCourseTeacher({
         ...data,
       });
+
       setIsLoading(false);
-      Notification;
+      handleSetDataDescription(res);
       toast.success("Cập nhật thành công");
     } catch (error) {
       setIsLoading(false);
       toast.error("Cập nhật thất bại");
     }
   };
+
   return (
     <div className="flex items-start justify-center w-full">
       <div className="flex flex-col gap-4 bg-white p-2 min-w-[50%] px-6">
@@ -202,6 +204,9 @@ const DescriptionCreateCourseTeacher = (): React.ReactElement => {
               />
             </label>
           </div>
+          {errors.image && (
+            <p className="text-xs text-red-500">Vui lòng chọn ảnh</p>
+          )}
         </div>
         <div className="mb-2">
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">

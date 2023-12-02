@@ -38,6 +38,7 @@ const CourseTeacher = (props: IProps): React.ReactElement => {
             {parseInt(`${props.data.status}`) === 0 && "Bảng nháp"}
             {parseInt(`${props.data.status}`) === 1 && "Đang duyệt"}
             {parseInt(`${props.data.status}`) === 2 && "Công khai"}
+            {parseInt(`${props.data.status}`) === 3 && "bị từ chối"}
           </div>
         </div>
         <div className="w-full flex justify-between">

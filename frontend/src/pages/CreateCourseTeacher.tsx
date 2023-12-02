@@ -21,34 +21,28 @@ import { toast } from "react-toastify";
 
 const CreateCourseTeacher = (): React.ReactElement => {
   // const [activeCreate, setActiveCreate] = React.useState<number>(0);
-  const { dataDescription, handleSetDataDescription } =
-    React.useContext(CreateCourseContext);
+  const { handleSetDataDescription } = React.useContext(CreateCourseContext);
 
   const currentUser = useSelector<RootState, User>(
     (state) => state.authSlice.currentUser as User
   );
   const param = useParams<{ id: string }>();
   React.useEffect(() => {
-    if (dataDescription === undefined) {
-      const requestApi = async () => {
-        try {
-          const res = await teacherApi.getCourseTeacherById({
-            teacherId: currentUser.user_id,
-            courseId: param.id ? param.id : "",
-          });
-          handleSetDataDescription(res.data);
-        } catch (error) {
-          console.log(error);
-        }
-      };
-      requestApi();
-    }
-  }, [
-    currentUser.user_id,
-    dataDescription,
-    handleSetDataDescription,
-    param.id,
-  ]);
+    const requestApi = async () => {
+      try {
+        const res = await teacherApi.getCourseTeacherById({
+          teacherId: currentUser.user_id,
+          courseId: param.id ? param.id : "",
+        });
+        handleSetDataDescription(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    requestApi();
+    // }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser.user_id, param.id]);
 
   return (
     // <CreateCourseProvider>
