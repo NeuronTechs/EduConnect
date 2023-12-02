@@ -17,6 +17,7 @@ import {
   MenuItem,
   MenuList,
 } from "@material-tailwind/react";
+import { toast } from "react-toastify";
 
 const CreateCourseTeacher = (): React.ReactElement => {
   // const [activeCreate, setActiveCreate] = React.useState<number>(0);
@@ -35,7 +36,6 @@ const CreateCourseTeacher = (): React.ReactElement => {
             teacherId: currentUser.user_id,
             courseId: param.id ? param.id : "",
           });
-          console.log(res.data);
           handleSetDataDescription(res.data);
         } catch (error) {
           console.log(error);
@@ -56,6 +56,7 @@ const CreateCourseTeacher = (): React.ReactElement => {
       <div className=" w-full h-full space-y-4">
         {/* <CreateCourseTitle /> */}
         <CreateCourseContainer />
+        {/* <ToastContainer /> */}
       </div>
     </LayoutCreateCourse>
   );
@@ -115,11 +116,13 @@ const MenuStatus = (): React.ReactElement => {
 
         const res = await teacherApi.updateCourseTeacher({
           ...dataDescription,
-          status_show: data,
+          status: data,
         });
         console.log(res.data);
+        toast.success("Cập nhật thành công");
       } catch (error) {
         console.log(error);
+        toast.error("Cập nhật thất bại");
       }
     };
     requestApi();

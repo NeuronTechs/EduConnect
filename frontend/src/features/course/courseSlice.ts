@@ -104,16 +104,43 @@ export const courseSlice = createSlice({
       state.currentLecture = action.payload;
       state.loading = false;
     },
+    handleStudentProgress: (state, action) => {
+      let count = 0;
+      if (state.currentCourse) {
+        state.currentCourse.sessions?.forEach((session) => {
+          session.lectures?.forEach((lecture) => {
+            if (
+              lecture.has_watched &&
+              lecture.has_watched !== "No" &&
+              parseInt(lecture.has_watched) !== 0
+            ) {
+              count++;
+            } else if (
+              lecture.lecture_id === action.payload.lecture_id &&
+              !lecture.has_watched
+            ) {
+              count++;
+            }
+            if (lecture.lecture_id === action.payload.lecture_id) {
+              lecture.has_watched = action.payload.has_watched;
+            }
+          });
+        });
+        state.currentCourse.completed_lectures = count;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getCourseDetails.pending, (state) => {
+      state.currentLecture = null;
       state.loading = true;
     });
     builder.addCase(getCourseDetails.fulfilled, (state, action) => {
       state.loading = false;
       state.currentCourse = action.payload;
-      state.currentLecture =
-        action.payload?.sessions?.[0]?.lectures?.[0] ?? null;
+      if (state.currentLecture === null)
+        state.currentLecture =
+          action.payload?.sessions?.[0]?.lectures?.[0] ?? null;
       state.isError = false;
     });
     builder.addCase(getCourseDetails.rejected, (state, action) => {
@@ -145,7 +172,8 @@ export const courseSlice = createSlice({
       state.loading = false;
       state.error = undefined;
       state.isError = false;
-      state.comments?.push(action.payload);
+      if (action.payload.isReply === "false")
+        state.comments?.push(action.payload);
     });
     builder.addCase(CommentLecture.rejected, (state, action) => {
       state.loading = false;
@@ -227,5 +255,6 @@ export const courseSlice = createSlice({
     });
   },
 });
-export const { resetStoreCourse, selectLecture } = courseSlice.actions;
+export const { resetStoreCourse, selectLecture, handleStudentProgress } =
+  courseSlice.actions;
 export default courseSlice.reducer;

@@ -2,6 +2,10 @@ import React from "react";
 import ListCourse from "../Home/ListCourse";
 import { dataCourseT } from "@/types/constans";
 import assets from "@/assets";
+import { ICourseDetail } from "@/types/type";
+import * as teacherApi from "@/api/teacherApi/teacherApi";
+import { useParams } from "react-router-dom";
+import { set } from "react-hook-form";
 interface IProps {
   idTeacher: string | undefined;
 }
@@ -45,7 +49,7 @@ const TabsControl = (props: ITabsControl): React.ReactElement => {
             Khoá học
           </div>
         </li>
-        <li
+        {/* <li
           onClick={() => props.setCurrentTabIndex(1)}
           className="mr-2 cursor-pointer"
         >
@@ -73,7 +77,7 @@ const TabsControl = (props: ITabsControl): React.ReactElement => {
           >
             Đánh giá
           </div>
-        </li>
+        </li> */}
         {/* <li className="mr-2">
           <div className="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">
             Contacts
@@ -106,15 +110,36 @@ const TabsContent = (props: ITabsContent): React.ReactElement => {
 };
 
 const TabsContentFirst = (): React.ReactElement => {
+  const [dataCourse, setDataCourse] = React.useState<ICourseDetail[]>([]);
+  const [Loading, setLoading] = React.useState<boolean>(false);
+
+  const param = useParams<{ id: string }>();
+  React.useEffect(() => {
+    console.log("render");
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const res = await teacherApi.getCourseTeacherApi({
+          teacherId: param.id ? param.id : "",
+          limit: 10,
+        });
+        setDataCourse(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+      setLoading(false);
+    };
+    fetchData();
+  }, [param.id]);
   return (
     <div className="w-full block space-y-4">
-      <ListCourse isLoading={false} data={dataCourseT} title="Nỗi Bật" />
-      <ListCourse isLoading={false} data={dataCourseT} title="Mới Nhất" />
+      <ListCourse isLoading={Loading} data={dataCourse} title="Nỗi Bật" />
+      {/* <ListCourse isLoading={false} data={dataCourseT} title="Mới Nhất" />
       <ListCourse
         isLoading={false}
         data={dataCourseT}
         title="Biên tập đề xuất"
-      />
+      /> */}
     </div>
   );
 };

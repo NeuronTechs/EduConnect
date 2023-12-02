@@ -130,7 +130,7 @@ const getAllCourseWithTeacherData = async (
 ): Promise<dataListResponse<ICourse>> => {
   const offset = (page - 1) * pageSize;
   const sql =
-    " Select c.*,t.username,t.teacher_id,CEIL((SELECT COUNT(*) FROM course c join teacher t on c.teacher_id = t.teacher_id where (c.title like  Concat('%',?,'%') or t.username like Concat('%', ? ,'%')) and (? = '2' or c.status = ?))/3) as total_page  from course c join teacher t on c.teacher_id = t.teacher_id where ( c.title like  Concat('%', ? ,'%') or t.username like Concat('%',?,'%'))  and (? = '2' or c.status = ?) limit ?,?";
+    " Select c.*,t.username,t.teacher_id,CEIL((SELECT COUNT(*) FROM course c join teacher t on c.teacher_id = t.teacher_id where (c.title like  Concat('%',?,'%') or t.username like Concat('%', ? ,'%')) and (? = '4' or c.status = ?))/3) as total_page  from course c join teacher t on c.teacher_id = t.teacher_id where ( c.title like  Concat('%', ? ,'%') or t.username like Concat('%',?,'%'))  and (? = '4' or c.status = ?) limit ?,?";
   return new Promise<dataListResponse<ICourse>>((resolve, reject) => {
     db.connectionDB.query(
       sql,

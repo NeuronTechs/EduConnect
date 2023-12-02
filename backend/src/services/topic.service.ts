@@ -1,6 +1,7 @@
 import { count } from "console";
 import db from "../config/connectDB";
 import { dataListResponse } from "../constant/type";
+import { QueryError } from "mysql2";
 
 // topic
 interface ITopic {
@@ -129,7 +130,7 @@ const getTopicCourses = async (id: string, limit: number) => {
     return new Promise<dataListResponse<ICourse>>((resolve, reject) => {
       db.connectionDB.query(
         { sql: queryCheckExistCourse, nestTables: true },
-        (error, results: ICourseResult[], fields) => {
+        (error: QueryError, results: ICourseResult[], fields) => {
           if (error) {
             reject({
               status: 500,
@@ -185,7 +186,8 @@ const getTopicCategory = async (limit?: number) => {
 const getAllTopic = async () => {
   try {
     const query = `
-      SELECT topic.topic_id, topic.title, topic.description FROM topic;
+      SELECT topic.topic_id, topic.title, topic.description , COUNT(course.topic_id) as course_count FROM topic LEFT JOIN course ON course.topic_id = topic.topic_id
+      GROUP BY topic.topic_id, topic.title;
     `;
     return new Promise<dataListResponse<ITopic>>((resolve, reject) => {
       db.connectionDB.query(query, (error, course, fields) => {

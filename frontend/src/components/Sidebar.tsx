@@ -142,9 +142,9 @@ const Sidebar = React.forwardRef<Ref, Props>(
   (props, ref): React.ReactElement => {
     const location = useLocation();
     return (
-      <div className="relative xl:w-[60px] h-screen w-[opx]">
+      <div className="relative xl:w-[60px] h-screen w-[0px] z-9999">
         <div
-          className={`absolute ${
+          className={`absolute z-9999 ${
             props.isOpen ? "w-[250px]" : "w-[60px]"
           } h-full overflow-auto shadow-sm z-50 bg-white top-0 left-0 xl:translate-x-0 ${
             props.isOpen ? "-translate-x-0" : "-translate-x-[250px]"

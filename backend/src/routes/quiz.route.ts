@@ -27,4 +27,8 @@ router
   .route("/questions/:idQuestion/answers/all")
   .put(quizController.updateAnswerQuestionMultiply);
 
+//   get quiz not expired
+router
+  .route("/quizNotExpired/:student_id")
+  .get(quizController.getQuizNotExpired);
 export default router;

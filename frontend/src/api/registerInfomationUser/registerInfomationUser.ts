@@ -13,7 +13,7 @@ interface dataInformationUser {
   gender: enumGender;
   birthday: Date;
   address: string;
-  avatar: File;
+  avatar: FileList | string;
   role: string;
   educational_level: string;
   major: string;

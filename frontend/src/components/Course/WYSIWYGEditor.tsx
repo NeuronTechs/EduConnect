@@ -1,6 +1,6 @@
 import { CommentLecture } from "@/features/course/courseSlice";
 import { AppDispatch } from "@/redux/store";
-import { SliceState } from "@/types/type";
+import { IComment, SliceState } from "@/types/type";
 import { Avatar } from "@material-tailwind/react";
 import React, { useState } from "react";
 import { useDropzone, FileWithPath } from "react-dropzone";
@@ -9,9 +9,13 @@ import { useDispatch, useSelector } from "react-redux";
 const WYSIWYGEditor = ({
   currentTime,
   Reply,
+  replyState,
+  setReply,
 }: {
   currentTime: number;
   Reply?: { comment_id: string | null | undefined };
+  replyState?: IComment[];
+  setReply?: React.Dispatch<React.SetStateAction<IComment[]>>;
 }) => {
   const { currentUser } = useSelector((state: SliceState) => state.authSlice);
   const { currentLecture } = useSelector(
@@ -27,7 +31,7 @@ const WYSIWYGEditor = ({
   }, []);
 
   const { getRootProps, isDragActive } = useDropzone({ onDrop });
-  const submitHandler = (e: { preventDefault: () => void }) => {
+  const submitHandler = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     if (currentUser != null && currentLecture != null) {
       const formData = new FormData();
@@ -43,7 +47,11 @@ const WYSIWYGEditor = ({
         formData.append("files", file);
       });
       console.log(formData);
-      dispatch(CommentLecture(formData));
+      const res = await dispatch(CommentLecture(formData));
+      if (Reply && setReply && res.payload) {
+        setReply((prev: IComment[]) => [...prev]);
+      }
+
       setContent("");
       setFiles([]);
     }

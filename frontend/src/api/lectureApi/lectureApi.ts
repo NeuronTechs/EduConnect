@@ -3,6 +3,8 @@ import * as httpRequest from "../../utils/httpRequest";
 
 export const createStudentProgress = async (params: IStudentProgress) => {
   try {
+    console.log(params);
+
     const res = await httpRequest.post(
       `/lecture/student-progress/create`,
       params
