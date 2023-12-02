@@ -25,6 +25,15 @@ const CreateLessonVideo = () => {
       source: selectLesson?.source,
     },
   });
+  React.useEffect(() => {
+    setValue("title", selectLesson?.name ? selectLesson?.name : "");
+    setValue(
+      "description",
+      selectLesson?.description ? selectLesson?.description : ""
+    );
+    setValue("duration", selectLesson?.duration ? selectLesson?.duration : 0);
+    setValue("source", selectLesson?.source ? selectLesson?.source : "");
+  }, [selectLesson, setValue]);
   const onSubmitTitle = (data: IInputLesson) => {
     const lesson = selectLesson;
     lesson!.name = data.title;
@@ -45,7 +54,7 @@ const CreateLessonVideo = () => {
     });
   };
   const [selectTypeVideo, setSelectTypeVideo] =
-    React.useState<string>("default");
+    React.useState<string>("youtube");
   return (
     <div className="w-full h-full">
       {/* header */}
@@ -87,12 +96,14 @@ const CreateLessonVideo = () => {
             onChange={(e) => setSelectTypeVideo(e.target.value)}
             value={selectTypeVideo}
           >
-            <option defaultValue={"default"} value={"default"}>
+            {/* <option defaultValue={"default"} value={"default"}>
               HTML (MP4)
+            </option> */}
+            <option defaultValue={"youtube"} value="youtube">
+              youtube
             </option>
-            <option value="youtube">youtube</option>
-            <option value="Vimeo">Vimeo</option>
-            <option value="Embed">Embed</option>
+            {/* <option value="Vimeo">Vimeo</option>
+            <option value="Embed">Embed</option> */}
           </select>
         </div>
         <UploadVideoType
@@ -114,7 +125,7 @@ const CreateLessonVideo = () => {
           />
         </div>
 
-        <div className="w-full">
+        {/* <div className="w-full">
           <label className="relative inline-flex items-center cursor-pointer">
             <input type="checkbox" value="" className="sr-only peer" />
             <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
@@ -122,7 +133,7 @@ const CreateLessonVideo = () => {
               xem trước khoá học
             </span>
           </label>
-        </div>
+        </div> */}
 
         <div className="w-full">
           <label
@@ -138,7 +149,7 @@ const CreateLessonVideo = () => {
             }}
           />
         </div>
-        <div className="w-full">
+        {/* <div className="w-full">
           <label
             form="message"
             className="block mb-2 text-xs font-bold text-gray-700 dark:text-white"
@@ -177,7 +188,7 @@ const CreateLessonVideo = () => {
               <input type="file" className="hidden" />
             </label>
           </div>
-        </div>
+        </div> */}
       </div>
       <div className="h-50px] w-full relative">
         <div className="sticky bottom-0 left-0 w-full flex justify-end">
@@ -200,10 +211,9 @@ const UploadVideoType = (props: {
   selectTypeVideo: string;
   register: UseFormRegister<IInputLesson>;
 }): React.ReactElement => {
-  console.log(props.selectTypeVideo);
   return (
     <div className="w-full">
-      {props.selectTypeVideo === "default" && (
+      {/* {props.selectTypeVideo === "default" && (
         <>
           <label
             form="message"
@@ -249,7 +259,7 @@ const UploadVideoType = (props: {
             </label>
           </div>
         </>
-      )}
+      )} */}
       {props.selectTypeVideo === "youtube" && (
         <>
           <label

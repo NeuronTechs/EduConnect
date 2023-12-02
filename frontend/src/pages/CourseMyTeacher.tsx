@@ -20,11 +20,11 @@ const CourseMyTeacher = (): React.ReactElement => {
     setIsLoading(true);
     const requestApi = async () => {
       try {
-        const res = await teacherApi.getCourseTeacherApi({
+        const res = await teacherApi.getCourseByTeacher({
           teacherId: useCurrentUser.user_id,
           limit: 10,
         });
-        setDataCourse(res.data);
+        setDataCourse(res);
       } catch (error) {
         console.log(error);
       }

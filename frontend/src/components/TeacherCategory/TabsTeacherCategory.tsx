@@ -1,15 +1,11 @@
 import React from "react";
 import ListCourse from "../Home/ListCourse";
-import { dataCourseT } from "@/types/constans";
 import assets from "@/assets";
 import { ICourseDetail } from "@/types/type";
 import * as teacherApi from "@/api/teacherApi/teacherApi";
 import { useParams } from "react-router-dom";
-import { set } from "react-hook-form";
-interface IProps {
-  idTeacher: string | undefined;
-}
-const TabsTeacherCategory = (props: IProps) => {
+
+const TabsTeacherCategory = () => {
   const [currentTabIndex, setCurrentTabIndex] = React.useState<number>(0);
 
   return (
@@ -115,7 +111,6 @@ const TabsContentFirst = (): React.ReactElement => {
 
   const param = useParams<{ id: string }>();
   React.useEffect(() => {
-    console.log("render");
     const fetchData = async () => {
       try {
         setLoading(true);

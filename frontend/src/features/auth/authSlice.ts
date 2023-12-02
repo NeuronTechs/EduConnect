@@ -76,6 +76,7 @@ export const authSlice = createSlice({
     });
 
     builder.addCase(login.rejected, (state, action) => {
+      console.log(action);
       state.loading = false;
       state.error = action.error.message;
       state.isError = true;
@@ -83,6 +84,8 @@ export const authSlice = createSlice({
 
     builder.addCase(login.fulfilled, (state, action) => {
       state.loading = false;
+      state.isError = false;
+      state.error = undefined;
       // console.log(action.payload);
 
       state.currentUser = action.payload;
@@ -91,6 +94,7 @@ export const authSlice = createSlice({
     builder.addCase(logoutThunk.fulfilled, (state) => {
       state.loading = false;
       state.currentUser = null;
+      state.isError = false;
       state.error = "";
     });
     // test login

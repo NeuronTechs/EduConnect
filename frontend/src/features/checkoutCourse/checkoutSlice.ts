@@ -11,7 +11,7 @@ export interface CourseCheckout {
 }
 
 export interface CheckoutState {
-  courseCurrent: CourseCheckout | null;
+  courseCurrent: CourseCheckout[] | null;
   loading: boolean | null;
   error: boolean | null;
 }
@@ -23,9 +23,9 @@ const initialState: CheckoutState = {
 };
 
 export const getCoureCheckout = createAsyncThunk<
-  CourseCheckout,
-  CourseCheckout
->("/checkout/getcourse", (Course: CourseCheckout) => {
+  CourseCheckout[],
+  CourseCheckout[]
+>("/checkout/getcourse", (Course: CourseCheckout[]) => {
   return Course;
 });
 

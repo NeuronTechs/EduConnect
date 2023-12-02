@@ -93,9 +93,9 @@ const StepperCreateCourse = ({
       status: 0,
     };
     try {
-      await courseApi.createCourse(dataCourse);
+      const res = await courseApi.createCourse(dataCourse);
 
-      navigate(configRouter.manageCourse);
+      navigate(configRouter.manageCourse.slice(0, -3) + res.course_id);
       notifySuccess();
     } catch (error) {
       console.log(error);

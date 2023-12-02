@@ -34,6 +34,23 @@ export const getCourseTeacherApi = async (params: {
   }
 };
 
+export const getCourseByTeacher = async (params: {
+  teacherId: string;
+  limit: number;
+}) => {
+  try {
+    const res = await httpRequest.get(
+      `/teachers/${params.teacherId}/courses/all`,
+      {
+        params: { limit: params.limit },
+      }
+    );
+    return res.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
 export const updateCourseTeacher = async (data: ICourseDetail) => {
   const formData = new FormData();
   formData.append("title", data.title ? data.title : "");
@@ -62,10 +79,7 @@ export const updateCourseTeacher = async (data: ICourseDetail) => {
   formData.append("study", JSON.stringify(data.study));
   formData.append("requirement", JSON.stringify(data.requirement));
   formData.append("language", data.language ? data.language.toString() : "");
-  formData.append(
-    "status_show",
-    data.status_show ? data.status_show.toString() : "0"
-  );
+
   formData.append(
     "create_at",
     data.created_at ? data.created_at : Date.now().toString()

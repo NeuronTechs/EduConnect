@@ -9,6 +9,7 @@ router
   .get(teacherController.getTeacherRecommendations);
 router.route("/:teacherId").get(teacherController.getTeacherDetail);
 router.route("/courses").post(teacherController.createCourseTeacher);
+router.route("/:id/courses/all").get(teacherController.getCourseByTeacher);
 router
   .route("/:teacherId/courses/:courseId")
   .get(teacherController.getCourseTeacherById);
