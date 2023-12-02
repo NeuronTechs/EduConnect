@@ -144,7 +144,7 @@ export interface ILecture {
   comments: IComment[] | null;
   duration: string;
   has_watched?: string;
-  comment_pages?: number;
+  comment_pages?: string;
 }
 
 export interface IConventionChat {
@@ -398,6 +398,7 @@ export interface IQuiz {
   questions: IQuestion[];
   created_at?: string;
   updated_at?: string;
+  name?: string;
 }
 export interface IQuestion {
   question_id: string;

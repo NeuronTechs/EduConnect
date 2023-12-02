@@ -48,7 +48,25 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
       setPage(page + 1);
     }
   };
+  const convertTime = (comment: IComment) => {
+    const timestampInSeconds = parseFloat(comment.timestamp);
+    const hours = Math.floor(timestampInSeconds / 3600);
+    const minutes = Math.floor((timestampInSeconds % 3600) / 60);
+    const seconds = Math.floor(timestampInSeconds % 60);
 
+    let formattedTimestamp = "";
+    if (hours > 0) {
+      formattedTimestamp = `${hours.toString().padStart(2, "0")}:${minutes
+        .toString()
+        .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+    } else {
+      formattedTimestamp = `${minutes.toString().padStart(2, "0")}:${seconds
+        .toString()
+        .padStart(2, "0")}`;
+    }
+
+    return formattedTimestamp;
+  };
   return (
     <div className="flex flex-col w-full justify-center items-start  gap-4 my-5">
       <div className="flex items-start w-full ml-5  my-3 space-x-5">
@@ -79,7 +97,7 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
               }}
               className=" cursor-pointer flex items-center justify-center p-2 w-14 h-6 font-bold  rounded-xl text-white bg-blue-500"
             >
-              {"00:0" + parseFloat(comment.timestamp).toFixed(0)}
+              {convertTime(comment)}
             </p>
             <p className="text-sm w-[80%] whitespace-pre-wrap font-medium">
               {comment.content}
@@ -230,10 +248,9 @@ const Comments = ({ setCurrentTime, currentTime }: Props) => {
       dispatch(
         CommentOfLecture({
           id: currentCourse?.currentLecture?.lecture_id,
-          paging: paging,
+          paging: 1,
         })
       );
-    setPaging(paging + 1);
   }, [currentCourse.currentLecture?.lecture_id]);
   const loadMoreCommentHandler = () => {
     if (currentCourse.currentLecture != null)
@@ -268,7 +285,7 @@ const Comments = ({ setCurrentTime, currentTime }: Props) => {
         <div className="flex items-center justify-center">
           {currentCourse.currentLecture &&
             currentCourse.currentLecture.comment_pages &&
-            currentCourse.currentLecture.comment_pages >= paging && (
+            parseInt(currentCourse.currentLecture.comment_pages) > paging && (
               <button
                 className="italic text-blue-500 w-[170px]"
                 onClick={loadMoreCommentHandler}
