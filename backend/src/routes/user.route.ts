@@ -17,4 +17,10 @@ router
 router
   .route("/information-teacher/:teacher_id")
   .get(middlewareController.verifyToken, AuthController.getInforTeacher);
+router
+  .route("/process-course/:student_id")
+  .get(
+    middlewareController.verifyToken,
+    AuthController.getProcessCourseByStudentId
+  );
 export default router;

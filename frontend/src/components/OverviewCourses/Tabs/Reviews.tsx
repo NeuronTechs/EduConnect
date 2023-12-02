@@ -1,11 +1,11 @@
 import { IReview, SliceState, addReview } from "@/types/type";
 import { Avatar, Progress, Rating, Typography } from "@material-tailwind/react";
-// import { ThumbsDown, ThumbsUp } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import * as courseApi from "../../../api/courseApi/courseApi";
 import { formatTimeStamp } from "@/utils/const";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 type reviewProps = {
   content: string;
@@ -49,19 +49,6 @@ const Review = (props: reviewProps) => {
           </div>
           <p className="font-semibold text-[16px]">{props.title}</p>
           <p className="text-sm">{props.content}</p>
-          {/* <div className="font-semibold opacity-80 mt-2">
-            <p>Nhận xét này có hữu ích không</p>
-            <div className="flex space-x-5 mt-2 items-center">
-              <ThumbsUp
-                className="rounded-full cursor-pointer border-[2px] border-black text-black p-1"
-                size={32}
-              />
-              <ThumbsDown
-                className="rounded-full cursor-pointer border-[2px] border-black text-black p-1"
-                size={32}
-              />
-            </div>
-          </div> */}
         </div>
       </div>
 
@@ -96,7 +83,6 @@ const Reviews = () => {
       const data = await courseApi.getStatisticStar(id as string);
       setTatistic(data?.data);
     };
-
     getReview();
     getStatisticStar();
   }, []);
@@ -108,7 +94,7 @@ const Reviews = () => {
 
   const handleAddReview = async () => {
     if (title.trim() === "" || content.trim() === "" || rated === 0) {
-      alert("Tiêu đề và nội dung không được để trống");
+      toast.error("Vui lòng hãy nhập tiêu đề, nội dung và lựa chọn số sao!");
     } else {
       let params: addReview = {
         course_id: id as string,
@@ -143,7 +129,9 @@ const Reviews = () => {
             <Rating
               unratedColor="amber"
               ratedColor="amber"
-              value={5}
+              value={
+                statistic?.totalStar ? Math.round(statistic?.totalStar) : 0
+              }
               readonly
             />
             <p className="text-sm ">Điểm khóa học</p>
@@ -242,17 +230,19 @@ const Reviews = () => {
         )}
         {reviews?.length > 0 &&
           reviews?.map((review) => (
-            <Review
-              content={review.content}
-              title={review.title}
-              createdAt={review.createdAt}
-              rating={review.rating}
-              full_name={review.full_name}
-              username={review.username}
-              avatar={review.avatar}
-            />
+            <div key={review?.review_id}>
+              <Review
+                content={review.content}
+                title={review.title}
+                createdAt={review.createdAt}
+                rating={review.rating}
+                full_name={review.full_name}
+                username={review.username}
+                avatar={review.avatar}
+              />
+            </div>
           ))}
-        {reviews?.length !== 0 && (
+        {reviews?.length !== 0 && reviews?.length >= 3 && (
           <div className="flex items-center justify-center">
             <button
               className="italic text-blue-500 w-[170px]"

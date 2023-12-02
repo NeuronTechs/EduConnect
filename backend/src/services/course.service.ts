@@ -599,10 +599,14 @@ const getComplaintCourse = (page: number, pageSize: number): Promise<any> => {
                   message: error,
                 });
               } else {
+                const totalPage =
+                  complaints[0].total / pageSize < 1
+                    ? 1
+                    : Math.ceil(complaints[0].total / pageSize);
                 resolve({
                   status: true,
                   data: result,
-                  totalPage: complaints[0],
+                  totalPage: totalPage,
                   message: "Get complaint success",
                 });
               }
@@ -664,11 +668,16 @@ const getComplaintDetail = (complaint_id: string): Promise<any> => {
 
 const resolveComplaintCourse = (
   complaint_id: string,
-  course_id: string
+  course_id: string,
+  option: string
 ): Promise<any> => {
   try {
-    console.log(complaint_id, course_id);
-    const query = `UPDATE educonnectdb.course SET status = "0" WHERE course_id = ?`;
+    let query: string;
+    if (option === "0") {
+      query = `UPDATE educonnectdb.course SET status = "0" WHERE course_id = ?`;
+    } else {
+      query = `UPDATE educonnectdb.course SET status = "1" WHERE course_id = ?`;
+    }
     return new Promise((resolve, reject) => {
       db.connectionDB.query(
         query,

@@ -7,10 +7,10 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   Books,
-  FacebookLogo,
-  GoogleLogo,
+  // FacebookLogo,
+  // GoogleLogo,
   HandWaving,
-  LinkedinLogo,
+  // LinkedinLogo,
 } from "@phosphor-icons/react";
 import { Link, useNavigate } from "react-router-dom";
 import assets from "@/assets";
@@ -59,15 +59,13 @@ const Login = () => {
         }}
       >
         <div className="w-7/12 h-3/6 bg-white opacity-50 backdrop-filter backdrop-blur-sm m-auto ">
-          <div className="ml-10 mt-20 w-6/12 text-2xl">
-            <h1 className=" text-black">
-              <strong> Digital platform for distance</strong>{" "}
+          <div className="ml-10 mt-20 w-8/12 text-2xl">
+            <h1 className=" text-black font-semibold italic">
+              Nền tảng kỹ thuật số cho việc học từ xa
             </h1>
-            <h1 className="text-gray-600">
-              <strong> Learning.</strong>{" "}
-            </h1>
-            <h1 className="text-base">
-              You will never know everything. But you will know more.
+            <h1 className="text-base mt-4">
+              Bạn sẽ không bao giờ biết tất cả mọi thứ. Nhưng bạn sẽ biết nhiều
+              hơn.
             </h1>
           </div>
         </div>
@@ -80,11 +78,13 @@ const Login = () => {
         <div className="mb-12">
           <div className="flex justify-center xl:justify-start">
             <h1 className="text-2xl">
-              <strong> Hey, Hello</strong>
+              <strong> Hey, Chào mừng</strong>
             </h1>
             <HandWaving size={32} />
           </div>
-          <p className="test-base">Enter your email and password to login.</p>
+          <p className="test-base">
+            Nhập tên đăng nhập và mật khẩu để đăng nhập.
+          </p>
         </div>
 
         <div>
@@ -110,17 +110,17 @@ const Login = () => {
               className="border-2 border-slate-500 rounded-md w-[350px] h-[40px] pl-3 pr-3"
             />
           </div>
-          <div className="mt-5 flex w-[350px] items-center justify-between">
-            <div className="space-x-3 flex  items-center">
+          <div className="mt-5 flex w-[350px] items-center justify-end">
+            {/* <div className="space-x-3 flex  items-center">
               <input
                 type="checkbox"
                 className="w-4 h-4 bg-gradient-to-r from-blue-500 to-purple-500"
                 id="RememberCheck"
               />
               <label htmlFor="RememberCheck">Ghi nhớ đăng nhập</label>
-            </div>
+            </div> */}
             <h6
-              className="underline cursor-pointer"
+              className="underline cursor-pointer "
               onClick={handleRedirectForgetPassword}
             >
               Quên mật khẩu?
@@ -139,7 +139,7 @@ const Login = () => {
               </button>
             </Link>
           </div>
-          <div className="flex flex-col w-9/12 items-center mt-10 ml-5">
+          {/* <div className="flex flex-col w-9/12 items-center mt-10 ml-5">
             <h6>Hoặc, Đăng nhập với</h6>
             <div className="flex space-x-3 mt-2">
               <button className="button-logo">
@@ -155,7 +155,7 @@ const Login = () => {
                 Google
               </button>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

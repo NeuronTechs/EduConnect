@@ -6,12 +6,14 @@ import {
   CardBody,
   CardFooter,
   IconButton,
+  Spinner,
 } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
 import { CSVLink } from "react-csv";
 import { ArrowDown, Eye } from "@phosphor-icons/react";
 import { useNavigate } from "react-router-dom";
 import * as adminApi from "../api/adminApi/adminApi";
+import { toast } from "react-toastify";
 
 interface IComplaint {
   complaint_id: string;
@@ -35,11 +37,11 @@ const TABLE_HEAD = [
 ];
 
 const headers = [
-  { label: "ID", key: "id" },
+  { label: "ID", key: "complaint_id" },
   { label: "Vấn đề", key: "title" },
   { label: "Nội dung", key: "problem" },
   { label: "Hình ảnh", key: "image" },
-  { label: "Khóa học", key: "course" },
+  { label: "Khóa học", key: "course_name" },
 ];
 
 const ManagerComplaintCourse = () => {
@@ -47,18 +49,25 @@ const ManagerComplaintCourse = () => {
   const [pageActive, setPageActive] = useState<number>(1);
   const [complaints, setComplaints] = useState<IComplaint[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
-  useEffect(() => {
-    const getComplaint = async () => {
+  const [loadingData, setLoadingData] = useState<boolean>(false);
+
+  const getComplaint = async () => {
+    setLoadingData(true);
+    try {
       const data = await adminApi.getComplaintCourse(pageActive as number);
+      console.log(data);
+      setLoadingData(false);
       setComplaints(data?.data);
-      setTotalPage(data?.totalPage?.total);
-    };
+      setTotalPage(data?.totalPage);
+    } catch (err: any) {
+      setLoadingData(false);
+      toast.error(err?.message);
+    }
+  };
+
+  useEffect(() => {
     getComplaint();
   }, [pageActive]);
-
-  const handlePageActive = (page: number) => {
-    setPageActive(page);
-  };
 
   const handleRedirect = (id: string) => {
     navigate(`/admin/complaint/${id}`);
@@ -88,97 +97,103 @@ const ManagerComplaintCourse = () => {
           </div>
         </CardHeader>
         <CardBody className="overflow-auto px-3">
-          <table className="w-full min-w-max table-auto text-left">
-            <thead>
-              <tr>
-                {TABLE_HEAD.map((head) => (
-                  <th
-                    key={head}
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
-                  >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal leading-none opacity-70"
+          {loadingData ? (
+            <div className="flex justify-center">
+              <Spinner />
+            </div>
+          ) : (
+            <table className="w-full min-w-max table-auto text-left">
+              <thead>
+                <tr>
+                  {TABLE_HEAD.map((head) => (
+                    <th
+                      key={head}
+                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
                     >
-                      {head}
-                    </Typography>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {complaints.map((report, index) => {
-                const isLast = index === complaints.length - 1;
-                const classes = isLast ? "" : "border-b border-blue-gray-50";
-                return (
-                  <tr key={report?.complaint_id}>
-                    <td className={classes}>
-                      <div className="flex items-center gap-3">
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal leading-none opacity-70"
+                      >
+                        {head}
+                      </Typography>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {complaints.map((report, index) => {
+                  const isLast = index === complaints.length - 1;
+                  const classes = isLast ? "" : "border-b border-blue-gray-50";
+                  return (
+                    <tr key={report?.complaint_id}>
+                      <td className={classes}>
+                        <div className="flex items-center gap-3">
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-bold"
+                          >
+                            {report?.complaint_id}
+                          </Typography>
+                        </div>
+                      </td>
+                      <td className={classes}>
                         <Typography
                           variant="small"
                           color="blue-gray"
-                          className="font-bold"
+                          className="font-normal"
                         >
-                          {report?.complaint_id}
+                          {report.title}
                         </Typography>
-                      </div>
-                    </td>
-                    <td className={classes}>
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {report.title}
-                      </Typography>
-                    </td>
-                    <td className={classes}>
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {report?.content}
-                      </Typography>
-                    </td>
-                    <td className={classes}>
-                      <div className="w-[100px] h-[100px]">
-                        <img
-                          className="w-[100px] h-[100px] object-contain"
-                          src={JSON.parse(report.image)[0]}
-                          alt=""
-                        />
-                      </div>
-                    </td>
-                    <td className={classes}>
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {report?.course_name}
-                      </Typography>
-                    </td>
-                    <td className={classes}>
-                      <div className="flex justify-start items-center">
-                        <p className="mr-3">
-                          {report?.status === null || report?.status === "0"
-                            ? "Chưa xử lý"
-                            : "Đã xử lý"}
-                        </p>
-                        <button
-                          onClick={() => handleRedirect(report?.complaint_id)}
+                      </td>
+                      <td className={classes}>
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal"
                         >
-                          <Eye size={22} color="#3fc723" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                          {report?.content}
+                        </Typography>
+                      </td>
+                      <td className={classes}>
+                        <div className="w-[100px] h-[100px]">
+                          <img
+                            className="w-[100px] h-[100px] object-contain"
+                            src={JSON.parse(report.image)[0]}
+                            alt=""
+                          />
+                        </div>
+                      </td>
+                      <td className={classes}>
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal"
+                        >
+                          {report?.course_name}
+                        </Typography>
+                      </td>
+                      <td className={classes}>
+                        <div className="flex justify-start items-center">
+                          <p className="mr-3">
+                            {report?.status === null || report?.status === "0"
+                              ? "Chưa xử lý"
+                              : "Đã xử lý"}
+                          </p>
+                          <button
+                            onClick={() => handleRedirect(report?.complaint_id)}
+                          >
+                            <Eye size={22} color="#3fc723" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
         </CardBody>
         <CardFooter className="flex items-center justify-center border-t border-blue-gray-50 p-4">
           <Button
@@ -197,7 +212,7 @@ const ManagerComplaintCourse = () => {
                 key={index + 1}
                 variant={pageActive === index + 1 ? "outlined" : "text"}
                 size="sm"
-                onClick={() => handlePageActive(index + 1)}
+                onClick={() => setPageActive(index + 1)}
                 className="hover:outline"
               >
                 {index + 1}

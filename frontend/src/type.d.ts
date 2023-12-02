@@ -22,4 +22,6 @@ export interface User {
   user_id: string;
   address?: string;
   birthday?: string;
+  address: string;
+  birthday: string;
 }

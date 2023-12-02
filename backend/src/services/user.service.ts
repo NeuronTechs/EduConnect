@@ -12,8 +12,9 @@ import {
 } from "../constant/user";
 import nodemailer from "nodemailer";
 import { convertTimestampToDateTime } from "../constant/utils";
+import { RowDataPacket } from "mysql2";
 
-const transporter = nodemailer.createTransport({
+export const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: "dinhhieunguyen07@gmail.com",
@@ -421,8 +422,20 @@ const resetPassword = async (
 
 const getInforTeacher = (teacher_id: string): Promise<any> => {
   try {
-    const query =
-      "SELECT * FROM educonnectdb.teacher join educonnectdb.user on teacher.username = user.username WHERE teacher_id = ?";
+    const query = `SELECT
+      COUNT(DISTINCT user.username) AS total_students,
+      COUNT(DISTINCT course.course_id) AS total_courses,
+      teacher.*,
+      user.*
+    FROM
+      user
+    LEFT JOIN
+      teacher ON user.username = teacher.username
+    LEFT JOIN
+      course ON course.teacher_id = teacher.teacher_id
+    LEFT JOIN
+      order_items ON order_items.course_id = course.course_id
+    where teacher.teacher_id = ?`;
     return new Promise((resolve, reject) => {
       db.connectionDB.query(query, [teacher_id], function (err, results) {
         if (err) {
@@ -472,6 +485,54 @@ const changePassword = async (
   }
 };
 
+const getProcessCourseByStudentId = async (
+  student_id: string
+): Promise<any> => {
+  try {
+    const sql = `SELECT 
+      subquery.course_id,
+      c.title, 
+      IF (subquery.completed_lectures = subquery.total_lectures, "complete", "progress") as isComplete
+      FROM 
+      (
+          SELECT 
+              c.course_id,
+              COUNT(DISTINCT sp.lecture_id) as completed_lectures,
+              (SELECT COUNT(*) FROM lecture l JOIN session ss ON l.session_id = ss.session_id WHERE ss.course_id = c.course_id) as total_lectures
+          FROM 
+              course c
+          LEFT JOIN 
+              student_progress sp ON c.course_id = sp.course_id AND sp.student_id = ?
+          WHERE 
+              c.course_id IN (SELECT course_id FROM order_items WHERE student_id = ?)
+          GROUP BY 
+              c.course_id
+      ) as subquery
+      JOIN 
+      course c ON c.course_id = subquery.course_id;`;
+    return new Promise((resolve, reject) => {
+      db.connectionDB.query(
+        sql,
+        [student_id, student_id],
+        (error, results: RowDataPacket[], fields) => {
+          if (error) {
+            console.log(error);
+            reject(error);
+            return;
+          }
+          resolve({
+            status: true,
+            data: results,
+            message: "Get process success",
+          });
+        }
+      );
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
 export default {
   login,
   register,
@@ -480,4 +541,5 @@ export default {
   resetPassword,
   getInforTeacher,
   changePassword,
+  getProcessCourseByStudentId,
 };
