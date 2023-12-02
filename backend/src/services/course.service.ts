@@ -183,7 +183,8 @@ const getCourseByTopicId = async (
  */
 const getCourseDetails = async (
   course_id: string,
-  user_id: string
+  user_id: string,
+  role: string
 ): Promise<dataResponse<ICourseDetail>> => {
   // Define the SQL query to retrieve course details
   const sql = `SELECT 
@@ -215,7 +216,7 @@ LEFT JOIN
 LEFT JOIN
   quiz_result qr ON qr.quiz_id = lq.quiz_id AND qr.student_id = ? AND l.type = 'quiz'
 WHERE 
-  s.course_id = ? and  c.course_id IN (SELECT course_id FROM order_items WHERE student_id = ?)
+ (s.course_id = ? and  c.course_id IN (SELECT course_id FROM order_items WHERE student_id = ?)) or (s.course_id = ? and c.teacher_id = ?) or (? = 2 and s.course_id = ?)
 ORDER BY 
   s.createdAt,s.session_id, l.lecture_id;`;
 
@@ -223,7 +224,18 @@ ORDER BY
   return new Promise<dataResponse<ICourseDetail>>((resolve, reject) => {
     db.connectionDB.query(
       sql,
-      [course_id, user_id, user_id, user_id, course_id, user_id],
+      [
+        course_id,
+        user_id,
+        user_id,
+        user_id,
+        course_id,
+        user_id,
+        course_id,
+        user_id,
+        role,
+        course_id,
+      ],
       (err, result: RowDataPacket[]) => {
         if (err) {
           reject(err);

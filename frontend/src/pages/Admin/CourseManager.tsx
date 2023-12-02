@@ -16,6 +16,7 @@ import * as adminApi from "../../api/adminApi/adminApi";
 import { Select } from "flowbite-react";
 import { useForm } from "react-hook-form";
 import { useDebounce } from "../../hooks/useDebounce ";
+import { Link, useNavigate } from "react-router-dom";
 const TABLE_HEAD = [
   "Tên khóa học",
   "Tên giảng viên",
@@ -87,7 +88,7 @@ const CourseManager = () => {
   }, [currentPage, txtSearch, selectStatus]);
 
   const handleOpen = () => setOpen(!open);
-
+  const navigate = useNavigate();
   const handleBlock = (courseID: string, status: string) => {
     setCourseId(courseID);
     setStatus(status);
@@ -223,13 +224,15 @@ const CourseManager = () => {
                   return (
                     <tr key={u?.course_id}>
                       <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {u?.title}
-                        </Typography>
+                        <Link to={"/course/learn/" + u.course_id}>
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal cursor-pointer"
+                          >
+                            {u?.title}
+                          </Typography>
+                        </Link>
                       </td>
                       <td className={classes}>
                         <Typography
@@ -241,11 +244,13 @@ const CourseManager = () => {
                         </Typography>
                       </td>
                       <td className={classes}>
-                        <img
-                          className="w-[80px] h-[80px] object-cover"
-                          src={u?.image}
-                          alt="student1"
-                        />
+                        <Link to={"/course/learn/" + u.course_id}>
+                          <img
+                            className="w-[80px] h-[80px] object-cover cursor-pointer"
+                            src={u?.image}
+                            alt="student1"
+                          />
+                        </Link>
                       </td>
                       <td className={classes}>
                         <Typography

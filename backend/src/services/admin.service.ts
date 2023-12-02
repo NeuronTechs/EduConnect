@@ -193,9 +193,47 @@ const setStatusCourse = async (
   }
 };
 
+const teacherSellReport = async (page: number, pageSize: number) => {
+  const query = `SELECT 
+  tc.*, u.avatar,
+  COUNT(t.transaction_id) AS courses_sold,
+  SUM(t.amount) AS profit,
+  (select count(*) from teacher)/? as total_page
+FROM 
+  transactions t 
+JOIN 
+  course c ON c.course_id = t.course_id 
+JOIN 
+  teacher tc ON tc.teacher_id = c.teacher_id 
+JOIN 
+  user u on u.username = tc.username
+GROUP BY 
+  tc.teacher_id
+LIMIT ?, ?`;
+  const offset = (page - 1) * pageSize;
+  return new Promise<dataListResponse<any>>((resolve, reject) => {
+    db.connectionDB.query(
+      query,
+      [pageSize, offset, pageSize],
+      (err, result: RowDataPacket[]) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve({
+          status: 200,
+          data: result as any[],
+          message: "Success",
+        });
+      }
+    );
+  });
+};
+
 export default {
   getAllUser,
   setStatusUser,
   getAllCourseWithTeacherData,
   setStatusCourse,
+  teacherSellReport,
 };

@@ -24,18 +24,6 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-// const data = [
-//   { name: "Apr", uv: parseInt(formatCurrency(50)) },
-//   { name: "Feb", uv: parseInt(formatCurrency(100)) },
-//   { name: "Mar", uv: parseInt(formatCurrency(150)) },
-//   { name: "Apr", uv: parseInt(formatCurrency(200)) },
-//   { name: "May", uv: parseInt(formatCurrency(550)) },
-//   { name: "Jun", uv: parseInt(formatCurrency(300)) },
-//   { name: "Jul", uv: parseInt(formatCurrency(350)) },
-//   { name: "Aug", uv: parseInt(formatCurrency(400)) },
-//   { name: "Sep", uv: parseInt(formatCurrency(350)) },
-// ];
-
 const DashboardAdmin = () => {
   const dispatch = useDispatch<AppDispatch>();
   const nav = useNavigate();
@@ -110,8 +98,11 @@ const DashboardAdmin = () => {
                 <Line type="monotone" dataKey="uv" stroke="#8884d8" />
                 <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
                 <XAxis dataKey="name" interval={0} />
-                <YAxis />
-                <Tooltip />
+                <YAxis
+                  fontSize={12}
+                  tickFormatter={(value) => `${value} VNĐ`}
+                />
+                <Tooltip formatter={(value) => `${value} VNĐ`} />
               </LineChart>
             </ResponsiveContainer>
           </div>
