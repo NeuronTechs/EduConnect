@@ -205,12 +205,13 @@ interface ICourseTeacher {
   title: string;
   topic_id: string;
   level: string;
+  status?: number;
 }
 const createCourseTeacher = async (data: ICourseTeacher) => {
   try {
     const course_id = uuidv4();
 
-    const query = `INSERT INTO course (teacher_id, course_id, title, topic_id, level, description) VALUES ('${data.teacher_id}', '${course_id}', '${data.title}', '${data.topic_id}', '${data.level}', '${data.description}');`;
+    const query = `INSERT INTO course (teacher_id, course_id, title, topic_id, level, description) VALUES ('${data.teacher_id}', '${course_id}', '${data.title}', '${data.topic_id}', '${data.level}', '${data.description}', '${data.status}');`;
     return new Promise<dataResponse<ICourseTeacher>>((resolve, reject) => {
       db.connectionDB.query(
         { sql: query },
