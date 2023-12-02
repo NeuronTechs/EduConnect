@@ -44,6 +44,7 @@ const Quiz = ({ currentLecture }: QuizProps) => {
   const [isFullQuiz, setIsFullQuiz] = React.useState(false);
   const [error, setError] = React.useState("");
   const [scoreQuiz, setScore] = React.useState(0);
+  const [review, setReview] = React.useState(false);
   const countdown = () => {
     if (time.seconds > 0) {
       setTime({
@@ -72,7 +73,7 @@ const Quiz = ({ currentLecture }: QuizProps) => {
     }
   };
   React.useEffect(() => {
-    if (QuizComplete === false) {
+    if (QuizComplete === false && review === false) {
       const timer = setTimeout(() => {
         countdown();
       }, 1000);
@@ -95,6 +96,7 @@ const Quiz = ({ currentLecture }: QuizProps) => {
           setScore(parseInt(res1.score));
           setAnswerList(res1.answer);
           setCurrentQuestion(res.questions[0]);
+          setReview(true);
         } else {
           setCurrentQuestion(res.questions[0]);
           if (res) {
@@ -117,6 +119,7 @@ const Quiz = ({ currentLecture }: QuizProps) => {
   useEffect(() => {
     if (currentLecture?.type === "quiz") {
       getData();
+      // setTime({ hour: 0, minutes: 10, seconds: 0 });
     }
   }, [currentLecture]);
   const handleComplete = async () => {
@@ -302,7 +305,10 @@ const Quiz = ({ currentLecture }: QuizProps) => {
                   currentQuestionIndex === quiz?.questions.length - 1 &&
                   QuizComplete === false && (
                     <button
-                      onClick={handleComplete}
+                      onClick={() => {
+                        if (review) setQuizComplete(true);
+                        else handleComplete();
+                      }}
                       className="text-white flex gap-2 items-center bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-4 py-2.5 text-center  mb-2"
                     >
                       Finish

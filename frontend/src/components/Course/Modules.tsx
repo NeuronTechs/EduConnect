@@ -28,6 +28,15 @@ type LectureProps = {
 interface Props {
   currentCourse: ICourse | null;
 }
+const convertTime = (time: string) => {
+  if (time !== undefined && time !== null) {
+    const seconds = time;
+    const date = new Date(0);
+    date.setSeconds(parseInt(seconds));
+    const timeString = date.toISOString().substr(11, 8);
+    return timeString;
+  }
+};
 const Icon = ({ open }: IconProps) => {
   return (
     <svg
@@ -53,6 +62,7 @@ const LectureCard = (props: { Lecture: ILecture; index: number }) => {
   const handleSelect = () => {
     dispatch(selectLecture(props.Lecture));
   };
+
   return (
     <>
       <div
@@ -66,7 +76,7 @@ const LectureCard = (props: { Lecture: ILecture; index: number }) => {
           <div className="flex items-center text-xs space-x-2">
             {props.Lecture.type === "video" && <MonitorPlay size={16} />}
             {props.Lecture.type === "quiz" && <Keyboard size={16} />}
-            <p> {props.Lecture.duration + " phút"}</p>
+            <p> {convertTime(props.Lecture.duration)}</p>
           </div>
           {props.Lecture.has_watched !== "No" &&
             props.Lecture.has_watched !== undefined &&
@@ -90,6 +100,14 @@ const Session = (props: LectureProps) => {
   const [open, setOpen] = useState<boolean>(props.isOpen);
 
   const handleOpen = () => setOpen(!open);
+  const getTotalTime = () => {
+    let total = 0;
+    props.lectures?.forEach((lecture) => {
+      if (lecture.duration !== undefined && lecture.duration !== null)
+        total += parseInt(lecture.duration);
+    });
+    return (total / 60).toFixed(2);
+  };
   return (
     <div className="  rounded-sm ">
       <Accordion open={open === true} icon={<Icon open={open} />}>
@@ -102,7 +120,7 @@ const Session = (props: LectureProps) => {
               <BookOpenText size={20} />
               <p>{props.lectures?.length + "bài"}</p>
               <Clock size={20} />
-              <p>60 phút</p>
+              <p>{getTotalTime() + " phút"}</p>
             </div>
           </div>
         </AccordionHeader>

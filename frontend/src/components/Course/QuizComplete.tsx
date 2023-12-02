@@ -15,7 +15,9 @@ const QuizCompleted = ({
     <div className="text-center flex bg-[#151c3b] w-full items-center justify-center flex-col gap-1 h-[500px]">
       <h1 className=" text-white">Quiz Scorecard</h1>
       <div className="w-[55%] h-40 rounded-md bg-[#111730] flex flex-col items-center justify-center gap-3">
-        <h1 className="text-5xl text-green-400 font-extrabold ">100%</h1>
+        <h1 className="text-5xl text-green-400 font-extrabold ">
+          {((scoreQuiz / quiz.questions.length) * 100).toFixed(2)}%
+        </h1>
         <div className="flex items-center gap-1">
           <Cake size={20} color="white" />{" "}
           <p className="text-sm text-white">Great Job</p>
@@ -31,9 +33,7 @@ const QuizCompleted = ({
           <p>{quiz.questions.length}</p>
         </div>
       </div>
-      <button className="w-[55%] bg-[#6300df] rounded-sm text-white text-sm p-1 mt-10">
-        Xác nhận
-      </button>
+
       <button
         onClick={() => {
           setQuizComplete(false);

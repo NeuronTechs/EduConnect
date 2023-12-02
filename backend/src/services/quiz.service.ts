@@ -501,7 +501,7 @@ const updateAnswerQuestionMultiply = async (
 
 const getQuizNotExpired = async (student_id: string) => {
   const query = `
-  SELECT lecture_quiz.*,lecture.name
+  SELECT lecture_quiz.*,lecture.name,course.course_id
   FROM order_items
   JOIN course ON order_items.course_id = course.course_id
   JOIN session ON course.course_id = session.course_id

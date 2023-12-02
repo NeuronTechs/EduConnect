@@ -7,6 +7,7 @@ import { AppDispatch } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { ICourse, SliceState } from "@/types/type";
 import { getCourseByStudentId } from "@/features/course/courseSlice";
+import { Link } from "react-router-dom";
 
 const MyCourse = (): React.ReactElement => {
   const dispatch = useDispatch<AppDispatch>();
@@ -23,7 +24,9 @@ const MyCourse = (): React.ReactElement => {
   return (
     <div className="flex flex-col w-full px-2 py-2 gap-5">
       <div className="flex items-center justify-start gap-5 w-full shadow-sm bg-white py-2 px-2 rounded-sm">
-        <div className="text-blue-500 text-sm font-semibold p-2">Trang Chủ</div>
+        <div className="text-blue-500 text-sm font-semibold p-2">
+          <Link to="/">Trang Chủ</Link>
+        </div>
         <div className="text-blue-500 text-sm font-semibold p-2">
           Khóa Học của tôi
         </div>
