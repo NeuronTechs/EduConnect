@@ -8,9 +8,7 @@ import { getCourseDetails } from "@/features/course/courseSlice";
 import { AppDispatch } from "@/redux/store";
 import { SliceState } from "@/types/type";
 import Quiz from "@/components/Course/Quiz";
-import FullQuiz from "@/components/Course/FullQuiz";
 import Header from "@/components/Course/Header/Header";
-import { login } from "@/features/auth/authSlice";
 const Course = () => {
   const { id } = useParams();
   const currentUser = useSelector((state: SliceState) => state.authSlice);
@@ -49,11 +47,13 @@ const Course = () => {
         <div className="flex flex-col w-full  gap-5 overflow-y-hidden">
           <div className=" grid grid-cols-4 space-x-2 overflow-y-hidden relative">
             <div className="col-span-4 lg:col-span-3 w-full h-auto lg:h-[100vh] lg:overflow-y-auto scrollbar-hide ">
-              {currentCourse.currentLecture?.type === "video" ? (
+              {currentCourse.currentLecture?.type === "video" &&
+              currentCourse.currentCourse ? (
                 <Video
                   currentLecture={currentCourse.currentLecture}
                   currentTime={currentTime}
                   setCurrentTime={setCurrentTime}
+                  currentCourse={currentCourse.currentCourse}
                 />
               ) : (
                 <Quiz currentLecture={currentCourse.currentLecture} />

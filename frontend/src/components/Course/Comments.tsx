@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import WYSIWYGEditor from "./WYSIWYGEditor";
 import { calculateTimePassed } from "@/utils/utils";
+import { set } from "immer/dist/internal";
 interface commentProps {
   comment: IComment;
   setCurrentTime: React.Dispatch<React.SetStateAction<number>>;
@@ -31,8 +32,8 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
     });
   };
   const loadReplyCommentHandler = async () => {
+    if (showReply === false) setShowReply(true);
     if (comment.comment_id) {
-      setShowReply(!showReply);
       const res = await dispatch(
         getReplyByCommentId({
           id: comment.comment_id,
@@ -47,7 +48,25 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
       setPage(page + 1);
     }
   };
+  const convertTime = (comment: IComment) => {
+    const timestampInSeconds = parseFloat(comment.timestamp);
+    const hours = Math.floor(timestampInSeconds / 3600);
+    const minutes = Math.floor((timestampInSeconds % 3600) / 60);
+    const seconds = Math.floor(timestampInSeconds % 60);
 
+    let formattedTimestamp = "";
+    if (hours > 0) {
+      formattedTimestamp = `${hours.toString().padStart(2, "0")}:${minutes
+        .toString()
+        .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+    } else {
+      formattedTimestamp = `${minutes.toString().padStart(2, "0")}:${seconds
+        .toString()
+        .padStart(2, "0")}`;
+    }
+
+    return formattedTimestamp;
+  };
   return (
     <div className="flex flex-col w-full justify-center items-start  gap-4 my-5">
       <div className="flex items-start w-full ml-5  my-3 space-x-5">
@@ -63,7 +82,7 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
             alt="avatar"
           />
         </div>
-        <div className=" text-sm flex  flex-col gap-2 bg-gray-200 py-3 px-5  rounded-lg">
+        <div className=" text-sm flex  flex-col gap-2  py-3 px-5  rounded-lg">
           <div className="flex items-center  gap-2">
             <h1 className="font-semibold mr-3 text-sm">{comment.username}</h1>
             <p className="opacity-80">
@@ -78,7 +97,7 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
               }}
               className=" cursor-pointer flex items-center justify-center p-2 w-14 h-6 font-bold  rounded-xl text-white bg-blue-500"
             >
-              {"00:0" + parseFloat(comment.timestamp).toFixed(0)}
+              {convertTime(comment)}
             </p>
             <p className="text-sm w-[80%] whitespace-pre-wrap font-medium">
               {comment.content}
@@ -163,6 +182,8 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
                 <WYSIWYGEditor
                   currentTime={currentTime}
                   Reply={{ comment_id: comment.comment_id }}
+                  replyState={reply}
+                  setReply={setReply}
                 ></WYSIWYGEditor>
               </div>
             )}
@@ -170,21 +191,34 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
           {comment.isReply === "false" && showReply === true && (
             <p
               className="underline cursor-pointer"
-              onClick={loadReplyCommentHandler}
+              onClick={() => setShowReply(false)}
             >
               Ẩn phản hồi
             </p>
           )}
-          {showReply === true &&
-            reply.map((comment) => {
-              return (
-                <Comment
-                  comment={comment}
-                  currentTime={currentTime}
-                  setCurrentTime={setCurrentTime}
-                />
-              );
-            })}
+          <div className="">
+            {showReply === true &&
+              reply.map((comment) => {
+                return (
+                  <Comment
+                    comment={comment}
+                    currentTime={currentTime}
+                    setCurrentTime={setCurrentTime}
+                  />
+                );
+              })}
+            {comment.isReply === "false" &&
+              showReply === true &&
+              comment.reply_count &&
+              comment.reply_count / 3 + 1 >= page && (
+                <p
+                  className="ml-[100px] text-blue-500 text-base font-light cursor-pointer"
+                  onClick={loadReplyCommentHandler}
+                >
+                  Xem thêm phản hồi
+                </p>
+              )}
+          </div>
 
           {comment.isReply === "false" && showReply === false && (
             <p
@@ -193,7 +227,7 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
             >
               {comment.reply_count && comment.reply_count > 0
                 ? `Xem ${comment.reply_count} phản hồi`
-                : "Trả lời"}
+                : ""}
             </p>
           )}
         </div>
@@ -214,7 +248,7 @@ const Comments = ({ setCurrentTime, currentTime }: Props) => {
       dispatch(
         CommentOfLecture({
           id: currentCourse?.currentLecture?.lecture_id,
-          paging: paging,
+          paging: 1,
         })
       );
   }, [currentCourse.currentLecture?.lecture_id]);
@@ -249,12 +283,16 @@ const Comments = ({ setCurrentTime, currentTime }: Props) => {
         })}
 
         <div className="flex items-center justify-center">
-          <button
-            className="italic text-blue-500 w-[170px]"
-            onClick={loadMoreCommentHandler}
-          >
-            Hiển thị thêm bình luận
-          </button>
+          {currentCourse.currentLecture &&
+            currentCourse.currentLecture.comment_pages &&
+            parseInt(currentCourse.currentLecture.comment_pages) > paging && (
+              <button
+                className="italic text-blue-500 w-[170px]"
+                onClick={loadMoreCommentHandler}
+              >
+                Hiển thị thêm bình luận
+              </button>
+            )}
         </div>
       </div>
     </div>

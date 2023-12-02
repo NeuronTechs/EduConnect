@@ -51,6 +51,8 @@ const createQuiz = async (quiz: IQuizResult) => {
 };
 
 const getResult = async (student_id: string, quiz_id: string) => {
+  console.log(student_id, quiz_id);
+
   const query = `SELECT * FROM quiz_result WHERE student_id = ? AND quiz_id = ?`;
   return new Promise<dataResponse<IQuizResult>>((resolve, rejects) => {
     try {
@@ -65,6 +67,7 @@ const getResult = async (student_id: string, quiz_id: string) => {
             });
             return;
           }
+
           resolve({
             status: 200,
             data: result[0],
@@ -81,6 +84,7 @@ const getResult = async (student_id: string, quiz_id: string) => {
     }
   });
 };
+
 export default {
   createQuiz,
   getResult,

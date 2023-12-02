@@ -55,7 +55,7 @@ const CourseManager = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [status, setStatus] = useState<string>("");
   const [courseId, setCourseId] = useState<string>("");
-  const [selectStatus, setSelectStatus] = useState<string>("2");
+  const [selectStatus, setSelectStatus] = useState<string>("4");
   const getAllUser = async () => {
     try {
       setLoading(true);
@@ -85,21 +85,21 @@ const CourseManager = () => {
 
   const handleOpen = () => setOpen(!open);
 
-  const handleBlock = (username: string) => {
-    setCourseId(username);
-    setStatus("0");
+  const handleBlock = (courseID: string, status: string) => {
+    setCourseId(courseID);
+    setStatus(status);
     setOpen(!open);
   };
 
-  const handleUnlock = (username: string) => {
-    setCourseId(username);
-    setStatus("1");
+  const handleUnlock = (courseID: string, status: string) => {
+    setCourseId(courseID);
+    setStatus(status);
     setOpen(!open);
   };
 
-  const handleConfirm = async () => {
+  const handleConfirm = async (statusValue: string) => {
     try {
-      const data = await adminApi.setStatusCourse(status, courseId);
+      const data = await adminApi.setStatusCourse(statusValue, courseId);
       if (data.status === 200) {
         getAllUser();
       } else {
@@ -145,9 +145,10 @@ const CourseManager = () => {
             id="countries"
             required
           >
-            <option value={2}>Tất cả</option>
-            <option value={0}>Chưa duyệt</option>
-            <option value={1}>Đã duyệt</option>
+            <option value={4}>Tất cả</option>
+            <option value={1}>Chưa duyệt</option>
+            <option value={2}>Đã duyệt</option>
+            <option value={3}>Bị khóa</option>
           </Select>
         </div>
         <form>
@@ -291,9 +292,9 @@ const CourseManager = () => {
                       <td className={classes}>{u?.price}</td>
                       <td className={classes}>{convertDate(u?.createdAt)}</td>
                       <td className={classes}>
-                        {u?.status === "0" || u?.status === "" ? (
+                        {u?.status === "1" || u?.status === "" ? (
                           <Typography
-                            onClick={() => handleUnlock(u.course_id)}
+                            onClick={() => handleUnlock(u.course_id, u?.status)}
                             variant="small"
                             color="blue-gray"
                             className="cursor-pointer font-normal bg-red-500 italic py-2 rounded-lg text-center text-white flex justify-center items-center"
@@ -301,14 +302,32 @@ const CourseManager = () => {
                             Chưa được duyệt
                             <PencilSimple size={18} />
                           </Typography>
-                        ) : (
+                        ) : u?.status === "2" ? (
                           <Typography
-                            onClick={() => handleBlock(u.course_id)}
+                            onClick={() => handleBlock(u.course_id, u?.status)}
                             variant="small"
                             color="blue-gray"
                             className="cursor-pointer p-2 font-normal bg-green-500 italic py-2 rounded-lg text-center text-white flex justify-center items-center"
                           >
                             Đã duyệt <PencilSimple size={18} />
+                          </Typography>
+                        ) : u?.status === "3" ? (
+                          <Typography
+                            onClick={() => handleUnlock(u.course_id, u?.status)}
+                            variant="small"
+                            color="blue-gray"
+                            className="cursor-pointer p-2 font-normal bg-red-500 italic py-2 rounded-lg text-center text-white flex justify-center items-center"
+                          >
+                            Bị khóa <PencilSimple size={18} />
+                          </Typography>
+                        ) : (
+                          <Typography
+                            onClick={() => handleUnlock(u.course_id, u?.status)}
+                            variant="small"
+                            color="blue-gray"
+                            className="cursor-pointer p-2 font-normal bg-gray-500 italic py-2 rounded-lg text-center text-white flex justify-center items-center"
+                          >
+                            Bản nháp <PencilSimple size={18} />
                           </Typography>
                         )}
                       </td>
@@ -317,76 +336,95 @@ const CourseManager = () => {
                 })}
               </tbody>
             </table>
-            <CardFooter className="flex items-center justify-center border-t border-blue-gray-50 p-4">
-              <Button
-                variant="outlined"
-                size="sm"
-                className={`mr-3 ${currentPage === 1 ? "hidden" : "block"} `}
-                onClick={() => {
-                  setCurrentPage((prev) => prev - 1);
-                }}
-              >
-                Trước
-              </Button>
-              <div className="flex items-center gap-2">
-                {Array.from({ length: totalPage }, (_, index) => (
-                  <IconButton
-                    key={index + 1}
-                    variant={currentPage === index + 1 ? "outlined" : "text"}
-                    size="sm"
-                    onClick={() => {
-                      setCurrentPage(index + 1);
-                    }}
-                    className="hover:outline"
-                  >
-                    {index + 1}
-                  </IconButton>
-                ))}
-              </div>
-              <Button
-                variant="outlined"
-                size="sm"
-                className={`ml-3 ${
-                  currentPage === totalPage ? "hidden" : "block"
-                } `}
-                onClick={() => {
-                  setCurrentPage((prev) => prev + 1);
-                }}
-              >
-                Tiếp
-              </Button>
-            </CardFooter>
+            {totalPage > 1 && (
+              <CardFooter className="flex items-center justify-center border-t border-blue-gray-50 p-4">
+                <Button
+                  variant="outlined"
+                  size="sm"
+                  className={`mr-3 ${currentPage === 1 ? "hidden" : "block"} `}
+                  onClick={() => {
+                    setCurrentPage((prev) => prev - 1);
+                  }}
+                >
+                  Trước
+                </Button>
+                <div className="flex items-center gap-2">
+                  {Array.from({ length: totalPage }, (_, index) => (
+                    <IconButton
+                      key={index + 1}
+                      variant={currentPage === index + 1 ? "outlined" : "text"}
+                      size="sm"
+                      onClick={() => {
+                        setCurrentPage(index + 1);
+                      }}
+                      className="hover:outline"
+                    >
+                      {index + 1}
+                    </IconButton>
+                  ))}
+                </div>
+                <Button
+                  variant="outlined"
+                  size="sm"
+                  className={`ml-3 ${
+                    currentPage === totalPage ? "hidden" : "block"
+                  } `}
+                  onClick={() => {
+                    setCurrentPage((prev) => prev + 1);
+                  }}
+                >
+                  Tiếp
+                </Button>
+              </CardFooter>
+            )}
           </>
         )}
       </Card>
       <Dialog open={open} handler={handleOpen}>
         <DialogHeader>
-          {status === "1"
-            ? "Xác nhận hủy chặn người dùng"
-            : "Xác nhận chặn người dùng"}
+          {status === "1" || status === "0" || status === "3"
+            ? "Xác nhận Duyệt khóa học"
+            : "Xác nhận chặn khóa"}
         </DialogHeader>
         <DialogBody>
           Khi bạn{" "}
-          {status === "1"
-            ? "'Xác nhận' hủy chặn người dùng"
-            : "'Xác nhận' chặn người dùng"}{" "}
+          {status === "1" || status === "0" || status === "3"
+            ? "'Xác nhận' duyệt khóa học"
+            : "'Xác nhận' chặn khóa học"}{" "}
           thì người dùng sẽ{" "}
           {status !== "1"
-            ? "không thể truy cập vào trang web được nữa."
-            : "được tiếp tục truy cập trang web."}
+            ? "Khóa học sẽ hiển thị trên hệ thống"
+            : "Khóa học sẽ bị chặn trên hệ thống"}
         </DialogBody>
         <DialogFooter>
           <Button
             variant="text"
             color="red"
             onClick={handleOpen}
-            className="mr-1"
+            className="mr-1 m-2"
           >
             <span>Hủy</span>
           </Button>
-          <Button variant="gradient" color="green" onClick={handleConfirm}>
-            <span>Xác nhận</span>
-          </Button>
+          {(status === "2" || status === "1") && (
+            <Button
+              className="m-2"
+              variant="gradient"
+              color="red"
+              onClick={() => handleConfirm("3")}
+            >
+              <span>Chặn khóa học</span>
+            </Button>
+          )}
+          {(status === "0" || status === "1" || status === "3") && (
+            <Button
+              className="m-2"
+              variant="gradient"
+              color="green"
+              onClick={() => handleConfirm("2")}
+            >
+              <span>Duyệt khóa học</span>
+            </Button>
+          )}
         </DialogFooter>
       </Dialog>
     </div>

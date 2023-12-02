@@ -83,7 +83,7 @@ const FullQuiz = ({
   error,
 }: QuizProps) => {
   return (
-    <div className="bg-gray-500 w-full flex justify-center  ">
+    <div className=" w-full h-screen flex justify-center  ">
       <div className="h-[500px] overflow-auto w-11/12 bg-white p-5 ">
         <div className="flex justify-end">
           <p
