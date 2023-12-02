@@ -68,7 +68,7 @@ interface ISearch {
 interface IResultSearch {
   [0]: { course: ICourse; teacher: ITeacher; topic: ITopic; user: IUser }[];
   [1]: { teacher: ITeacher; user: IUser }[];
-  [2]: { topic: ITopic; course_count: number }[];
+  [2]: { topic: ITopic; "": { course_count: number } }[];
 }
 
 const search = async (keyword: string, limit: number) => {
@@ -78,15 +78,15 @@ const search = async (keyword: string, limit: number) => {
     JOIN teacher ON course.teacher_id = teacher.teacher_id 
     JOIN topic ON course.topic_id = topic.topic_id 
     JOIN user ON teacher.username = user.username 
-    WHERE course.title LIKE ? LIMIT ${limit ? limit : 10} ;
+    WHERE course.title LIKE ? AND course.status LIMIT ${limit ? limit : 10};
     SELECT * 
     FROM teacher JOIN user ON teacher.username = user.username 
-    WHERE user.username LIKE ?  OR user.full_name LIKE ? LIMIT ${
+    WHERE (user.username LIKE ?  OR user.full_name LIKE ?) LIMIT ${
       limit ? limit : 10
     };
     SELECT topic.topic_id, topic.title, topic.description, COUNT(course.topic_id) as course_count FROM topic 
-    LEFT JOIN course ON course.topic_id = topic.topic_id
-    WHERE topic.title LIKE ? OR topic.description LIKE ?
+    LEFT JOIN course ON course.topic_id = topic.topic_id AND course.status = 2
+    WHERE (topic.title LIKE ? OR topic.description LIKE ?)
     GROUP BY topic.topic_id, topic.title  LIMIT ${limit ? limit : 10}`;
 
     return new Promise<dataResponse<ISearch>>(async (resolve, reject) => {
@@ -125,7 +125,7 @@ const search = async (keyword: string, limit: number) => {
             return { ...item.teacher, user: item.user };
           });
           const topics = results[2].map((item) => {
-            return { ...item.topic, course_count: item.course_count };
+            return { ...item.topic, course_count: item[""].course_count };
           });
 
           resolve({
@@ -148,7 +148,7 @@ const suggestionSearch = async (keyword: string, limit: number) => {
   try {
     const query1 = `
     SELECT * FROM course 
-    WHERE course.title LIKE ? LIMIT ?`;
+    WHERE course.title LIKE ? AND course.status = 2 LIMIT ?`;
 
     return new Promise<dataResponse<ISearch>>(async (resolve, reject) => {
       connectDB.connectionDB.query(

@@ -58,7 +58,6 @@ interface ICourse {
   discount: number;
   ranking?: number;
   status?: string;
-  status_show?: number;
   total_ranking?: number;
   total_enrollment?: number;
   total_lecture?: number;
@@ -186,7 +185,6 @@ const getTeacherDetail = async (id: string) => {
             user: course[0]?.user,
             total_courses: course[0]?.total_courses,
           };
-          console.log(course);
           resolve({
             status: 200,
             data: data as ITeacher,
@@ -245,7 +243,7 @@ const createCourseTeacher = async (data: ICourseTeacher) => {
 
 const getCourseTeacher = async (id: string, limit: number) => {
   try {
-    const query = `SELECT course.*, teacher.*, user.*, topic.* FROM course JOIN teacher ON course.teacher_id = teacher.teacher_id JOIN user ON teacher.username = user.username JOIN topic ON course.topic_id = topic.topic_id WHERE teacher.teacher_id = ? LIMIT ?`;
+    const query = `SELECT course.*, teacher.*, user.*, topic.* FROM course JOIN teacher ON course.teacher_id = teacher.teacher_id JOIN user ON teacher.username = user.username JOIN topic ON course.topic_id = topic.topic_id WHERE teacher.teacher_id = ?  AND course.status =  2 LIMIT ?`;
     return new Promise<dataListResponse<ICourse>>((resolve, reject) => {
       db.connectionDB.query(
         {
@@ -323,7 +321,7 @@ const updateCourseTeacher = async (id: string, data: ICourse) => {
 };
 const getCourseTeacherById = async (id: string) => {
   try {
-    const query = `SELECT course.*, teacher.*, user.*, topic.* FROM course JOIN teacher ON course.teacher_id = teacher.teacher_id JOIN user ON teacher.username = user.username JOIN topic ON course.topic_id = topic.topic_id WHERE course.course_id = ?;`;
+    const query = `SELECT course.*, teacher.*, user.*, topic.* FROM course JOIN teacher ON course.teacher_id = teacher.teacher_id JOIN user ON teacher.username = user.username JOIN topic ON course.topic_id = topic.topic_id WHERE course.course_id = ? ;`;
     return new Promise<dataResponse<ICourse>>((resolve, reject) => {
       db.connectionDB.query(
         {
@@ -343,8 +341,6 @@ const getCourseTeacherById = async (id: string) => {
           const dataResult = results.map((result) => {
             return {
               ...result?.course,
-              // study: JSON.parse(result?.course?.study),
-              // requirement: JSON.parse(result?.course?.requirement),
               teacher: result.teacher,
               user: result.user,
               topic: result.topic,
@@ -452,7 +448,50 @@ const getStudentByTeacher = (teacher_id: string): Promise<any> => {
     throw error;
   }
 };
-
+const getCourseByTeacher2 = (
+  teacher_id: string,
+  limit: number
+): Promise<any> => {
+  try {
+    const query = `SELECT course.*, teacher.*, user.*, topic.* FROM course JOIN teacher ON course.teacher_id = teacher.teacher_id JOIN user ON teacher.username = user.username JOIN topic ON course.topic_id = topic.topic_id WHERE teacher.teacher_id = ?  LIMIT ?`;
+    return new Promise<dataListResponse<ICourse>>((resolve, reject) => {
+      db.connectionDB.query(
+        {
+          sql: query,
+          values: [`${teacher_id}`, limit ? limit : 10],
+          nestTables: true,
+        },
+        (error: QueryError, results: ICourseResult[]) => {
+          if (error) {
+            reject({
+              status: 500,
+              data: [],
+              message: error,
+            });
+            return;
+          } else {
+            const dataResult = results.map((result) => {
+              return {
+                ...result.course,
+                teacher: result.teacher,
+                user: result.user,
+                topic: result.topic,
+              };
+            });
+            console.log(dataResult);
+            resolve({
+              status: 200,
+              data: dataResult as ICourse[],
+              message: "Get courses successfully by teacher",
+            });
+          }
+        }
+      );
+    });
+  } catch (error) {
+    throw error;
+  }
+};
 export default {
   getTeacherRecommendations,
   getTeacherDetail,
@@ -461,4 +500,5 @@ export default {
   getCourseTeacher,
   updateCourseTeacher,
   getStudentByTeacher,
+  getCourseByTeacher2,
 };

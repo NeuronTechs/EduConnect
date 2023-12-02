@@ -54,7 +54,7 @@ const Home = () => {
       try {
         const promises = [
           topicApi.getRecommendCourse({ limit: "5" }),
-          topicApi.getTopicCategory({ limit: "5" }),
+          topicApi.getTopicCategory({ limit: "8" }),
           teacherApi.teacherRecommendationsApi({ limit: "5" }),
         ];
         const [courses, categories, teachers] = await Promise.all(promises);

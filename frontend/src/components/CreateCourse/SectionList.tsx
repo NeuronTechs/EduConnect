@@ -1,5 +1,4 @@
 import {
-  Binoculars,
   DotsSixVertical,
   Pencil,
   PlusCircle,
@@ -185,10 +184,11 @@ const ItemSection = (props: {
             <PlusCircle size={20} />
             <p>thêm bài giảng</p>
           </button>
-          <button className="text-gray-500 bg-gray-100 text-xs font-bold px-4 py-1.5 flex items-center justify-center cursor-pointer hover:bg-gray-200 rounded-md">
+          <div></div>
+          {/* <button className="text-gray-500 bg-gray-100 text-xs font-bold px-4 py-1.5 flex items-center justify-center cursor-pointer hover:bg-gray-200 rounded-md">
             <Binoculars size={20} />
             <p>Tìm tài liệu</p>
-          </button>
+          </button> */}
         </div>
       </div>
       {/* content */}
