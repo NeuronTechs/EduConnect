@@ -1,4 +1,4 @@
-import { ClipboardText, File, MonitorPlay } from "@phosphor-icons/react";
+import { ClipboardText, MonitorPlay } from "@phosphor-icons/react";
 import React from "react";
 import SectionList from "./SectionList";
 import {
@@ -80,13 +80,15 @@ const LessonInformation = (props: {
                     NỘI DUNG HỌC TẬP
                   </h5>
                   <div className="flex items-center justify-start gap-4">
-                    <LessonTypeItem
+                    {/* =====================================================================update=============================================== */}
+                    {/* <LessonTypeItem
                       icon={<File />}
                       title="bài học văn bản"
                       onClick={() => {
                         handlerAddNewLesson("document");
                       }}
-                    />
+                    /> */}
+                    {/* ====================================================================================================================== */}
                     <LessonTypeItem
                       icon={<MonitorPlay />}
                       title="bài học video"

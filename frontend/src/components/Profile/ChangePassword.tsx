@@ -3,6 +3,7 @@ import * as authApi from "../../api/authApi/authApi";
 import { useSelector } from "react-redux";
 import { SliceState } from "@/types/type";
 import { Spinner } from "@material-tailwind/react";
+import { toast } from "react-toastify";
 
 const ChangePassword = () => {
   const [password, setPassword] = useState<string>("");
@@ -18,7 +19,7 @@ const ChangePassword = () => {
       inputRef.current?.focus();
     } else {
       if (password !== confirmPassword) {
-        alert("Mật khẩu không trùng!!!");
+        toast.error("Mật khẩu không trùng!!!");
         inputRef.current?.focus();
       } else {
         try {
@@ -29,17 +30,17 @@ const ChangePassword = () => {
           );
           if (data?.status === 200) {
             setLoading(false);
-            alert("Thay đổi mật khẩu thành công");
+            toast.success("Thay đổi mật khẩu thành công");
             setPassword("");
             setConfirmPassword("");
           } else {
             setLoading(false);
-            alert(data?.message);
+            toast.error(data?.message);
           }
         } catch (error: any) {
           setLoading(false);
           console.log(error);
-          alert(error?.message);
+          toast.error(error?.message);
         }
       }
     }
@@ -67,6 +68,7 @@ const ChangePassword = () => {
             <input
               type="password"
               ref={inputRef}
+              value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
               }}
@@ -80,6 +82,7 @@ const ChangePassword = () => {
           <div className="mb-3 mx-3">
             <input
               type="password"
+              value={confirmPassword}
               onChange={(e) => {
                 setConfirmPassword(e.target.value);
               }}

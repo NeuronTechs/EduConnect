@@ -24,17 +24,14 @@ const ContentQuestionMultiplyChoice = (props: { data: IQuestionInfo }) => {
   const { register, handleSubmit, reset } = useForm<IInputAnswer>();
   const onSubmit = (data: IInputAnswer) => {
     if (data.title === "") return;
-    handleAddNewAnswerQuestion(
-      {
-        answer_id: `${props.data.answers.length + 1}`,
-        question_id: props.data.question_id,
-        answer: data.title,
-        isCorrect: false,
-        image: null,
-        question: null,
-      },
-      "keyword"
-    );
+    handleAddNewAnswerQuestion({
+      answer_id: `${props.data.answers.length + 1}`,
+      question_id: props.data.question_id,
+      answer: data.title,
+      isCorrect: 0,
+      image: null,
+      question: null,
+    });
     reset();
   };
   return (
@@ -136,7 +133,9 @@ const ItemAnswer = (props: {
   data: IAnswerInfo;
 }): React.ReactElement => {
   const [hover, setHover] = React.useState<boolean>(false);
-
+  const [isCheck, setIsCheck] = React.useState<boolean>(
+    props.data.isCorrect ? true : false
+  );
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: props.id });
 
@@ -144,7 +143,15 @@ const ItemAnswer = (props: {
     transform: CSS.Transform.toString(transform),
     transition,
   };
-
+  const { handleEditAnswerQuestion } = React.useContext(CreateQuizContext);
+  const handleChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value === "") return;
+    handleEditAnswerQuestion(props.data.answer_id, {
+      ...props.data,
+      isCorrect: e.target.checked ? 1 : 0,
+    });
+    setIsCheck(e.target.checked);
+  };
   return (
     <div
       className=" flex items-center justify-between w-full p-2 rounded-md border border-transparent bg-white relative min-h-[45px]"
@@ -158,7 +165,9 @@ const ItemAnswer = (props: {
         <div className="flex items-center justify-center" {...listeners}>
           <DotsSixVertical size={15} className="cursor-pointer" />
         </div>
-        <p className="text-xs font-normal">Power Supply</p>
+        <p className="text-xs font-normal">
+          {props.data.answer ? props.data.answer : "chưa nhập câu trả lời"}
+        </p>
         <div className=" text-gray-500">
           <Pencil size={15} />
         </div>
@@ -181,7 +190,11 @@ const ItemAnswer = (props: {
         <p className="text-sm font-medium text-gray-500">Đúng</p>
         <input
           type="checkbox"
-          value=""
+          value={props.data.answer_id}
+          checked={isCheck}
+          onChange={(e) => {
+            handleChangeValue(e);
+          }}
           className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
         />
       </div>

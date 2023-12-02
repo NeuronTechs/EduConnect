@@ -1,6 +1,7 @@
 import quizApi from "@/api/quizApi";
 import { IAnswerInfo, IQuestionInfo, IQuizInfo } from "@/types/type";
 import React from "react";
+import { toast } from "react-toastify";
 
 interface CreateQuizContextType {
   dataQuiz: IQuizInfo;
@@ -11,13 +12,18 @@ interface CreateQuizContextType {
   handleEditQuestion: (question: IQuestionInfo) => void;
   handleDeleteQuestion: (idQuestion: string) => void;
   // answer
-  handleAddNewAnswerQuestion: (answer: IAnswerInfo, type: string) => void;
+  handleAddNewAnswerQuestion: (answer: IAnswerInfo) => void;
   handleEditAnswerQuestion: (idQuestion: string, answer: IAnswerInfo) => void;
   handleDeleteAnswerQuestion: (answer: IAnswerInfo) => void;
+  handleEditAnswerQuestionAll: (
+    idQuestion: string,
+    answer1: IAnswerInfo,
+    answer2: IAnswerInfo
+  ) => void;
 }
 export const CreateQuizContext = React.createContext<CreateQuizContextType>({
   dataQuiz: {
-    resource_id: "",
+    quiz_id: "",
     lecture_id: "",
     content: "",
     description: "",
@@ -40,11 +46,12 @@ export const CreateQuizContext = React.createContext<CreateQuizContextType>({
   handleAddNewAnswerQuestion: () => {},
   handleEditAnswerQuestion: () => {},
   handleDeleteAnswerQuestion: () => {},
+  handleEditAnswerQuestionAll: () => {},
 } as CreateQuizContextType);
 
 const CreateQuizProvider = ({ children }: { children: React.ReactNode }) => {
   const [dataQuiz, setDataQuiz] = React.useState<IQuizInfo>({
-    resource_id: "",
+    quiz_id: "",
     lecture_id: "",
     description: "",
     content: "",
@@ -65,15 +72,40 @@ const CreateQuizProvider = ({ children }: { children: React.ReactNode }) => {
   // add new question
   const handleAddNewQuestion = async (question: IQuestionInfo) => {
     try {
-      const res = await quizApi.createQuestionQuiz(question);
-      if (res) {
-        setDataQuiz({
-          ...dataQuiz,
-          questions: [...dataQuiz.questions, { ...res, answers: [] }],
-        });
+      if (question.type === "fill") {
+        const resultQuestion = await quizApi.createQuestionQuiz(question);
+        if (resultQuestion) {
+          const resultAnswer = await quizApi.createAnswerQuestionQuiz({
+            question_id: resultQuestion.question_id,
+            image: "",
+            answer: "Nhập Câu Trả Lời",
+            explain: "",
+            question: "",
+            answer_id: Math.floor(Math.random() * 1000000).toString(),
+            isCorrect: 1,
+          });
+          if (!resultAnswer) return console.log("error");
+          const dataQuestion = {
+            ...resultQuestion,
+            answers: [resultAnswer],
+          };
+          setDataQuiz({
+            ...dataQuiz,
+            questions: [...dataQuiz.questions, dataQuestion],
+          });
+        }
+      } else {
+        const res = await quizApi.createQuestionQuiz(question);
+        if (res) {
+          setDataQuiz({
+            ...dataQuiz,
+            questions: [...dataQuiz.questions, { ...res, answers: [] }],
+          });
+        }
       }
     } catch (error) {
       console.log(error);
+      toast.error("Thêm câu hỏi thất bại");
     }
   };
   // edit question
@@ -84,7 +116,7 @@ const CreateQuizProvider = ({ children }: { children: React.ReactNode }) => {
         setDataQuiz({
           ...dataQuiz,
           questions: dataQuiz.questions.map((question) =>
-            question.question_id === question.question_id
+            question.question_id === questionData.question_id
               ? questionData
               : question
           ),
@@ -92,6 +124,7 @@ const CreateQuizProvider = ({ children }: { children: React.ReactNode }) => {
       }
     } catch (error) {
       console.log(error);
+      toast.error("Sửa câu hỏi thất bại");
     }
   };
 
@@ -109,23 +142,21 @@ const CreateQuizProvider = ({ children }: { children: React.ReactNode }) => {
       }
     } catch (error) {
       console.log(error);
+      toast.error("Xóa câu hỏi thất bại");
     }
   };
   // add new answer of question
-  const handleAddNewAnswerQuestion = async (
-    answer: IAnswerInfo,
-    type: string
-  ) => {
+  const handleAddNewAnswerQuestion = async (answer: IAnswerInfo) => {
     try {
       const res = await quizApi.createAnswerQuestionQuiz(answer);
       if (res) {
+        // console.log(res);
         setDataQuiz({
           ...dataQuiz,
           questions: dataQuiz.questions.map((question) =>
             question.question_id === answer.question_id
               ? {
                   ...question,
-                  type: type,
                   answers: [...question.answers, res],
                 }
               : question
@@ -134,6 +165,7 @@ const CreateQuizProvider = ({ children }: { children: React.ReactNode }) => {
       }
     } catch (error) {
       console.log(error);
+      toast.error("Thêm câu trả lời thất bại");
     }
   };
   // update answer of question
@@ -143,7 +175,6 @@ const CreateQuizProvider = ({ children }: { children: React.ReactNode }) => {
   ) => {
     try {
       const res = await quizApi.updateAnswerQuestionQuiz(answerData);
-      console.log(res);
       if (res) {
         setDataQuiz({
           ...dataQuiz,
@@ -163,6 +194,7 @@ const CreateQuizProvider = ({ children }: { children: React.ReactNode }) => {
       }
     } catch (error) {
       console.log(error);
+      toast.error("Sửa câu trả lời thất bại");
     }
   };
   // delete answer of question
@@ -186,6 +218,44 @@ const CreateQuizProvider = ({ children }: { children: React.ReactNode }) => {
       }
     } catch (error) {
       console.log(error);
+      toast.error("Xóa câu trả lời thất bại");
+    }
+  };
+  const handleEditAnswerQuestionAll = async (
+    idQuestion: string,
+    answerData1: IAnswerInfo,
+    answerData2: IAnswerInfo
+  ) => {
+    try {
+      const res = await quizApi.updateAnswerQuestionMultiply(
+        answerData1,
+        answerData2
+      );
+      console.log(res);
+      if (res) {
+        setDataQuiz({
+          ...dataQuiz,
+          questions: dataQuiz.questions.map((question) =>
+            question.question_id === idQuestion
+              ? {
+                  ...question,
+                  answers: question.answers.map((answer) => {
+                    if (answer.answer_id === answerData1.answer_id) {
+                      return answerData1;
+                    } else if (answer.answer_id === answerData2.answer_id) {
+                      return answerData2;
+                    } else {
+                      return answer;
+                    }
+                  }),
+                }
+              : question
+          ),
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Sửa câu trả lời thất bại");
     }
   };
   return (
@@ -202,6 +272,7 @@ const CreateQuizProvider = ({ children }: { children: React.ReactNode }) => {
         handleAddNewAnswerQuestion,
         handleEditAnswerQuestion,
         handleDeleteAnswerQuestion,
+        handleEditAnswerQuestionAll,
       }}
     >
       {children}

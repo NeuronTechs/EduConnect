@@ -275,6 +275,7 @@ const login = async (req: Request, res: Response) => {
 
 const refreshToken = async (req: Request, res: Response) => {
   const cookiesHeader = req.headers.cookie;
+
   if (cookiesHeader) {
     const index = cookiesHeader.indexOf(";");
     const refreshToken = cookiesHeader
@@ -592,6 +593,26 @@ const changePassword = async (req: Request, res: Response) => {
   }
 };
 
+const getProcessCourseByStudentId = async (req: Request, res: Response) => {
+  try {
+    const { student_id } = req.params;
+    const result = await UserService.getProcessCourseByStudentId(student_id);
+    if (result?.status) {
+      res.status(200).json({
+        status: 200,
+        data: result?.data,
+        message: result.message,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      status: 500,
+      data: {},
+      message: error,
+    });
+  }
+};
+
 export default {
   login,
   refreshToken,
@@ -602,4 +623,5 @@ export default {
   resetPassword,
   getInforTeacher,
   changePassword,
+  getProcessCourseByStudentId,
 };

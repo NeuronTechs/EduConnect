@@ -141,6 +141,18 @@ const publicRoutes: IRouter[] = [
     layout: BlankLayout,
     role: "0",
   },
+  {
+    path: configRouter.categoryCourse,
+    component: lazy(() => import("../pages/Category/CategoryCourse")),
+    layout: DefaultLayout,
+    role: "0",
+  },
+  {
+    path: configRouter.categoryTopic,
+    component: lazy(() => import("../pages/Category/categoryTopic")),
+    layout: DefaultLayout,
+    role: "0",
+  },
   // user
 
   {

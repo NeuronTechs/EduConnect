@@ -19,18 +19,25 @@ interface IProps {
 }
 const CourseTeacher = (props: IProps): React.ReactElement => {
   const { handleSetDataDescription } = React.useContext(CreateCourseContext);
+
   return (
     <div className="rounded-2xl bg-white p-2 flex flex-col gap-2 shadow-sm w-full justify-between">
       <div className=" flex flex-col w-full gap-2">
         <div className="w-full max-h-[150px] relative">
           <ImageWithError
-            src={props.data.image ? props.data.image : assets.images.noBg}
+            src={
+              props.data.image
+                ? props.data.image.toString()
+                : assets.images.noBg
+            }
             alt={props.data.title}
             fallbackSrc={assets.images.noBg}
             className="w-full h-full object-fill rounded-2xl"
           />
           <div className="bg-blue-500 absolute top-1 right-2 text-xs font-bold text-white px-2 py-1 rounded-full">
-            {props.data.status}
+            {parseInt(`${props.data.status}`) === 0 && "Bảng nháp"}
+            {parseInt(`${props.data.status}`) === 1 && "Đang duyệt"}
+            {parseInt(`${props.data.status}`) === 2 && "Công khai"}
           </div>
         </div>
         <div className="w-full flex justify-between">

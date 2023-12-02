@@ -69,12 +69,10 @@ const SignUp = () => {
           <Books size={32} /> <h1>EduConnect</h1>
         </div>
         <div className="flex flex-col items-center w-full mt-20">
-          <h1 className="text-base">
-            <strong>Đăng ký để bắt đầu Học tập </strong>
-          </h1>
+          <h1 className="mb-5 text-[24px]">Đăng ký để bắt đầu Học tập</h1>
           <div className="text-sm">
             {/* email  */}
-            <div className="mb-2">
+            <div className="mb-3">
               <h6>Tên người dùng</h6>
               <input
                 type="text"
@@ -85,7 +83,7 @@ const SignUp = () => {
                 className="border-[1px] border-slate-600 rounded-md w-full h-[35px] pl-3"
               />
             </div>
-            <div className="mb-2">
+            <div className="mb-3">
               <h6>Email</h6>
               <input
                 type="text"
@@ -98,7 +96,7 @@ const SignUp = () => {
             </div>
             {/* phone and gender  */}
 
-            <div className="mb-2 mt-2">
+            <div className="mb-3 mt-3">
               <h6>Mật khẩu</h6>
               <input
                 type="password"
@@ -110,7 +108,7 @@ const SignUp = () => {
               />
             </div>
             {/* address  */}
-            <div className="mb-2 mt-2">
+            <div className="mb-3 mt-3">
               <h6>Nhập lại mật khẩu</h6>
               <input
                 type="password"
@@ -125,7 +123,7 @@ const SignUp = () => {
               />
             </div>
             {/* submit  */}
-            <div className="flex items-center justify-center">
+            {/* <div className="flex items-center justify-center">
               <input
                 type="checkbox"
                 className="w-4 h-4 bg-gradient-to-r mt-3 from-blue-500 to-purple-500"
@@ -135,17 +133,17 @@ const SignUp = () => {
                 Đồng ý với Điều khoản sử dụng và Chính sách quyền riêng tư của
                 chúng tôi.
               </label>
-            </div>
-            <div className="flex space-x-5 mt-20 text-xs">
+            </div> */}
+            <div className="flex space-x-5 mt-4 text-xs">
               <button
                 onClick={signupHandler}
                 className="bg-gradient-to-r from-orange-500 to-blue-500 w-[195px] h-10 text-white rounded-lg"
               >
-                <strong> SignUp</strong>
+                <strong> Đăng ký</strong>
               </button>
               <Link to="/login">
                 <button className=" w-[195px] h-10 border-2 border-gray-500 rounded-lg">
-                  <strong> Back to Login</strong>
+                  <strong> Đăng nhập</strong>
                 </button>
               </Link>
             </div>
@@ -162,15 +160,13 @@ const SignUp = () => {
         }}
       >
         <div className="w-7/12 h-3/6 bg-white opacity-50 backdrop-filter backdrop-blur-sm m-auto ">
-          <div className="ml-10 mt-20 w-6/12 text-2xl">
-            <h1 className=" text-black">
-              <strong> Digital platform for distance</strong>{" "}
+          <div className="ml-10 mt-20 w-10/12 text-2xl">
+            <h1 className=" text-black font-semibold italic">
+              Nền tảng kỹ thuật số cho việc học từ xa
             </h1>
-            <h1 className="text-gray-600">
-              <strong> Learning.</strong>{" "}
-            </h1>
-            <h1 className="text-base">
-              You will never know everything. But you will know more.
+            <h1 className="text-base mt-4">
+              Bạn sẽ không bao giờ biết tất cả mọi thứ. Nhưng bạn sẽ biết nhiều
+              hơn.
             </h1>
           </div>
         </div>

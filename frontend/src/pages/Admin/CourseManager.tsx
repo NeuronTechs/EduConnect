@@ -11,7 +11,7 @@ import {
   Spinner,
 } from "@material-tailwind/react";
 import { PencilSimple } from "@phosphor-icons/react";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as adminApi from "../../api/adminApi/adminApi";
 import { Select } from "flowbite-react";
 import { useForm } from "react-hook-form";
@@ -271,13 +271,13 @@ const CourseManager = () => {
                           >
                             {u?.level}
                           </Typography>
-                          <Typography
+                          {/* <Typography
                             variant="small"
                             color="blue-gray"
                             className="font-normal"
                           >
                             {u?.language}
-                          </Typography>
+                          </Typography> */}
                         </div>
                       </td>
                       <td className={classes}>

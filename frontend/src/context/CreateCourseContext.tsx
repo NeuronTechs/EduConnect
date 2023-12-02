@@ -1,7 +1,7 @@
 import courseManageApi from "@/api/courseManageApi";
 import { ICourseDetail, ILessonInfo, ISectionInfo } from "@/types/type";
 import React from "react";
-import { set } from "react-hook-form";
+import { toast } from "react-toastify";
 
 interface ICurriculum {
   lessons: ILessonInfo[];
@@ -14,6 +14,7 @@ const dataCurriculum: ICurriculum = {
 };
 
 export interface ICreateCourseContext {
+  isLoading?: boolean;
   dataDescription: ICourseDetail | undefined;
   dataSection: ISectionInfo[];
   selectLesson: ILessonInfo | undefined;
@@ -30,6 +31,7 @@ export interface ICreateCourseContext {
 }
 
 export const CreateCourseContext = React.createContext<ICreateCourseContext>({
+  isLoading: false,
   dataDescription: undefined,
   dataSection: [],
   selectLesson: undefined,
@@ -77,9 +79,11 @@ const CreateCourseProvider = (props: { children: React.ReactNode }) => {
 
       setDataSection((cur) => [...cur, res as ISectionInfo]);
       setIsLoading(false);
+      toast.success("Thêm phần mới thành công");
     } catch (error) {
       setIsLoading(false);
       console.log(error);
+      toast.error("Thêm phần mới thất bại");
     }
   };
   const handleEditTitleSection = (id: string, title: string) => {
@@ -127,9 +131,11 @@ const CreateCourseProvider = (props: { children: React.ReactNode }) => {
         });
       }
       setIsLoading(false);
+      toast.success("Thêm bài học mới thành công");
     } catch (error) {
       console.log(error);
       setIsLoading(false);
+      toast.error("Thêm bài học mới thất bại");
     }
   };
 
@@ -152,9 +158,11 @@ const CreateCourseProvider = (props: { children: React.ReactNode }) => {
         );
       }
       setIsLoading(false);
+      toast.success("Xóa bài học thành công");
     } catch (error) {
       console.log(error);
       setIsLoading(false);
+      toast.error("Xóa bài học thất bại");
     }
   };
   const handleEditLesson = async (lesson: ILessonInfo) => {
@@ -176,9 +184,12 @@ const CreateCourseProvider = (props: { children: React.ReactNode }) => {
           )
         );
       }
+      setIsLoading(false);
+      toast.success("Cập nhật bài học thành công");
     } catch (error) {
       console.log(error);
       setIsLoading(false);
+      toast.error("Cập nhật bài học thất bại");
     }
   };
   const handlerSelectLesson = (lesson: ILessonInfo) => {
@@ -187,6 +198,7 @@ const CreateCourseProvider = (props: { children: React.ReactNode }) => {
   return (
     <CreateCourseContext.Provider
       value={{
+        isLoading,
         dataDescription,
         dataSection,
         selectLesson,

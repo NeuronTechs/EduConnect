@@ -22,6 +22,10 @@ router
 router
   .route("/questions/:idQuestion/answers/:idAnswer")
   .delete(quizController.deleteAnswerQuestionQuiz);
+//   answer all
+router
+  .route("/questions/:idQuestion/answers/all")
+  .put(quizController.updateAnswerQuestionMultiply);
 
 //   get quiz not expired
 router

@@ -30,9 +30,9 @@ const getTeacherRecommendations = async (req: Request, res: Response) => {
   }
 };
 const getTeacherDetail = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const { teacherId } = req.params;
   try {
-    const result = await teacherService.getTeacherDetail(id as string);
+    const result = await teacherService.getTeacherDetail(teacherId as string);
     if (result?.status) {
       res.status(200).json({
         status: 200,
@@ -126,7 +126,7 @@ const getCourseTeacher = async (req: Request, res: Response) => {
 };
 const updateCourseTeacher = async (req: Request, res: Response) => {
   const { courseId } = req.params;
-  const { body, file } = req;
+  const { body } = req;
   let imageT = null;
   if (!req.file) {
     imageT = {

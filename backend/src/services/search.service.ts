@@ -1,3 +1,4 @@
+import { QueryError } from "mysql2";
 import connectDB from "../config/connectDB";
 import { dataListResponse, dataResponse } from "../constant/type";
 interface ISearchService {
@@ -65,9 +66,9 @@ interface ISearch {
   topics?: ITopic[];
 }
 interface IResultSearch {
-  [0]: ICourse[];
-  [1]: ITeacher[];
-  [2]: ITopic[];
+  [0]: { course: ICourse; teacher: ITeacher; topic: ITopic; user: IUser }[];
+  [1]: { teacher: ITeacher; user: IUser }[];
+  [2]: { topic: ITopic; course_count: number }[];
 }
 
 const search = async (keyword: string, limit: number) => {
@@ -102,7 +103,61 @@ const search = async (keyword: string, limit: number) => {
           nestTables: true,
         },
 
-        (error, results: IResultSearch, fields) => {
+        (error: QueryError, results: IResultSearch, fields) => {
+          // console.log(results);
+          if (error) {
+            reject({
+              status: 500,
+              data: {},
+              message: error,
+            });
+            return;
+          }
+          const courses = results[0].map((item) => {
+            return {
+              ...item.course,
+              teacher: item.teacher,
+              topic: item.topic,
+              user: item.user,
+            };
+          });
+          const teachers = results[1].map((item) => {
+            return { ...item.teacher, user: item.user };
+          });
+          const topics = results[2].map((item) => {
+            return { ...item.topic, course_count: item.course_count };
+          });
+
+          resolve({
+            status: 200,
+            data: {
+              courses: courses as ICourse[],
+              teachers: teachers as ITeacher[],
+              topics: topics as ITopic[],
+            } as ISearch,
+            message: "search courses, teacher and topic successfully",
+          });
+        }
+      );
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+const suggestionSearch = async (keyword: string, limit: number) => {
+  try {
+    const query1 = `
+    SELECT * FROM course 
+    WHERE course.title LIKE ? LIMIT ?`;
+
+    return new Promise<dataResponse<ISearch>>(async (resolve, reject) => {
+      connectDB.connectionDB.query(
+        {
+          sql: query1,
+          values: [`%${keyword}%`, limit ? limit : 10],
+        },
+
+        (error: QueryError, results: ICourse[]) => {
           // console.log(results);
           if (error) {
             reject({
@@ -116,11 +171,9 @@ const search = async (keyword: string, limit: number) => {
           resolve({
             status: 200,
             data: {
-              courses: results[0] as ICourse[],
-              teachers: results[1] as ITeacher[],
-              topics: results[2] as ITopic[],
+              courses: results as ICourse[],
             } as ISearch,
-            message: "search courses, teacher and topic successfully",
+            message: "search courses successfully",
           });
         }
       );
@@ -129,5 +182,4 @@ const search = async (keyword: string, limit: number) => {
     throw error;
   }
 };
-
-export default { search };
+export default { search, suggestionSearch };

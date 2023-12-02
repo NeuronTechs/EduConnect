@@ -19,15 +19,28 @@ export interface ICourseDetail {
   title: string;
   description: string;
   image: string | FileList;
-  price: number;
-  study: string;
-  requirement: string;
+  price: object;
+  study: {
+    study1: string;
+    study2: string;
+    study3: string;
+    study4: string;
+    study5: string;
+    study6: string;
+  };
+  requirement: {
+    requirement1: string;
+    requirement2: string;
+    requirement3: string;
+    requirement4: string;
+    requirement5: string;
+    requirement6: string;
+  };
   level: string;
   language: string;
   discount: number;
   ranking?: number;
-  status?: string;
-  status_show?: string;
+  status?: number;
   duration?: number;
   duration_type?: string;
   total_ranking?: number;
@@ -66,7 +79,7 @@ export interface ITopic {
 export interface ITeacher {
   teacher_id: string;
   username: string;
-  introduce?: string;
+  description?: string;
   subject?: string;
   educational_level?: string;
   email: string;
@@ -265,7 +278,7 @@ export interface IAnswerInfo {
   question: string | null;
   answer: string;
   image: string | null;
-  isCorrect: boolean;
+  isCorrect: number;
   explain?: string | null;
 }
 export interface IQuestionInfo {
@@ -278,7 +291,7 @@ export interface IQuestionInfo {
   answers: IAnswerInfo[];
 }
 export interface IQuizInfo {
-  resource_id: string;
+  quiz_id: string;
   lecture_id: string;
   description: string;
   timeout: string;

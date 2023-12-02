@@ -23,6 +23,7 @@ const CreateContentCourse = (props: {
   React.useEffect(() => {
     const requestApi = async () => {
       if (dataDescription?.course_id) {
+        setIsLoading(true);
         try {
           const res = await courseManageApi.getSectionCourse(
             dataDescription.course_id
@@ -30,8 +31,10 @@ const CreateContentCourse = (props: {
           if (res) {
             setDataSection(res);
           }
+          setIsLoading(false);
         } catch (error) {
           console.log(error);
+          setIsLoading(false);
         }
       }
     };

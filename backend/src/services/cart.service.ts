@@ -1,4 +1,5 @@
 import db from "../config/connectDB";
+import { generateID } from "../constant/utils";
 
 const checkExistCourse = (
   student_id: String,
@@ -48,7 +49,7 @@ const addToCart = async (
     } else {
       const queryAddToCart =
         "INSERT INTO `cart` (`cart_id`, `student_id`,`course_id`) VALUES (?,?,?)";
-      const cart_id: String = `cart_${course_id}`;
+      const cart_id: String = `cart_${generateID()}_${course_id}`;
       return new Promise((resolve, reject) => {
         db.connectionDB.query(
           queryAddToCart,

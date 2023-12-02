@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { configRouter } from "@/configs/router";
 import { Button, Spinner, Typography } from "@material-tailwind/react";
 import * as authApi from "../api/authApi/authApi";
+import { toast } from "react-toastify";
 
 function ForgetPassword() {
   const [gmail, setEmail] = useState<string>("");
@@ -20,25 +21,30 @@ function ForgetPassword() {
     if (gmail === "") {
       setError("Hãy nhập email!!!");
       if (inputRef.current) inputRef.current.focus();
+      setLoading(false);
     } else {
       try {
-        const data = await authApi.forgetPassword(gmail);
+        const data = await authApi.forgetPassword(gmail.trim());
         if (data?.status === 200) {
           setLoading(false);
-          alert("Vui lòng kiểm tra email của bạn để thay đổi mật khẩu");
+          toast.success("Vui lòng kiểm tra email của bạn để thay đổi mật khẩu");
           nav(configRouter.login);
         }
       } catch (error: any) {
         setLoading(false);
-        alert(
-          "Tìm kiếm không trả về kết quả nào. Vui lòng thử lại với email khác."
-        );
+        if (error?.response?.data?.status === 500) {
+          toast.error("Đã tồn tại mã xác nhận. Vui lòng kiểm tra email");
+        } else {
+          toast.error(
+            "Tìm kiếm không trả về kết quả nào. Vui lòng thử lại với email khác."
+          );
+        }
         if (inputRef.current) inputRef.current.focus();
       }
     }
   };
   return (
-    <div className="w-full h-full bg-gray-200">
+    <div className="w-full h-full bg-gray-400">
       <div className="w-1/2 h-[300px] flex flex-col justify-center text-black absolute top-1/4 left-1/4 shadow-md bg-white rounded-lg p-3">
         <div className="m-[10px_15px]">
           <Typography className="font-semibold text-[25px]">
@@ -55,7 +61,7 @@ function ForgetPassword() {
             type="search"
             ref={inputRef}
             onChange={(e) => {
-              setEmail(e.target.value);
+              setEmail(e.target.value.trim());
             }}
             placeholder="Nhập email..."
             style={{

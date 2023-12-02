@@ -24,12 +24,14 @@ export const getComplaintDetail = async (complaint_id: string) => {
 
 export const resolveComplaintCourse = async (
   complaint_id: string,
-  course_id: string
+  course_id: string,
+  option: string
 ) => {
   try {
     const res = await httpRequest.post(`/course/resolve-complaint-course`, {
       complaint_id: complaint_id,
       course_id: course_id,
+      option: option,
     });
     return res;
   } catch (error) {

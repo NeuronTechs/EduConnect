@@ -58,10 +58,9 @@ const Home = () => {
           teacherApi.teacherRecommendationsApi({ limit: "5" }),
         ];
         const [courses, categories, teachers] = await Promise.all(promises);
-        setDataCourse(courses.data);
-        setDataCategory(categories.data as ITopic[]);
-        console.log(categories.data as ITopic[]);
-        setDataTeacher(teachers.data as ITeacher[]);
+        setDataCourse(courses);
+        setDataCategory(categories as ITopic[]);
+        setDataTeacher(teachers as ITeacher[]);
       } catch (error) {
         console.error(error);
       } finally {

@@ -10,7 +10,14 @@ import { User } from "@/type";
 import { configRouter } from "@/configs/router";
 import { CreateCourseContext } from "@/context/CreateCourseContext";
 // api
-import * as teacehrApi from "@/api/teacherApi/teacherApi";
+import * as teacherApi from "@/api/teacherApi/teacherApi";
+import {
+  Menu,
+  MenuHandler,
+  MenuItem,
+  MenuList,
+} from "@material-tailwind/react";
+import { toast } from "react-toastify";
 
 const CreateCourseTeacher = (): React.ReactElement => {
   // const [activeCreate, setActiveCreate] = React.useState<number>(0);
@@ -25,11 +32,10 @@ const CreateCourseTeacher = (): React.ReactElement => {
     if (dataDescription === undefined) {
       const requestApi = async () => {
         try {
-          const res = await teacehrApi.getCourseTeacherById({
+          const res = await teacherApi.getCourseTeacherById({
             teacherId: currentUser.user_id,
             courseId: param.id ? param.id : "",
           });
-          console.log(res.data);
           handleSetDataDescription(res.data);
         } catch (error) {
           console.log(error);
@@ -50,6 +56,7 @@ const CreateCourseTeacher = (): React.ReactElement => {
       <div className=" w-full h-full space-y-4">
         {/* <CreateCourseTitle /> */}
         <CreateCourseContainer />
+        {/* <ToastContainer /> */}
       </div>
     </LayoutCreateCourse>
   );
@@ -82,12 +89,7 @@ const LayoutCreateCourse = (props: {
 
         <div></div>
         <div className="flex items-center justify-center h-full px-5 gap-4">
-          <button
-            type="button"
-            className="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-1.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none "
-          >
-            Chế độ công khai
-          </button>
+          <MenuStatus />
           <button
             type="button"
             className="py-1.5 px-4 text-sm font-medium text-white focus:outline-none bg-gray-300/50 rounded-lg   hover:bg-blue-700 hover:text-white "
@@ -98,6 +100,50 @@ const LayoutCreateCourse = (props: {
       </div>
       {/* content */}
       <div className="w-full h-[calc(100vh-60px)]">{props.children}</div>
+    </div>
+  );
+};
+
+const MenuStatus = (): React.ReactElement => {
+  const [status, setStatus] = React.useState<number>(0);
+  const { dataDescription } = React.useContext(CreateCourseContext);
+  const handClick = (data: number) => {
+    const requestApi = async () => {
+      try {
+        if (dataDescription === undefined) {
+          return;
+        }
+
+        const res = await teacherApi.updateCourseTeacher({
+          ...dataDescription,
+          status: data,
+        });
+        console.log(res.data);
+        toast.success("Cập nhật thành công");
+      } catch (error) {
+        console.log(error);
+        toast.error("Cập nhật thất bại");
+      }
+    };
+    requestApi();
+    setStatus(data);
+  };
+  return (
+    <div className="flex items-center justify-center h-full px-5 gap-4">
+      <Menu>
+        <MenuHandler>
+          <button
+            type="button"
+            className="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-1.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none "
+          >
+            {status === 1 ? "Chế độ công khai" : "Chế độ riêng tư"}
+          </button>
+        </MenuHandler>
+        <MenuList>
+          <MenuItem onClick={() => handClick(1)}>Chế độ công khai</MenuItem>
+          <MenuItem onClick={() => handClick(0)}>Chế độ riêng tư</MenuItem>
+        </MenuList>
+      </Menu>
     </div>
   );
 };

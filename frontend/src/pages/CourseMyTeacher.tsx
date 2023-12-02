@@ -31,7 +31,7 @@ const CourseMyTeacher = (): React.ReactElement => {
       setIsLoading(false);
     };
     requestApi();
-  }, []);
+  }, [useCurrentUser.user_id]);
   return (
     <div className="w-full p-2 space-y-2">
       <div className="w-full px-3 py-2 flex items-center justify-between bg-white rounded-md">
