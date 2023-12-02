@@ -1,6 +1,6 @@
 import { selectLecture } from "@/features/course/courseSlice";
 import { AppDispatch } from "@/redux/store";
-import { ICourse, ILecture } from "@/types/type";
+import { ICourse, ILecture, SliceState } from "@/types/type";
 import {
   Accordion,
   AccordionHeader,
@@ -14,7 +14,7 @@ import {
   MonitorPlay,
 } from "@phosphor-icons/react";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 interface IconProps {
   open: boolean;
@@ -70,7 +70,8 @@ const LectureCard = (props: { Lecture: ILecture; index: number }) => {
           </div>
           {props.Lecture.has_watched !== "No" &&
             props.Lecture.has_watched !== undefined &&
-            props.Lecture.has_watched !== "0" && (
+            props.Lecture.has_watched !== null &&
+            parseInt(props.Lecture.has_watched) !== 0 && (
               <div className="rounded-full border-[0.5px] w-5 h-5 flex justify-center items-center border-green-500 bg-green-500">
                 <Check size={14} color="white" />
               </div>
@@ -122,11 +123,15 @@ const Session = (props: LectureProps) => {
 };
 
 const Modules = ({ currentCourse }: Props) => {
+  const currentCourseOverview = useSelector(
+    (state: SliceState) => state.courseOverviewSlice.courseCurrent
+  );
   return (
     <div className=" col-span-4 lg:col-span-1 h-auto p-4 py-2  sticky shadow-xl  border-l-2 border-gray-350 lg:h-[100vh] bg-white  lg:overflow-y-auto ">
       <h1 className="text-xl font-bold">Nội dung khóa học</h1>
       <p className="text-xs text-gray-500">
-        Số lượng bài học (15) / Tổng thời gian (5,5 hrs)
+        {" Số lượng bài học ( " + currentCourseOverview?.totalLecture + " )"} /
+        Tổng thời gian ({currentCourseOverview?.totalTime + " phút"})
       </p>
       <div className="mt-5">
         {currentCourse?.sessions?.map((session) => {

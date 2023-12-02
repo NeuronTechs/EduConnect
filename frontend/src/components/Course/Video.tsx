@@ -69,6 +69,9 @@ const Video = ({
       currentUser &&
       currentTime > 0
     ) {
+      if (typeof currentTime === "string") {
+        return;
+      }
       dispatch(
         updateStudentProgress({
           course_id: currentId.course_id,

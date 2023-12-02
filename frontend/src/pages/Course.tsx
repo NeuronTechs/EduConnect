@@ -8,9 +8,7 @@ import { getCourseDetails } from "@/features/course/courseSlice";
 import { AppDispatch } from "@/redux/store";
 import { SliceState } from "@/types/type";
 import Quiz from "@/components/Course/Quiz";
-import FullQuiz from "@/components/Course/FullQuiz";
 import Header from "@/components/Course/Header/Header";
-import { login } from "@/features/auth/authSlice";
 const Course = () => {
   const { id } = useParams();
   const currentUser = useSelector((state: SliceState) => state.authSlice);

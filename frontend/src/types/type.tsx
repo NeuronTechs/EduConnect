@@ -144,6 +144,7 @@ export interface ILecture {
   comments: IComment[] | null;
   duration: string;
   has_watched?: string;
+  comment_pages?: number;
 }
 
 export interface IConventionChat {

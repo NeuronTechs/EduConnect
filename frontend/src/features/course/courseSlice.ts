@@ -109,7 +109,11 @@ export const courseSlice = createSlice({
       if (state.currentCourse) {
         state.currentCourse.sessions?.forEach((session) => {
           session.lectures?.forEach((lecture) => {
-            if (lecture.has_watched) {
+            if (
+              lecture.has_watched &&
+              lecture.has_watched !== "No" &&
+              parseInt(lecture.has_watched) !== 0
+            ) {
               count++;
             } else if (
               lecture.lecture_id === action.payload.lecture_id &&
@@ -128,13 +132,15 @@ export const courseSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getCourseDetails.pending, (state) => {
+      state.currentLecture = null;
       state.loading = true;
     });
     builder.addCase(getCourseDetails.fulfilled, (state, action) => {
       state.loading = false;
       state.currentCourse = action.payload;
-      state.currentLecture =
-        action.payload?.sessions?.[0]?.lectures?.[0] ?? null;
+      if (state.currentLecture === null)
+        state.currentLecture =
+          action.payload?.sessions?.[0]?.lectures?.[0] ?? null;
       state.isError = false;
     });
     builder.addCase(getCourseDetails.rejected, (state, action) => {
@@ -166,7 +172,8 @@ export const courseSlice = createSlice({
       state.loading = false;
       state.error = undefined;
       state.isError = false;
-      state.comments?.push(action.payload);
+      if (action.payload.isReply === "false")
+        state.comments?.push(action.payload);
     });
     builder.addCase(CommentLecture.rejected, (state, action) => {
       state.loading = false;

@@ -23,4 +23,8 @@ router
   .route("/questions/:idQuestion/answers/:idAnswer")
   .delete(quizController.deleteAnswerQuestionQuiz);
 
+//   get quiz not expired
+router
+  .route("/quizNotExpired/:student_id")
+  .get(quizController.getQuizNotExpired);
 export default router;

@@ -72,10 +72,12 @@ const Quiz = ({ currentLecture }: QuizProps) => {
     }
   };
   React.useEffect(() => {
-    const timer = setTimeout(() => {
-      countdown();
-    }, 1000);
-    return () => clearTimeout(timer);
+    if (QuizComplete === false) {
+      const timer = setTimeout(() => {
+        countdown();
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
   });
 
   const getData = async () => {
@@ -87,6 +89,7 @@ const Quiz = ({ currentLecture }: QuizProps) => {
           currentUser.currentUser.user_id,
           res.quiz_id
         );
+
         if (res1) {
           setQuizComplete(true);
           setScore(parseInt(res1.score));
@@ -117,8 +120,6 @@ const Quiz = ({ currentLecture }: QuizProps) => {
     }
   }, [currentLecture]);
   const handleComplete = async () => {
-    console.log(answerList);
-
     if (quiz) {
       let score = 0;
       for (let i = 0; i < quiz.questions.length; i++) {
@@ -274,28 +275,32 @@ const Quiz = ({ currentLecture }: QuizProps) => {
                 Hiển thị toàn bộ
               </p>
               <div className="flex gap-4">
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (
-                      quiz &&
-                      currentQuestionIndex < quiz.questions.length - 1
-                    ) {
-                      setCurrentQuestionIndex(currentQuestionIndex + 1);
-                      setCurrentQuestion(
-                        quiz.questions[currentQuestionIndex + 1]
-                      );
-                    }
-                    // if (currentQuestion.id == data.length) setQuizComplete(true);
-                    // else setCurrentQuestion(data[currentQuestion.id]);
-                  }}
-                  className="text-white flex gap-2 items-center bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-4 py-2.5 text-center  mb-2"
-                >
-                  Next
-                  <CaretRight size={16} />
-                </button>
                 {quiz &&
-                  currentQuestionIndex === quiz?.questions.length - 1 && (
+                  currentQuestionIndex !== quiz?.questions.length - 1 && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (
+                          quiz &&
+                          currentQuestionIndex < quiz.questions.length - 1
+                        ) {
+                          setCurrentQuestionIndex(currentQuestionIndex + 1);
+                          setCurrentQuestion(
+                            quiz.questions[currentQuestionIndex + 1]
+                          );
+                        }
+                        // if (currentQuestion.id == data.length) setQuizComplete(true);
+                        // else setCurrentQuestion(data[currentQuestion.id]);
+                      }}
+                      className="text-white flex gap-2 items-center bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-4 py-2.5 text-center  mb-2"
+                    >
+                      Next
+                      <CaretRight size={16} />
+                    </button>
+                  )}
+                {quiz &&
+                  currentQuestionIndex === quiz?.questions.length - 1 &&
+                  QuizComplete === false && (
                     <button
                       onClick={handleComplete}
                       className="text-white flex gap-2 items-center bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-4 py-2.5 text-center  mb-2"
