@@ -26,10 +26,10 @@ const initialState: CourseState = {
 
 export const getCourseDetails = createAsyncThunk<
   ICourse,
-  { id: string; user_id: string }
+  { id: string; user_id: string; role: string }
 >(
   "course/getCourseDetails",
-  async (params: { id: string; user_id: string }) => {
+  async (params: { id: string; user_id: string; role: string }) => {
     const res = await courseApi.getCourseDetails(params);
     return res;
   }
@@ -113,6 +113,15 @@ export const courseSlice = createSlice({
           });
         });
       }
+    },
+    clearState: (state) => {
+      state.currentLecture = null;
+      state.currentCourse = null;
+      state.courses = null;
+      state.comments = null;
+      state.loading = false;
+      state.error = undefined;
+      state.isError = false;
     },
     handleStudentProgress: (state, action) => {
       let count = 0;
@@ -270,5 +279,6 @@ export const {
   selectLecture,
   handleStudentProgress,
   selectQuiz,
+  clearState,
 } = courseSlice.actions;
 export default courseSlice.reducer;

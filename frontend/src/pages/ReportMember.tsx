@@ -116,7 +116,7 @@ const ReportMember = () => {
                         color="blue-gray"
                         className="font-normal"
                       >
-                        {item.uv}
+                        {item.uv + " Thành viên"}
                       </Typography>
                     </td>
                   </tr>

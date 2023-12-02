@@ -39,54 +39,57 @@ const Video = ({
     }
   }, [currentTime]);
   useEffect(() => {
-    dispatch(
-      handleStudentProgress({
-        lecture_id: currentId?.lecture_id,
-        has_watched: currentTime,
-      })
-    );
-    if (
-      (currentId?.has_watched === "No" ||
-        currentId?.has_watched === undefined) &&
-      currentId !== null &&
-      currentUser &&
-      currentTime > 0
-    ) {
+    if (currentUser && currentUser.role === "0") {
       dispatch(
-        createStudentProgress({
-          course_id: currentCourse.course_id,
-          lecture_id: currentId.lecture_id?.toString(), // Convert lecture_id to string
-          session_id: currentId.session_id?.toString(),
-          progress: currentTime,
-          student_id: currentUser?.user_id,
+        handleStudentProgress({
+          lecture_id: currentId?.lecture_id,
+          has_watched: currentTime,
         })
       );
-      setCurrentId(currentLecture);
-    } else if (
-      currentId?.has_watched !== "No" &&
-      currentId !== null &&
-      currentUser &&
-      currentTime > 0
-    ) {
-      if (typeof currentTime === "string") {
-        return;
+      if (
+        (currentId?.has_watched === "No" ||
+          currentId?.has_watched === undefined ||
+          currentId?.has_watched === null) &&
+        currentId !== null &&
+        currentUser &&
+        currentTime > 0
+      ) {
+        dispatch(
+          createStudentProgress({
+            course_id: currentCourse.course_id,
+            lecture_id: currentId.lecture_id?.toString(), // Convert lecture_id to string
+            session_id: currentId.session_id?.toString(),
+            progress: currentTime,
+            student_id: currentUser?.user_id,
+          })
+        );
+        setCurrentId(currentLecture);
+      } else if (
+        currentId?.has_watched !== "No" &&
+        currentId !== null &&
+        currentUser &&
+        currentTime > 0
+      ) {
+        if (typeof currentTime === "string") {
+          return;
+        }
+        dispatch(
+          updateStudentProgress({
+            course_id: currentId.course_id,
+            lecture_id: currentId.lecture_id?.toString(), // Convert lecture_id to string
+            session_id: currentId.session_id?.toString(),
+            progress: currentTime,
+            student_id: currentUser?.user_id,
+          })
+        );
+        setCurrentId(currentLecture);
       }
-      dispatch(
-        updateStudentProgress({
-          course_id: currentId.course_id,
-          lecture_id: currentId.lecture_id?.toString(), // Convert lecture_id to string
-          session_id: currentId.session_id?.toString(),
-          progress: currentTime,
-          student_id: currentUser?.user_id,
-        })
-      );
-      setCurrentId(currentLecture);
-    }
 
-    if (videoRef.current && currentLecture?.has_watched !== "No") {
-      videoRef.current.currentTime = parseFloat(
-        currentLecture?.has_watched || "0"
-      );
+      if (videoRef.current && currentLecture?.has_watched !== "No") {
+        videoRef.current.currentTime = parseFloat(
+          currentLecture?.has_watched || "0"
+        );
+      }
     }
   }, [currentLecture]);
   const getEmbedUrl = (url: string) => {

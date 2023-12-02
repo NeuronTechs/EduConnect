@@ -12,4 +12,5 @@ router
   .post(middlewareController.verifyToken, adminController.setStatusUser);
 router.route("/list-course").get(adminController.getAllCourseWithTeacherData);
 router.route("/set-status-course").post(adminController.setStatusCourse);
+router.route("/teacher-sell-report").get(adminController.teacherSellReport);
 export default router;

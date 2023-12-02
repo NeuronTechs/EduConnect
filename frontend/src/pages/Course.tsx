@@ -18,11 +18,21 @@ const Course = () => {
   const [currentTime, setCurrentTime] = useState(0);
   const navigate = useNavigate();
   const getCourseDetailsStatus = async () => {
-    console.log("call",id,)
-    if (id !== undefined && currentUser.currentUser?.user_id) {
+    if (
+      id !== undefined &&
+      currentUser.currentUser?.role &&
+      (currentUser.currentUser?.user_id ||
+        currentUser.currentUser?.role === "2")
+    ) {
       const res = await dispatch(
-        getCourseDetails({ id: id, user_id: currentUser.currentUser?.user_id })
+        getCourseDetails({
+          id: id,
+          user_id: currentUser.currentUser?.user_id || "0",
+          role: currentUser.currentUser?.role,
+        })
       );
+      console.log(res);
+
       if (res.payload === undefined) {
         navigate("/404");
       } else {
@@ -53,16 +63,18 @@ const Course = () => {
           <div className=" grid grid-cols-4 space-x-2 overflow-y-hidden relative">
             <div className="col-span-4 lg:col-span-3 w-full h-auto lg:h-[100vh] lg:overflow-y-auto scrollbar-hide ">
               {currentCourse.currentLecture?.type === "video" &&
-              currentCourse.currentCourse ? (
-                <Video
-                  currentLecture={currentCourse.currentLecture}
-                  currentTime={currentTime}
-                  setCurrentTime={setCurrentTime}
-                  currentCourse={currentCourse.currentCourse}
-                />
-              ) : (
-                <Quiz currentLecture={currentCourse.currentLecture} />
-              )}
+                currentCourse.currentCourse && (
+                  <Video
+                    currentLecture={currentCourse.currentLecture}
+                    currentTime={currentTime}
+                    setCurrentTime={setCurrentTime}
+                    currentCourse={currentCourse.currentCourse}
+                  />
+                )}
+              {currentCourse.currentLecture?.type === "quiz" &&
+                currentCourse.currentCourse && (
+                  <Quiz currentLecture={currentCourse.currentLecture} />
+                )}
 
               <TabsInfo
                 currentLecture={currentCourse.currentLecture}

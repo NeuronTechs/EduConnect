@@ -80,8 +80,8 @@ const ReportSale = () => {
               <Line type="monotone" dataKey="uv" stroke="#8884d8" />
               <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
               <XAxis dataKey="name" interval={0} />
-              <YAxis />
-              <Tooltip />
+              <YAxis fontSize={12} tickFormatter={(value) => `${value} VNĐ`} />
+              <Tooltip formatter={(value) => `${value} VNĐ`} />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -130,7 +130,7 @@ const ReportSale = () => {
                         color="blue-gray"
                         className="font-normal"
                       >
-                        {item.uv}
+                        {item.uv + " VNĐ"}
                       </Typography>
                     </td>
                   </tr>

@@ -15,6 +15,7 @@ import { resetCheckOutCart } from "@/features/checkoutCourse/checkoutSlice";
 import { User } from "@/type";
 import ImageWithError from "../ImageWithError";
 import assets from "@/assets";
+import { clearState } from "@/features/course/courseSlice";
 
 const AccountHeader = () => {
   const nav = useNavigate();
@@ -28,6 +29,7 @@ const AccountHeader = () => {
     await dispatch(resetStoreCart());
     await dispatch(resetStoreCourseOverview());
     await dispatch(resetCheckOutCart());
+    await dispatch(clearState());
     nav(configRouter.login);
   };
   const handleRedirectTeacher = () => {

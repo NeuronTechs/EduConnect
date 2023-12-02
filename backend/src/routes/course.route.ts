@@ -22,7 +22,7 @@ router
   .route("/courses-by-student/:id")
   .get(middlewareController.verifyToken, courseController.getCourseByStudentId);
 router
-  .route("/course-details/:id/users/:user_id")
+  .route("/course-details/:id/users/:user_id/role/:role")
   .get(middlewareController.verifyToken, courseController.getCourseDetails);
 router
   .route("/overview-course/:id")

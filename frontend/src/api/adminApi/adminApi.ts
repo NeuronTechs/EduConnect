@@ -86,6 +86,17 @@ export const getAllCourseWithTeacherData = async (
   }
 };
 
+export const getTeacherSellReport = async (page: number) => {
+  try {
+    const res = await httpRequest.get(
+      `/admin/teacher-sell-report?page=${page}`
+    );
+    return res;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
 export const setStatusCourse = async (status: string, course_id: string) => {
   try {
     const res = await httpRequest.post(`/admin/set-status-course`, {
