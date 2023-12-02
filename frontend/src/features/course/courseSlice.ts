@@ -104,6 +104,16 @@ export const courseSlice = createSlice({
       state.currentLecture = action.payload;
       state.loading = false;
     },
+    selectQuiz: (state, action) => {
+      if (state.currentCourse) {
+        state.currentCourse.sessions?.forEach((session) => {
+          session.lectures?.forEach((lecture) => {
+            if (lecture.lecture_id === action.payload)
+              state.currentLecture = lecture;
+          });
+        });
+      }
+    },
     handleStudentProgress: (state, action) => {
       let count = 0;
       if (state.currentCourse) {
@@ -255,6 +265,10 @@ export const courseSlice = createSlice({
     });
   },
 });
-export const { resetStoreCourse, selectLecture, handleStudentProgress } =
-  courseSlice.actions;
+export const {
+  resetStoreCourse,
+  selectLecture,
+  handleStudentProgress,
+  selectQuiz,
+} = courseSlice.actions;
 export default courseSlice.reducer;

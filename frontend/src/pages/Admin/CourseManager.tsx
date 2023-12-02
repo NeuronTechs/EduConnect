@@ -41,7 +41,7 @@ interface ICourseInfo {
   username: string;
   total_page: number;
   language: string;
-  createdAt: string;
+  create_at: string;
 }
 interface Inputs {
   dataInput: string;
@@ -68,13 +68,16 @@ const CourseManager = () => {
         setLoading(false);
         setCourse(data1?.data);
         setTotalPage(data1?.data[0].total_page);
+        console.log(data1?.data[0]);
       } else {
         setLoading(false);
+        setTotalPage(1);
         alert(data1?.message);
       }
       console.log(data1);
     } catch (error) {
       setLoading(false);
+      setTotalPage(1);
       console.log(error);
     }
   };
@@ -290,7 +293,7 @@ const CourseManager = () => {
                         </Typography>
                       </td>
                       <td className={classes}>{u?.price}</td>
-                      <td className={classes}>{convertDate(u?.createdAt)}</td>
+                      <td className={classes}>{convertDate(u?.create_at)}</td>
                       <td className={classes}>
                         {u?.status === "1" || u?.status === "" ? (
                           <Typography
@@ -363,18 +366,20 @@ const CourseManager = () => {
                     </IconButton>
                   ))}
                 </div>
-                <Button
-                  variant="outlined"
-                  size="sm"
-                  className={`ml-3 ${
-                    currentPage === totalPage ? "hidden" : "block"
-                  } `}
-                  onClick={() => {
-                    setCurrentPage((prev) => prev + 1);
-                  }}
-                >
-                  Tiếp
-                </Button>
+                {currentPage < totalPage && (
+                  <Button
+                    variant="outlined"
+                    size="sm"
+                    className={`ml-3 ${
+                      currentPage === totalPage ? "hidden" : "block"
+                    } `}
+                    onClick={() => {
+                      setCurrentPage((prev) => prev + 1);
+                    }}
+                  >
+                    Tiếp
+                  </Button>
+                )}
               </CardFooter>
             )}
           </>

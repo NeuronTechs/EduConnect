@@ -4,13 +4,14 @@ import Video from "@/components/Course/Video";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getCourseDetails } from "@/features/course/courseSlice";
+import { getCourseDetails, selectQuiz } from "@/features/course/courseSlice";
 import { AppDispatch } from "@/redux/store";
 import { SliceState } from "@/types/type";
 import Quiz from "@/components/Course/Quiz";
 import Header from "@/components/Course/Header/Header";
 const Course = () => {
-  const { id } = useParams();
+  const { id, quiz } = useParams();
+
   const currentUser = useSelector((state: SliceState) => state.authSlice);
   const dispatch = useDispatch<AppDispatch>();
   const currentCourse = useSelector((state: SliceState) => state.courseSlice);
@@ -21,9 +22,12 @@ const Course = () => {
       const res = await dispatch(
         getCourseDetails({ id: id, user_id: currentUser.currentUser?.user_id })
       );
-      console.log(res);
       if (res.payload === undefined) {
         navigate("/404");
+      } else {
+        if (quiz !== undefined) {
+          dispatch(selectQuiz(quiz));
+        }
       }
     }
   };

@@ -412,6 +412,7 @@ export interface IQuiz {
   created_at?: string;
   updated_at?: string;
   name?: string;
+  course_id?: string;
 }
 export interface IQuestion {
   question_id: string;

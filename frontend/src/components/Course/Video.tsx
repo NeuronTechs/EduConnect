@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import { ICourse, ILecture, SliceState } from "@/types/type";
-import { useLocation } from "react-router-dom";
 import {
   createStudentProgress,
   handleStudentProgress,
@@ -119,7 +118,7 @@ const Video = ({
           onPause={onPause}
           onStateChange={onStateChange}
         />
-      ) : (
+      ) : currentLecture?.source !== "" ? (
         <video
           src={currentLecture?.source}
           className=" w-full aspect-video  bg-black"
@@ -135,6 +134,10 @@ const Video = ({
         >
           Your browser does not support the video tag.
         </video>
+      ) : (
+        <div className="w-full h-[75vh] flex justify-center items-center">
+          <p className="text-white text-2xl">Video không tồn tại</p>
+        </div>
       )}
     </div>
   );
