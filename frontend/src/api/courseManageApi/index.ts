@@ -20,17 +20,18 @@ const createSectionCourse = async (idCourse: string, data: any) => {
 };
 const updateSectionCourse = async (idCourse: string, data: any) => {
   try {
-    const res = await httpRequest.put(`/courses/${idCourse}/sections`, data);
+    const res = await httpRequest.put(`/courses/sections`, {
+      session_id: idCourse,
+      ...data,
+    });
     return res.data;
   } catch (error) {
     return Promise.reject(error);
   }
 };
-const deleteSectionCourse = async (idCourse: string, idSection: string) => {
+const deleteSectionCourse = async (idSection: string) => {
   try {
-    const res = await httpRequest.deleted(
-      `/courses/${idCourse}/sections/${idSection}`
-    );
+    const res = await httpRequest.deleted(`/courses/sections/${idSection}`);
     return res?.data;
   } catch (error) {
     return Promise.reject(error);

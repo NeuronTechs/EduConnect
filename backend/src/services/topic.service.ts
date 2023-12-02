@@ -92,8 +92,13 @@ const formatCourse = (courses: ICourseResult[]) => {
 // get courses recommend for user
 const getCoursesRecommend = async () => {
   try {
-    const queryCheckExistCourse =
-      "SELECT course.*, teacher.*, user.*, topic.* FROM course JOIN teacher ON course.teacher_id = teacher.teacher_id JOIN user ON teacher.username = user.username JOIN topic ON course.topic_id = topic.topic_id WHERE course.status = 2 LIMIT 10";
+    const queryCheckExistCourse = `SELECT  course.*, AVG(review.rating) as ranking, COUNT(review.review_id) as total_ranking
+      FROM course
+      JOIN review ON course.course_id = review.course_id
+      WHERE course.status = 2
+      GROUP BY course.course_id, course.title
+      ORDER BY ranking DESC
+      LIMIT 10;`;
     return new Promise<dataListResponse<ICourse>>((resolve, reject) => {
       db.connectionDB.query(
         { sql: queryCheckExistCourse, nestTables: true },
@@ -107,10 +112,11 @@ const getCoursesRecommend = async () => {
             });
             return;
           }
+          console.log(results);
           resolve({
             status: 200,
             data: formatCourse(results) as ICourse[],
-            message: "Get courses successfully",
+            message: "Get courses successfully 1",
           });
         }
       );

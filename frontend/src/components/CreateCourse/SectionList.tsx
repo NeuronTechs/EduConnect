@@ -1,9 +1,4 @@
-import {
-  DotsSixVertical,
-  Pencil,
-  PlusCircle,
-  Trash,
-} from "@phosphor-icons/react";
+import { DotsSixVertical, PlusCircle, Trash } from "@phosphor-icons/react";
 import React from "react";
 import LessonList from "./LessonList";
 //
@@ -16,6 +11,7 @@ import {
   CreateCourseContext,
   ICreateCourseContext,
 } from "@/context/CreateCourseContext";
+import InputEditTitle from "./CreateLesson/Quiz/InputEditTitle";
 
 // fake data generator
 const SectionList = (props: {
@@ -88,9 +84,8 @@ const ItemSection = (props: {
   data: ISectionInfo;
 }): React.ReactElement => {
   const [isHovered, setIsHovered] = React.useState(false);
-  const [isEditing, setIsEditing] = React.useState(false);
 
-  const { handleDeleteSection } = React.useContext(
+  const { handleDeleteSection, handleEditTitleSection } = React.useContext(
     CreateCourseContext
   ) as ICreateCourseContext;
 
@@ -108,13 +103,6 @@ const ItemSection = (props: {
 
   const handleMouseLeave = () => {
     setIsHovered(false);
-  };
-  const handleTitleClick = () => {
-    setIsEditing(true);
-  };
-
-  const handleTitleBlur = () => {
-    setIsEditing(false);
   };
 
   const handleNewLessonClick = () => {
@@ -140,25 +128,17 @@ const ItemSection = (props: {
           <div className="flex items-center justify-center" {...listeners}>
             <DotsSixVertical size={20} className="cursor-pointer" />
           </div>
-          <div
-            className={`w-full text-sm font-bold overflow-hidden ${
-              isEditing
-                ? "[&[contenteditable]]:focus:outline-none [&[contenteditable]]:focus:border [&[contenteditable]]:focus:border-blue-500"
-                : ""
-            }}`}
-            onClick={handleTitleClick}
-            onBlur={handleTitleBlur}
-            contentEditable={isEditing}
-          >
-            <p className="w-full overflow-hidden text-ellipsis whitespace-nowrap">
-              {props.data.name}
-            </p>
-          </div>
-          {isHovered && !isEditing && (
+          <InputEditTitle
+            onSubmit={(data) =>
+              handleEditTitleSection(props.data.session_id, data)
+            }
+            value={props.data.name}
+          />
+          {/* {isHovered && !isEditing && (
             <div onClick={handleTitleClick}>
               <Pencil size={15} className="cursor-pointer" />
             </div>
-          )}
+          )} */}
         </div>
         <div className="flex gap-2">
           {isHovered && (

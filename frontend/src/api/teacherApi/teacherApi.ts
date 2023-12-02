@@ -99,7 +99,7 @@ export const updateCourseTeacher = async (data: ICourseDetail) => {
       headers as AxiosRequestHeaders
     );
 
-    return res;
+    return res.data;
   } catch (error) {
     return Promise.reject(error);
   }

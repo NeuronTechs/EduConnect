@@ -215,7 +215,7 @@ const createCourseSection = async (section: ISection) => {
   });
 };
 const updateSectionOfCourse = async (section: ISection) => {
-  const query = `UPDATE session SET ? WHERE section_id = ?`;
+  const query = `UPDATE session SET ? WHERE session_id = ?`;
   return new Promise<dataResponse<ISection>>((resolve, rejects) => {
     try {
       connectDB.connectionDB.query(
@@ -246,7 +246,7 @@ const updateSectionOfCourse = async (section: ISection) => {
   });
 };
 const deleteSectionOfCourse = async (section_id: string) => {
-  const query = `DELETE FROM session WHERE section_id = ?`;
+  const query = `DELETE FROM session WHERE session_id = ?`;
   return new Promise<dataResponse<ISection>>((resolve, rejects) => {
     try {
       connectDB.connectionDB.query(
