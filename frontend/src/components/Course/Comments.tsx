@@ -19,6 +19,7 @@ interface commentProps {
 }
 
 const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
+  const currentUser = useSelector((state: SliceState) => state.authSlice);
   const [isReply, setIsReply] = useState(false);
   const [Positive, setPositive] = useState<boolean | null>(null);
   const [page, setPage] = useState(1);
@@ -75,9 +76,9 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
             loading="lazy"
             className="w-[40px] h-[40px]"
             src={
-              comment.avatar !== null
+              comment.avatar !== undefined
                 ? comment.avatar
-                : "https://png.pngtree.com/png-clipart/20200224/original/pngtree-cartoon-color-simple-male-avatar-png-image_5230557.jpg"
+                : currentUser.currentUser?.avatar
             }
             alt="avatar"
           />
@@ -210,7 +211,7 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
             {comment.isReply === "false" &&
               showReply === true &&
               comment.reply_count &&
-              comment.reply_count / 3 + 1 >= page && (
+              comment.reply_count / 3 + 1.5 >= page && (
                 <p
                   className="ml-[100px] text-blue-500 text-base font-light cursor-pointer"
                   onClick={loadReplyCommentHandler}
