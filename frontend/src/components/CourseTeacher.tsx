@@ -6,13 +6,13 @@ import {
   UsersThree,
 } from "@phosphor-icons/react";
 import React from "react";
-import { Rating } from "flowbite-react";
 import { Link } from "react-router-dom";
 import { configRouter } from "@/configs/router";
 import { ICourseDetail } from "@/types/type";
 import ImageWithError from "./ImageWithError";
 import assets from "@/assets";
 import { CreateCourseContext } from "@/context/CreateCourseContext";
+import Start from "./Start";
 interface IProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: ICourseDetail;
@@ -71,14 +71,15 @@ const CourseTeacher = (props: IProps): React.ReactElement => {
         {/* rating */}
         <div className="w-full flex justify-between flex-col gap-3">
           <div className="flex gap-1 items-center">
-            <Rating size={"sm"}>
-              <Rating.Star />
-              <Rating.Star />
-              <Rating.Star />
-              <Rating.Star />
-              <Rating.Star filled={false} />
-            </Rating>
-            <p className="text-xs font-medium">5</p>
+            <Start
+              scoreReview={Math.round(
+                props.data.ranking ? props.data.ranking : 0
+              )}
+              totalReview={
+                props.data.total_review ? props.data.total_review : 0
+              }
+            />
+            <p className="text-xs font-medium">{}</p>
           </div>
           <div className="flex flex-col">
             <p className="text-xs text-black font-extralight">
@@ -105,7 +106,7 @@ const CourseTeacher = (props: IProps): React.ReactElement => {
                 <SealCheck size={15} />
               </div>
               <p className="text-xs font-bold leading-3">
-                {props.data.total_enrollment ? props.data.total_enrollment : 0}
+                {props.data.total_review ? props.data.total_review : 0}
               </p>
             </div>
             <div className="flex items-center gap-1 p-1 ">

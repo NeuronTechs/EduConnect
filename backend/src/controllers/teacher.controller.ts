@@ -231,7 +231,6 @@ const getCourseByTeacher = async (req: Request, res: Response) => {
       id as string,
       parseInt(req.query.limit as string)
     );
-    console.log(result);
     if (result?.status) {
       res.status(200).json({
         status: 200,

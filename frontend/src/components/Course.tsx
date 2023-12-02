@@ -9,7 +9,7 @@ import { ICourseDetail } from "../types/type";
 import { Link } from "react-router-dom";
 import ImageWithError from "./ImageWithError";
 import assets from "@/assets";
-import { Rating } from "flowbite-react";
+import Start from "./Start";
 
 interface props {
   data: ICourseDetail;
@@ -56,14 +56,14 @@ const Course = (props: props): React.ReactElement => {
           {/* rating */}
           <div className="w-full flex justify-between flex-col gap-3">
             <div className="flex gap-1 items-center">
-              <Rating size={"sm"}>
-                <Rating.Star />
-                <Rating.Star />
-                <Rating.Star />
-                <Rating.Star />
-                <Rating.Star filled={false} />
-              </Rating>
-              <p className="text-xs font-medium">{props.data?.ranking || 0}</p>
+              <Start
+                scoreReview={Math.floor(
+                  props.data?.ranking ? props.data.ranking : 0
+                )}
+                totalReview={
+                  props.data.total_review ? props.data.total_review : 0
+                }
+              />
             </div>
             <div className="flex flex-col">
               <p className="text-xs text-black font-extralight">
@@ -90,7 +90,7 @@ const Course = (props: props): React.ReactElement => {
               </div>
               <p className="text-xs font-bold leading-3">
                 {/* check out */}
-                {props.data?.total_enrollment || 0}
+                {props.data?.total_review || 0}
               </p>
             </div>
             <div className="flex items-center gap-1 p-1 ">

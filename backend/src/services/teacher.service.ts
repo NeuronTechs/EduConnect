@@ -89,10 +89,18 @@ interface ICourseResult {
   teacher: ITeacher;
   user: IUser;
   topic: ITopic;
+  transactions?: {
+    total_student: number;
+  };
+  review?: {
+    total_review: number;
+    score_review: number;
+  };
 }
 interface ITeacherResult {
   teacher: ITeacher;
   user: IUser;
+  "": { totalCourse: number; totalStudent: number };
 }
 
 interface TransformedData {
@@ -118,9 +126,13 @@ interface StudentOfCourse {
 // recommend teacher for user
 const getTeacherRecommendations = async (limit: string) => {
   try {
-    const query = `SELECT * FROM teacher JOIN user ON teacher.username = user.username  limit ${
-      limit ? limit : 10
-    };`;
+    const query = `SELECT teacher.*, user.*, COUNT(DISTINCT course.course_id) as totalCourse  , count(DISTINCT transactions.student_id) as totalStudent
+    FROM teacher 
+    LEFT JOIN user ON teacher.username = user.username 
+    LEFT JOIN course ON teacher.teacher_id = course.teacher_id  
+    LEFT JOIN transactions ON transactions.course_id = course.course_id   
+    GROUP BY teacher.teacher_id 
+    limit ${limit ? limit : 10};`;
     return new Promise<dataListResponse<ITeacher>>((resolve, reject) => {
       db.connectionDB.query(
         { sql: query, nestTables: true },
@@ -134,12 +146,20 @@ const getTeacherRecommendations = async (limit: string) => {
             });
             return;
           }
+          console.log(course);
           const data = course.map((result) => {
             return {
               ...result?.teacher,
               user: result?.user,
+              totalCourse: result[""].totalCourse
+                ? result?.[""].totalCourse
+                : 0,
+              totalStudent: result[""].totalStudent
+                ? result?.[""].totalStudent
+                : 0,
             };
           });
+          console.log(data);
           resolve({
             status: 200,
             data: data as ITeacher[],
@@ -154,12 +174,15 @@ const getTeacherRecommendations = async (limit: string) => {
 };
 const getTeacherDetail = async (id: string) => {
   try {
-    const query = `SELECT teacher.*, user.*, COUNT(DISTINCT course.course_id) as total_courses  
+    const query = `SELECT teacher.*, user.*, COUNT(DISTINCT course.course_id) as totalCourse  , count(DISTINCT transactions.student_id) as totalStudent
     FROM teacher 
     LEFT JOIN course ON teacher.teacher_id = course.teacher_id  
+    LEFT JOIN transactions ON transactions.course_id = course.course_id  
     LEFT JOIN user ON teacher.username = user.username  
     WHERE teacher.teacher_id ='${id}' 
-    GROUP BY teacher.teacher_id;`;
+    GROUP BY teacher.teacher_id;
+    
+    `;
     return new Promise<dataResponse<ITeacher>>((resolve, reject) => {
       db.connectionDB.query(
         { sql: query, nestTables: true },
@@ -168,7 +191,7 @@ const getTeacherDetail = async (id: string) => {
           course: {
             teacher: ITeacher;
             user: IUser;
-            total_courses: number;
+            "": { totalCourse: number; totalStudent: number };
           }[],
           fields
         ) => {
@@ -183,7 +206,8 @@ const getTeacherDetail = async (id: string) => {
           const data = {
             ...course[0]?.teacher,
             user: course[0]?.user,
-            total_courses: course[0]?.total_courses,
+            totalCourse: course[0]?.[""].totalCourse,
+            totalStudent: course[0]?.[""].totalStudent,
           };
           resolve({
             status: 200,
@@ -320,7 +344,11 @@ const updateCourseTeacher = async (id: string, data: ICourse) => {
 };
 const getCourseTeacherById = async (id: string) => {
   try {
-    const query = `SELECT course.*, teacher.*, user.*, topic.* FROM course JOIN teacher ON course.teacher_id = teacher.teacher_id JOIN user ON teacher.username = user.username JOIN topic ON course.topic_id = topic.topic_id WHERE course.course_id = ? ;`;
+    const query = `SELECT course.*, teacher.*, user.*, topic.* 
+    FROM course JOIN teacher ON course.teacher_id = teacher.teacher_id 
+    JOIN user ON teacher.username = user.username 
+    JOIN topic ON course.topic_id = topic.topic_id 
+    WHERE course.course_id = ? ;`;
     return new Promise<dataResponse<ICourse>>((resolve, reject) => {
       db.connectionDB.query(
         {
@@ -452,7 +480,16 @@ const getCourseByTeacher2 = (
   limit: number
 ): Promise<any> => {
   try {
-    const query = `SELECT course.*, teacher.*, user.*, topic.* FROM course JOIN teacher ON course.teacher_id = teacher.teacher_id JOIN user ON teacher.username = user.username JOIN topic ON course.topic_id = topic.topic_id WHERE teacher.teacher_id = ?  LIMIT ?`;
+    const query = `SELECT course.*, teacher.*, user.*, topic.* , total_student, total_review, score_review
+    FROM course JOIN teacher ON course.teacher_id = teacher.teacher_id 
+    JOIN user ON teacher.username = user.username 
+    JOIN topic ON course.topic_id = topic.topic_id 
+    LEFT JOIN (SELECT course_id, COUNT(student_id) as total_student 
+    FROM transactions GROUP BY course_id) as transactions ON transactions.course_id = course.course_id
+    LEFT JOIN (SELECT course_id, AVG(rating) as score_review, COUNT(review_id) as total_review 
+    FROM review GROUP BY course_id) as review ON review.course_id = course.course_id
+    WHERE teacher.teacher_id = ?  
+    LIMIT ?`;
     return new Promise<dataListResponse<ICourse>>((resolve, reject) => {
       db.connectionDB.query(
         {
@@ -475,9 +512,12 @@ const getCourseByTeacher2 = (
                 teacher: result.teacher,
                 user: result.user,
                 topic: result.topic,
+                total_student: result.transactions?.total_student,
+                total_review: result.review?.total_review,
+                ranking: result.review?.score_review,
               };
             });
-            console.log(dataResult);
+            console.log(results);
             resolve({
               status: 200,
               data: dataResult as ICourse[],

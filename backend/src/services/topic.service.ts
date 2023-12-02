@@ -76,6 +76,13 @@ interface ICourseResult {
   teacher: ITeacher;
   user: IUser;
   topic: ITopic;
+  transactions?: {
+    total_student: number;
+  };
+  review?: {
+    total_review: number;
+    score_review: number;
+  };
 }
 // Transform the nested results into the desired format
 const formatCourse = (courses: ICourseResult[]) => {
@@ -85,6 +92,9 @@ const formatCourse = (courses: ICourseResult[]) => {
       teacher: result.teacher,
       user: result.user,
       topic: result.topic,
+      total_student: result.transactions?.total_student,
+      total_review: result.review?.total_review,
+      ranking: result.review?.score_review,
     };
   });
 };
@@ -92,12 +102,15 @@ const formatCourse = (courses: ICourseResult[]) => {
 // get courses recommend for user
 const getCoursesRecommend = async () => {
   try {
-    const queryCheckExistCourse = `SELECT  course.*, AVG(review.rating) as ranking, COUNT(review.review_id) as total_ranking
-      FROM course
-      JOIN review ON course.course_id = review.course_id
+    const queryCheckExistCourse = `SELECT course.*, teacher.*, user.*, topic.* , total_student, total_review, score_review
+      FROM course JOIN teacher ON course.teacher_id = teacher.teacher_id 
+      JOIN user ON teacher.username = user.username 
+      JOIN topic ON course.topic_id = topic.topic_id 
+      LEFT JOIN (SELECT course_id, COUNT(student_id) as total_student 
+      FROM transactions GROUP BY course_id) as transactions ON transactions.course_id = course.course_id
+      LEFT JOIN (SELECT course_id, AVG(rating) as score_review, COUNT(review_id) as total_review 
+      FROM review GROUP BY course_id) as review ON review.course_id = course.course_id
       WHERE course.status = 2
-      GROUP BY course.course_id, course.title
-      ORDER BY ranking DESC
       LIMIT 10;`;
     return new Promise<dataListResponse<ICourse>>((resolve, reject) => {
       db.connectionDB.query(
@@ -130,10 +143,15 @@ const getCoursesRecommend = async () => {
 
 const getTopicCourses = async (id: string, limit: number) => {
   try {
-    const queryCheckExistCourse = `SELECT * FROM course 
+    const queryCheckExistCourse = `SELECT course.*, teacher.*, user.*, topic.* , total_student, total_review, score_review
+    FROM course 
     JOIN teacher ON course.teacher_id = teacher.teacher_id 
     JOIN topic ON course.topic_id = topic.topic_id 
     JOIN user ON teacher.username = user.username  
+    LEFT JOIN (SELECT course_id, COUNT(student_id) as total_student 
+    FROM transactions GROUP BY course_id) as transactions ON transactions.course_id = course.course_id
+    LEFT JOIN (SELECT course_id, AVG(rating) as score_review, COUNT(review_id) as total_review 
+    FROM review GROUP BY course_id) as review ON review.course_id = course.course_id
     WHERE topic.topic_id = ${id} AND course.status = 2 
     LIMIT ${limit ? limit : 10}`;
     return new Promise<dataListResponse<ICourse>>((resolve, reject) => {

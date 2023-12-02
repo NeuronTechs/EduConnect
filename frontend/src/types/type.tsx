@@ -48,12 +48,12 @@ export interface ICourseDetail {
     study6: string;
   };
   requirement: {
-    requirement1: string;
-    requirement2: string;
-    requirement3: string;
-    requirement4: string;
-    requirement5: string;
-    requirement6: string;
+    require1: string;
+    require2: string;
+    require3: string;
+    require4: string;
+    require5: string;
+    require6: string;
   };
   level: string;
   language: string;
@@ -62,8 +62,9 @@ export interface ICourseDetail {
   status?: number;
   duration?: number;
   duration_type?: string;
-  total_ranking?: number;
+  // total_ranking?: number;
   total_enrollment?: number;
+  total_review?: number;
   total_lecture?: number;
   total_hour?: number;
   total_student?: number;

@@ -150,12 +150,12 @@ interface IInputTarget {
     study6: string;
   };
   requirement: {
-    requirement1: string;
-    requirement2: string;
-    requirement3: string;
-    requirement4: string;
-    requirement5: string;
-    requirement6: string;
+    require1: string;
+    require2: string;
+    require3: string;
+    require4: string;
+    require5: string;
+    require6: string;
   };
 }
 const TargetCreateCourseTeacher = (): React.ReactElement => {
@@ -170,15 +170,16 @@ const TargetCreateCourseTeacher = (): React.ReactElement => {
       study6: "",
     },
     requirement: {
-      requirement1: "",
-      requirement2: "",
-      requirement3: "",
-      requirement4: "",
-      requirement5: "",
-      requirement6: "",
+      require1: "",
+      require2: "",
+      require3: "",
+      require4: "",
+      require5: "",
+      require6: "",
     },
   };
-  const { dataDescription } = React.useContext(CreateCourseContext);
+  const { dataDescription, handleSetDataDescription } =
+    React.useContext(CreateCourseContext);
 
   const {
     register,
@@ -204,7 +205,11 @@ const TargetCreateCourseTeacher = (): React.ReactElement => {
         requirement: data.requirement,
       });
       setIsLoading(false);
-
+      handleSetDataDescription({
+        ...dataDescription,
+        study: data.study,
+        requirement: data.requirement,
+      });
       toast.success("Cập nhật thành công");
     } catch (error) {
       console.log(error);
@@ -323,57 +328,57 @@ const TargetCreateCourseTeacher = (): React.ReactElement => {
           </p>
 
           <input
-            {...register("requirement.requirement1", { required: true })}
+            {...register("requirement.require1", { required: true })}
             placeholder="Ví dụ: Không có yêu cầu hoặc điều kiện tiên quyết nào..."
             type="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
-          {errors.requirement?.requirement1 && (
+          {errors.requirement?.require1 && (
             <p className="text-sm text-red-500">Không được để trống</p>
           )}
           <input
-            {...register("requirement.requirement2", { required: true })}
+            {...register("requirement.require2", { required: true })}
             placeholder="Ví dụ: Không có yêu cầu hoặc điều kiện tiên quyết nào..."
             type="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
-          {errors.requirement?.requirement2 && (
+          {errors.requirement?.require2 && (
             <p className="text-sm text-red-500">Không được để trống</p>
           )}
           <input
-            {...register("requirement.requirement3", { required: true })}
+            {...register("requirement.require3", { required: true })}
             placeholder="Ví dụ: Không có yêu cầu hoặc điều kiện tiên quyết nào..."
             type="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
-          {errors.requirement?.requirement3 && (
+          {errors.requirement?.require3 && (
             <p className="text-sm text-red-500">Không được để trống</p>
           )}
           <input
-            {...register("requirement.requirement4", { required: true })}
+            {...register("requirement.require4", { required: true })}
             placeholder="Ví dụ: Không có yêu cầu hoặc điều kiện tiên quyết nào..."
             type="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
-          {errors.requirement?.requirement4 && (
+          {errors.requirement?.require4 && (
             <p className="text-sm text-red-500">Không được để trống</p>
           )}
           <input
-            {...register("requirement.requirement5", { required: true })}
+            {...register("requirement.require5", { required: true })}
             placeholder="Ví dụ: Không có yêu cầu hoặc điều kiện tiên quyết nào..."
             type="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
-          {errors.requirement?.requirement5 && (
+          {errors.requirement?.require5 && (
             <p className="text-sm text-red-500">Không được để trống</p>
           )}
           <input
-            {...register("requirement.requirement6", { required: true })}
+            {...register("requirement.require6", { required: true })}
             placeholder="Ví dụ: Không có yêu cầu hoặc điều kiện tiên quyết nào..."
             type="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
-          {errors.requirement?.requirement6 && (
+          {errors.requirement?.require6 && (
             <p className="text-sm text-red-500">Không được để trống</p>
           )}
           {/* <p className="text-base font-normal text-blue-500 py-3 flex gap-2 items-center leading-3 cursor-pointer">
@@ -422,7 +427,8 @@ const TargetCreateCourseTeacher = (): React.ReactElement => {
   );
 };
 const PriceCreateCourseTeacher = (): React.ReactElement => {
-  const { dataDescription } = React.useContext(CreateCourseContext);
+  const { dataDescription, handleSetDataDescription } =
+    React.useContext(CreateCourseContext);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const {
     register,
@@ -443,7 +449,9 @@ const PriceCreateCourseTeacher = (): React.ReactElement => {
     try {
       setIsLoading(true);
       await teacherApi.updateCourseTeacher(data);
+
       setIsLoading(false);
+      handleSetDataDescription({ ...dataDescription, ...data });
       toast.success("Cập nhật thành công");
     } catch (error) {
       console.log(error);
