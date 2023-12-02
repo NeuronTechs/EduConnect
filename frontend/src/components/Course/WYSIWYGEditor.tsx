@@ -49,7 +49,7 @@ const WYSIWYGEditor = ({
       console.log(formData);
       const res = await dispatch(CommentLecture(formData));
       if (Reply && setReply && res.payload) {
-        setReply((prev: IComment[]) => [...prev]);
+        setReply((prev: IComment[]) => [res.payload as IComment, ...prev]);
       }
 
       setContent("");
