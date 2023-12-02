@@ -115,6 +115,7 @@ const Quiz = ({ currentLecture }: QuizProps) => {
     if (currentLecture?.type === "quiz") {
       getData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentLecture]);
   const handleComplete = async () => {
     console.log(answerList);
