@@ -1,6 +1,6 @@
 import { AddressBook, Note } from "@phosphor-icons/react";
 import React, { useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   UseFormHandleSubmit,
@@ -90,6 +90,7 @@ const StepperCreateCourse = ({
       level: data.level,
       topic_id: data.topic,
       teacher_id: useCurrentUser.user_id,
+      status: 0,
     };
     try {
       await courseApi.createCourse(dataCourse);

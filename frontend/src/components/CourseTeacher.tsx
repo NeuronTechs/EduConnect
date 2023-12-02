@@ -35,7 +35,9 @@ const CourseTeacher = (props: IProps): React.ReactElement => {
             className="w-full h-full object-fill rounded-2xl"
           />
           <div className="bg-blue-500 absolute top-1 right-2 text-xs font-bold text-white px-2 py-1 rounded-full">
-            {props.data.status_show ? "Đang công khai" : "Đang ẩn"}
+            {parseInt(`${props.data.status}`) === 0 && "Bảng nháp"}
+            {parseInt(`${props.data.status}`) === 1 && "Đang duyệt"}
+            {parseInt(`${props.data.status}`) === 2 && "Công khai"}
           </div>
         </div>
         <div className="w-full flex justify-between">
