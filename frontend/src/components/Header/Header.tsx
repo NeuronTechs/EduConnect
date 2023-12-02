@@ -1,5 +1,5 @@
 import SearchHeader from "./SearchHeader";
-import NotificationHeader from "./NotificationHeader";
+// import NotificationHeader from "./NotificationHeader";
 import AccountHeader from "./AccountHeader";
 // import MessageHeader from "./MessageHeader";
 import { List } from "@phosphor-icons/react";
@@ -27,7 +27,7 @@ const Header = (props: propsHeader): React.ReactElement => {
         <SearchHeader />
       </div>
       <div className="right flex gap-3 items-center">
-        <NotificationHeader />
+        {/* <NotificationHeader /> */}
         {/* <MessageHeader /> */}
         {currentUser?.role === "0" && <CourseCart />}
         <AccountHeader />

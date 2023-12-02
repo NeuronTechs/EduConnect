@@ -40,7 +40,10 @@ const Login = () => {
 
     try {
       if (loginSuccess.type === "auth/login/fulfilled") {
-        navigate("/");
+        if (loginSuccess.payload?.role === "0") navigate("/");
+        else if (loginSuccess.payload?.role === "1")
+          navigate(configRouter.dashboardTeacher);
+        else navigate(configRouter.dashboardAdmin);
       } else {
         notify(loginSuccess?.error?.message);
       }

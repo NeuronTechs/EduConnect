@@ -18,6 +18,7 @@ const Course = () => {
   const [currentTime, setCurrentTime] = useState(0);
   const navigate = useNavigate();
   const getCourseDetailsStatus = async () => {
+    console.log("call",id,)
     if (id !== undefined && currentUser.currentUser?.user_id) {
       const res = await dispatch(
         getCourseDetails({ id: id, user_id: currentUser.currentUser?.user_id })
