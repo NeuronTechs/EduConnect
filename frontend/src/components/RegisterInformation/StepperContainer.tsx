@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect } from "react";
-import { UseFormRegister, useForm } from "react-hook-form";
+import {
+  FieldErrors,
+  UseFormRegister,
+  UseFormTrigger,
+  useForm,
+} from "react-hook-form";
 import StepperMain from "./StepperMain";
 import assets from "../../assets";
 import { Radio, Typography } from "@material-tailwind/react";
@@ -15,11 +20,10 @@ import { updateInformation } from "@/features/auth/authSlice";
 enum enumGender {
   female = "female",
   male = "male",
-  other = "other",
 }
 interface IFormInput {
-  fullName: string;
-  avatar: FileList;
+  full_name: string;
+  avatar: FileList | string;
   email: string;
   phone: number;
   gender: enumGender;
@@ -44,35 +48,98 @@ const StepperContainer = (): React.ReactElement => {
   const [isLastStep, setIsLastStep] = React.useState<boolean>(false);
   const [isFirstStep, setIsFirstStep] = React.useState<boolean>(false);
   const [isLoad, setIsLoad] = React.useState<boolean>(false);
+
+  // useform hook
   const {
     register,
     watch,
     handleSubmit,
+    formState: { errors },
+    trigger,
+    clearErrors,
     // formState: { errors },
-  } = useForm<IFormInput>();
-  const urlFile = watch("avatar");
-  const handleNext = () => !isLastStep && setActiveStep((cur) => cur + 1);
-  const handlePrev = () => !isFirstStep && setActiveStep((cur) => cur - 1);
+  } = useForm<IFormInput>({
+    defaultValues: {
+      full_name: currentUser?.full_name,
+      email: currentUser?.email,
+      avatar: currentUser.avatar,
+      phone: parseInt(currentUser?.phone as string),
+      // gender: "female",
+      birthday: new Date(currentUser?.birthday ? currentUser?.birthday : ""),
+      address: currentUser?.address,
+    },
+  });
+  // handle stepper
+  const handleNext = async () => {
+    await trigger();
+    await clearErrors();
+    if (activeStep === 0) {
+      await trigger(["full_name", "email", "phone", "birthday", "address"]);
+    }
+    if (activeStep === 1) {
+      await trigger([
+        "role",
+        "educational_level",
+        "major",
+        "course",
+        "school",
+        "address_school",
+      ]);
+    }
+    if (
+      errors.full_name ||
+      errors.email ||
+      errors.phone ||
+      errors.birthday ||
+      errors.address ||
+      errors.role ||
+      errors.educational_level ||
+      errors.major ||
+      errors.course ||
+      errors.school ||
+      errors.address_school
+    ) {
+      return;
+    }
 
-  const [urlAvatar, setUrlAvatar] = React.useState<string | undefined>("");
+    if (!isLastStep) {
+      setActiveStep((cur) => cur + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    clearErrors();
+    if (!isFirstStep) {
+      setActiveStep((cur) => cur - 1);
+    }
+  };
+  // avatar
+  const urlFile = watch("avatar");
+  const [urlAvatar, setUrlAvatar] = React.useState<
+    string | undefined | FileList
+  >(currentUser?.avatar);
   useEffect(() => {
-    if (urlFile !== undefined && urlFile.length > 0) {
+    if (
+      urlFile !== undefined &&
+      urlFile.length > 0 &&
+      urlFile instanceof FileList
+    ) {
       setUrlAvatar(URL.createObjectURL(urlFile[0]));
     }
   }, [urlFile]);
+  // handle submit api
   const onSubmit = async (data: IFormInput) => {
-    // if(data.firstName === "" || data.lastName === "" || data )
     setIsLoad(true);
     try {
       const res = await userRegisterInformationApi.addInformationUser({
         username: currentUser?.username,
-        fullName: data.fullName,
+        fullName: data.full_name,
         email: data.email,
         phone: data.phone,
         gender: data.gender,
         birthday: data.birthday,
         address: data.address,
-        avatar: data.avatar[0],
+        avatar: data.avatar,
         role: data.role,
         educational_level: data.educational_level,
         major: data.major,
@@ -81,7 +148,6 @@ const StepperContainer = (): React.ReactElement => {
         address_school: data.address_school,
       });
       if (res) {
-        console.log(res);
         setIsLoad(false);
         const user_id =
           data.role === "0"
@@ -90,11 +156,10 @@ const StepperContainer = (): React.ReactElement => {
         dispatch(
           updateInformation({
             ...currentUser,
-            fullName: data.fullName,
+            full_name: data.full_name,
             email: data.email,
             role: data.role,
-            avatar:
-              "https://gravatar.com/avatar/0fafdda675b8bbc8d67cf4c51183ce45?s=400&d=robohash&r=x",
+            avatar: data.avatar,
             phone: data.phone.toString(),
             user_id: user_id,
           })
@@ -123,6 +188,8 @@ const StepperContainer = (): React.ReactElement => {
         activeStep={activeStep}
         register={register}
         urlAvatar={urlAvatar}
+        errors={errors}
+        trigger={trigger}
       />
       <div className="mt-5 flex justify-between gap-5">
         <button
@@ -188,10 +255,24 @@ export default StepperContainer;
 type propsContentStepper = {
   activeStep: number;
   register: UseFormRegister<IFormInput>;
-  urlAvatar: string | undefined;
+  urlAvatar: FileList | string | undefined;
+  errors: FieldErrors<IFormInput>;
+  trigger: UseFormTrigger<IFormInput>;
 };
 
 const ContentStepper = (props: propsContentStepper): React.ReactElement => {
+  const imageURL =
+    props.urlAvatar instanceof FileList
+      ? URL.createObjectURL(props.urlAvatar[0])
+      : props.urlAvatar;
+
+  // ...
+
+  const minDate = new Date("1000-01-01");
+  const maxDate = new Date();
+
+  // ...
+
   return (
     <div className="w-full">
       {props.activeStep === 0 && (
@@ -199,11 +280,7 @@ const ContentStepper = (props: propsContentStepper): React.ReactElement => {
           <div className="logo flex flex-col items-center justify-center space-y-1">
             <div className="w-[80px] h-[80px] overflow-hidden">
               <ImageWithError
-                src={
-                  props.urlAvatar !== ""
-                    ? props.urlAvatar
-                    : assets.images.noAvatar
-                }
+                src={imageURL !== "" ? imageURL : assets.images.noAvatar}
                 alt="avatar"
                 fallbackSrc={assets.images.noAvatar}
                 className="w-full h-full object-cover"
@@ -221,59 +298,82 @@ const ContentStepper = (props: propsContentStepper): React.ReactElement => {
                 type="file"
                 multiple={false}
                 {...props.register("avatar")}
+                name="avatar"
               />
             </div>
           </div>
           <div className="form w-full">
             <div className="grid grid-cols-2 gap-3 gap-y-5">
-              {/* <div className="flex flex-col items-start justify-start">
-                <Typography variant="h6" className="text-sm ">
-                  Họ và Tên Đệm
-                </Typography>
-                <input
-                  {...props.register("firstName")}
-                  type="text"
-                  name="firstName"
-                  className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-400 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
-                  placeholder="Họ và Tên Đệm"
-                />
-              </div> */}
               <div className="flex flex-col items-start justify-start col-span-2">
                 <Typography variant="h6" className="text-sm">
                   Họ và Tên
                 </Typography>
                 <input
-                  {...props.register("fullName")}
+                  {...props.register("full_name", { required: true })}
                   type="text"
-                  name="fullName"
+                  // name="full_name"
                   className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-400 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
                   placeholder="Tên"
+                  onBlur={() => props.trigger("full_name")}
                 />
+                {props.errors.full_name && (
+                  <span className="text-red-500">
+                    Họ và Tên không được để trống
+                  </span>
+                )}
               </div>
               <div className="col-span-2 flex flex-col items-start justify-start">
                 <Typography variant="h6" className="text-sm">
                   Email
                 </Typography>
                 <input
-                  {...props.register("email")}
+                  {...props.register("email", {
+                    required: true,
+                    pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  })}
                   type="text"
                   name="email"
                   className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-400 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
                   placeholder="robert.langster@gmail.com"
+                  onBlur={() => props.trigger("email")}
                 />
+                {props.errors.email &&
+                  props.errors.email.type === "required" && (
+                    <span className="text-red-500">
+                      Email không được để trống
+                    </span>
+                  )}
+                {props.errors.email &&
+                  props.errors.email.type === "pattern" && (
+                    <span className="text-red-500">Email không hợp lệ</span>
+                  )}
               </div>
               <div className=" flex flex-col items-start justify-start">
                 <Typography variant="h6" className="text-sm">
                   Số điện thoại
                 </Typography>
                 <input
-                  {...props.register("phone")}
+                  {...props.register("phone", {
+                    required: true,
+                    pattern: /^[0-9]{10}$/, // Kiểm tra có đúng 10 chữ số hay không
+                  })}
                   type="number"
-                  size={10}
                   name="phone"
                   className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-400 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
-                  // placeholder="robert.langster@gmail.com"
+                  onBlur={() => props.trigger("phone")}
                 />
+                {props.errors.phone &&
+                  props.errors.phone.type === "required" && (
+                    <span className="text-red-500">
+                      Số điện thoại không được để trống
+                    </span>
+                  )}
+                {props.errors.phone &&
+                  props.errors.phone.type === "pattern" && (
+                    <span className="text-red-500">
+                      Số điện thoại không hợp lệ. Vui lòng nhập 10 chữ số.
+                    </span>
+                  )}
               </div>
               <div className="flex flex-col items-start justify-start">
                 <Typography variant="h6" className="text-sm">
@@ -300,30 +400,60 @@ const ContentStepper = (props: propsContentStepper): React.ReactElement => {
                 </div>
               </div>
               <div className="col-span-2 flex flex-col items-start justify-start">
-                <Typography variant="h6" className="text-sm">
-                  Ngày Sinh
-                </Typography>
-                <div className="flex items-center justify-start gap-3"></div>
-                <input
-                  {...props.register("birthday")}
-                  type="date"
-                  name="birthday"
-                  className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-400 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
-                  placeholder="robert.langster@gmail.com"
-                />
+                <div className="col-span-2 flex flex-col items-start justify-start">
+                  <Typography variant="h6" className="text-sm">
+                    Ngày Sinh
+                  </Typography>
+                  <input
+                    {...props.register("birthday", {
+                      required: true,
+                      validate: (value) => {
+                        const selectedDate = new Date(value);
+                        const currentDate = new Date();
+                        if (selectedDate < minDate || selectedDate > maxDate) {
+                          return "Ngày sinh không hợp lệ";
+                        }
+                        if (selectedDate > currentDate) {
+                          return "Ngày sinh không thể là ngày trong tương lai";
+                        }
+                        return true;
+                      },
+                    })}
+                    type="date"
+                    placeholder="dd-mm-yyyy"
+                    min={minDate.toISOString().split("T")[0]}
+                    onBlur={() => props.trigger("birthday")}
+                  />
+                  {props.errors.birthday && (
+                    <span className="text-red-500">
+                      {props.errors.birthday.message}
+                    </span>
+                  )}
+                  {props.errors.birthday?.type === "required" && (
+                    <span className="text-red-500">
+                      Ngày sinh không được để trống
+                    </span>
+                  )}
+                </div>
               </div>
               <div className="col-span-2 flex flex-col items-start justify-start">
                 <Typography variant="h6" className="text-sm">
-                  ĐỊa Chỉ
+                  Địa Chỉ
                 </Typography>
                 <div className="flex items-center justify-start gap-3"></div>
                 <input
-                  {...props.register("address")}
+                  {...props.register("address", { required: true })}
                   type="text"
                   name="address"
                   className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-400 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
                   placeholder="ĐỊa Chỉ"
+                  onBlur={() => props.trigger("address")}
                 />
+                {props.errors.address && (
+                  <span className="text-red-500">
+                    Địa chỉ không được để trống
+                  </span>
+                )}
               </div>
             </div>
           </div>
@@ -339,7 +469,7 @@ const ContentStepper = (props: propsContentStepper): React.ReactElement => {
                 </Typography>
                 <div className="flex gap-10">
                   <Radio
-                    {...props.register("role")}
+                    {...props.register("role", { required: true })}
                     value={"0"}
                     name="role"
                     label="Học sinh, Sinh Viên"
@@ -348,7 +478,7 @@ const ContentStepper = (props: propsContentStepper): React.ReactElement => {
                     color="blue"
                   />
                   <Radio
-                    {...props.register("role")}
+                    {...props.register("role", { required: true })}
                     value={"1"}
                     name="role"
                     label="Giáo Viên"
@@ -362,36 +492,54 @@ const ContentStepper = (props: propsContentStepper): React.ReactElement => {
                   Tình độ học vấn
                 </Typography>
                 <input
-                  {...props.register("educational_level")}
+                  {...props.register("educational_level", { required: true })}
                   type="text"
                   name="educational_level"
                   className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-400 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
                   placeholder="Tình độ học vấn"
+                  onBlur={() => props.trigger("educational_level")}
                 />
+                {props.errors.educational_level && (
+                  <span className="text-red-500">
+                    Tình độ học vấn không được để trống
+                  </span>
+                )}
               </div>
               <div className="flex flex-col items-start justify-start">
                 <Typography variant="h6" className="text-sm">
                   Ngành học
                 </Typography>
                 <input
-                  {...props.register("major")}
+                  {...props.register("major", { required: true })}
                   type="text"
                   name="major"
                   className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-400 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
                   placeholder="Ngành học"
+                  onBlur={() => props.trigger("major")}
                 />
+                {props.errors.major && (
+                  <span className="text-red-500">
+                    Ngành học không được để trống
+                  </span>
+                )}
               </div>
               <div className="col-span-2 flex flex-col items-start justify-start">
                 <Typography variant="h6" className="text-sm">
                   Trường Học
                 </Typography>
                 <input
-                  {...props.register("school")}
+                  {...props.register("school", { required: true })}
                   type="text"
                   name="school"
                   className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-400 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
                   placeholder="Trường"
+                  onBlur={() => props.trigger("school")}
                 />
+                {props.errors.school && (
+                  <span className="text-red-500">
+                    Trường học không được để trống
+                  </span>
+                )}
               </div>
 
               <div className="col-span-2 flex flex-col items-start justify-start">
@@ -400,25 +548,37 @@ const ContentStepper = (props: propsContentStepper): React.ReactElement => {
                 </Typography>
                 <div className="flex items-center justify-start gap-3"></div>
                 <input
-                  {...props.register("course")}
+                  {...props.register("course", { required: true })}
                   type="date"
                   name="course"
                   className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-400 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
                   placeholder="robert.langster@gmail.com"
+                  onBlur={() => props.trigger("course")}
                 />
+                {props.errors.course && (
+                  <span className="text-red-500">
+                    Khoá học không được để trống
+                  </span>
+                )}
               </div>
               <div className="col-span-2 flex flex-col items-start justify-start">
                 <Typography variant="h6" className="text-sm">
-                  ĐỊa Chỉ Trường
+                  Địa Chỉ Trường
                 </Typography>
                 <div className="flex items-center justify-start gap-3"></div>
                 <input
-                  {...props.register("address_school")}
+                  {...props.register("address_school", { required: true })}
                   type="text"
                   name="address_school"
                   className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-400 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
                   placeholder="Địa Chỉ"
+                  onBlur={() => props.trigger("address_school")}
                 />
+                {props.errors.address_school && (
+                  <span className="text-red-500">
+                    Địa chỉ không được để trống
+                  </span>
+                )}
               </div>
             </div>
           </div>

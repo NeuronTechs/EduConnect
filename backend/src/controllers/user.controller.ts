@@ -275,6 +275,7 @@ const login = async (req: Request, res: Response) => {
 
 const refreshToken = async (req: Request, res: Response) => {
   const cookiesHeader = req.headers.cookie;
+
   if (cookiesHeader) {
     const index = cookiesHeader.indexOf(";");
     const refreshToken = cookiesHeader

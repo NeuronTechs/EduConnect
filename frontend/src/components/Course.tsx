@@ -16,11 +16,11 @@ interface props {
 }
 const Course = (props: props): React.ReactElement => {
   return (
-    <div className="rounded-2xl bg-white p-2 flex flex-col gap-2 shadow-sm w-full">
+    <div className="rounded-2xl bg-white p-2 flex flex-col gap-2 shadow-lg w-full">
       <div className="w-full flex flex-col gap-2">
         <div className="w-full aspect-video h-full max-h-[200px] min-h-[150px]">
           <ImageWithError
-            src={props.data.image}
+            src={props.data.image ? props.data.image.toString() : ""}
             alt={props.data.title}
             fallbackSrc={assets.images.noBg}
             className="w-full h-full object-fill rounded-2xl"

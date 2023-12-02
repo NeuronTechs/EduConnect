@@ -1,5 +1,4 @@
 import { ICourseDetail } from "@/types/type";
-import { MagnifyingGlass } from "@phosphor-icons/react";
 import React from "react";
 import ImageWithError from "../ImageWithError";
 import { Link } from "react-router-dom";
@@ -15,9 +14,9 @@ const SearchHeaderResult = (props: IProps): React.ReactElement => {
   return (
     <>
       {props.isOpen && (
-        <div className="absolute top-[110%] bg-white rounded-md max-h-[400px] min-h-[300px] w-full p-2 z-10 shadow-xl overflow-auto">
-          <div className="flex- flex-col items-start justify-center gap-2">
-            <div className="w-full">
+        <div className="absolute top-[110%] bg-white rounded-md h-[500px] w-full p-2 z-99999 shadow-xl py-4 overflow-hidden">
+          <div className="h-full w-full py-4 overflow-auto">
+            {/* <div className="w-full">
               <h5 className="text-sm font-bold">Từ khóa liên quan</h5>
             </div>
             {props.dataSearch.keyword?.length === 0 && (
@@ -26,8 +25,8 @@ const SearchHeaderResult = (props: IProps): React.ReactElement => {
                   Không có kết quả
                 </p>
               </div>
-            )}
-            <div className="w-full space-y-2 mt-2 mb-2">
+            )} */}
+            {/* <div className="w-full space-y-2 mt-2 mb-2">
               {props.dataSearch.keyword?.map((item, index) => (
                 <div
                   key={index}
@@ -39,13 +38,13 @@ const SearchHeaderResult = (props: IProps): React.ReactElement => {
                   </p>
                 </div>
               ))}
-            </div>
-            <div className="w-full space-y-2 ">
+            </div> */}
+            <div className="w-full h-full space-y-2 ">
               <div>
-                <h5 className="text-sm font-bold">Khoá Học Gợi ý </h5>
+                <h5 className="text-base font-bold">Khoá Học Gợi ý </h5>
               </div>
               {props.dataSearch.course?.length === 0 && (
-                <div className="w-full h-[50px] rounded-sm flex items-center justify-center  px-4 text-gray-500 space-x-3 hover:bg-gray-100">
+                <div className="w-full h-[50px] rounded-sm flex items-center justify-center  px-4 py-2 text-gray-500 space-x-3 hover:bg-gray-100">
                   <p className="text-sm font-norma overflow-hidden text-ellipsis">
                     Không có kết quả
                   </p>
@@ -54,18 +53,19 @@ const SearchHeaderResult = (props: IProps): React.ReactElement => {
               {props.dataSearch.course?.map((data) => {
                 return (
                   <Link
+                    key={data.course_id}
                     to={`/course/${data.course_id}`}
                     onClick={() => props.setIsFocus(false)}
                   >
-                    <div className="rounded-sm bg-white hover:bg-gray-100 min-h-[50px] flex items-center justify-start px-4 space-x-3">
-                      <div className=" h-[40px] w-[40px]">
+                    <div className="rounded-md bg-white hover:bg-gray-200 min-h-[50px] flex items-center justify-start px-2 py-2 space-x-3">
+                      <div className=" h-[40px] w-[60px] rounded-md overflow-hidden">
                         <ImageWithError
-                          src={data.image.toString()}
+                          src={data.image ? data.image.toString() : ""}
                           alt=""
                           className=" w-full h-full"
                         />
                       </div>
-                      <div className=" flex flex-col justify-start items-start w-ful pb-3">
+                      <div className=" flex flex-col justify-start items-start w-ful ">
                         <h5 className="text-sm font-bold overflow-hidden text-ellipsis">
                           {data.title}
                         </h5>

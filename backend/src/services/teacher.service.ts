@@ -155,24 +155,45 @@ const getTeacherRecommendations = async (limit: string) => {
 };
 const getTeacherDetail = async (id: string) => {
   try {
-    const query = `SELECT teacher.*, COUNT(DISTINCT course.course_id) as total_courses  
-    FROM teacher LEFT JOIN course ON teacher.teacher_id = course.teacher_id  where id = ${id} GROUP BY teacher.teacher_id;`;
-    return new Promise<dataListResponse<ITeacher>>((resolve, reject) => {
-      db.connectionDB.query(query, (error, course, fields) => {
-        if (error) {
-          reject({
-            status: 500,
-            data: [],
-            message: error,
+    const query = `SELECT teacher.*, user.*, COUNT(DISTINCT course.course_id) as total_courses  
+    FROM teacher 
+    LEFT JOIN course ON teacher.teacher_id = course.teacher_id  
+    LEFT JOIN user ON teacher.username = user.username  
+    WHERE teacher.teacher_id ='${id}' 
+    GROUP BY teacher.teacher_id;`;
+    return new Promise<dataResponse<ITeacher>>((resolve, reject) => {
+      db.connectionDB.query(
+        { sql: query, nestTables: true },
+        (
+          error: QueryError,
+          course: {
+            teacher: ITeacher;
+            user: IUser;
+            total_courses: number;
+          }[],
+          fields
+        ) => {
+          if (error) {
+            reject({
+              status: 500,
+              data: [],
+              message: error,
+            });
+            return;
+          }
+          const data = {
+            ...course[0]?.teacher,
+            user: course[0]?.user,
+            total_courses: course[0]?.total_courses,
+          };
+          console.log(course);
+          resolve({
+            status: 200,
+            data: data as ITeacher,
+            message: "Get teacher successfully",
           });
-          return;
         }
-        resolve({
-          status: 200,
-          data: course as ITeacher[],
-          message: "Get teacher successfully",
-        });
-      });
+      );
     });
   } catch (error) {
     throw error;
@@ -267,8 +288,7 @@ const getCourseTeacher = async (id: string, limit: number) => {
 const updateCourseTeacher = async (id: string, data: ICourse) => {
   data.update_at = new Date().toISOString().slice(0, 19).replace("T", " ");
   data.create_at = new Date().toISOString().slice(0, 19).replace("T", " ");
-  data.study = data.study ? JSON.stringify(data.study) : "";
-  data.requirement = data.requirement ? JSON.stringify(data.requirement) : "";
+
   try {
     const query = `UPDATE course SET ? WHERE course_id = ?;`;
     return new Promise<dataResponse<ICourse>>((resolve, reject) => {
@@ -323,8 +343,8 @@ const getCourseTeacherById = async (id: string) => {
           const dataResult = results.map((result) => {
             return {
               ...result?.course,
-              study: JSON.parse(result?.course?.study),
-              requirement: JSON.parse(result?.course?.requirement),
+              // study: JSON.parse(result?.course?.study),
+              // requirement: JSON.parse(result?.course?.requirement),
               teacher: result.teacher,
               user: result.user,
               topic: result.topic,

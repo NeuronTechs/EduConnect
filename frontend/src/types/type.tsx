@@ -99,7 +99,7 @@ export interface ITopic {
 export interface ITeacher {
   teacher_id: string;
   username: string;
-  introduce?: string;
+  description?: string;
   subject?: string;
   educational_level?: string;
   email: string;

@@ -4,7 +4,7 @@ import BannerLoading from "../Loading/BannerLoading";
 interface props {
   isLoading: boolean;
 }
-const Banner = (props: props) => {
+const Banner = (props: props): React.ReactElement => {
   return (
     <>
       {props.isLoading ? (
@@ -26,11 +26,11 @@ const Banner = (props: props) => {
               quản lý khóa học, tương tác học viên, bán hàng bằng các công cụ
               trực quan và dễ dàng sử dụng.
             </span>
-            <div className="flex w-full ">
+            {/* <div className="flex w-full ">
               <div className="bg-blue-500 rounded-3xl px-4 py-2 text-white">
                 Xem
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       )}

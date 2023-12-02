@@ -1,6 +1,7 @@
 import quizApi from "@/api/quizApi";
 import { IAnswerInfo, IQuestionInfo, IQuizInfo } from "@/types/type";
 import React from "react";
+import { toast } from "react-toastify";
 
 interface CreateQuizContextType {
   dataQuiz: IQuizInfo;
@@ -104,6 +105,7 @@ const CreateQuizProvider = ({ children }: { children: React.ReactNode }) => {
       }
     } catch (error) {
       console.log(error);
+      toast.error("Thêm câu hỏi thất bại");
     }
   };
   // edit question
@@ -122,6 +124,7 @@ const CreateQuizProvider = ({ children }: { children: React.ReactNode }) => {
       }
     } catch (error) {
       console.log(error);
+      toast.error("Sửa câu hỏi thất bại");
     }
   };
 
@@ -139,6 +142,7 @@ const CreateQuizProvider = ({ children }: { children: React.ReactNode }) => {
       }
     } catch (error) {
       console.log(error);
+      toast.error("Xóa câu hỏi thất bại");
     }
   };
   // add new answer of question
@@ -161,6 +165,7 @@ const CreateQuizProvider = ({ children }: { children: React.ReactNode }) => {
       }
     } catch (error) {
       console.log(error);
+      toast.error("Thêm câu trả lời thất bại");
     }
   };
   // update answer of question
@@ -189,6 +194,7 @@ const CreateQuizProvider = ({ children }: { children: React.ReactNode }) => {
       }
     } catch (error) {
       console.log(error);
+      toast.error("Sửa câu trả lời thất bại");
     }
   };
   // delete answer of question
@@ -212,6 +218,7 @@ const CreateQuizProvider = ({ children }: { children: React.ReactNode }) => {
       }
     } catch (error) {
       console.log(error);
+      toast.error("Xóa câu trả lời thất bại");
     }
   };
   const handleEditAnswerQuestionAll = async (
@@ -248,6 +255,7 @@ const CreateQuizProvider = ({ children }: { children: React.ReactNode }) => {
       }
     } catch (error) {
       console.log(error);
+      toast.error("Sửa câu trả lời thất bại");
     }
   };
   return (

@@ -15,9 +15,11 @@ export interface User {
   full_name: string;
   createdAt: string;
   updatedAt: string;
-  avatar: string;
+  avatar: string | FileList;
   phone: string;
   email: string;
   accessToken: string;
   user_id: string;
+  address?: string;
+  birthday?: string;
 }

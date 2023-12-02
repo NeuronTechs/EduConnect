@@ -35,7 +35,6 @@ const CreateCourseTeacher = (): React.ReactElement => {
             teacherId: currentUser.user_id,
             courseId: param.id ? param.id : "",
           });
-          console.log(res.data);
           handleSetDataDescription(res.data);
         } catch (error) {
           console.log(error);
@@ -56,6 +55,7 @@ const CreateCourseTeacher = (): React.ReactElement => {
       <div className=" w-full h-full space-y-4">
         {/* <CreateCourseTitle /> */}
         <CreateCourseContainer />
+        {/* <ToastContainer /> */}
       </div>
     </LayoutCreateCourse>
   );
