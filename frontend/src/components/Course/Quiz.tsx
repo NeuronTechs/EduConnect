@@ -178,7 +178,7 @@ const Quiz = ({ currentLecture }: QuizProps) => {
   };
 
   return (
-    <div className="bg-gray-500 h-auto py-5 flex justify-center  ">
+    <div className="bg-gray-500 h-[75vh] py-5 flex justify-center  ">
       {isFullQuiz && quiz ? (
         <FullQuiz
           currentQuiz={quiz}
