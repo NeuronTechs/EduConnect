@@ -12,13 +12,18 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import * as courseApi from "../api/courseApi/courseApi";
 import { AppDispatch } from "@/redux/store";
-import { resetCheckOutCart } from "@/features/checkoutCourse/checkoutSlice";
+import {
+  CourseCheckout,
+  resetCheckOutCart,
+} from "@/features/checkoutCourse/checkoutSlice";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from "@material-tailwind/react";
 import { useState } from "react";
 import { Video } from "@phosphor-icons/react";
 import { configRouter } from "@/configs/router";
 import { removeToCart } from "@/features/cart/cartSlice";
+import { BASE_URL } from "@/configs/environment";
+import { toast } from "react-toastify";
 
 const options = {
   style: {
@@ -37,6 +42,7 @@ const Checkout = () => {
   const dispatch = useDispatch<AppDispatch>();
   const nav = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
+  // const [totalSuccess, setTotalSuccess] = useState<number>(0);
 
   const currentCourse = useSelector(
     (state: SliceState) => state.checkoutSlice?.courseCurrent
@@ -54,95 +60,186 @@ const Checkout = () => {
     nav(configRouter.home);
   };
 
+  let totalPrice = currentCourse?.reduce(
+    (total: number, course: CourseCheckout) => {
+      return total + (course?.discount ? course?.discount : 0);
+    },
+    0
+  );
+
   const submitHandler = async (e: any) => {
     e.preventDefault();
 
     let res;
+    let totalSuccess = 0;
     try {
-      setLoading(true);
       const config = {
         headers: {
           "Content-Type": "application/json",
         },
       };
+      for (const course of currentCourse || []) {
+        setLoading(true);
+        const paymentData = {
+          amount: course?.discount,
+        };
 
-      const paymentData = {
-        amount: currentCourse?.discount,
-      };
+        res = await axios.post(
+          `${BASE_URL}/payment/process`,
+          paymentData,
+          config
+        );
 
-      res = await axios.post(
-        "http://localhost:3000/v1/payment/process",
-        paymentData,
-        config
-      );
+        const clientSecret = res.data.client_secret;
 
-      const clientSecret = res.data.client_secret;
-
-      if (!stripe || !elements) {
-        return;
-      }
-      const cardElement = elements.getElement(CardNumberElement);
-      if (cardElement) {
-        const result = await stripe.confirmCardPayment(clientSecret, {
-          payment_method: {
-            card: cardElement,
-            billing_details: {
-              name: currentUser?.full_name,
-              email: currentUser?.email,
-            },
-          },
-        });
-        if (result.error) {
-          setLoading(false);
-          alert(result.error.message);
-        } else {
-          if (result.paymentIntent.status === "succeeded") {
-            const addTransactionInCourse =
-              await courseApi.addTransactionInCourse({
-                student_id: currentUser?.user_id,
-                course_id: currentCourse?.course_id,
-                amount: currentCourse?.discount,
-                status: "Thành công",
-                transaction_id: result?.paymentIntent?.id,
-                full_name: currentUser?.full_name,
+        if (!stripe || !elements) {
+          return;
+        }
+        const cardElement = elements.getElement(CardNumberElement);
+        if (cardElement) {
+          const result = await stripe.confirmCardPayment(clientSecret, {
+            payment_method: {
+              card: cardElement,
+              billing_details: {
+                name: currentUser?.full_name,
                 email: currentUser?.email,
-                course_name: currentCourse?.title,
-              });
-            console.log(addTransactionInCourse);
-            if (addTransactionInCourse.status === 200) {
-              if (
-                currentCart?.filter(
-                  (cart) => cart?.course_id === currentCourse?.course_id
-                ) &&
-                currentCart?.filter(
-                  (cart) => cart?.course_id === currentCourse?.course_id
-                )?.length > 0
-              ) {
-                dispatch(
-                  removeToCart(
-                    currentCart?.filter(
-                      (cart) => cart?.course_id === currentCourse?.course_id
-                    )[0].cart_id as string
-                  )
-                );
+              },
+            },
+          });
+          if (result.error) {
+            setLoading(false);
+            toast.error(result.error.message);
+          } else {
+            if (result.paymentIntent.status === "succeeded") {
+              const addTransactionInCourse =
+                await courseApi.addTransactionInCourse({
+                  student_id: currentUser?.user_id,
+                  course_id: course?.course_id,
+                  amount: course?.discount,
+                  status: "Thành công",
+                  transaction_id: result?.paymentIntent?.id,
+                  full_name: currentUser?.full_name,
+                  email: currentUser?.email,
+                  course_name: course?.title,
+                });
+              if (addTransactionInCourse.status === 200) {
+                if (
+                  currentCart?.filter(
+                    (cart) => cart?.course_id === course?.course_id
+                  ) &&
+                  currentCart?.filter(
+                    (cart) => cart?.course_id === course?.course_id
+                  )?.length > 0
+                ) {
+                  dispatch(
+                    removeToCart(
+                      currentCart?.filter(
+                        (cart) => cart?.course_id === course?.course_id
+                      )[0].cart_id as string
+                    )
+                  );
+                }
+                totalSuccess++;
+                if (totalSuccess === currentCourse?.length) {
+                  setLoading(false);
+                  dispatch(resetCheckOutCart());
+                  toast.success("Thanh toán thành công");
+                  nav("/");
+                }
+                // dispatch(resetCheckOutCart());
+                // setTotalSuccess((prev) => prev + 1);
+                // console.log(totalSuccess);
+                // toast.success("Thanh toán thành công");
+                // nav("/");
+              } else {
+                setLoading(false);
+                toast.error(addTransactionInCourse.message);
               }
-              setLoading(false);
-              dispatch(resetCheckOutCart());
-              alert("Thanh toán thành công");
-              nav("/");
             } else {
               setLoading(false);
-              alert(addTransactionInCourse.message);
+              toast.error("Có một vài vấn đề trong lúc thanh toán!!!");
             }
-          } else {
-            setLoading(false);
-            alert("Có một vài vấn đề trong lúc thanh toán!!!");
           }
         }
       }
+
+      // const paymentData = {
+      //   amount: currentCourse?.discount,
+      // };
+
+      // res = await axios.post(
+      //   "http://localhost:3000/v1/payment/process",
+      //   paymentData,
+      //   config
+      // );
+
+      // const clientSecret = res.data.client_secret;
+
+      // if (!stripe || !elements) {
+      //   return;
+      // }
+      // const cardElement = elements.getElement(CardNumberElement);
+      // if (cardElement) {
+      //   const result = await stripe.confirmCardPayment(clientSecret, {
+      //     payment_method: {
+      //       card: cardElement,
+      //       billing_details: {
+      //         name: currentUser?.full_name,
+      //         email: currentUser?.email,
+      //       },
+      //     },
+      //   });
+      //   if (result.error) {
+      //     setLoading(false);
+      //     alert(result.error.message);
+      //   } else {
+      //     if (result.paymentIntent.status === "succeeded") {
+      //       const addTransactionInCourse =
+      //         await courseApi.addTransactionInCourse({
+      //           student_id: currentUser?.user_id,
+      //           course_id: currentCourse?.course_id,
+      //           amount: currentCourse?.discount,
+      //           status: "Thành công",
+      //           transaction_id: result?.paymentIntent?.id,
+      //           full_name: currentUser?.full_name,
+      //           email: currentUser?.email,
+      //           course_name: currentCourse?.title,
+      //         });
+      //       console.log(addTransactionInCourse);
+      //       if (addTransactionInCourse.status === 200) {
+      //         if (
+      //           currentCart?.filter(
+      //             (cart) => cart?.course_id === currentCourse?.course_id
+      //           ) &&
+      //           currentCart?.filter(
+      //             (cart) => cart?.course_id === currentCourse?.course_id
+      //           )?.length > 0
+      //         ) {
+      //           dispatch(
+      //             removeToCart(
+      //               currentCart?.filter(
+      //                 (cart) => cart?.course_id === currentCourse?.course_id
+      //               )[0].cart_id as string
+      //             )
+      //           );
+      //         }
+      //         setLoading(false);
+      //         dispatch(resetCheckOutCart());
+      //         alert("Thanh toán thành công");
+      //         nav("/");
+      //       } else {
+      //         setLoading(false);
+      //         alert(addTransactionInCourse.message);
+      //       }
+      //     } else {
+      //       setLoading(false);
+      //       alert("Có một vài vấn đề trong lúc thanh toán!!!");
+      //     }
+      //   }
+      // }
     } catch (error: any) {
       setLoading(false);
-      alert(error?.message);
+      toast.error(error?.message);
     }
   };
 
@@ -203,27 +300,31 @@ const Checkout = () => {
                 <h1 className="mb-4 font-semibold my-3 text-[20px]">
                   Khóa học
                 </h1>
-                <div className="w-full flex-1 grid grid-cols-[80px_auto_40px] md:grid-cols-[80px_auto_80px] justify-stretch items-center my-3">
-                  <img
-                    className="w-full h-[80px] object-cover p-1"
-                    src={currentCourse?.image}
-                    alt="course image"
-                    loading="lazy"
-                  />
-                  <div className="truncate text-[16px] mx-2 cursor-pointer">
-                    <p className="my-1 font-semibold truncate">
-                      {currentCourse?.title}
-                    </p>
-                    <p className="my-1 truncate">{currentCourse?.full_name}</p>
+                {currentCourse.map((course, index) => (
+                  <div key={index}>
+                    <div className="w-full flex-1 grid grid-cols-[80px_auto_40px] md:grid-cols-[80px_auto_80px] justify-stretch items-center my-3">
+                      <img
+                        className="w-full h-[80px] object-cover p-1"
+                        src={course?.image}
+                        alt="course image"
+                        loading="lazy"
+                      />
+                      <div className="truncate text-[16px] mx-2 cursor-pointer">
+                        <p className="my-1 font-semibold truncate">
+                          {course?.title}
+                        </p>
+                        <p className="my-1 truncate">{course?.full_name}</p>
+                      </div>
+                      <div className="hidden md:block">
+                        <p className="text-[14px] text-black">
+                          {formatCurrency(
+                            course?.discount ? course?.discount : 0
+                          )}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="hidden md:block">
-                    <p className="text-[14px] text-black">
-                      {formatCurrency(
-                        currentCourse?.discount ? currentCourse?.discount : 0
-                      )}
-                    </p>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
             {/* info total bill */}
@@ -233,12 +334,10 @@ const Checkout = () => {
               </div>
               <div className="flex items-center justify-between my-2">
                 <div className="text-[15px] text-gray-800">
-                  Tạm tính (3 khóa học)
+                  Tạm tính ({currentCourse?.length} khóa học)
                 </div>
                 <div className="text-[15px] font-semibold">
-                  {formatCurrency(
-                    currentCourse?.discount ? currentCourse?.discount : 0
-                  )}
+                  {formatCurrency(totalPrice ? totalPrice : 0)}
                 </div>
               </div>
               <div className="flex items-center justify-between my-2">
@@ -250,17 +349,15 @@ const Checkout = () => {
               <div className="flex items-start justify-between my-2">
                 <div className="text-[15px]">Tổng cộng</div>
                 <div className="text-[15px] font-semibold flex flex-col items-end justify-center">
-                  <p>
-                    {formatCurrency(
-                      currentCourse?.discount ? currentCourse?.discount : 0
-                    )}
-                  </p>
+                  <p>{formatCurrency(totalPrice ? totalPrice : 0)}</p>
                   <p className="font-normal">Đã bao gồm VAT (nếu có)</p>
                 </div>
               </div>
               <div className="my-3">
                 {loading ? (
-                  <Spinner className="flex justify-center" />
+                  <div className="flex justify-center">
+                    <Spinner />
+                  </div>
                 ) : (
                   <button
                     onClick={submitHandler}

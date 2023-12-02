@@ -92,7 +92,7 @@ const BuyCourse = () => {
         title: currentCourse?.title,
         image: currentCourse?.image,
       };
-      await dispatch(getCoureCheckout(courseCurrent));
+      await dispatch(getCoureCheckout([courseCurrent]));
       navigate(configRouter.checkout);
     }
   };

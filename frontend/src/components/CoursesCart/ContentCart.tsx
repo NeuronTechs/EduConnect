@@ -14,12 +14,16 @@ import { AppDispatch } from "../../redux/store";
 import { Cart, getCarts, removeToCart } from "../../features/cart/cartSlice";
 import { configRouter } from "@/configs/router";
 import { SliceState } from "@/types/type";
+import { getCoureCheckout } from "@/features/checkoutCourse/checkoutSlice";
 
 const ContentCart = () => {
   const [open, setOpen] = useState<boolean>(false);
   const navigate = useNavigate();
   const cartCurrent = useSelector(
     (state: SliceState) => state.cartSlice.cartCurrent
+  );
+  const currentUser = useSelector(
+    (state: SliceState) => state.authSlice.currentUser
   );
   let totalPrice = cartCurrent?.reduce((total: number, cart: Cart) => {
     return total + (cart?.discount ? cart?.discount : 0);
@@ -30,7 +34,10 @@ const ContentCart = () => {
     navigate(configRouter.home);
   };
 
-  const handleRedirectCheckoutPage = () => {
+  const handleRedirectCheckoutPage = async () => {
+    if (cartCurrent && cartCurrent.length > 0) {
+      await dispatch(getCoureCheckout(cartCurrent));
+    }
     navigate(configRouter.checkout);
   };
 
@@ -43,7 +50,7 @@ const ContentCart = () => {
   const handleRemoveCourseToCart = async (cart_id: string) => {
     setOpen(!open);
     await dispatch(removeToCart(cart_id));
-    await dispatch(getCarts("00657"));
+    await dispatch(getCarts(currentUser?.user_id as string));
   };
 
   return (
@@ -67,7 +74,9 @@ const ContentCart = () => {
                     />
                     <div
                       className="truncate text-[16px] mx-2 cursor-pointer"
-                      onClick={() => handleRedirectCourse("123")}
+                      onClick={() =>
+                        handleRedirectCourse(data?.course_id as string)
+                      }
                     >
                       <p className="my-1 font-semibold truncate">
                         {data?.title}
