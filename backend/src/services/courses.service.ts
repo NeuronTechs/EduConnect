@@ -443,41 +443,41 @@ const getLessonOfSection = async (section_id: string) => {
     }
   });
 };
-const createQuiz = async (quiz: any) => {
-  quiz.quiz_id = uuidv4();
-  quiz.created_at = new Date().toISOString().slice(0, 19).replace("T", " ");
-  quiz.updated_at = new Date().toISOString().slice(0, 19).replace("T", " ");
-  const query = `INSERT INTO lesson_quiz SET ?`;
-  return new Promise<dataResponse<any>>((resolve, rejects) => {
-    try {
-      connectDB.connectionDB.query(
-        { sql: query, values: [quiz] },
-        (err: QueryError, result: any) => {
-          if (err) {
-            rejects({
-              status: 400,
-              data: [],
-              message: err.message,
-            });
-            return;
-          }
-          quiz.quiz_id = result.insertId;
-          resolve({
-            status: 200,
-            data: quiz as any,
-            message: "Created successfully",
-          });
-        }
-      );
-    } catch (err) {
-      rejects({
-        status: 500,
-        data: [],
-        message: err,
-      });
-    }
-  });
-};
+// const createQuiz = async (quiz: any) => {
+//   quiz.quiz_id = uuidv4();
+//   quiz.created_at = new Date().toISOString().slice(0, 19).replace("T", " ");
+//   quiz.updated_at = new Date().toISOString().slice(0, 19).replace("T", " ");
+//   const query = `INSERT INTO lesson_quiz SET ?`;
+//   return new Promise<dataResponse<any>>((resolve, rejects) => {
+//     try {
+//       connectDB.connectionDB.query(
+//         { sql: query, values: [quiz] },
+//         (err: QueryError, result: any) => {
+//           if (err) {
+//             rejects({
+//               status: 400,
+//               data: [],
+//               message: err.message,
+//             });
+//             return;
+//           }
+//           quiz.quiz_id = result.insertId;
+//           resolve({
+//             status: 200,
+//             data: quiz as any,
+//             message: "Created successfully",
+//           });
+//         }
+//       );
+//     } catch (err) {
+//       rejects({
+//         status: 500,
+//         data: [],
+//         message: err,
+//       });
+//     }
+//   });
+// };
 
 export default {
   createCourseSection,

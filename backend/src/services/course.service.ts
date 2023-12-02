@@ -159,20 +159,20 @@ GROUP BY
   });
 };
 
-const getCourseByTopicId = async (
-  category_id: string
-): Promise<dataListResponse<ICourse>> => {
-  const sql = `SELECT * FROM course WHERE topic_id = ?`;
-  return new Promise<dataListResponse<ICourse>>((resolve, reject) => {
-    db.connectionDB.query(sql, [category_id], (err, result) => {
-      if (err) {
-        reject(err);
-        return;
-      }
-      resolve({ status: 200, data: result as ICourse[], message: "Success" });
-    });
-  });
-};
+// const getCourseByTopicId = async (
+//   category_id: string
+// ): Promise<dataListResponse<ICourse>> => {
+//   const sql = `SELECT * FROM course WHERE topic_id = ?`;
+//   return new Promise<dataListResponse<ICourse>>((resolve, reject) => {
+//     db.connectionDB.query(sql, [category_id], (err, result) => {
+//       if (err) {
+//         reject(err);
+//         return;
+//       }
+//       resolve({ status: 200, data: result as ICourse[], message: "Success" });
+//     });
+//   });
+// };
 
 // get course details with session and lecture of session
 // Define a function that retrieves course details for a given course ID

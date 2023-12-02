@@ -180,7 +180,12 @@ const TargetCreateCourseTeacher = (): React.ReactElement => {
   };
   const { dataDescription } = React.useContext(CreateCourseContext);
 
-  const { register, handleSubmit, setValue } = useForm<IInputTarget>({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<IInputTarget>({
     defaultValues: {
       study: dataDescription?.study ? dataDescription.study : initialData.study,
       requirement: dataDescription?.requirement
@@ -189,6 +194,7 @@ const TargetCreateCourseTeacher = (): React.ReactElement => {
     },
   });
   const saveTarget = async (data: IInputTarget) => {
+    if (errors.study || errors.requirement) return;
     if (!dataDescription) return;
     setIsLoading(true);
     try {
@@ -239,36 +245,57 @@ const TargetCreateCourseTeacher = (): React.ReactElement => {
             type="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
+          {errors.study?.study1 && (
+            <p className="text-sm text-red-500">Không được để trống</p>
+          )}
           <input
             {...register("study.study2", { required: true })}
             placeholder="Ví dụ: Học viên sẽ có thể tạo ra một ứng dụng web đơn giản..."
             type="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
+          {errors.study?.study2 && (
+            <p className="text-sm text-red-500">Không được để trống</p>
+          )}
           <input
             {...register("study.study3", { required: true })}
             placeholder="Ví dụ: Học viên sẽ có thể tạo ra một ứng dụng web đơn giản..."
             type="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
+          {errors.study?.study3 && (
+            <p className="text-sm text-red-500">Không được để trống</p>
+          )}
           <input
             {...register("study.study4", { required: true })}
             placeholder="Ví dụ: Học viên sẽ có thể tạo ra một ứng dụng web đơn giản..."
             type="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
+          {errors.study?.study4 && (
+            <p className="text-sm text-red-500">Không được để trống</p>
+          )}
           <input
             {...register("study.study5", { required: true })}
             placeholder="Ví dụ: Học viên sẽ có thể tạo ra một ứng dụng web đơn giản..."
             type="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
+          {errors.study?.study5 && (
+            <p className="text-sm text-red-500">Không được để trống</p>
+          )}
           <input
             {...register("study.study6", { required: true })}
             placeholder="Ví dụ: Học viên sẽ có thể tạo ra một ứng dụng web đơn giản..."
             type="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
+          {errors.study?.study6 && (
+            <p className="text-sm text-red-500">Không được để trống</p>
+          )}
+          {/* <p className="text-base font-normal text-blue-500 py-3 flex gap-2 items-center leading-3 cursor-pointer">
+            <PlusCircle size={20} />
+            Thêm nội dung vào phản hồi của bạn
 
           {/* <input
             type="text"
@@ -300,36 +327,54 @@ const TargetCreateCourseTeacher = (): React.ReactElement => {
             type="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
+          {errors.requirement?.requirement1 && (
+            <p className="text-sm text-red-500">Không được để trống</p>
+          )}
           <input
             {...register("requirement.requirement2", { required: true })}
             placeholder="Ví dụ: Không có yêu cầu hoặc điều kiện tiên quyết nào..."
             type="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
+          {errors.requirement?.requirement2 && (
+            <p className="text-sm text-red-500">Không được để trống</p>
+          )}
           <input
             {...register("requirement.requirement3", { required: true })}
             placeholder="Ví dụ: Không có yêu cầu hoặc điều kiện tiên quyết nào..."
             type="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
+          {errors.requirement?.requirement3 && (
+            <p className="text-sm text-red-500">Không được để trống</p>
+          )}
           <input
             {...register("requirement.requirement4", { required: true })}
             placeholder="Ví dụ: Không có yêu cầu hoặc điều kiện tiên quyết nào..."
             type="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
+          {errors.requirement?.requirement4 && (
+            <p className="text-sm text-red-500">Không được để trống</p>
+          )}
           <input
             {...register("requirement.requirement5", { required: true })}
             placeholder="Ví dụ: Không có yêu cầu hoặc điều kiện tiên quyết nào..."
             type="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
+          {errors.requirement?.requirement5 && (
+            <p className="text-sm text-red-500">Không được để trống</p>
+          )}
           <input
             {...register("requirement.requirement6", { required: true })}
             placeholder="Ví dụ: Không có yêu cầu hoặc điều kiện tiên quyết nào..."
             type="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
+          {errors.requirement?.requirement6 && (
+            <p className="text-sm text-red-500">Không được để trống</p>
+          )}
           {/* <p className="text-base font-normal text-blue-500 py-3 flex gap-2 items-center leading-3 cursor-pointer">
             <PlusCircle size={20} />
             Thêm nội dung vào phản hồi của bạn
@@ -378,12 +423,22 @@ const TargetCreateCourseTeacher = (): React.ReactElement => {
 const PriceCreateCourseTeacher = (): React.ReactElement => {
   const { dataDescription } = React.useContext(CreateCourseContext);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const { register, handleSubmit } = useForm<ICourseDetail>({
+  const {
+    register,
+    handleSubmit,
+    trigger,
+    formState: { errors },
+  } = useForm<ICourseDetail>({
     defaultValues: {
       ...dataDescription,
     },
   });
   const onSubmitTitle = async (data: ICourseDetail) => {
+    trigger();
+    if (errors.price || errors.discount) {
+      toast.error("Giá hoặc giá bán không hợp lệ");
+      return;
+    }
     try {
       setIsLoading(true);
       await teacherApi.updateCourseTeacher(data);
@@ -407,9 +462,12 @@ const PriceCreateCourseTeacher = (): React.ReactElement => {
             Giá (VND)
           </label>
           <input
-            {...register("price")}
+            {...register("price", { required: true })}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
+          {errors.price && (
+            <p className="text-sm text-red-500">Không được để trống</p>
+          )}
         </div>
         <div className="mb-2">
           <label
@@ -419,9 +477,12 @@ const PriceCreateCourseTeacher = (): React.ReactElement => {
             Giá bán (VND)
           </label>
           <input
-            {...register("discount")}
+            {...register("discount", { required: true })}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
+          {errors.discount && (
+            <p className="text-sm text-red-500">Không được để trống</p>
+          )}
         </div>
         {/* <div className="grid gap-6 mb-2 md:grid-cols-2">
           <div>

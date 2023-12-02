@@ -37,7 +37,7 @@ const TeacherCategory = (): React.ReactElement => {
         ) : (
           <TeacherInformation data={data ? data : ({} as ITeacher)} />
         )}
-        <TabsTeacherCategory idTeacher={data?.teacher_id} />
+        <TabsTeacherCategory />
         {/* tab course review student */}
       </div>
     </PageTransition>

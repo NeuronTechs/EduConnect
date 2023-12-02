@@ -14,7 +14,14 @@ const DescriptionCreateCourseTeacher = (): React.ReactElement => {
     React.useContext<ICreateCourseContext>(CreateCourseContext);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
-  const { register, watch, handleSubmit, reset } = useForm<ICourseDetail>({
+  const {
+    register,
+    watch,
+    handleSubmit,
+    reset,
+    formState: { errors },
+    trigger,
+  } = useForm<ICourseDetail>({
     defaultValues: dataDescription,
   });
   // reset form when dataDescription change
@@ -64,6 +71,17 @@ const DescriptionCreateCourseTeacher = (): React.ReactElement => {
     }
   };
   const onSave = async (data: ICourseDetail) => {
+    trigger();
+    if (
+      errors.title ||
+      errors.topic_id ||
+      errors.level ||
+      errors.description ||
+      (errors.image && data.image === undefined)
+    ) {
+      toast.error("Vui lòng nhập đầy đủ thông tin");
+      return;
+    }
     setIsLoading(true);
     try {
       await teacherApi.updateCourseTeacher({
@@ -86,11 +104,14 @@ const DescriptionCreateCourseTeacher = (): React.ReactElement => {
             Tên khóa học
           </label>
           <input
-            {...register("title")}
+            {...register("title", { required: true })}
             name="title"
             type="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
+          {errors.title && (
+            <p className="text-xs text-red-500">Vui lòng nhập tên khóa học</p>
+          )}
         </div>
         <div className="mb-2">
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -98,7 +119,7 @@ const DescriptionCreateCourseTeacher = (): React.ReactElement => {
           </label>
 
           <select
-            {...register("topic_id")}
+            {...register("topic_id", { required: true })}
             name="topic_id"
             // name="topic_id"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -118,7 +139,7 @@ const DescriptionCreateCourseTeacher = (): React.ReactElement => {
             Mức độ
           </label>
           <select
-            {...register("level")}
+            {...register("level", { required: true })}
             name="level"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
@@ -176,7 +197,7 @@ const DescriptionCreateCourseTeacher = (): React.ReactElement => {
                 type="file"
                 className="hidden"
                 multiple={false}
-                {...register("image")}
+                {...register("image", { required: true })}
                 name="image"
               />
             </label>
@@ -187,12 +208,15 @@ const DescriptionCreateCourseTeacher = (): React.ReactElement => {
             Miêu tả
           </label>
           <textarea
-            {...register("description")}
+            {...register("description", { required: true })}
             name="description"
             rows={4}
             className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Mô tả khoá học..."
           ></textarea>
+          {errors.description && (
+            <p className="text-xs text-red-500">Vui lòng nhập mô tả</p>
+          )}
         </div>
         {/* <div className="grid gap-6 mb-2 md:grid-cols-2">
           <div>

@@ -93,7 +93,7 @@ const formatCourse = (courses: ICourseResult[]) => {
 const getCoursesRecommend = async () => {
   try {
     const queryCheckExistCourse =
-      "SELECT course.*, teacher.*, user.*, topic.* FROM course JOIN teacher ON course.teacher_id = teacher.teacher_id JOIN user ON teacher.username = user.username JOIN topic ON course.topic_id = topic.topic_id LIMIT 10";
+      "SELECT course.*, teacher.*, user.*, topic.* FROM course JOIN teacher ON course.teacher_id = teacher.teacher_id JOIN user ON teacher.username = user.username JOIN topic ON course.topic_id = topic.topic_id WHERE course.status = 2 LIMIT 10";
     return new Promise<dataListResponse<ICourse>>((resolve, reject) => {
       db.connectionDB.query(
         { sql: queryCheckExistCourse, nestTables: true },
@@ -124,9 +124,12 @@ const getCoursesRecommend = async () => {
 
 const getTopicCourses = async (id: string, limit: number) => {
   try {
-    const queryCheckExistCourse = `SELECT * FROM course JOIN teacher ON course.teacher_id = teacher.teacher_id JOIN topic ON course.topic_id = topic.topic_id JOIN user ON teacher.username = user.username  WHERE topic.topic_id = ${id} limit ${
-      limit ? limit : 10
-    }`;
+    const queryCheckExistCourse = `SELECT * FROM course 
+    JOIN teacher ON course.teacher_id = teacher.teacher_id 
+    JOIN topic ON course.topic_id = topic.topic_id 
+    JOIN user ON teacher.username = user.username  
+    WHERE topic.topic_id = ${id} AND course.status = 2 
+    LIMIT ${limit ? limit : 10}`;
     return new Promise<dataListResponse<ICourse>>((resolve, reject) => {
       db.connectionDB.query(
         { sql: queryCheckExistCourse, nestTables: true },
@@ -158,7 +161,7 @@ const getTopicCategory = async (limit?: number) => {
     const query = `
       SELECT topic.topic_id, topic.title, topic.description, COUNT(course.topic_id) as course_count
       FROM topic 
-      LEFT JOIN course ON course.topic_id = topic.topic_id
+      LEFT JOIN course ON course.topic_id = topic.topic_id AND course.status = 2
       GROUP BY topic.topic_id, topic.title
       LIMIT ${limit ? limit : 8}
     `;
@@ -186,7 +189,8 @@ const getTopicCategory = async (limit?: number) => {
 const getAllTopic = async () => {
   try {
     const query = `
-      SELECT topic.topic_id, topic.title, topic.description , COUNT(course.topic_id) as course_count FROM topic LEFT JOIN course ON course.topic_id = topic.topic_id
+      SELECT topic.topic_id, topic.title, topic.description , COUNT(course.topic_id) as course_count FROM topic 
+      LEFT JOIN course ON course.topic_id = topic.topic_id AND course.status = 2
       GROUP BY topic.topic_id, topic.title;
     `;
     return new Promise<dataListResponse<ITopic>>((resolve, reject) => {

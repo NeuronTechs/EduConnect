@@ -34,6 +34,23 @@ export const getCourseTeacherApi = async (params: {
   }
 };
 
+export const getCourseByTeacher = async (params: {
+  teacherId: string;
+  limit: number;
+}) => {
+  try {
+    const res = await httpRequest.get(
+      `/teachers/${params.teacherId}/courses/all`,
+      {
+        params: { limit: params.limit },
+      }
+    );
+    return res.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
 export const updateCourseTeacher = async (data: ICourseDetail) => {
   const formData = new FormData();
   formData.append("title", data.title ? data.title : "");
