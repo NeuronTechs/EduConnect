@@ -121,6 +121,7 @@ const Quiz = ({ currentLecture }: QuizProps) => {
       getData();
       // setTime({ hour: 0, minutes: 10, seconds: 0 });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentLecture]);
   const handleComplete = async () => {
     if (quiz) {

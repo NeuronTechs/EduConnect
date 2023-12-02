@@ -66,18 +66,33 @@ interface ISearch {
   topics?: ITopic[];
 }
 interface IResultSearch {
-  [0]: { course: ICourse; teacher: ITeacher; topic: ITopic; user: IUser }[];
+  [0]: {
+    course: ICourse;
+    teacher: ITeacher;
+    topic: ITopic;
+    user: IUser;
+    transactions?: {
+      total_student: number;
+    };
+    review?: {
+      total_review: number;
+      score_review: number;
+    };
+  }[];
   [1]: { teacher: ITeacher; user: IUser }[];
   [2]: { topic: ITopic; "": { course_count: number } }[];
 }
 
 const search = async (keyword: string, limit: number) => {
   try {
-    const query1 = `SELECT * 
-    FROM course 
-    JOIN teacher ON course.teacher_id = teacher.teacher_id 
-    JOIN topic ON course.topic_id = topic.topic_id 
+    const query1 = `SELECT course.*, teacher.*, user.*, topic.* , total_student, total_review, score_review
+    FROM course JOIN teacher ON course.teacher_id = teacher.teacher_id 
     JOIN user ON teacher.username = user.username 
+    JOIN topic ON course.topic_id = topic.topic_id 
+    LEFT JOIN (SELECT course_id, COUNT(student_id) as total_student 
+    FROM transactions GROUP BY course_id) as transactions ON transactions.course_id = course.course_id
+    LEFT JOIN (SELECT course_id, AVG(rating) as score_review, COUNT(review_id) as total_review 
+    FROM review GROUP BY course_id) as review ON review.course_id = course.course_id
     WHERE course.title LIKE ? AND course.status LIMIT ${limit ? limit : 10};
     SELECT * 
     FROM teacher JOIN user ON teacher.username = user.username 
@@ -119,6 +134,9 @@ const search = async (keyword: string, limit: number) => {
               teacher: item.teacher,
               topic: item.topic,
               user: item.user,
+              total_student: item.transactions?.total_student,
+              total_review: item.review?.total_review,
+              ranking: item.review?.score_review,
             };
           });
           const teachers = results[1].map((item) => {
