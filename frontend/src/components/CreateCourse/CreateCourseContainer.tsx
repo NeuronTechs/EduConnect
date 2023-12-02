@@ -204,6 +204,7 @@ const TargetCreateCourseTeacher = (): React.ReactElement => {
         requirement: data.requirement,
       });
       setIsLoading(false);
+
       toast.success("Cập nhật thành công");
     } catch (error) {
       console.log(error);

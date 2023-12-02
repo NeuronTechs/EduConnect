@@ -6,6 +6,7 @@ interface ICourse {
   level: string;
   topic_id: string;
   teacher_id: string;
+  status: number;
 }
 const createCourse = async (course: ICourse) => {
   try {
