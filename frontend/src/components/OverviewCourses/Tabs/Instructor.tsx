@@ -1,10 +1,5 @@
 import { Avatar } from "@material-tailwind/react";
-import {
-  ChatCenteredDots,
-  PlayCircle,
-  Star,
-  User,
-} from "@phosphor-icons/react";
+import { PlayCircle, User } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import * as courseApi from "../../../api/courseApi/courseApi";
 import { formatBirthDay } from "@/utils/const";
@@ -39,21 +34,13 @@ const Instructor = () => {
           <p className="font-semibold">{teacher?.full_name}</p>
           <p className="font-semibold">{teacher?.major}</p>
           <div className="flex items-center">
-            <p className="flex items-center justify-center mr-5">
-              <Star size={20} color="yellow" weight="fill" className="mr-1" />
-              4.5 sao
-            </p>
-            <p className="hidden lg:display lg:flex items-center justify-start mr-5">
-              <ChatCenteredDots size={20} className="mr-1" />
-              100 bình luận
+            <p className="flex items-center justify-start mr-5">
+              <PlayCircle size={20} className="mr-1" />
+              {teacher?.total_courses} khóa học
             </p>
             <p className="hidden lg:display lg:flex items-center justify-start mr-5">
               <User size={20} className="mr-1" />
-              362 học sinh
-            </p>
-            <p className="flex items-center justify-start mr-5">
-              <PlayCircle size={20} className="mr-1" />
-              20 khóa học
+              {teacher?.total_students} học sinh
             </p>
           </div>
         </div>

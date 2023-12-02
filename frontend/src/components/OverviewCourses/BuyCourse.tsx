@@ -257,13 +257,16 @@ const BuyCourse = () => {
               </p>
             </div>
             <div className="flex flex-col justify-center items-center gap-2">
-              {currentCourse?.student_id !== null &&
-              currentCourse?.student_id?.includes(
-                currentUser?.user_id as string
-              ) ? (
+              {(currentCourse?.student_id !== null &&
+                currentCourse?.student_id?.includes(
+                  currentUser?.user_id as string
+                )) ||
+              (currentCourse?.teacher_id === currentUser?.user_id &&
+                currentUser?.role === "1") ||
+              currentUser?.role === "2" ? (
                 <button
                   onClick={() =>
-                    handleRedirectToCouse(currentCourse?.course_id)
+                    handleRedirectToCouse(currentCourse?.course_id as string)
                   }
                   className="flex items-center justify-center border border-blue-300 w-full py-2 rounded-lg text-blue-400"
                 >

@@ -422,8 +422,20 @@ const resetPassword = async (
 
 const getInforTeacher = (teacher_id: string): Promise<any> => {
   try {
-    const query =
-      "SELECT * FROM educonnectdb.teacher join educonnectdb.user on teacher.username = user.username WHERE teacher_id = ?";
+    const query = `SELECT
+      COUNT(DISTINCT user.username) AS total_students,
+      COUNT(DISTINCT course.course_id) AS total_courses,
+      teacher.*,
+      user.*
+    FROM
+      user
+    LEFT JOIN
+      teacher ON user.username = teacher.username
+    LEFT JOIN
+      course ON course.teacher_id = teacher.teacher_id
+    LEFT JOIN
+      order_items ON order_items.course_id = course.course_id
+    where teacher.teacher_id = ?`;
     return new Promise((resolve, reject) => {
       db.connectionDB.query(query, [teacher_id], function (err, results) {
         if (err) {
@@ -529,5 +541,5 @@ export default {
   resetPassword,
   getInforTeacher,
   changePassword,
-  getProcessCourseByStudentId
+  getProcessCourseByStudentId,
 };

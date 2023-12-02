@@ -13,6 +13,7 @@ import { CSVLink } from "react-csv";
 import { ArrowDown, Eye } from "@phosphor-icons/react";
 import { useNavigate } from "react-router-dom";
 import * as adminApi from "../api/adminApi/adminApi";
+import { toast } from "react-toastify";
 
 interface IComplaint {
   complaint_id: string;
@@ -36,11 +37,11 @@ const TABLE_HEAD = [
 ];
 
 const headers = [
-  { label: "ID", key: "id" },
+  { label: "ID", key: "complaint_id" },
   { label: "Vấn đề", key: "title" },
   { label: "Nội dung", key: "problem" },
   { label: "Hình ảnh", key: "image" },
-  { label: "Khóa học", key: "course" },
+  { label: "Khóa học", key: "course_name" },
 ];
 
 const ManagerComplaintCourse = () => {
@@ -49,25 +50,24 @@ const ManagerComplaintCourse = () => {
   const [complaints, setComplaints] = useState<IComplaint[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [loadingData, setLoadingData] = useState<boolean>(false);
+
+  const getComplaint = async () => {
+    setLoadingData(true);
+    try {
+      const data = await adminApi.getComplaintCourse(pageActive as number);
+      console.log(data);
+      setLoadingData(false);
+      setComplaints(data?.data);
+      setTotalPage(data?.totalPage);
+    } catch (err: any) {
+      setLoadingData(false);
+      toast.error(err?.message);
+    }
+  };
+
   useEffect(() => {
-    const getComplaint = async () => {
-      setLoadingData(true);
-      try {
-        const data = await adminApi.getComplaintCourse(pageActive as number);
-        setLoadingData(false);
-        setComplaints(data?.data);
-        setTotalPage(data?.totalPage?.total);
-      } catch (err: any) {
-        setLoadingData(false);
-        alert(err?.message);
-      }
-    };
     getComplaint();
   }, [pageActive]);
-
-  const handlePageActive = (page: number) => {
-    setPageActive(page);
-  };
 
   const handleRedirect = (id: string) => {
     navigate(`/admin/complaint/${id}`);
@@ -212,7 +212,7 @@ const ManagerComplaintCourse = () => {
                 key={index + 1}
                 variant={pageActive === index + 1 ? "outlined" : "text"}
                 size="sm"
-                onClick={() => handlePageActive(index + 1)}
+                onClick={() => setPageActive(index + 1)}
                 className="hover:outline"
               >
                 {index + 1}

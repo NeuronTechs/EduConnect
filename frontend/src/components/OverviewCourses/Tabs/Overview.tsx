@@ -169,60 +169,84 @@ const Overview = () => {
       <div className="p-[10px]">
         <h3 className="font-semibold">Bạn sẽ học được gì?</h3>
         <ul className="flex flex-col lg:flex-row flex-wrap p-[5px_10px]">
-          <li className="flex items-baseline justify-start basis-1/2">
-            <CheckCircle size={16} className="mr-3" />
-            {currentCourse?.study?.study1}
-          </li>
-          <li className="flex items-baseline justify-start basis-1/2">
-            <CheckCircle size={16} className="mr-3" />
-            {currentCourse?.study?.study2}
-          </li>
-          <li className="flex items-baseline justify-start basis-1/2">
-            <CheckCircle size={16} className="mr-3" />
-            {currentCourse?.study?.study3}
-          </li>
-          <li className="flex items-baseline justify-start basis-1/2">
-            <CheckCircle size={16} className="mr-3" />
-            {currentCourse?.study?.study4}
-          </li>
-          <li className="flex items-baseline justify-start basis-1/2">
-            <CheckCircle size={16} className="mr-3" />
-            {currentCourse?.study?.study5}
-          </li>
-          <li className="flex items-baseline justify-start basis-1/2">
-            <CheckCircle size={16} className="mr-3" />
-            {currentCourse?.study?.study6}
-          </li>
+          {currentCourse?.study?.study1 && (
+            <li className="flex items-baseline justify-start basis-1/2">
+              <CheckCircle size={16} className="mr-3" />
+              {currentCourse?.study?.study1}
+            </li>
+          )}
+          {currentCourse?.study?.study2 && (
+            <li className="flex items-baseline justify-start basis-1/2">
+              <CheckCircle size={16} className="mr-3" />
+              {currentCourse?.study?.study2}
+            </li>
+          )}
+          {currentCourse?.study?.study3 && (
+            <li className="flex items-baseline justify-start basis-1/2">
+              <CheckCircle size={16} className="mr-3" />
+              {currentCourse?.study?.study3}
+            </li>
+          )}
+          {currentCourse?.study?.study4 && (
+            <li className="flex items-baseline justify-start basis-1/2">
+              <CheckCircle size={16} className="mr-3" />
+              {currentCourse?.study?.study4}
+            </li>
+          )}
+          {currentCourse?.study?.study5 && (
+            <li className="flex items-baseline justify-start basis-1/2">
+              <CheckCircle size={16} className="mr-3" />
+              {currentCourse?.study?.study5}
+            </li>
+          )}
+          {currentCourse?.study?.study6 && (
+            <li className="flex items-baseline justify-start basis-1/2">
+              <CheckCircle size={16} className="mr-3" />
+              {currentCourse?.study?.study6}
+            </li>
+          )}
         </ul>
       </div>
       {/* Yêu cầu */}
       <div className="p-[10px] gap-2">
         <h3 className="font-semibold">Yêu cầu</h3>
         <ul className="p-[5px_10px] flex flex-col lg:flex-row flex-wrap">
-          <li className="flex items-baseline justify-start basis-1/2">
-            <MinusCircle weight="fill" size={16} className="mr-3" />
-            {currentCourse?.requirement?.require1}
-          </li>
-          <li className="flex items-baseline justify-start basis-1/2">
-            <MinusCircle weight="fill" size={16} className="mr-3" />
-            {currentCourse?.requirement?.require2}
-          </li>
-          <li className="flex items-baseline justify-start basis-1/2">
-            <MinusCircle weight="fill" size={16} className="mr-3" />
-            {currentCourse?.requirement?.require3}
-          </li>
-          <li className="flex items-baseline justify-start basis-1/2">
-            <MinusCircle weight="fill" size={16} className="mr-3" />
-            {currentCourse?.requirement?.require4}
-          </li>
-          <li className="flex items-baseline justify-start basis-1/2">
-            <MinusCircle weight="fill" size={16} className="mr-3" />
-            {currentCourse?.requirement?.require5}
-          </li>
-          <li className="flex items-baseline justify-start basis-1/2">
-            <MinusCircle weight="fill" size={16} className="mr-3" />
-            {currentCourse?.requirement?.require6}
-          </li>
+          {currentCourse?.requirement?.require1 && (
+            <li className="flex items-baseline justify-start basis-1/2">
+              <MinusCircle weight="fill" size={16} className="mr-3" />
+              {currentCourse?.requirement?.require1}
+            </li>
+          )}
+          {currentCourse?.requirement?.require2 && (
+            <li className="flex items-baseline justify-start basis-1/2">
+              <MinusCircle weight="fill" size={16} className="mr-3" />
+              {currentCourse?.requirement?.require2}
+            </li>
+          )}
+          {currentCourse?.requirement?.require3 && (
+            <li className="flex items-baseline justify-start basis-1/2">
+              <MinusCircle weight="fill" size={16} className="mr-3" />
+              {currentCourse?.requirement?.require3}
+            </li>
+          )}
+          {currentCourse?.requirement?.require4 && (
+            <li className="flex items-baseline justify-start basis-1/2">
+              <MinusCircle weight="fill" size={16} className="mr-3" />
+              {currentCourse?.requirement?.require4}
+            </li>
+          )}
+          {currentCourse?.requirement?.require5 && (
+            <li className="flex items-baseline justify-start basis-1/2">
+              <MinusCircle weight="fill" size={16} className="mr-3" />
+              {currentCourse?.requirement?.require5}
+            </li>
+          )}
+          {currentCourse?.requirement?.require6 && (
+            <li className="flex items-baseline justify-start basis-1/2">
+              <MinusCircle weight="fill" size={16} className="mr-3" />
+              {currentCourse?.requirement?.require6}
+            </li>
+          )}
         </ul>
       </div>
     </div>

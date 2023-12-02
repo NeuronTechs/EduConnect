@@ -27,10 +27,10 @@ const ListStudent = () => {
         if (data?.status === 200) {
           setLoading(false);
           setStudentInCouse(data?.data?.teacher_id);
-          setCourseSelect(
-            data?.data?.teacher_id?.course[0]?.course_id !== "" &&
-              data?.data?.teacher_id?.course[0]?.course_id
-          );
+          // setCourseSelect(
+          //   data?.data?.teacher_id?.course[0]?.course_id !== "" &&
+          //     data?.data?.teacher_id?.course[0]?.course_id
+          // );
         } else {
           setLoading(false);
           alert("error");
@@ -50,7 +50,9 @@ const ListStudent = () => {
   return (
     <div className="w-full space-y-4">
       {loading ? (
-        <Spinner />
+        <div className="flex justify-center">
+          <Spinner className="h-16 w-16 text-gray-900/50" />
+        </div>
       ) : (
         <>
           {/* filter */}
@@ -65,6 +67,9 @@ const ListStudent = () => {
                   className="rounded-md"
                   onChange={(e) => setCourseSelect(e.target.value)}
                 >
+                  <option className="p-3" value="">
+                    Tất cả học viên
+                  </option>
                   {studentInCourse?.course?.map((s) => (
                     <option
                       className="p-3"
@@ -104,51 +109,81 @@ const ListStudent = () => {
           {/* list student when display = block */}
           {displayCourse === 0 && (
             <div className="flex flex-wrap">
-              {courseSelect !== "" ? (
-                (
-                  studentInCourse?.course?.filter(
-                    (s) => s.course_id === courseSelect
-                  )[0]?.student ?? []
-                ).map((student, index) => (
-                  <div
-                    key={index}
-                    className="w-full md:w-[31%] mx-3 my-3 rounded-md p-[10px] flex flex-col items-center justify-center bg-white"
-                  >
-                    <img
-                      className="w-[120px] h-[120px] object-cover"
-                      src={student?.avatar}
-                      alt="student1"
-                    />
-                    <Typography variant="h4" className="my-2">
-                      {student?.student_name}
-                    </Typography>
-                    <Typography
-                      variant="paragraph"
-                      className="mb-2 flex items-center"
+              {courseSelect !== ""
+                ? (
+                    studentInCourse?.course?.filter(
+                      (s) => s.course_id === courseSelect
+                    )[0]?.student ?? []
+                  ).map((student, index) => (
+                    <div
+                      key={index}
+                      className="w-full md:w-[31%] mx-3 my-3 rounded-md p-[10px] flex flex-col items-center justify-center bg-white"
                     >
-                      <MapPin size={20} />
-                      {student?.address}
-                    </Typography>
-                    <Typography variant="paragraph" className="mb-2">
-                      {student?.timeStart}
-                    </Typography>
-                    <Typography
-                      variant="paragraph"
-                      className="mb-2 font-semibold"
-                    >
-                      {
-                        studentInCourse?.course?.filter(
-                          (course) => course.course_id === courseSelect
-                        )[0].course_name
-                      }
-                    </Typography>
-                  </div>
-                ))
-              ) : (
-                <div className="w-full md:w-[31%] mx-3 my-3 rounded-md p-[10px] flex flex-col items-center justify-center bg-white">
-                  Không tồn tại khóa học
-                </div>
-              )}
+                      <img
+                        className="w-[120px] h-[120px] object-cover"
+                        src={student?.avatar}
+                        alt="student1"
+                      />
+                      <Typography variant="h4" className="my-2">
+                        {student?.student_name}
+                      </Typography>
+                      <Typography
+                        variant="paragraph"
+                        className="mb-2 flex items-center"
+                      >
+                        <MapPin size={20} />
+                        {student?.address}
+                      </Typography>
+                      <Typography variant="paragraph" className="mb-2">
+                        {student?.timeStart}
+                      </Typography>
+                      <Typography
+                        variant="paragraph"
+                        className="mb-2 font-semibold"
+                      >
+                        {
+                          studentInCourse?.course?.filter(
+                            (course) => course.course_id === courseSelect
+                          )[0].course_name
+                        }
+                      </Typography>
+                    </div>
+                  ))
+                : studentInCourse?.course
+                    ?.filter((s) => s.course_id !== courseSelect)
+                    .map((course) =>
+                      course?.student?.map((student, index) => (
+                        <div
+                          key={index}
+                          className="w-full md:w-[31%] mx-3 my-3 rounded-md p-[10px] flex flex-col items-center justify-center bg-white"
+                        >
+                          <img
+                            className="w-[120px] h-[120px] object-cover"
+                            src={student?.avatar}
+                            alt="student1"
+                          />
+                          <Typography variant="h4" className="my-2">
+                            {student?.student_name}
+                          </Typography>
+                          <Typography
+                            variant="paragraph"
+                            className="mb-2 flex items-center"
+                          >
+                            <MapPin size={20} />
+                            {student?.address}
+                          </Typography>
+                          <Typography variant="paragraph" className="mb-2">
+                            {student?.timeStart}
+                          </Typography>
+                          <Typography
+                            variant="paragraph"
+                            className="mb-2 font-semibold"
+                          >
+                            {course?.course_name}
+                          </Typography>
+                        </div>
+                      ))
+                    )}
             </div>
           )}
           {/* list student when display = list */}
@@ -172,74 +207,134 @@ const ListStudent = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {courseSelect !== "" ? (
-                      (
-                        studentInCourse?.course?.filter(
-                          (s) => s.course_id === courseSelect
-                        )[0]?.student ?? []
-                      ).map((student, index) => {
-                        const isLast =
-                          index ===
-                          (
-                            studentInCourse?.course?.filter(
-                              (s) => s.course_id === courseSelect
-                            )[0]?.student ?? []
-                          ).length -
-                            1;
-                        const classes = isLast
-                          ? "p-4 bg-white"
-                          : "p-4 border-b border-blue-gray-50 bg-white";
-                        return (
-                          <tr key={index}>
-                            <td className={classes}>
-                              <div className="flex items-center">
-                                <img
-                                  src={student?.avatar}
-                                  alt="image"
-                                  className="w-[120px] h-[120px] object-cover"
-                                />
-                              </div>
-                            </td>
-                            <td className={`${classes} bg-blue-gray-50/50`}>
-                              <Typography variant="h5" className="my-2">
-                                {student?.student_name}
-                              </Typography>
-                            </td>
-                            <td className={classes}>
-                              <Typography
-                                variant="paragraph"
-                                className="mb-2 flex items-center"
-                              >
-                                <MapPin size={20} />
-                                {student.address}
-                              </Typography>
-                            </td>
-                            <td className={classes}>
-                              <Typography variant="paragraph" className="mb-2">
-                                {student?.timeStart}
-                              </Typography>
-                            </td>
-                            <td className={classes}>
-                              <Typography
-                                variant="paragraph"
-                                className="mb-2 font-semibold"
-                              >
-                                {
+                    {courseSelect !== ""
+                      ? (
+                          studentInCourse?.course?.filter(
+                            (s) => s.course_id === courseSelect
+                          )[0]?.student ?? []
+                        ).map((student, index) => {
+                          const isLast =
+                            index ===
+                            (
+                              studentInCourse?.course?.filter(
+                                (s) => s.course_id === courseSelect
+                              )[0]?.student ?? []
+                            ).length -
+                              1;
+                          const classes = isLast
+                            ? "p-4 bg-white"
+                            : "p-4 border-b border-blue-gray-50 bg-white";
+                          return (
+                            <tr key={index}>
+                              <td className={classes}>
+                                <div className="flex items-center">
+                                  <img
+                                    src={student?.avatar}
+                                    alt="image"
+                                    className="w-[120px] h-[120px] object-cover"
+                                  />
+                                </div>
+                              </td>
+                              <td className={`${classes} bg-blue-gray-50/50`}>
+                                <Typography variant="h5" className="my-2">
+                                  {student?.student_name}
+                                </Typography>
+                              </td>
+                              <td className={classes}>
+                                <Typography
+                                  variant="paragraph"
+                                  className="mb-2 flex items-center"
+                                >
+                                  <MapPin size={20} />
+                                  {student.address}
+                                </Typography>
+                              </td>
+                              <td className={classes}>
+                                <Typography
+                                  variant="paragraph"
+                                  className="mb-2"
+                                >
+                                  {student?.timeStart}
+                                </Typography>
+                              </td>
+                              <td className={classes}>
+                                <Typography
+                                  variant="paragraph"
+                                  className="mb-2 font-semibold"
+                                >
+                                  {
+                                    studentInCourse?.course?.filter(
+                                      (course) =>
+                                        course.course_id === courseSelect
+                                    )[0].course_name
+                                  }
+                                </Typography>
+                              </td>
+                            </tr>
+                          );
+                        })
+                      : studentInCourse?.course
+                          ?.filter((s) => s.course_id !== courseSelect)
+                          .map((course) =>
+                            course?.student?.map((student, index) => {
+                              const isLast =
+                                index ===
+                                (
                                   studentInCourse?.course?.filter(
-                                    (course) =>
-                                      course.course_id === courseSelect
-                                  )[0].course_name
-                                }
-                              </Typography>
-                            </td>
-                          </tr>
-                        );
-                      })
-                    ) : (
-                      <div className="w-full md:w-[31%] mx-3 my-3 rounded-md p-[10px] flex flex-col items-center justify-center bg-white">
-                        Không tồn tại khóa học
-                      </div>
-                    )}
+                                    (s) => s.course_id === courseSelect
+                                  )[0]?.student ?? []
+                                ).length -
+                                  1;
+                              const classes = isLast
+                                ? "p-4 bg-white"
+                                : "p-4 border-b border-blue-gray-50 bg-white";
+                              return (
+                                <tr key={index}>
+                                  <td className={classes}>
+                                    <div className="flex items-center">
+                                      <img
+                                        src={student?.avatar}
+                                        alt="image"
+                                        className="w-[120px] h-[120px] object-cover"
+                                      />
+                                    </div>
+                                  </td>
+                                  <td
+                                    className={`${classes} bg-blue-gray-50/50`}
+                                  >
+                                    <Typography variant="h5" className="my-2">
+                                      {student?.student_name}
+                                    </Typography>
+                                  </td>
+                                  <td className={classes}>
+                                    <Typography
+                                      variant="paragraph"
+                                      className="mb-2 flex items-center"
+                                    >
+                                      <MapPin size={20} />
+                                      {student.address}
+                                    </Typography>
+                                  </td>
+                                  <td className={classes}>
+                                    <Typography
+                                      variant="paragraph"
+                                      className="mb-2"
+                                    >
+                                      {student?.timeStart}
+                                    </Typography>
+                                  </td>
+                                  <td className={classes}>
+                                    <Typography
+                                      variant="paragraph"
+                                      className="mb-2 font-semibold"
+                                    >
+                                      {course?.course_name}
+                                    </Typography>
+                                  </td>
+                                </tr>
+                              );
+                            })
+                          )}
                   </tbody>
                 </table>
               </Card>
