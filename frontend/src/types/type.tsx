@@ -59,8 +59,7 @@ export interface ICourseDetail {
   language: string;
   discount: number;
   ranking?: number;
-  status?: string;
-  status_show?: number;
+  status?: number;
   duration?: number;
   duration_type?: string;
   total_ranking?: number;
@@ -99,7 +98,7 @@ export interface ITopic {
 export interface ITeacher {
   teacher_id: string;
   username: string;
-  introduce?: string;
+  description?: string;
   subject?: string;
   educational_level?: string;
   email: string;

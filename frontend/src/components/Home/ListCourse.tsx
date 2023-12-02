@@ -2,17 +2,24 @@ import React from "react";
 import Course from "../Course";
 import { ICourseDetail } from "../../types/type";
 import ListCourseLoading from "../Loading/ListCourseLoading";
+import { Link } from "react-router-dom";
+import { configRouter } from "@/configs/router";
 interface props {
   data: ICourseDetail[];
   title: string;
   isLoading: boolean;
+  showMore?: boolean;
 }
 const ListCourse = (props: props): React.ReactElement => {
   return (
     <div className="flex flex-col gap-2 px-2 w-full overflow-hidden">
       <div className="w-full flex items-center justify-between px-1">
         <h5 className="text-xl font-bold">{props.title}</h5>
-        <p className="text-sm font-light text-blue-600">Xem thêm {">>"}</p>
+        {props.showMore && (
+          <Link to={configRouter.categoryCourse}>
+            <p className="text-sm font-light text-blue-600">Xem thêm {">>"}</p>
+          </Link>
+        )}
       </div>
       <div className="px-3 py-1 w-full">
         {props.isLoading ? (

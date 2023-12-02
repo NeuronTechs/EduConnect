@@ -9,10 +9,12 @@ interface props {
 }
 const ListCategory = (props: props): React.ReactElement => {
   return (
-    <div className="flex flex-col gap-2 px-2 w-full">
+    <div className="flex flex-col gap-2 px-2 w-full space-y-4">
       <div className="w-full flex items-center justify-between px-1">
         <h5 className="text-xl font-bold">{props.title}</h5>
-        <p className="text-sm font-light text-blue-600">Xem thêm {">>"}</p>
+        {/* <Link to={"/category-filter"}>
+          <p className="text-sm font-light text-blue-600">Xem thêm {">>"}</p>
+        </Link> */}
       </div>
       <div className="grid gap-4 grid-cols-4 w-full px-3">
         {props.isLoading ? (
@@ -21,7 +23,7 @@ const ListCategory = (props: props): React.ReactElement => {
           <>
             {props.data.length === 0 && (
               <div className="flex items-center justify-center w-full py-15 col-span-4">
-                <p className="text-center text-lg font-semibold">
+                <p className="text-center text-base font-semibold">
                   Không có danh mục nào
                 </p>
               </div>

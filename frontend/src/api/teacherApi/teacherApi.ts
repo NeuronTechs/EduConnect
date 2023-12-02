@@ -2,10 +2,19 @@ import { ICourseDetail } from "@/types/type";
 import * as httpRequest from "@/utils/httpRequest";
 import { AxiosRequestHeaders } from "axios";
 
+export const getTeacherDetail = async (params: { id: string }) => {
+  try {
+    const res = await httpRequest.get("/teachers/" + params.id);
+    return res.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
 export const teacherRecommendationsApi = async (params: { limit: string }) => {
   try {
     const res = await httpRequest.get("/teachers/recommendations", params);
-    return res;
+    return res.data;
   } catch (error) {
     return Promise.reject(error);
   }
@@ -26,7 +35,6 @@ export const getCourseTeacherApi = async (params: {
 };
 
 export const updateCourseTeacher = async (data: ICourseDetail) => {
-  console.log(data);
   const formData = new FormData();
   formData.append("title", data.title ? data.title : "");
   formData.append("description", data.description ? data.description : "");

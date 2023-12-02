@@ -15,8 +15,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <Provider store={store}>
         <CreateCourseProvider>
           <BrowserRouter>
-            <App />
             <ToastContainer />
+            <App />
           </BrowserRouter>
         </CreateCourseProvider>
       </Provider>

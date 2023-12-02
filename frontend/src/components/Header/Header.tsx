@@ -15,7 +15,7 @@ const Header = (props: propsHeader): React.ReactElement => {
     (state: SliceState) => state.authSlice.currentUser
   );
   return (
-    <div className="w-full h-[80px] bg-white shadow-sm flex items-center justify-between px-3 py-2 ">
+    <div className="w-full h-[80px] bg-white shadow-sm flex items-center justify-between px-3 py-2 relative z-999 ">
       <div className="left flex space-x-3 items-center">
         <div className="rounded-full cursor-pointer p-2  flex transition-all delay-200 items-center justify-center h-auto">
           <List

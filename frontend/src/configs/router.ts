@@ -20,6 +20,8 @@ export const configRouter = {
   chat: "/chat",
 
   payout: "/teacher/payout",
+  categoryCourse: "courses/category",
+  categoryTopic: "/category-topic/:id",
   // teacher
   dashboardTeacher: "/teacher/dashboard",
   liststudent: "/teacher/liststudent",
