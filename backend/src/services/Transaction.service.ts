@@ -105,6 +105,82 @@ const getTransactionByTeacher = async (teacher_id: string): Promise<any> => {
         (error, transactions: RowDataPacket[], fields) => {
           if (error) {
             reject({
+              status: 500,
+              data: {},
+              message: error,
+            });
+            return;
+          }
+          resolve({
+            status: 200,
+            data: transactions,
+            message: "Get transactions success",
+          });
+        }
+      );
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getTeacherReport = async (id: string): Promise<any> => {
+  try {
+    const query = `
+    select YEAR(createdAt) as year,month(createdAt) as month,count(*) as total_student,sum(t.amount)as profit from transactions t join course c on c.course_id = t.course_id join teacher te on te.teacher_id = c.teacher_id where te.teacher_id= ? and createdAt >= DATE_SUB(CURDATE(), INTERVAL 9 MONTH) and t.status = "Thành Công" group by year,month order by year DESC, month DESC`;
+    return new Promise((resolve, reject) => {
+      db.connectionDB.query(
+        query,
+        [id],
+        (error, transactions: RowDataPacket[], fields) => {
+          if (error) {
+            reject({
+              status: false,
+              data: {},
+              message: error,
+            });
+            return;
+          }
+          resolve({
+            status: true,
+            data: transactions,
+            message: "Get transactions success",
+          });
+        }
+      );
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getTransactionEachCourseByTeacher = async (
+  teacher_id: string
+): Promise<any> => {
+  try {
+    const query = `
+    SELECT 
+    c.course_id,
+    c.title,
+    c.image,
+    COUNT(t.transaction_id) AS courses_sold,
+    SUM(t.amount) AS total_revenue
+  FROM 
+    course c 
+  LEFT JOIN 
+    transactions t ON c.course_id = t.course_id 
+  WHERE 
+    c.teacher_id = "te_giaovien01" AND t.status = 'Thành Công'
+  GROUP BY 
+    c.course_id
+    `;
+    return new Promise((resolve, reject) => {
+      db.connectionDB.query(
+        query,
+        [teacher_id],
+        (error, transactions: RowDataPacket[], fields) => {
+          if (error) {
+            reject({
               status: false,
               data: {},
               message: error,
@@ -128,4 +204,6 @@ export default {
   getTransactionReport,
   getTransactionByStudent,
   getTransactionByTeacher,
+  getTeacherReport,
+  getTransactionEachCourseByTeacher,
 };
