@@ -39,9 +39,13 @@ const CreateLessonQuiz = (): React.ReactElement => {
   const { selectLesson, handleEditLesson } =
     React.useContext(CreateCourseContext);
   //
-  const { register, handleSubmit } = useForm<IInputQuiz>({
+  const { register, handleSubmit, setValue } = useForm<IInputQuiz>({
     defaultValues: { title: selectLesson?.name },
   });
+  React.useEffect(() => {
+    setValue("title", selectLesson?.name ? selectLesson?.name : "");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectLesson]);
   const onSubmitTitle = (data: IInputQuiz) => {
     if (data.title.trim() === "") return;
     if (selectLesson) {
@@ -51,14 +55,14 @@ const CreateLessonQuiz = (): React.ReactElement => {
       });
     }
   };
+
   React.useEffect(() => {
-    if (selectLesson) {
-      const requestApi = async () => {
-        const res = await quizApi.getQuiz(selectLesson.lecture_id);
-        setDataQuiz(res);
-      };
-      requestApi();
-    }
+    if (!selectLesson) return;
+    const requestApi = async () => {
+      const res = await quizApi.getQuiz(selectLesson.lecture_id);
+      setDataQuiz(res);
+    };
+    requestApi();
   }, [selectLesson, setDataQuiz]);
   return (
     <div className="w-full h-full space-y-2">
@@ -153,15 +157,24 @@ const SettingQuiz = (): React.ReactElement => {
     setValue("passPercent", dataQuiz.passPercent);
     setValue("retakePercent", dataQuiz.retakePercent);
     setValue("description", dataQuiz.description);
+    setValue("quiz_id", dataQuiz.quiz_id);
+    setValue("lecture_id", dataQuiz.lecture_id);
+    setValue("timeout", dataQuiz.timeout);
+    setValue("type", dataQuiz.type);
+    setValue("created_at", dataQuiz.created_at);
+    setValue("updated_at", dataQuiz.updated_at);
   }, [dataQuiz, setValue]);
 
   const handleUpdateInfoQuiz = async (data: IQuizInfo) => {
     try {
       if (dataQuiz.lecture_id) {
+        console.log(data);
         setIsLoading(true);
         const res = await quizApi.updateQuiz(data);
         console.log(res);
         toast.success("Cập nhật thành công");
+        const data1 = { ...dataQuiz, ...res };
+        console.log(data1);
         setDataQuiz({ ...dataQuiz, ...res });
         setIsLoading(false);
       }
