@@ -74,12 +74,16 @@ export const updateCourseTeacher = async (data: ICourseDetail) => {
   if (data.price) {
     formData.append("price", data.price ? data.price.toString() : "0");
   }
+
   formData.append("topic_id", data.topic_id ? data.topic_id.toString() : "");
   formData.append("level", data.level ? data.level.toString() : "");
   formData.append("study", JSON.stringify(data.study));
   formData.append("requirement", JSON.stringify(data.requirement));
-  formData.append("language", data.language ? data.language.toString() : "");
-
+  formData.append(
+    "language",
+    data.language ? data.language.toString() : "Tiêng việt"
+  );
+  formData.append("status", data.status ? data.status.toString() : "0");
   formData.append(
     "create_at",
     data.created_at ? data.created_at : Date.now().toString()

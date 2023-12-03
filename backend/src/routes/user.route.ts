@@ -2,6 +2,7 @@ import express from "express";
 const router = express.Router();
 import AuthController from "../controllers/user.controller";
 import middlewareController from "../middlewares/middlewareController";
+const uploadCloud = require("../middlewares/uploadCloudinary");
 router.route("/login").post(AuthController.login);
 router.route("/refreshToken").post(AuthController.refreshToken);
 router.route("/logout").post(AuthController.logout);
@@ -13,7 +14,11 @@ router
   .post(middlewareController.verifyToken, AuthController.changePassword);
 router
   .route("/updateinformation")
-  .post(middlewareController.verifyToken, AuthController.updateInformation);
+  .post(
+    middlewareController.verifyToken,
+    uploadCloud.single("avatar"),
+    AuthController.updateInformation
+  );
 router
   .route("/information-teacher/:teacher_id")
   .get(middlewareController.verifyToken, AuthController.getInforTeacher);

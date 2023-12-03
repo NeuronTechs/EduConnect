@@ -125,7 +125,6 @@ const getCoursesRecommend = async () => {
             });
             return;
           }
-          console.log(results);
           resolve({
             status: 200,
             data: formatCourse(results) as ICourse[],

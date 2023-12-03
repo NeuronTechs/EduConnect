@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect } from "react";
+import React from "react";
 import {
   FieldErrors,
   UseFormRegister,
@@ -117,6 +117,7 @@ const StepperContainer = (): React.ReactElement => {
   const urlAvatar = watch("avatar");
   const onSubmit = async (data: IFormInput) => {
     setIsLoad(true);
+    console.log(data.avatar);
     try {
       const res = await userRegisterInformationApi.addInformationUser({
         username: currentUser?.username,
@@ -146,7 +147,7 @@ const StepperContainer = (): React.ReactElement => {
             full_name: data.full_name,
             email: data.email,
             role: data.role,
-            avatar: data.avatar,
+            avatar: res.avatar,
             phone: data.phone.toString(),
             user_id: user_id,
           })

@@ -296,7 +296,7 @@ const ContentStepperCreateCourse = (props: {
             }
             onClick={() => {
               props.setValue("typeCourse", "test");
-              setSelected("test");
+              // setSelected("test");
             }}
           >
             <Note size={32} />
@@ -304,6 +304,9 @@ const ContentStepperCreateCourse = (props: {
             <p className="text-sm font-medium text-center">
               Giúp học viên luyện thi lấy chứng chỉ bằng cách đưa ra câu hỏi
               thực hành.
+            </p>
+            <p className="text-center">
+              chức năng sẽ được phát triển trong tương lai
             </p>
           </div>
         </div>

@@ -205,6 +205,7 @@ const updateInformation = async (
               }
               resolve({
                 status: true,
+
                 message: "Update information success",
               });
             }
