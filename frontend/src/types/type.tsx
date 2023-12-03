@@ -13,25 +13,6 @@ export interface SliceState {
   checkoutSlice: CheckoutState;
   adminSlice: AdminState;
 }
-export interface ICourse {
-  course_id: string;
-  teacher_id: string;
-  topic_id: string;
-  image: string;
-  title: string;
-  description: string;
-  price: number;
-  discount: number;
-  total_hours: number;
-  createdAt: string;
-  updatedAt: string;
-
-  sessions?: ISession[] | null;
-  teacher_avatar?: string;
-  teacher_name?: string;
-  completed_lectures?: number;
-  total_lectures?: number;
-}
 
 export interface ICourseDetail {
   course_id: string;
@@ -139,6 +120,26 @@ export interface IComment {
   avatar?: string | null;
   reply_count?: number;
 }
+
+export interface ICourse {
+  course_id: string;
+  teacher_id: string;
+  topic_id: string;
+  image: string;
+  title: string;
+  description: string;
+  price: number;
+  discount: number;
+  total_hours: number;
+  createdAt: string;
+  updatedAt: string;
+
+  sessions?: ISession[] | null;
+  teacher_avatar?: string;
+  teacher_name?: string;
+  completed_lectures?: number;
+  total_lectures?: number;
+}
 export interface ISession {
   session_id: string;
   course_id: string;
@@ -157,6 +158,7 @@ export interface ILecture {
   comments: IComment[] | null;
   duration: string;
   has_watched?: string;
+  comment_pages?: string;
 }
 
 export interface IConventionChat {
@@ -198,16 +200,6 @@ export interface IMessage {
     size: number;
   }[];
   isLoading?: boolean;
-}
-
-export interface IModules {
-  id: string;
-  title: string;
-  numberLesson: number;
-  course_id: string;
-  totalTime: number;
-  createdAt: Date;
-  updateAt: Date;
 }
 
 export interface ILesson {
@@ -420,6 +412,8 @@ export interface IQuiz {
   questions: IQuestion[];
   created_at?: string;
   updated_at?: string;
+  name?: string;
+  course_id?: string;
 }
 export interface IQuestion {
   question_id: string;

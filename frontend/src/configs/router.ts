@@ -8,7 +8,7 @@ export const configRouter = {
   resetPassword: "/reset-password",
   // student
   myCourse: "/myCourse",
-  learning: "/course/learn/:id",
+  learning: "/course/learn/:id/:quiz?",
   profile: "/profile",
   allTask: "/myCourse/allTask",
   course: "/course/:id",

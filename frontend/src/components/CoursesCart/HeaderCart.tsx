@@ -1,5 +1,5 @@
 // import SearchHeader from "../Header/SearchHeader";
-import NotificationHeader from "../Header/NotificationHeader";
+// import NotificationHeader from "../Header/NotificationHeader";
 // import MessageHeader from "../Header/MessageHeader";
 import CourseCart from "../Header/CourseCart";
 import AccountHeader from "../Header/AccountHeader";
@@ -32,7 +32,7 @@ const HeaderCart = () => {
         <SearchHeader />
       </div> */}
       <div className="flex items-center justify-center gap-3 pr-3">
-        <NotificationHeader />
+        {/* <NotificationHeader /> */}
         {/* <MessageHeader /> */}
         {/* <CourseCart /> */}
         {currentUser?.role === "0" && <CourseCart />}

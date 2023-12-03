@@ -183,7 +183,8 @@ GROUP BY
  */
 const getCourseDetails = async (
   course_id: string,
-  user_id: string
+  user_id: string,
+  role: string
 ): Promise<dataResponse<ICourseDetail>> => {
   // Define the SQL query to retrieve course details
   const sql = `SELECT 
@@ -198,23 +199,10 @@ const getCourseDetails = async (
   l.source,
   l.type,
   l.duration,
-  CASE 
-      WHEN l.type = 'video' THEN
-          CASE 
-              WHEN sp.progress IS NULL THEN "No"
-              ELSE sp.progress
-          END
-      WHEN l.type = 'quiz' THEN
-          CASE 
-              WHEN qr.score IS NULL THEN "No"
-              ELSE "Yes"
-          END
-  END AS has_watched,
+  sp.progress AS has_watched,
   CEIL((SELECT COUNT(*) FROM comments WHERE lecture_id = l.lecture_id AND isReply="false") / 5) as comment_pages,
   (SELECT COUNT(*) FROM lecture l JOIN session ss ON l.session_id = ss.session_id WHERE ss.course_id = c.course_id) as total_lectures ,
-  (SELECT COUNT(*) FROM lecture l2 
-   LEFT JOIN student_progress sp2 ON sp2.lecture_id = l2.lecture_id AND sp2.student_id = ? join session ss on l.session_id = ss.session_id
-   WHERE ss.course_id = c.course_id AND sp2.progress IS NOT NULL) as completed_lectures
+  (select count(*)   from student_progress where student_progress.course_id = ? AND student_progress.student_id = ? AND progress !=0 AND progress IS NOT NULL) as completed_lectures
 FROM 
   Session s
 JOIN 
@@ -228,7 +216,7 @@ LEFT JOIN
 LEFT JOIN
   quiz_result qr ON qr.quiz_id = lq.quiz_id AND qr.student_id = ? AND l.type = 'quiz'
 WHERE 
-  s.course_id = ? and  c.course_id IN (SELECT course_id FROM order_items WHERE student_id = ?)
+ (s.course_id = ? and  c.course_id IN (SELECT course_id FROM order_items WHERE student_id = ?)) or (s.course_id = ? and c.teacher_id = ?) or (? = 2 and s.course_id = ?)
 ORDER BY 
   s.createdAt,s.session_id, l.lecture_id;`;
 
@@ -236,7 +224,18 @@ ORDER BY
   return new Promise<dataResponse<ICourseDetail>>((resolve, reject) => {
     db.connectionDB.query(
       sql,
-      [user_id, user_id, user_id, course_id, user_id],
+      [
+        course_id,
+        user_id,
+        user_id,
+        user_id,
+        course_id,
+        user_id,
+        course_id,
+        user_id,
+        role,
+        course_id,
+      ],
       (err, result: RowDataPacket[]) => {
         if (err) {
           reject(err);
@@ -282,8 +281,10 @@ ORDER BY
                 lecture_id: item.lecture_id,
                 lecture_name: item.lecture_name,
                 description: item.description,
+                session_id: item.session_id,
                 source: item.source,
                 type: item.type,
+                has_watched: item.has_watched,
               });
             }
           }

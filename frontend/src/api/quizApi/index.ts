@@ -165,7 +165,20 @@ export const getResults = async (student_id: string, quiz_id: string) => {
     const response = await httpRequests.get(
       `/quiz-result/lectures/${student_id}/${quiz_id}`
     );
+    console.log(response);
+
     return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const getQuizNotExpired = async (student_id: string) => {
+  try {
+    const response = await httpRequests.get(
+      `/quiz/quizNotExpired/${student_id}`
+    );
+    return response;
   } catch (error) {
     return Promise.reject(error);
   }
@@ -174,6 +187,7 @@ export default {
   getQuiz,
   createQuiz,
   updateQuiz,
+  getQuizNotExpired,
   // question
   createQuestionQuiz,
   updateQuestionQuiz,

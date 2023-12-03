@@ -140,3 +140,25 @@ export const getPaymentByPaymentTeacherId = async (teacher_id: string) => {
     return Promise.reject(error);
   }
 };
+
+export const getTeacherReport = async (teacher_id: string) => {
+  try {
+    const res = await httpRequest.get(
+      `transaction/teacher-report/${teacher_id}`
+    );
+    return res;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const getTransactionEachCourseByTeacher = async (teacher_id: string) => {
+  try {
+    const res = await httpRequest.get(
+      `transaction/transaction-course-teacher/${teacher_id}`
+    );
+    return res;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};

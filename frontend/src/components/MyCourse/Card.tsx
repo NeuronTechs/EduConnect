@@ -45,17 +45,7 @@ const Card = (props: props) => {
           </div>
         </div>
       </div>
-      <div className="flex justify-between text-gray-500 leading-3 text-base font-semibold">
-        <div className="flex justify-center items-center">
-          <Book size={15} className="mr-2" /> 1
-        </div>
-        <div className="flex justify-center items-center">
-          <ShieldCheck size={15} className="mr-2" /> 2
-        </div>
-        <div className="flex justify-center items-center">
-          <UsersFour size={15} className="mr-2" /> 3
-        </div>
-      </div>
+
       <div className="w-full bg-gray-300 rounded-lg h-1">
         <div
           className="bg-gray-600 h-1 p-0.5 text-center text-[15px] font-semibold leading-none text-primary-100 rounded-lg"

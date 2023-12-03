@@ -20,13 +20,7 @@ const TabsInfo = ({ currentLecture, setCurrentTime, currentTime }: Props) => {
   return (
     <div className="w-[100wh] h-auto bg-white p-3  shadow-xl">
       <h1 className="text-xl font-bold">{currentLecture?.lecture_name}</h1>
-      <div className="flex space-x-4 text-xs text-gray-500">
-        <p className="cursor-pointer">Vũ Thanh Sang </p>
-        <span>|</span>
-        <p className="cursor-pointer">Figma</p>
-        <span>|</span>
-        <p className="cursor-pointer">Follow</p>
-      </div>
+
       <div className="mt-7 ">
         <Tabs value={activeTab}>
           <TabsHeader

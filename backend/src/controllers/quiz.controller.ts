@@ -203,6 +203,30 @@ const deleteAnswerQuestionQuiz = async (req: Request, res: Response) => {
   }
 };
 
+const getQuizNotExpired = async (req: Request, res: Response) => {
+  const { student_id } = req.params;
+  try {
+    const result = await quizService.getQuizNotExpired(student_id);
+    if (result.status) {
+      res.status(200).json({
+        status: 200,
+        data: result?.data,
+        message: result?.message,
+      });
+    } else {
+      console.log(result);
+      res.status(400).json({
+        status: 400,
+        data: result?.data,
+        message: result?.message,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal server error", message: error });
+  }
+};
+
 const updateAnswerQuestionMultiply = async (req: Request, res: Response) => {
   const { body, params } = req;
   try {
@@ -244,4 +268,6 @@ export default {
   deleteAnswerQuestionQuiz,
 
   updateAnswerQuestionMultiply,
+
+  getQuizNotExpired,
 };

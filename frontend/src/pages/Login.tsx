@@ -22,8 +22,8 @@ const Login = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  const notify = () => {
-    toast.error("Tài khoản hoặc mật khẩu không chính xác", {
+  const notify = (message: string) => {
+    toast.error(message, {
       position: "top-right",
       autoClose: 3000,
       hideProgressBar: false,
@@ -38,10 +38,17 @@ const Login = () => {
     const auth: Auth = { username: username, password: password };
     const loginSuccess = await dispatch(login(auth));
 
-    if (loginSuccess.type === "auth/login/fulfilled") {
-      navigate("/");
-    } else {
-      notify();
+    try {
+      if (loginSuccess.type === "auth/login/fulfilled") {
+        if (loginSuccess.payload?.role === "0") navigate("/");
+        else if (loginSuccess.payload?.role === "1")
+          navigate(configRouter.dashboardTeacher);
+        else navigate(configRouter.dashboardAdmin);
+      } else {
+        notify(loginSuccess?.error?.message);
+      }
+    } catch (err: any) {
+      notify(err?.response?.data?.message);
     }
   };
 

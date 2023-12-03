@@ -209,7 +209,7 @@ const login = async (req: Request, res: Response) => {
         //3
         status: 400,
         data: {},
-        message: "The username field is required!",
+        message: "Hãy nhập tài khoản!",
       });
     } else if (!password) {
       //4
@@ -217,7 +217,7 @@ const login = async (req: Request, res: Response) => {
         //5
         status: 400,
         data: {},
-        message: "The password field is required!",
+        message: "Hãy nhập mật khẩu",
       });
     } else {
       const result = await UserService.login(username); //6
@@ -227,7 +227,7 @@ const login = async (req: Request, res: Response) => {
           //8
           status: 400,
           data: {},
-          message: "Incorrect username",
+          message: "Tài khoản không chính xác!",
         });
       }
       const isValid = await isValidPassword(password, result[0]?.password); //9
@@ -237,7 +237,7 @@ const login = async (req: Request, res: Response) => {
           //11
           status: 400,
           data: {},
-          message: "Incorrect password",
+          message: "Mật khẩu không chính xác",
         });
       }
       const accessToken = generateAccessToken(
@@ -257,12 +257,20 @@ const login = async (req: Request, res: Response) => {
         path: "/",
         sameSite: "strict",
       });
-      const { password: _, ...others } = result[0];
-      res.status(200).json({
-        status: 200,
-        data: { ...others, accessToken },
-        message: "Get value success",
-      });
+      const { password: _, status, ...others } = result[0];
+      if (status === "0") {
+        res.status(400).json({
+          status: 400,
+          data: {},
+          message: "Tài khoản của bạn đã bị khóa!",
+        });
+      } else {
+        res.status(200).json({
+          status: 200,
+          data: { ...others, status, accessToken },
+          message: "Get value success",
+        });
+      }
     }
   } catch (error) {
     res.status(500).json({

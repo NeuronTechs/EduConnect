@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { signup } from "../features/auth/authSlice";
 import { AppDispatch } from "../redux/store";
 import { signupState } from "../type";
+import { toast } from "react-toastify";
 const SignUp = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -16,8 +17,32 @@ const SignUp = () => {
   const full_name = "test";
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const notify = (message: string) => {
+    toast.error(message, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
+  };
   const signupHandler = async () => {
-    if (password === rePassword) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regular expression for email validation
+    if (username === "" || email === "" || password === "") {
+      notify("Vui lòng nhập đầy đủ thông tin");
+    } else if (username.length < 6) {
+      notify("Tên người dùng phải có ít nhất 6 ký tự");
+    } else if (password.length < 6) {
+      notify("Mật khẩu phải có ít nhất 6 ký tự");
+    } else if (!emailRegex.test(email)) {
+      // Check if email is valid
+      notify("Email không hợp lệ");
+    } else if (username.includes(" ")) {
+      notify("Tên người dùng không được chứa khoảng trắng");
+    } else if (password === rePassword) {
       setFitPassword(true);
       const signupValue: signupState = {
         username: username,
@@ -28,11 +53,15 @@ const SignUp = () => {
       const signupStatus = await dispatch(signup(signupValue));
       if (signupStatus.type === "auth/signup/fulfilled") {
         navigate("/");
+      } else if (signupStatus.type === "auth/signup/rejected") {
+        notify("Username này đã tồn tại");
       }
     } else {
+      notify("Mật khẩu không khớp");
       setFitPassword(false);
     }
   };
+
   return (
     <div className="flex h-[100vh]">
       <div className="flex-initial w-[794px] flex flex-col ">

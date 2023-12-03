@@ -90,10 +90,10 @@ const getCourseByStudentId = async (req: Request, res: Response) => {
 };
 
 const getCourseDetails = async (req: Request, res: Response) => {
-  const { id, user_id } = req.params;
+  const { id, user_id, role } = req.params;
 
   try {
-    const courses = await CourseService.getCourseDetails(id, user_id);
+    const courses = await CourseService.getCourseDetails(id, user_id, role);
     res.status(courses.status).json({ data: courses });
   } catch (error) {
     res.status(500).json({ error: error });

@@ -8,9 +8,9 @@ export const loginPass = async (params: Auth) => {
       password: params.password,
     });
     return res?.data;
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
-    return Promise.reject(error);
+    return Promise.reject(error?.response?.data);
   }
 };
 export const signup = async (params: signupState) => {
