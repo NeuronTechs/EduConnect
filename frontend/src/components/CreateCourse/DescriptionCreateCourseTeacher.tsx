@@ -77,8 +77,9 @@ const DescriptionCreateCourseTeacher = (): React.ReactElement => {
       errors.topic_id ||
       errors.level ||
       errors.description ||
-      (errors.image && data.image === undefined)
+      watch("image") === null
     ) {
+      console.log(watch("image"));
       toast.error("Vui lòng nhập đầy đủ thông tin");
       return;
     }
@@ -199,14 +200,14 @@ const DescriptionCreateCourseTeacher = (): React.ReactElement => {
                 type="file"
                 className="hidden"
                 multiple={false}
-                {...register("image", { required: true })}
+                {...register("image")}
                 name="image"
               />
             </label>
           </div>
-          {errors.image && (
+          {/* {errors.image && (
             <p className="text-xs text-red-500">Vui lòng chọn ảnh</p>
-          )}
+          )} */}
         </div>
         <div className="mb-2">
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
