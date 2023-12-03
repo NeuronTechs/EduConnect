@@ -515,7 +515,6 @@ const getCourseByTeacher2 = (
                 ranking: result.review?.score_review,
               };
             });
-            console.log(results);
             resolve({
               status: 200,
               data: dataResult as ICourse[],

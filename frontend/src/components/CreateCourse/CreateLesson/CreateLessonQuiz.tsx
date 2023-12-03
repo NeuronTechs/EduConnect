@@ -26,6 +26,7 @@ import { CreateQuizContext } from "@/context/CreateQuizContext";
 import InputEditTitle from "./Quiz/InputEditTitle";
 import { CreateCourseContext } from "@/context/CreateCourseContext";
 import quizApi from "@/api/quizApi";
+import { toast } from "react-toastify";
 
 interface IInputQuiz {
   title: string;
@@ -138,13 +139,36 @@ const CreateLessonQuiz = (): React.ReactElement => {
 export default CreateLessonQuiz;
 
 const SettingQuiz = (): React.ReactElement => {
-  const { dataQuiz } = React.useContext(CreateQuizContext);
+  const { dataQuiz, setDataQuiz } = React.useContext(CreateQuizContext);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const { register, handleSubmit, setValue } = useForm<IQuizInfo>({
     defaultValues: dataQuiz,
   });
-  const handleUpdateInfoQuiz = (data: IQuizInfo) => {
-    if (dataQuiz.lecture_id) {
-      quizApi.updateQuiz(data);
+  React.useEffect(() => {
+    setValue("content", dataQuiz.content);
+    setValue("duration", dataQuiz.duration);
+    setValue("durationUnit", dataQuiz.durationUnit);
+    setValue("isRandom", dataQuiz.isRandom);
+    setValue("isShowAnswer", dataQuiz.isShowAnswer);
+    setValue("passPercent", dataQuiz.passPercent);
+    setValue("retakePercent", dataQuiz.retakePercent);
+    setValue("description", dataQuiz.description);
+  }, [dataQuiz, setValue]);
+
+  const handleUpdateInfoQuiz = async (data: IQuizInfo) => {
+    try {
+      if (dataQuiz.lecture_id) {
+        setIsLoading(true);
+        const res = await quizApi.updateQuiz(data);
+        console.log(res);
+        toast.success("Cập nhật thành công");
+        setDataQuiz({ ...dataQuiz, ...res });
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Cập nhật thất bại");
+      setIsLoading(false);
     }
   };
   return (
@@ -251,13 +275,25 @@ const SettingQuiz = (): React.ReactElement => {
         />
       </div>
       <div className="flex w-full py-4 px-2">
-        <button
-          onClick={handleSubmit(handleUpdateInfoQuiz)}
-          type="button"
-          className="text-white bg-blue-600 hover:bg-blue-400 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-        >
-          Lưu
-        </button>
+        {isLoading ? (
+          <button
+            type="button"
+            className="text-white bg-blue-600 hover:bg-blue-400 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+          >
+            <div className="flex items-center justify-center gap-2">
+              <div className="w-4 h-4 rounded-full border-2 border-transparent border-t-2 border-white animate-spin"></div>
+              <p>Đang cập nhật</p>
+            </div>
+          </button>
+        ) : (
+          <button
+            onClick={handleSubmit(handleUpdateInfoQuiz)}
+            type="button"
+            className="text-white bg-blue-600 hover:bg-blue-400 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+          >
+            Lưu
+          </button>
+        )}
       </div>
     </div>
   );
