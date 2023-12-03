@@ -146,7 +146,6 @@ const getTeacherRecommendations = async (limit: string) => {
             });
             return;
           }
-          console.log(course);
           const data = course.map((result) => {
             return {
               ...result?.teacher,
@@ -159,7 +158,6 @@ const getTeacherRecommendations = async (limit: string) => {
                 : 0,
             };
           });
-          console.log(data);
           resolve({
             status: 200,
             data: data as ITeacher[],
