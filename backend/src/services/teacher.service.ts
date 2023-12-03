@@ -528,6 +528,7 @@ const getCourseByTeacher2 = (
     throw error;
   }
 };
+
 export default {
   getTeacherRecommendations,
   getTeacherDetail,
