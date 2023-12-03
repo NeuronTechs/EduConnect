@@ -1,5 +1,5 @@
 import { CreateQuizContext } from "@/context/CreateQuizContext";
-import { IQuestionInfo } from "@/types/type";
+import { IAnswerInfo, IQuestionInfo } from "@/types/type";
 import { Pencil, Plus, Trash } from "@phosphor-icons/react";
 import React from "react";
 
@@ -15,9 +15,10 @@ const ContentQuestionMatchingImage = (props: {
       answers: [
         ...props.data.answers,
         {
-          id: props.data.answers.length + 1,
+          answer_id: (props.data.answers.length + 1).toString(),
+          question_id: props.data.question_id,
           answer: "",
-          isCorrect: false,
+          isCorrect: 0,
           image: null,
           question: "",
         },
@@ -38,7 +39,7 @@ const ContentQuestionMatchingImage = (props: {
           </div>
         )}
         {props.data.answers.map((item) => (
-          <ItemAnswer key={item.id} id={item.id} data={item} />
+          <ItemAnswer key={item.answer_id} id={item.answer_id} data={item} />
         ))}
       </div>
       <div className="w-full  mb-4 mt-4 flex items-center justify-center">
@@ -57,7 +58,7 @@ const ContentQuestionMatchingImage = (props: {
 
 export default ContentQuestionMatchingImage;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const ItemAnswer = (props: { id: number; data: { id: number } }) => {
+const ItemAnswer = (_props: { id: string; data: IAnswerInfo }) => {
   return (
     <div className="flex items-stretch gap-1">
       {/* question */}

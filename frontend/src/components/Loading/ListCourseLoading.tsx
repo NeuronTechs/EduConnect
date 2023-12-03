@@ -5,7 +5,7 @@ interface propsCourses {
 const ListCourseLoading = (props: propsCourses): React.ReactElement => {
   return (
     <div className={`grid grid-cols-${props.numberShow} gap-4 w-full `}>
-      {[...Array(props.numberShow).keys()].map((item, index) => {
+      {[...Array(props.numberShow).keys()].map((_item, index) => {
         return <CardCourseLoading key={index} />;
       })}
     </div>

@@ -1,6 +1,6 @@
 import React from "react";
 
-const InfoTeacherCategoryLoading = () => {
+const InfoTeacherCategoryLoading = (): React.ReactElement => {
   return <div>InfoTeacherCategoryLoading</div>;
 };
 

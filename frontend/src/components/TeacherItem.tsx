@@ -1,8 +1,5 @@
 import React from "react";
-import {
-  DotsThreeOutlineVertical,
-  EnvelopeSimpleOpen,
-} from "@phosphor-icons/react";
+
 import { ITeacher } from "../types/type";
 import { Link } from "react-router-dom";
 import ImageWithError from "./ImageWithError";

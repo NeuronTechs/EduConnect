@@ -6,10 +6,10 @@ import {
   ShareFat,
 } from "@phosphor-icons/react";
 import React from "react";
-import FileMessage from "./MediaChat/FileMessage";
+// import FileMessage from "./MediaChat/FileMessage";
 import { IMessage } from "@/types/type";
-import MediaMessage from "./MediaChat/MediaMessage";
-import AudioSoundMessage from "./MediaChat/AudioSoundMessage";
+// import MediaMessage from "./MediaChat/MediaMessage";
+// import AudioSoundMessage from "./MediaChat/AudioSoundMessage";
 import ImageWithError from "../ImageWithError";
 import { Tooltip } from "flowbite-react";
 // import MediaMessage from "./MediaMessage";
@@ -104,7 +104,7 @@ const ItemChat = (props: IProps): React.ReactElement => {
           <p className="flex text-base font-normal text-gray-500">
             {props.data.message}
           </p>
-          {(props.data.images?.length || 0) + (props.data.videos?.length || 0) >
+          {/* {(props.data.images?.length || 0) + (props.data.videos?.length || 0) >
             1 && (
             <MediaMessage
               data={[
@@ -112,24 +112,24 @@ const ItemChat = (props: IProps): React.ReactElement => {
                 ...(props.data.videos || []),
               ]}
             />
-          )}
+          )} */}
 
-          {props.data.audios?.map((audio, index) => (
+          {/* {props.data.audios?.map((audio, index) => (
             <AudioSoundMessage
               key={index}
-              // src={audio.src}
+              src={audio.src}
               // name={audio.name}
               // duration={audio.duration}
             />
-          ))}
-          {props.data.files?.map((file, index) => (
+          ))} */}
+          {/* {props.data.files?.map((file, index) => (
             <FileMessage
               key={index}
               // src={file.src}
               // name={file.name}
               // size={file.size}
             />
-          ))}
+          ))} */}
         </div>
       </div>
     </div>

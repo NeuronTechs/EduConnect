@@ -1,7 +1,7 @@
 import { DownloadSimple, File } from "@phosphor-icons/react";
 import React from "react";
 
-const FileMessage = () => {
+const FileMessage = (): React.ReactElement => {
   return (
     <div className="bg-blue-100 p-2.5 rounded-md flex items-center justify-center min-w-[300px] gap-3">
       <div className="">

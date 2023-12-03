@@ -6,25 +6,40 @@ export const dataCourseT: ICourseDetail[] = [
     title: "UI/UX Design",
     description: "UI/UX Design",
     image: "",
-    price: 1000000,
-    study: "UI/UX Design",
-    requirement: "UI/UX Design",
+    price: 10000,
+    study: {
+      study1: "",
+      study2: "",
+      study3: "",
+      study4: "",
+      study5: "",
+      study6: "",
+    },
+
+    requirement: {
+      require1: "",
+      require2: "",
+      require3: "",
+      require4: "",
+      require5: "",
+      require6: "",
+    },
     level: "UI/UX Design",
     language: "vietnamese",
     discount: 10000,
     ranking: 4.5,
-    total_ranking: 100,
+    total_review: 100,
     total_enrollment: 100,
     total_lecture: 100,
     total_hour: 100,
     total_student: 100,
     teacher_id: "t123",
     topic_id: "topic123",
-    status: "nháp",
+    status: 0,
     teacher: {
       teacher_id: "t123",
       username: "Jionson whet",
-      introduce:
+      description:
         "I am a professional UI/UX designer with 10 years of experience.",
       subject: "Ui/UX thiết kế",
       educational_level: "12",
@@ -83,7 +98,7 @@ export const dataTeacherT: ITeacher[] = [
   {
     teacher_id: "t123",
     username: "Jionson whet",
-    introduce:
+    description:
       "I am a professional UI/UX designer with 10 years of experience.",
     subject: "Ui/UX thiết kế",
     educational_level: "12",

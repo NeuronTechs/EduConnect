@@ -19,7 +19,7 @@ export interface ICourseDetail {
   title: string;
   description: string;
   image: string | FileList;
-  price: object;
+  price: number;
   study: {
     study1: string;
     study2: string;

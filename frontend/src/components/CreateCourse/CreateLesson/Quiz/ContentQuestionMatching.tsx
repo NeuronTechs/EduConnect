@@ -1,5 +1,5 @@
 import { CreateQuizContext } from "@/context/CreateQuizContext";
-import { IQuestionInfo } from "@/types/type";
+import { IAnswerInfo, IQuestionInfo } from "@/types/type";
 import { DndContext } from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
 import { Pencil, Plus, Trash } from "@phosphor-icons/react";
@@ -16,11 +16,13 @@ const ContentQuestionMatching = (props: { data: IQuestionInfo }) => {
       answers: [
         ...props.data.answers,
         {
-          id: props.data.answers.length + 1,
+          answer_id: (Math.random() * 10000).toString(),
           answer: "",
-          isCorrect: false,
           image: null,
+          isCorrect: 0,
           question: "",
+          question_id: props.data.question_id,
+          explain: "",
         },
       ],
     });
@@ -33,7 +35,9 @@ const ContentQuestionMatching = (props: { data: IQuestionInfo }) => {
         <div className="flex items-center justify-end gap-2"></div>
       </div>
       <DndContext>
-        <SortableContext items={props.data.answers}>
+        <SortableContext
+          items={props.data.answers.map((item) => item.answer_id)}
+        >
           <div className="space-y-2 w-full">
             {props.data.answers.length === 0 && (
               <div className="flex items-center justify-center w-full p-2 rounded-md border border-transparent relative min-h-[45px]">
@@ -41,7 +45,11 @@ const ContentQuestionMatching = (props: { data: IQuestionInfo }) => {
               </div>
             )}
             {props.data.answers.map((item) => (
-              <ItemAnswer key={item.id} id={item.id} data={item} />
+              <ItemAnswer
+                key={item.answer_id}
+                id={item.answer_id}
+                data={item}
+              />
             ))}
           </div>
         </SortableContext>
@@ -63,9 +71,9 @@ const ContentQuestionMatching = (props: { data: IQuestionInfo }) => {
 export default ContentQuestionMatching;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const ItemAnswer = (props: {
-  id: number;
-  data: { id: number };
+const ItemAnswer = (_props: {
+  id: string;
+  data: IAnswerInfo;
 }): React.ReactElement => {
   const [hover, setHover] = React.useState<boolean>(false);
   return (
