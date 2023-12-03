@@ -8,6 +8,7 @@ export default function TextEditor({
 }: {
   value: string;
   onEditorChange: (data: string) => void;
+  onEditorChangeRichtext?: (data: string) => void;
 }) {
   const [editorData, setEditorData] = React.useState(
     value ? value : "<p>Start writing your content here...</p>"
