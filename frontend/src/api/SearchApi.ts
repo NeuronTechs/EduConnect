@@ -1,11 +1,11 @@
 import * as httpRequest from "../utils/httpRequest";
 
-const search = async (value: string, limit: number) => {
+const search = async (value: string, limit?: number) => {
   try {
     const data = await httpRequest.get("search", {
       params: {
         keyword: value,
-        limit: limit,
+        limit: limit ? limit : 10,
       },
     });
     return data.data;
