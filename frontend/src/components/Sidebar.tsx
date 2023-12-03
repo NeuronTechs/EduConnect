@@ -2,8 +2,6 @@ import React from "react";
 import assets from "../assets";
 import {
   BookOpenText,
-  Calendar,
-  Chat,
   FolderPlus,
   House,
   MaskSad,
@@ -32,21 +30,21 @@ const ITEM_SIDEBAR = [
     icon: <BookOpenText size={25} />,
     to: configRouter.myCourse,
   },
-  {
-    title: "kế hoạch",
-    icon: <Calendar size={25} />,
-    to: configRouter.myCourse,
-  },
+  // {
+  //   title: "kế hoạch",
+  //   icon: <Calendar size={25} />,
+  //   to: configRouter.myCourse,
+  // },
   // {
   //   title: "Thông báo",
   //   icon: <Notification size={25} />,
   //   to: configRouter.myCourse,
   // },
-  {
-    title: "Tin Nhắn",
-    icon: <Chat size={25} />,
-    to: "/chat",
-  },
+  // {
+  //   title: "Tin Nhắn",
+  //   icon: <Chat size={25} />,
+  //   to: "/chat",
+  // },
   {
     title: "Hồ sơ",
     icon: <UserCircle size={25} />,

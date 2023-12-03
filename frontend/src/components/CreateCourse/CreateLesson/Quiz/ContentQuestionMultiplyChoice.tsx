@@ -13,6 +13,7 @@ import {
   Trash,
 } from "@phosphor-icons/react";
 import React from "react";
+import InputEditTitle from "./InputEditTitle";
 
 interface IInputAnswer {
   title: string;
@@ -143,7 +144,8 @@ const ItemAnswer = (props: {
     transform: CSS.Transform.toString(transform),
     transition,
   };
-  const { handleEditAnswerQuestion } = React.useContext(CreateQuizContext);
+  const { handleEditAnswerQuestion, handleDeleteAnswerQuestion } =
+    React.useContext(CreateQuizContext);
   const handleChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value === "") return;
     handleEditAnswerQuestion(props.data.answer_id, {
@@ -152,6 +154,7 @@ const ItemAnswer = (props: {
     });
     setIsCheck(e.target.checked);
   };
+
   return (
     <div
       className=" flex items-center justify-between w-full p-2 rounded-md border border-transparent bg-white relative min-h-[45px]"
@@ -165,12 +168,18 @@ const ItemAnswer = (props: {
         <div className="flex items-center justify-center" {...listeners}>
           <DotsSixVertical size={15} className="cursor-pointer" />
         </div>
-        <p className="text-xs font-normal">
-          {props.data.answer ? props.data.answer : "chưa nhập câu trả lời"}
-        </p>
-        <div className=" text-gray-500">
-          <Pencil size={15} />
-        </div>
+
+        <InputEditTitle
+          onSubmit={(data) =>
+            handleEditAnswerQuestion(props.data.question_id, {
+              ...props.data,
+              answer: data,
+            })
+          }
+          value={
+            props.data.answer ? props.data.answer : "chưa nhập câu trả lời"
+          }
+        />
       </div>
       <div className="flex bg-white items-center justify-center gap-3">
         {hover && (
@@ -182,7 +191,10 @@ const ItemAnswer = (props: {
               <Plus size={15} />
               <p>Thêm Giải Thích</p>
             </button>
-            <button className=" p-1  text-gray-500 hover:text-gray-600">
+            <button
+              className=" p-1  text-gray-500 hover:text-gray-600"
+              onClick={() => handleDeleteAnswerQuestion(props.data)}
+            >
               <Trash size={15} />
             </button>
           </>
@@ -212,6 +224,15 @@ const ItemAnswerImage = (props: {
     transform: CSS.Transform.toString(transform),
     transition,
   };
+  const { handleEditAnswerQuestion, handleDeleteAnswerQuestion } =
+    React.useContext(CreateQuizContext);
+  const handleChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value === "") return;
+    handleEditAnswerQuestion(props.data.answer_id, {
+      ...props.data,
+      isCorrect: e.target.checked ? 1 : 0,
+    });
+  };
 
   return (
     <div
@@ -234,6 +255,10 @@ const ItemAnswerImage = (props: {
           <p className="text-sm font-medium text-gray-500">Đúng</p>
           <input
             type="checkbox"
+            checked={props.data.isCorrect ? true : false}
+            onChange={(e) => {
+              handleChangeValue(e);
+            }}
             value=""
             className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
           />
@@ -279,7 +304,10 @@ const ItemAnswerImage = (props: {
           <Plus size={15} />
           <p>Thêm Giải Thích</p>
         </button>
-        <button className=" p-1  text-gray-500 hover:text-gray-600">
+        <button
+          className=" p-1  text-gray-500 hover:text-gray-600"
+          onClick={() => handleDeleteAnswerQuestion(props.data)}
+        >
           <Trash size={15} />
         </button>
       </div>

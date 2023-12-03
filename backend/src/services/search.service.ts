@@ -93,7 +93,7 @@ const search = async (keyword: string, limit: number) => {
     FROM transactions GROUP BY course_id) as transactions ON transactions.course_id = course.course_id
     LEFT JOIN (SELECT course_id, AVG(rating) as score_review, COUNT(review_id) as total_review 
     FROM review GROUP BY course_id) as review ON review.course_id = course.course_id
-    WHERE course.title LIKE ? AND course.status LIMIT ${limit ? limit : 10};
+    WHERE course.title LIKE ? AND course.status = 2 LIMIT ${limit ? limit : 10};
     SELECT * 
     FROM teacher JOIN user ON teacher.username = user.username 
     WHERE (user.username LIKE ?  OR user.full_name LIKE ?) LIMIT ${

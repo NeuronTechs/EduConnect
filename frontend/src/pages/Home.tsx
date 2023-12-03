@@ -7,6 +7,7 @@ import * as topicApi from "@/api/topicApi/topicApi";
 import * as teacherApi from "@/api/teacherApi/teacherApi";
 import { ICourseDetail, ITeacher, ITopic } from "@/types/type";
 import ListTeacher from "@/components/Home/ListTeacher";
+import { configRouter } from "@/configs/router";
 
 const TabHome = (): React.ReactElement => {
   const location = useLocation();
@@ -17,7 +18,7 @@ const TabHome = (): React.ReactElement => {
     },
     {
       title: "Thể Loại",
-      patch: "/category-filter",
+      patch: configRouter.categoryCourse,
     },
   ];
   return (

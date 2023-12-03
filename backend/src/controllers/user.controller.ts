@@ -363,7 +363,7 @@ const updateInformation = async (req: Request, res: Response) => {
       });
     }
 
-    if (!req.body.avatar) {
+    if (!req.body.avatar && !req.file) {
       return res.status(400).json({
         status: 400,
         data: {},
@@ -458,13 +458,20 @@ const updateInformation = async (req: Request, res: Response) => {
       school,
       address_school,
     } = req.body;
-
+    console.log(req.file, req.body);
+    let imageT = null;
+    if (!req.file) {
+      imageT = avatar;
+    } else {
+      imageT = req.file.path;
+    }
+    console.log(imageT, avatar);
     let result: informationResponse;
     result = await UserService.updateInformation({
       username,
       role,
       fullName,
-      avatar,
+      avatar: imageT,
       phone,
       email,
       address,
@@ -479,6 +486,21 @@ const updateInformation = async (req: Request, res: Response) => {
     if (result?.status) {
       res.status(200).json({
         status: 200,
+        data: {
+          username,
+          role,
+          fullName,
+          avatar: imageT,
+          phone,
+          email,
+          address,
+          birthday,
+          educational_level,
+          major,
+          course,
+          school,
+          address_school,
+        },
         message: result?.message,
       });
     } else {
