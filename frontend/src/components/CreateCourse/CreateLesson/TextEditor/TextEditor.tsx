@@ -15,7 +15,7 @@ export default function TextEditor({
   );
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleEditorChange = (event: any, editor: any) => {
+  const handleEditorChange = (_event: any, editor: any) => {
     const data = editor.getData();
     setEditorData(data);
     onEditorChange(data);

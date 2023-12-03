@@ -1,7 +1,7 @@
 import { PauseCircle, PlayCircle } from "@phosphor-icons/react";
 import React from "react";
 
-const MediaMessage = (props: { data: { src: string; alt?: string }[] }) => {
+const MediaMessage = (): React.ReactElement => {
   return (
     <div className="grid grid-cols-2 gap-2 ">
       <CardVideo />
@@ -14,6 +14,13 @@ export default MediaMessage;
 
 const CardVideo = (): React.ReactElement => {
   const [isPlaying, setIsPlaying] = React.useState(false);
+  const handlePlayVideo = () => {
+    if (!isPlaying) {
+      setIsPlaying(true);
+    } else {
+      setIsPlaying(false);
+    }
+  };
   return (
     <div className="w-full aspect-video rounded-md relative overflow-hidden bg-gray-100">
       <div className="absolute w-full h-full top-0 left-0 p-2 flex flex-col justify-between">
@@ -22,9 +29,19 @@ const CardVideo = (): React.ReactElement => {
         </div>
         <div className="flex items-center justify-center w-full">
           {isPlaying ? (
-            <PlayCircle size={25} className="text-white" weight="bold" />
+            <PlayCircle
+              size={25}
+              className="text-white"
+              weight="bold"
+              onClick={handlePlayVideo}
+            />
           ) : (
-            <PauseCircle size={25} weight="bold" className="text-white" />
+            <PauseCircle
+              size={25}
+              weight="bold"
+              className="text-white"
+              onClick={handlePlayVideo}
+            />
           )}
         </div>
         <div className="flex justify-between text-white text-sm font-light  ">

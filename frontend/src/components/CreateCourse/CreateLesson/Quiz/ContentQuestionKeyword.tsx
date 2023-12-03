@@ -20,7 +20,7 @@ const ContentQuestionKeyword = (props: { data: IQuestionInfo }) => {
       answer_id: `${props.data.answers.length + 1}`,
       question_id: props.data.question_id,
       answer: data.title,
-      isCorrect: false,
+      isCorrect: 0,
       image: null,
       question: null,
     });

@@ -184,6 +184,7 @@ const SettingQuiz = (): React.ReactElement => {
       setIsLoading(false);
     }
   };
+
   return (
     <div className="w-full space-y-3 px-2">
       <div className="space-y-2">
@@ -281,7 +282,7 @@ const SettingQuiz = (): React.ReactElement => {
       <div className="space-y-2">
         <p className="text-xs font-bold text-black">Nội dung bài học</p>
         <TextEditor
-          value={dataQuiz.description}
+          value={dataQuiz.description ? dataQuiz.description : ""}
           onEditorChange={(data) => {
             setValue("description", data);
           }}

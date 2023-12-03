@@ -149,7 +149,7 @@ const publicRoutes: IRouter[] = [
   },
   {
     path: configRouter.categoryTopic,
-    component: lazy(() => import("../pages/Category/categoryTopic")),
+    component: lazy(() => import("../pages/Category/CategoryTopic")),
     layout: DefaultLayout,
     role: "0",
   },

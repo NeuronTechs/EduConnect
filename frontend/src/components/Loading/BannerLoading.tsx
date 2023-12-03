@@ -1,6 +1,6 @@
 import React from "react";
 
-const BannerLoading = () => {
+const BannerLoading = (): React.ReactElement => {
   return (
     <div className="w-full bg-white rounded-xl">
       <div

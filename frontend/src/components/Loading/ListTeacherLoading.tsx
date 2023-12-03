@@ -1,6 +1,8 @@
 import React from "react";
 
-const ListTeacherLoading = (props: { numberShow: number }) => {
+const ListTeacherLoading = (props: {
+  numberShow: number;
+}): React.ReactElement => {
   return (
     <div className={`grid grid-cols-${props.numberShow} gap-3 w-full`}>
       <CardTeacherLoading />
