@@ -6,25 +6,25 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 const Task = () => {
   const currentUser = useSelector((state: SliceState) => state.authSlice);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [quiz, setQuiz] = useState<IQuiz[]>([]);
   const getQuiz = async () => {
     try {
       if (currentUser.currentUser) {
-        setLoading(true);
+        // setLoading(true);
 
         const res = await quizApi.getQuizNotExpired(
           currentUser.currentUser?.user_id
         );
 
         if (res.status === 200) {
-          setLoading(false);
+          // setLoading(false);
           setQuiz(res.data);
         }
       }
     } catch (error) {
-      setLoading(false);
+      // setLoading(false);
       console.log(error);
     }
   };

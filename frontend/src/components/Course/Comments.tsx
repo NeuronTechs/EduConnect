@@ -11,7 +11,6 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import WYSIWYGEditor from "./WYSIWYGEditor";
 import { calculateTimePassed } from "@/utils/utils";
-import { set } from "immer/dist/internal";
 interface commentProps {
   comment: IComment;
   setCurrentTime: React.Dispatch<React.SetStateAction<number>>;
@@ -76,9 +75,11 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
             loading="lazy"
             className="w-[40px] h-[40px]"
             src={
-              comment.avatar !== undefined
+              typeof comment.avatar === "string"
                 ? comment.avatar
-                : currentUser.currentUser?.avatar
+                : typeof currentUser.currentUser?.avatar === "string"
+                ? currentUser.currentUser?.avatar
+                : undefined
             }
             alt="avatar"
           />

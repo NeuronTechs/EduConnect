@@ -1,32 +1,4 @@
 import { Rating } from "@material-tailwind/react";
-import {
-  Tabs,
-  TabsHeader,
-  TabsBody,
-  Tab,
-  TabPanel,
-} from "@material-tailwind/react";
-import Overview from "../Tabs/Overview";
-import Reviews from "../Tabs/Reviews";
-import Instructor from "../Tabs/Instructor";
-
-const dataTab = [
-  {
-    label: "Tổng quan",
-    value: "Tổng quan",
-    desc: <Overview />,
-  },
-  {
-    label: "Đánh giá",
-    value: "Đánh giá",
-    desc: <Reviews />,
-  },
-  {
-    label: "Giáo viên",
-    value: "Giáo viên",
-    desc: <Instructor />,
-  },
-];
 
 const DetailCourseLoading = () => {
   return (

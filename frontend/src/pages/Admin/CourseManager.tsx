@@ -16,7 +16,7 @@ import * as adminApi from "../../api/adminApi/adminApi";
 import { Select } from "flowbite-react";
 import { useForm } from "react-hook-form";
 import { useDebounce } from "../../hooks/useDebounce ";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 const TABLE_HEAD = [
   "Tên khóa học",
   "Tên giảng viên",
@@ -88,7 +88,6 @@ const CourseManager = () => {
   }, [currentPage, txtSearch, selectStatus]);
 
   const handleOpen = () => setOpen(!open);
-  const navigate = useNavigate();
   const handleBlock = (courseID: string, status: string) => {
     setCourseId(courseID);
     setStatus(status);
