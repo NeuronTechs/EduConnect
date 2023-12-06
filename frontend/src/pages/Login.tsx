@@ -15,6 +15,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import assets from "@/assets";
 import { configRouter } from "@/configs/router";
+import { IUser } from "@/types/type";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -38,17 +39,13 @@ const Login = () => {
     const auth: Auth = { username: username, password: password };
     const loginSuccess = await dispatch(login(auth));
 
-    try {
-      if (loginSuccess.type === "auth/login/fulfilled") {
-        if (loginSuccess.payload?.role === "0") navigate("/");
-        else if (loginSuccess.payload?.role === "1")
-          navigate(configRouter.dashboardTeacher);
-        else navigate(configRouter.dashboardAdmin);
-      } else {
-        notify(loginSuccess?.error?.message);
-      }
-    } catch (err: any) {
-      notify(err?.response?.data?.message);
+    if (loginSuccess.type === "auth/login/fulfilled") {
+      if ((loginSuccess.payload as IUser)?.role === "0") navigate("/");
+      else if ((loginSuccess.payload as IUser)?.role === "1")
+        navigate(configRouter.dashboardTeacher);
+      else navigate(configRouter.dashboardAdmin);
+    } else {
+      notify((loginSuccess as { error: { message: string } }).error?.message);
     }
   };
 
