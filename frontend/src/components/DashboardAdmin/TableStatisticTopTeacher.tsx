@@ -2,53 +2,6 @@ import { getTeacherSellReport } from "@/api/adminApi/adminApi";
 import { formatCurrency } from "@/utils/const";
 import { useEffect, useState } from "react";
 
-const topTeacher = [
-  {
-    image:
-      "https://cache.lovethispic.com/uploaded_images/327102-Rose-In-Grayscale.jpeg",
-    name: "Trần Thị Mỹ Linh",
-    field: "IT",
-    totalCourse: 30,
-    totalStudent: 1500,
-    profit: 50000000,
-  },
-  {
-    image:
-      "https://cache.lovethispic.com/uploaded_images/327102-Rose-In-Grayscale.jpeg",
-    name: "Trần Thị Mỹ Linh",
-    field: "IT",
-    totalCourse: 30,
-    totalStudent: 1500,
-    profit: 50000000,
-  },
-  {
-    image:
-      "https://cache.lovethispic.com/uploaded_images/327102-Rose-In-Grayscale.jpeg",
-    name: "Trần Thị Mỹ Linh",
-    field: "IT",
-    totalCourse: 30,
-    totalStudent: 1500,
-    profit: 50000000,
-  },
-  {
-    image:
-      "https://cache.lovethispic.com/uploaded_images/327102-Rose-In-Grayscale.jpeg",
-    name: "Trần Thị Mỹ Linh",
-    field: "IT",
-    totalCourse: 30,
-    totalStudent: 1500,
-    profit: 50000000,
-  },
-  {
-    image:
-      "https://cache.lovethispic.com/uploaded_images/327102-Rose-In-Grayscale.jpeg",
-    name: "Trần Thị Mỹ Linh",
-    field: "IT",
-    totalCourse: 30,
-    totalStudent: 1500,
-    profit: 50000000,
-  },
-];
 interface ITopTeacher {
   avatar: string;
   username: string;

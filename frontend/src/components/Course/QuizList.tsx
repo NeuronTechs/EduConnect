@@ -1,4 +1,4 @@
-import { IQuiz } from "@/types/type";
+import { IQuestion, IQuiz } from "@/types/type";
 import { Dispatch, SetStateAction } from "react";
 import { answer } from "./Quiz";
 
