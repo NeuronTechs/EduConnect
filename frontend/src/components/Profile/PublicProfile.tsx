@@ -12,7 +12,15 @@ const PublicProfile = () => {
         <h1 className="font-bold text-black mb-3"> Thông tin cá nhân </h1>
       </div>
       <div className="relative w-full flex items-center justify-center mb-4 mt-8">
-        <img src={currentUser?.avatar} alt="" className="h-[80px]" />
+        <img
+          src={
+            typeof currentUser?.avatar === "string"
+              ? currentUser?.avatar
+              : undefined
+          }
+          alt=""
+          className="h-[80px]"
+        />
       </div>
       <div className="flex flex-col gap-7 w-full">
         <div className="flex w-full space-x-7">

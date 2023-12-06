@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from "react-redux";
 const WYSIWYGEditor = ({
   currentTime,
   Reply,
-  replyState,
   setReply,
 }: {
   currentTime: number;
@@ -63,7 +62,7 @@ const WYSIWYGEditor = ({
         loading="lazy"
         className="w-[40px] h-[40px] col-span-1"
         src={
-          currentUser && currentUser.avatar !== null
+          currentUser && typeof currentUser.avatar === "string"
             ? currentUser.avatar
             : "https://png.pngtree.com/png-clipart/20200224/original/pngtree-cartoon-color-simple-male-avatar-png-image_5230557.jpg"
         }

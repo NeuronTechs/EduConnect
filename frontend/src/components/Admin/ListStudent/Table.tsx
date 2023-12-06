@@ -1,7 +1,6 @@
 import assets from "@/assets";
 import { IStudent } from "@/types/type";
 import { ArrowsDownUp } from "@phosphor-icons/react";
-import React from "react";
 
 type props = {
   listStudent: IStudent[];
@@ -30,7 +29,7 @@ const Table = (props: props) => {
             ))}
           </tr>
         </thead>
-        
+
         <tbody>
           {props.listStudent.map(
             ({ id, username, major, createdAt, email }, index) => {
@@ -83,8 +82,7 @@ const Table = (props: props) => {
           )}
         </tbody>
       </table>
-    {/* create text box for search bar */}
-    
+      {/* create text box for search bar */}
     </div>
   );
 };
