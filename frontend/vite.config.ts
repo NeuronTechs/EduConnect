@@ -1,16 +1,26 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import commonjs from "vite-plugin-commonjs";
 import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react() /*ckeditor5({})*/,
+    commonjs({
+      filter(id) {
+        if (["ckeditor5/build/ckeditor.js"].includes(id)) {
+          return true;
+        }
+      },
+    }),
+  ],
   optimizeDeps: {
     include: ["ckeditor5/build/ckeditor"],
   },
   build: {
     commonjsOptions: {
-      include: ["ckeditor5/build/ckeditor"],
+      exclude: ["ckeditor5/build/ckeditor"],
     },
   },
   resolve: {
