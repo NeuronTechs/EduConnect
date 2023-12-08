@@ -10,10 +10,10 @@ export default function TextEditor({
   onEditorChange: (data: string) => void;
   onEditorChangeRichtext?: (data: string) => void;
 }) {
-  const [editorData, setEditorData] = React.useState(
-    value ? value : "<p>Start writing your content here...</p>"
-  );
-
+  const [editorData, setEditorData] = React.useState("");
+  React.useEffect(() => {
+    if (value !== editorData) setEditorData(value);
+  }, [value, editorData]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleEditorChange = (_event: any, editor: any) => {
     const data = editor.getData();
