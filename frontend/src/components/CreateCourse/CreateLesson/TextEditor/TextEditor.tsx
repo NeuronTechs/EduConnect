@@ -1,5 +1,5 @@
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-import Editor from "ckeditor5/build/ckeditor";
+import Editor from "ckeditor5-custom-build";
 import React from "react";
 
 export default function TextEditor({

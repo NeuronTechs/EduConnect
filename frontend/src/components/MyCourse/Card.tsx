@@ -1,5 +1,4 @@
 import { ICourse } from "@/types/type";
-import { Book, ShieldCheck, UsersFour } from "@phosphor-icons/react";
 import { useNavigate } from "react-router-dom";
 
 type props = {

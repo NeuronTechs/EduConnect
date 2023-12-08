@@ -13,7 +13,7 @@ import {
   Keyboard,
   MonitorPlay,
 } from "@phosphor-icons/react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 interface IconProps {
