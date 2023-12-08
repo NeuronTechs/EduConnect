@@ -42,7 +42,7 @@ const Checkout = () => {
   const dispatch = useDispatch<AppDispatch>();
   const nav = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
-  // const [totalSuccess, setTotalSuccess] = useState<number>(0);
+  const [cardName, setCardName] = useState<string>("");
 
   const currentCourse = useSelector(
     (state: SliceState) => state.checkoutSlice?.courseCurrent
@@ -67,97 +67,138 @@ const Checkout = () => {
     0
   );
 
+  const generateRandomString = () => {
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
+    for (let i = 0; i < 10; i++) {
+      result += characters.charAt(
+        Math.floor(Math.random() * characters.length)
+      );
+    }
+    return result;
+  };
+
   const submitHandler = async (e: any) => {
     e.preventDefault();
 
     let res;
     let totalSuccess = 0;
     try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      for (const course of currentCourse || []) {
-        setLoading(true);
-        const paymentData = {
-          amount: course?.discount,
+      if (cardName === "") {
+        toast.error("Vui lòng nhập tên thẻ!");
+      } else {
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+          },
         };
-
-        res = await axios.post(
-          `${BASE_URL}/payment/process`,
-          paymentData,
-          config
-        );
-
-        const clientSecret = res.data.client_secret;
-
-        if (!stripe || !elements) {
-          return;
-        }
-        const cardElement = elements.getElement(CardNumberElement);
-        if (cardElement) {
-          const result = await stripe.confirmCardPayment(clientSecret, {
-            payment_method: {
-              card: cardElement,
-              billing_details: {
-                name: currentUser?.full_name,
+        for (const course of currentCourse || []) {
+          setLoading(true);
+          if ((course?.discount as number) < 5000) {
+            const addTransactionInCourse =
+              await courseApi.addTransactionInCourse({
+                student_id: currentUser?.user_id,
+                course_id: course?.course_id,
+                amount: course?.discount ? course?.discount : 0,
+                status: "Thành công",
+                transaction_id: generateRandomString(),
+                full_name: currentUser?.full_name,
                 email: currentUser?.email,
-              },
-            },
-          });
-          if (result.error) {
-            setLoading(false);
-            toast.error(result.error.message);
-          } else {
-            if (result.paymentIntent.status === "succeeded") {
-              const addTransactionInCourse =
-                await courseApi.addTransactionInCourse({
-                  student_id: currentUser?.user_id,
-                  course_id: course?.course_id,
-                  amount: course?.discount,
-                  status: "Thành công",
-                  transaction_id: result?.paymentIntent?.id,
-                  full_name: currentUser?.full_name,
-                  email: currentUser?.email,
-                  course_name: course?.title,
-                });
-              if (addTransactionInCourse.status === 200) {
-                if (
+                course_name: course?.title,
+              });
+            if (addTransactionInCourse.status === 200) {
+              dispatch(
+                removeToCart(
                   currentCart?.filter(
                     (cart) => cart?.course_id === course?.course_id
-                  ) &&
-                  currentCart?.filter(
-                    (cart) => cart?.course_id === course?.course_id
-                  )?.length > 0
-                ) {
-                  dispatch(
-                    removeToCart(
-                      currentCart?.filter(
-                        (cart) => cart?.course_id === course?.course_id
-                      )[0].cart_id as string
-                    )
-                  );
-                }
-                totalSuccess++;
-                if (totalSuccess === currentCourse?.length) {
-                  setLoading(false);
-                  dispatch(resetCheckOutCart());
-                  toast.success("Thanh toán thành công");
-                  nav("/");
-                }
-                // dispatch(resetCheckOutCart());
-                // setTotalSuccess((prev) => prev + 1);
-                // console.log(totalSuccess);
-                // toast.success("Thanh toán thành công");
-                // nav("/");
-              } else {
-                setLoading(false);
-                toast.error(addTransactionInCourse.message);
-              }
+                  )[0].cart_id as string
+                )
+              );
+              setLoading(false);
+              totalSuccess++;
+              // toast.success("Thanh toán thành công");
+              // nav(`/course/learn/${course?.course_id}`);
             } else {
               setLoading(false);
-              toast.error("Có một vài vấn đề trong lúc thanh toán!!!");
+              toast.error(addTransactionInCourse.message);
+            }
+          } else {
+            const paymentData = {
+              amount: course?.discount,
+            };
+
+            res = await axios.post(
+              `${BASE_URL}/payment/process`,
+              paymentData,
+              config
+            );
+
+            const clientSecret = res.data.client_secret;
+
+            if (!stripe || !elements) {
+              return;
+            }
+            const cardElement = elements.getElement(CardNumberElement);
+            if (cardElement) {
+              const result = await stripe.confirmCardPayment(clientSecret, {
+                payment_method: {
+                  card: cardElement,
+                  billing_details: {
+                    name: currentUser?.full_name,
+                    email: currentUser?.email,
+                  },
+                },
+              });
+              if (result.error) {
+                setLoading(false);
+                toast.error(result.error.message);
+              } else {
+                if (result.paymentIntent.status === "succeeded") {
+                  const addTransactionInCourse =
+                    await courseApi.addTransactionInCourse({
+                      student_id: currentUser?.user_id,
+                      course_id: course?.course_id,
+                      amount: course?.discount,
+                      status: "Thành công",
+                      transaction_id: result?.paymentIntent?.id,
+                      full_name: currentUser?.full_name,
+                      email: currentUser?.email,
+                      course_name: course?.title,
+                    });
+                  if (addTransactionInCourse.status === 200) {
+                    if (
+                      currentCart?.filter(
+                        (cart) => cart?.course_id === course?.course_id
+                      ) &&
+                      currentCart?.filter(
+                        (cart) => cart?.course_id === course?.course_id
+                      )?.length > 0
+                    ) {
+                      dispatch(
+                        removeToCart(
+                          currentCart?.filter(
+                            (cart) => cart?.course_id === course?.course_id
+                          )[0].cart_id as string
+                        )
+                      );
+                    }
+                    totalSuccess++;
+                    if (totalSuccess === currentCourse?.length) {
+                      setLoading(false);
+                      dispatch(resetCheckOutCart());
+                      toast.success("Thanh toán thành công");
+                      nav("/");
+                    }
+                  } else {
+                    setLoading(false);
+                    toast.error(addTransactionInCourse.message);
+                  }
+                } else {
+                  setLoading(false);
+                  toast.error("Có một vài vấn đề trong lúc thanh toán!!!");
+                }
+              }
             }
           }
         }
@@ -266,6 +307,7 @@ const Checkout = () => {
                     id="card_name_field"
                     placeholder="Card Name"
                     required
+                    onChange={(e) => setCardName(e.target.value)}
                   />
                 </div>
                 <div className="form-group ">

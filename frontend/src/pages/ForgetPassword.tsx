@@ -6,7 +6,7 @@ import * as authApi from "../api/authApi/authApi";
 import { toast } from "react-toastify";
 
 function ForgetPassword() {
-  const [gmail, setEmail] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -14,17 +14,17 @@ function ForgetPassword() {
 
   useEffect(() => {
     setError("");
-  }, [gmail]);
+  }, [email]);
 
   const handleForgetPass = async () => {
     setLoading(true);
-    if (gmail === "") {
+    if (email === "") {
       setError("Hãy nhập email!!!");
       if (inputRef.current) inputRef.current.focus();
       setLoading(false);
     } else {
       try {
-        const data = await authApi.forgetPassword(gmail.trim());
+        const data = await authApi.forgetPassword(email);
         if (data?.status === 200) {
           setLoading(false);
           toast.success("Vui lòng kiểm tra email của bạn để thay đổi mật khẩu");
@@ -61,7 +61,7 @@ function ForgetPassword() {
             type="search"
             ref={inputRef}
             onChange={(e) => {
-              setEmail(e.target.value.trim());
+              setEmail(e.target.value);
             }}
             placeholder="Nhập email..."
             style={{

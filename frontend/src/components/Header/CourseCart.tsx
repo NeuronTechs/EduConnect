@@ -84,10 +84,10 @@ const CourseCart = () => {
                     </div>
                     <div className="flex">
                       <p className="text-[14px] text-blue-600 line-through">
-                        {formatCurrency(data?.price)}
+                        {formatCurrency(data?.price ? data?.price : 0)}
                       </p>
                       <p className="text-[14px] text-blue-600 font-semibold">
-                        {formatCurrency(data?.discount)}
+                        {formatCurrency(data?.discount ? data?.discount : 0)}
                       </p>
                     </div>
                   </div>

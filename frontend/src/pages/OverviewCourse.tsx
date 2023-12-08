@@ -33,11 +33,9 @@ const OverviewCourse = () => {
   ];
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [title, setTitle] = useState<string>("");
+  const [title, setTitle] = useState<string>("Giáo viên không trung thực");
   const [problem, setProblem] = useState<string>("");
   const [image, setImage] = useState<File[]>([]);
-  const [sessionProblem, setSessionProblem] = useState<string>("");
-  const [lectureProblem, setLectureProblem] = useState<string>("");
   const dispatch = useDispatch<AppDispatch>();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -52,6 +50,13 @@ const OverviewCourse = () => {
 
   const currentCourse = useSelector(
     (state: SliceState) => state.courseOverviewSlice.courseCurrent
+  );
+
+  const [sessionProblem, setSessionProblem] = useState<string>(
+    currentCourse?.sessions[0]?.session_id as string
+  );
+  const [lectureProblem, setLectureProblem] = useState<string>(
+    currentCourse?.sessions[0]?.lectures[0]?.lecture_id as string
   );
 
   const loadingGetOverviewCourse = useSelector(
@@ -71,14 +76,14 @@ const OverviewCourse = () => {
 
   const handleOpen = () => {
     setProblem("");
-    setTitle("");
+    // setTitle("");
     setImage([]);
     setOpen(!open);
   };
 
   const handleClose = () => {
     setProblem("");
-    setTitle("");
+    // setTitle("");
     setImage([]);
     setOpen(!open);
   };

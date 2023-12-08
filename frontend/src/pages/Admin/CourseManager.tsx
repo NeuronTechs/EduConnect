@@ -16,7 +16,8 @@ import * as adminApi from "../../api/adminApi/adminApi";
 import { Select } from "flowbite-react";
 import { useForm } from "react-hook-form";
 import { useDebounce } from "../../hooks/useDebounce ";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { formatCurrency } from "@/utils/const";
 const TABLE_HEAD = [
   "Tên khóa học",
   "Tên giảng viên",
@@ -35,8 +36,8 @@ interface ICourseInfo {
   title: string;
   description: string;
   image: string;
-  price: string;
-  discount: string;
+  price: number;
+  discount: number;
   level: string;
   status: string;
   username: string;
@@ -88,6 +89,7 @@ const CourseManager = () => {
   }, [currentPage, txtSearch, selectStatus]);
 
   const handleOpen = () => setOpen(!open);
+  // const navigate = useNavigate();
   const handleBlock = (courseID: string, status: string) => {
     setCourseId(courseID);
     setStatus(status);
@@ -296,7 +298,9 @@ const CourseManager = () => {
                           {u?.language}
                         </Typography>
                       </td>
-                      <td className={classes}>{u?.price}</td>
+                      <td className={classes}>
+                        {formatCurrency(u?.discount ? u?.discount : 0)}
+                      </td>
                       <td className={classes}>{convertDate(u?.create_at)}</td>
                       <td className={classes}>
                         {u?.status === "1" || u?.status === "" ? (

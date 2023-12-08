@@ -114,6 +114,7 @@ const StudentList = () => {
   };
 
   const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
+    setCurrentPage(1);
     setTxtSearch(e.target.value);
   };
 
