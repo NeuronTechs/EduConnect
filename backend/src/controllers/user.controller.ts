@@ -519,8 +519,9 @@ const updateInformation = async (req: Request, res: Response) => {
 };
 
 const isValidEmail = async (req: Request, res: Response) => {
+  const { email } = req.body;
+  console.log(email);
   try {
-    const { email } = req.body;
     const token: string = crypto.randomBytes(20).toString("hex");
     const isValidEmail = await UserService.isValidEmail({ email, token });
     if (isValidEmail?.status) {

@@ -66,6 +66,9 @@ const BuyCourse = () => {
           amount: currentCourse?.discount,
           status: "Thành công",
           transaction_id: generateRandomString(),
+          full_name: currentUser?.full_name,
+          email: currentUser?.email,
+          course_name: currentCourse?.title,
         });
         if (addTransactionInCourse.status === 200) {
           setLoadingCheckout(false);
