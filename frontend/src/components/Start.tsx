@@ -20,8 +20,9 @@ const Start = (props: IProps): React.ReactElement => {
           </svg>
         ))}
 
-        {Array.from({ length: 5 - props.scoreReview }).map(() => (
+        {Array.from({ length: 5 - props.scoreReview }).map((_, i) => (
           <svg
+            key={i}
             className="w-4 h-4 text-gray-300 dark:text-gray-500"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
