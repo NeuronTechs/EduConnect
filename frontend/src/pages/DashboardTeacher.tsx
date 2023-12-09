@@ -185,7 +185,9 @@ const DashboardTeacher = () => {
                 Doanh thu
               </h1>
               <p className="text-[#159F46] font-semibold text-[32px] mb-4">
-                $467.34
+                {dataProfit
+                  .map((item: { name: string; uv: number }) => item.uv)
+                  .reduce((a, b) => a + b) + " VNĐ"}
               </p>
               <p className="text-[14px] text-[#303030] tracking-wider">
                 Thu nhập trong tháng này
@@ -196,7 +198,9 @@ const DashboardTeacher = () => {
                 Học viên
               </h1>
               <p className="text-[#1D9CFD] font-semibold text-[32px] mb-4">
-                12,000
+                {dataStudent
+                  .map((item: { name: string; uv: number }) => item.uv)
+                  .reduce((a, b) => a + b)}
               </p>
               <p className="text-[14px] text-[#303030] tracking-wider">
                 Mới trong tháng này

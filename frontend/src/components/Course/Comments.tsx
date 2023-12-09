@@ -1,16 +1,14 @@
-import {
-  CommentOfLecture,
-  LoadMoreComment,
-  getReplyByCommentId,
-} from "@/features/course/courseSlice";
-import { AppDispatch } from "@/redux/store";
 import { IComment, SliceState } from "@/types/type";
-import { Avatar } from "@material-tailwind/react";
+import { Avatar, Spinner } from "@material-tailwind/react";
 import { ThumbsDown, ThumbsUp } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import WYSIWYGEditor from "./WYSIWYGEditor";
 import { calculateTimePassed } from "@/utils/utils";
+import {
+  CommentOfLecture,
+  getReplyByCommentId,
+} from "@/api/courseApi/courseApi";
 interface commentProps {
   comment: IComment;
   setCurrentTime: React.Dispatch<React.SetStateAction<number>>;
@@ -24,7 +22,7 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
   const [page, setPage] = useState(1);
   const [reply, setReply] = useState<IComment[]>([]);
   const [showReply, setShowReply] = useState(false);
-  const dispatch = useDispatch<AppDispatch>();
+  const [loading, setLoading] = useState(false);
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -32,23 +30,23 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
     });
   };
   const loadReplyCommentHandler = async () => {
+    setLoading(true);
     if (showReply === false) setShowReply(true);
     if (comment.comment_id) {
-      const res = await dispatch(
-        getReplyByCommentId({
-          id: comment.comment_id,
-          paging: page,
-        })
-      );
-      if (res.payload) {
-        const temp = res.payload as IComment[];
-        setReply([...reply, ...temp]);
+      const res: IComment[] = await getReplyByCommentId({
+        id: comment.comment_id,
+        paging: page,
+      });
+      if (res.length) {
+        setReply([...reply, ...res]);
       }
 
       setPage(page + 1);
     }
+    setLoading(false);
   };
   const convertTime = (comment: IComment) => {
+    if (comment?.timestamp === undefined) return "00:00";
     const timestampInSeconds = parseFloat(comment.timestamp);
     const hours = Math.floor(timestampInSeconds / 3600);
     const minutes = Math.floor((timestampInSeconds % 3600) / 60);
@@ -67,6 +65,10 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
 
     return formattedTimestamp;
   };
+  useEffect(() => {
+    if (reply.length > 0) setShowReply(true);
+  }, [reply.length]);
+
   return (
     <div className="flex flex-col w-full justify-center items-start  gap-4 my-5">
       <div className="flex items-start w-full ml-5  my-3 space-x-5">
@@ -75,8 +77,8 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
             loading="lazy"
             className="w-[40px] h-[40px]"
             src={
-              typeof comment.avatar === "string"
-                ? comment.avatar
+              typeof comment?.avatar === "string"
+                ? comment?.avatar
                 : typeof currentUser.currentUser?.avatar === "string"
                 ? currentUser.currentUser?.avatar
                 : undefined
@@ -86,9 +88,15 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
         </div>
         <div className=" text-sm flex  flex-col gap-2  py-3 px-5  rounded-lg">
           <div className="flex items-center  gap-2">
-            <h1 className="font-semibold mr-3 text-sm">{comment.username}</h1>
+            <h1 className="font-semibold mr-3 text-sm">
+              {comment?.username !== undefined
+                ? comment.username
+                : currentUser.currentUser?.username}
+            </h1>
             <p className="opacity-80">
-              {comment.createdAt && calculateTimePassed(comment.createdAt)}
+              {comment?.createdAt !== undefined
+                ? calculateTimePassed(comment?.createdAt)
+                : "now"}
             </p>
           </div>
           <div className="flex space-x-5">
@@ -102,17 +110,16 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
               {convertTime(comment)}
             </p>
             <p className="text-sm w-[80%] whitespace-pre-wrap font-medium">
-              {comment.content}
+              {comment?.content}
             </p>
           </div>
 
-          {comment.resource !== null && (
+          {comment.resource !== null && comment?.resource !== undefined && (
             <div className="w-[80wh]">
               <div className="flex items-center gap-4">
                 {Array.isArray(comment?.resource) &&
                   comment?.resource.length > 0 &&
                   comment?.resource?.map((res) => {
-                    console.log(res.mimetype);
                     if (res.mimetype?.includes("image")) {
                       return (
                         <div className="flex items-center gap-2">
@@ -172,7 +179,6 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
               <p
                 className="underline cursor-pointer"
                 onClick={() => setIsReply(!isReply)}
-                // onClick={loadReplyCommentHandler}
               >
                 Trả lời
               </p>
@@ -184,7 +190,6 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
                 <WYSIWYGEditor
                   currentTime={currentTime}
                   Reply={{ comment_id: comment.comment_id }}
-                  replyState={reply}
                   setReply={setReply}
                 ></WYSIWYGEditor>
               </div>
@@ -209,6 +214,9 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
                   />
                 );
               })}
+            <div className="flex items-center justify-center">
+              {loading && <Spinner color="blue" />}
+            </div>
             {comment.isReply === "false" &&
               showReply === true &&
               comment.reply_count &&
@@ -242,62 +250,77 @@ interface Props {
   currentTime: number;
 }
 const Comments = ({ setCurrentTime, currentTime }: Props) => {
-  const dispatch = useDispatch<AppDispatch>();
   const currentCourse = useSelector((state: SliceState) => state.courseSlice);
+  const [loading, setLoading] = useState(false);
+  const [comments, setComments] = useState<IComment[]>([]);
   const [paging, setPaging] = useState(1);
+  const getComment = async () => {
+    setLoading(true);
+    if (currentCourse.currentLecture) {
+      const res: IComment[] = await CommentOfLecture({
+        id: currentCourse?.currentLecture?.lecture_id,
+        paging: 1,
+      });
+      if (res.length > 0) setComments(res);
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    if (currentCourse.currentLecture)
-      dispatch(
-        CommentOfLecture({
-          id: currentCourse?.currentLecture?.lecture_id,
-          paging: 1,
-        })
-      );
-  }, [currentCourse.currentLecture?.lecture_id]);
-  const loadMoreCommentHandler = () => {
-    if (currentCourse.currentLecture != null)
-      dispatch(
-        LoadMoreComment({
-          id: currentCourse?.currentLecture?.lecture_id,
-          paging: paging + 1,
-        })
-      );
-    setPaging(paging + 1);
+    setComments([]);
+    getComment();
+  }, [currentCourse.currentLecture]);
+  const loadMoreCommentHandler = async () => {
+    setLoading(true);
+    if (currentCourse.currentLecture != null) {
+      const res: IComment[] = await CommentOfLecture({
+        id: currentCourse?.currentLecture?.lecture_id,
+        paging: paging + 1,
+      });
+      if (res.length > 0) setComments([...comments, ...res]);
+      setPaging(paging + 1);
+    }
+    setLoading(false);
   };
 
+  useEffect(() => {}, []);
+
   return (
-    <div className="w-full h-auto">
-      <div className="mt-3">
-        <h1 className="font-semibold text-xl">Phản hồi của học sinh</h1>
-      </div>
-      <div className="my-3 w-full">
-        <WYSIWYGEditor currentTime={currentTime} />
+    <>
+      <div className="w-full h-auto">
+        <div className="mt-3">
+          <h1 className="font-semibold text-xl">Phản hồi của học sinh</h1>
+        </div>
+        <div className="my-3 w-full">
+          <WYSIWYGEditor currentTime={currentTime} setComments={setComments} />
 
-        {currentCourse?.comments?.map((comment) => {
-          return (
-            <Comment
-              key={comment.comment_id}
-              comment={comment}
-              currentTime={currentTime}
-              setCurrentTime={setCurrentTime}
-            />
-          );
-        })}
-
-        <div className="flex items-center justify-center">
-          {currentCourse.currentLecture &&
-            currentCourse.currentLecture.comment_pages &&
-            parseInt(currentCourse.currentLecture.comment_pages) > paging && (
-              <button
-                className="italic text-blue-500 w-[170px]"
-                onClick={loadMoreCommentHandler}
-              >
-                Hiển thị thêm bình luận
-              </button>
-            )}
+          {comments?.map((comment, index) => {
+            return (
+              <Comment
+                key={index}
+                comment={comment}
+                currentTime={currentTime}
+                setCurrentTime={setCurrentTime}
+              />
+            );
+          })}
+          <div className="flex items-center justify-center">
+            {loading && <Spinner color="blue" />}
+          </div>
+          <div className="flex items-center justify-center">
+            {currentCourse.currentLecture &&
+              currentCourse.currentLecture.comment_pages &&
+              parseInt(currentCourse.currentLecture.comment_pages) > paging && (
+                <button
+                  className="italic text-blue-500 w-[170px]"
+                  onClick={loadMoreCommentHandler}
+                >
+                  Hiển thị thêm bình luận
+                </button>
+              )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

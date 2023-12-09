@@ -34,29 +34,6 @@ export const getCourseDetails = createAsyncThunk<
     return res;
   }
 );
-export const CommentOfLecture = createAsyncThunk<
-  IComment[],
-  { id: string; paging: number }
->("course/CommentOfLecture", async (params) => {
-  const res = await courseApi.CommentOfLecture(params);
-  return res;
-});
-export const LoadMoreComment = createAsyncThunk<
-  IComment[],
-  { id: string; paging: number }
->("course/LoadMoreComment", async (params) => {
-  const res = await courseApi.CommentOfLecture(params);
-  return res;
-});
-export const CommentLecture = createAsyncThunk<IComment, FormData>(
-  "course/CommentLecture",
-  async (params: FormData) => {
-    const res = await courseApi.CommentLecture(params);
-    console.log(res);
-
-    return res;
-  }
-);
 
 export const getCourseByStudentId = createAsyncThunk<ICourse[], string>(
   "course/getCourseByStudentId",
@@ -79,16 +56,6 @@ export const updateStudentProgress = createAsyncThunk<
   const res = await lectureApi.updateStudentProgress(params);
   return res;
 });
-export const getReplyByCommentId = createAsyncThunk<
-  IComment[],
-  { id: string; paging: number }
->(
-  "course/getReplyByCommentId",
-  async (params: { id: string; paging: number }) => {
-    const res = await courseApi.getReplyByCommentId(params);
-    return res;
-  }
-);
 export const courseSlice = createSlice({
   name: "course",
   initialState,
@@ -169,50 +136,6 @@ export const courseSlice = createSlice({
       state.currentLecture = null;
       state.isError = true;
     });
-    builder.addCase(CommentOfLecture.pending, (state) => {
-      state.loading = true;
-    });
-    builder.addCase(CommentOfLecture.fulfilled, (state, action) => {
-      state.loading = false;
-
-      state.comments = action.payload;
-      state.error = undefined;
-      state.isError = false;
-    });
-    builder.addCase(CommentOfLecture.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.error.message;
-      state.isError = true;
-    });
-    builder.addCase(CommentLecture.pending, (state) => {
-      state.loading = true;
-    });
-    builder.addCase(CommentLecture.fulfilled, (state, action) => {
-      state.loading = false;
-      state.error = undefined;
-      state.isError = false;
-      if (action.payload.isReply === "false")
-        state.comments?.push(action.payload);
-    });
-    builder.addCase(CommentLecture.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.error.message;
-      state.isError = true;
-    });
-    builder.addCase(LoadMoreComment.pending, (state) => {
-      state.loading = true;
-    });
-    builder.addCase(LoadMoreComment.fulfilled, (state, action) => {
-      state.loading = false;
-      state.error = undefined;
-      state.isError = false;
-      state.comments?.push(...action.payload);
-    });
-    builder.addCase(LoadMoreComment.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.error.message;
-      state.isError = true;
-    });
     builder.addCase(getCourseByStudentId.pending, (state) => {
       state.loading = true;
     });
@@ -253,21 +176,6 @@ export const courseSlice = createSlice({
       console.log(action.payload);
     });
     builder.addCase(updateStudentProgress.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.error.message;
-      state.isError = true;
-    });
-
-    builder.addCase(getReplyByCommentId.pending, (state) => {
-      state.loading = true;
-    });
-    builder.addCase(getReplyByCommentId.fulfilled, (state) => {
-      state.loading = false;
-      state.error = undefined;
-      state.isError = false;
-      // state.replyComments.push(...action.payload);
-    });
-    builder.addCase(getReplyByCommentId.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message;
       state.isError = true;
