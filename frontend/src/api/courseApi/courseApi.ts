@@ -70,6 +70,7 @@ export const getReplyByCommentId = async (params: {
     const res = await httpRequest.get(
       `/comment/reply-by-comment/${params.id}?page=${params.paging}`
     );
+
     return res?.data?.data;
   } catch (error) {
     return Promise.reject(error);

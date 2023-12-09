@@ -1,6 +1,4 @@
 import CardFour from "@/components/DashboardAdmin/CardFour";
-import CardOne from "@/components/DashboardAdmin/CardOne";
-import CardThree from "@/components/DashboardAdmin/CardThree";
 import CardTwo from "@/components/DashboardAdmin/CardTwo";
 import TableStatisticTopTeacher from "@/components/DashboardAdmin/TableStatisticTopTeacher";
 import { configRouter } from "@/configs/router";
@@ -65,10 +63,16 @@ const DashboardAdmin = () => {
       {/* statistic */}
       <div className="my-3 lg:mt-0 group relative flex items-center gap-2.5 rounded-md font-medium text-bodydark2 duration-300 ease-in-out px-5">
         <div className="w-full h-auto grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-          <CardOne />
-          <CardTwo />
-          <CardThree />
-          <CardFour />
+          <CardTwo
+            dataRevenue={dataRevenue
+              .map((item: { name: string; uv: string }) => item.uv)
+              .reduce((a, b) => a + parseInt(b), 0)}
+          />
+          <CardFour
+            dataStudent={dataStudent
+              .map((item: { name: string; uv: number }) => item.uv)
+              .reduce((a, b) => a + b, 0)}
+          />
         </div>
       </div>
       {/* chart */}

@@ -16,7 +16,7 @@ import * as adminApi from "../../api/adminApi/adminApi";
 import { Select } from "flowbite-react";
 import { useForm } from "react-hook-form";
 import { useDebounce } from "../../hooks/useDebounce ";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { formatCurrency } from "@/utils/const";
 const TABLE_HEAD = [
   "Tên khóa học",
