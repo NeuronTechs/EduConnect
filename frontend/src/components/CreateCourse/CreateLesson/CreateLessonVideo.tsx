@@ -6,47 +6,33 @@ import { Video } from "@phosphor-icons/react";
 import React from "react";
 import { UseFormRegister, useForm } from "react-hook-form";
 import TextEditor from "./TextEditor/TextEditor";
+import { ILessonInfo } from "@/types/type";
 
-interface IInputLesson {
-  title: string;
-  description: string;
-  duration: number;
-  source: string | FileList;
-}
 const CreateLessonVideo = () => {
   const { selectLesson, handleEditLesson } =
     React.useContext<ICreateCourseContext>(CreateCourseContext);
 
-  const { register, handleSubmit, setValue } = useForm<IInputLesson>({
+  const { register, handleSubmit, setValue, reset } = useForm<ILessonInfo>({
     defaultValues: {
-      title: selectLesson?.name,
-      description: selectLesson?.description,
-      duration: selectLesson?.duration ? selectLesson?.duration : 0,
-      source: selectLesson?.source,
+      ...selectLesson,
     },
   });
   React.useEffect(() => {
-    setValue("title", selectLesson?.name ? selectLesson?.name : "");
-    setValue(
-      "description",
-      selectLesson?.description ? selectLesson?.description : ""
-    );
-    setValue("duration", selectLesson?.duration ? selectLesson?.duration : 0);
-    setValue("source", selectLesson?.source ? selectLesson?.source : "");
-  }, [selectLesson, setValue]);
-  const onSubmitTitle = (data: IInputLesson) => {
+    reset(selectLesson);
+  }, [reset, selectLesson, setValue]);
+  const onSubmitTitle = (data: ILessonInfo) => {
     const lesson = selectLesson;
-    lesson!.name = data.title;
+    lesson!.name = data.name;
     if (!lesson) return;
     handleEditLesson(lesson);
   };
-  const onSubmitData = (data: IInputLesson) => {
+  const onSubmitData = (data: ILessonInfo) => {
     console.log(data);
     if (!selectLesson) return;
     handleEditLesson({
       lecture_id: selectLesson?.lecture_id ? selectLesson?.lecture_id : "",
       session_id: selectLesson?.session_id ? selectLesson?.session_id : "",
-      name: data.title,
+      name: data.name,
       description: data.description,
       duration: data.duration,
       source: data.source,
@@ -66,7 +52,7 @@ const CreateLessonVideo = () => {
           </div>
           <div className=" flex flex-1 items-center p-2 border border-gray- rounded-r-md">
             <input
-              {...register("title")}
+              {...register("name")}
               placeholder="Nhập tiêu đề..."
               className="text-sm w-full outline-none border-none"
             />
@@ -209,7 +195,7 @@ export default CreateLessonVideo;
 
 const UploadVideoType = (props: {
   selectTypeVideo: string;
-  register: UseFormRegister<IInputLesson>;
+  register: UseFormRegister<ILessonInfo>;
 }): React.ReactElement => {
   return (
     <div className="w-full">
