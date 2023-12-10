@@ -167,6 +167,7 @@ const getReplyByCommentId = async (
   const offset = (page - 1) * pageSize;
   const sql = `
 SELECT 
+c.comment_id,
   c.username,
   c.lecture_id,
   c.timestamp,
@@ -174,7 +175,8 @@ SELECT
   c.isReply,
   c.resource,
   c.createdAt,
-  u.avatar
+  u.avatar,
+  (SELECT COUNT(*) FROM comments r WHERE r.reply_id = c.comment_id) as reply_count
 FROM 
   comments c 
 JOIN 

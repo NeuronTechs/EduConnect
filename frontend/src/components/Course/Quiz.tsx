@@ -174,6 +174,7 @@ const Quiz = ({ currentLecture }: QuizProps) => {
           setQuizComplete(true);
           setScore(score);
           setCurrentQuestionIndex(0);
+          setReview(true);
         }
         setError("");
       }
@@ -241,6 +242,7 @@ const Quiz = ({ currentLecture }: QuizProps) => {
             </div>
             {currentQuestion && currentQuestion.type === "fill" ? (
               <QuizFill
+                review={review}
                 currentQuestion={currentQuestion}
                 currentQuestionIndex={currentQuestionIndex}
                 answerList={answerList}
@@ -250,6 +252,7 @@ const Quiz = ({ currentLecture }: QuizProps) => {
               <div className="border-[0.5px] rounded-md m-5 text-sm font-medium border-gray-300  ">
                 {currentQuestion && currentQuestion.type === "single_choice" ? (
                   <QuizSingleChoice
+                    review={review}
                     currentQuestion={currentQuestion}
                     currentQuestionIndex={currentQuestionIndex}
                     answerList={answerList}
@@ -259,6 +262,7 @@ const Quiz = ({ currentLecture }: QuizProps) => {
                   currentQuestion &&
                   currentQuestion.type === "multiple_choice" && (
                     <QuizMutiChoice
+                      review={review}
                       currentQuestion={currentQuestion}
                       currentQuestionIndex={currentQuestionIndex}
                       answerList={answerList}

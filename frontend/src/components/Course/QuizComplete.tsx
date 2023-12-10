@@ -20,7 +20,7 @@ const QuizCompleted = ({
         </h1>
         <div className="flex items-center gap-1">
           <Cake size={20} color="white" />{" "}
-          <p className="text-sm text-white">Great Job</p>
+          <p className="text-sm text-white">Đã hoàn thành bài kiểm tra</p>
         </div>
       </div>
       <div className="flex gap-1 w-[55%] font-bold text-white">
