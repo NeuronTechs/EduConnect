@@ -84,12 +84,12 @@ const LayoutCreateCourse = (props: {
         <div></div>
         <div className="flex items-center justify-center h-full px-5 gap-4">
           <MenuStatus />
-          <button
+          {/* <button
             type="button"
             className="py-1.5 px-4 text-sm font-medium text-white focus:outline-none bg-gray-300/50 rounded-lg   hover:bg-blue-700 hover:text-white "
           >
-            xem khoá học xem khoá học
-          </button>
+            xem khoá học
+          </button> */}
         </div>
       </div>
       {/* content */}
