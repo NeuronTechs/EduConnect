@@ -13,6 +13,7 @@ import { formatCurrency } from "../../utils/const";
 import { useSelector } from "react-redux";
 import { SliceState } from "@/types/type";
 import DetailCourseLoading from "./Loading/DetailCourseLoading";
+import assets from "@/assets";
 
 const dataTab = [
   {
@@ -70,12 +71,20 @@ const DetailCourse = () => {
           {/* Infor course */}
           <div className="flex flex-col lg:flex lg:flex-row lg:items-center lg:justify-between p-[10px] h-[50px]">
             <div className="flex">
-              <Avatar src={currentCourse?.avatar} alt="avatar" loading="lazy" />
+              <Avatar
+                src={
+                  currentCourse?.avatar !== "null"
+                    ? currentCourse?.avatar
+                    : assets?.images?.noAvatar
+                }
+                alt="avatar"
+                loading="lazy"
+              />
               <div className="mx-3">
                 <p className="font-semibold">{currentCourse?.fullName}</p>
                 <p>{currentCourse?.educational_level}</p>
               </div>
-              <div className="flex items-center">
+              {/* <div className="flex items-center">
                 <Rating
                   value={3}
                   readonly
@@ -85,16 +94,20 @@ const DetailCourse = () => {
                 <p className="hidden lg:block text-[14px] ml-1 italic font-normal">
                   {1200} đánh giá
                 </p>
-              </div>
+              </div> */}
             </div>
             <div className="hidden lg:block text-blue-300">
               {currentCourse?.discount ? (
                 <>
                   <p className="line-through">
-                    {currentCourse?.price!==null ? formatCurrency(currentCourse?.price) : 'Chưa xác định'}
+                    {currentCourse?.price !== null
+                      ? formatCurrency(currentCourse?.price)
+                      : "Chưa xác định"}
                   </p>
                   <p className="font-semibold text-blue-500">
-                    {currentCourse?.discount!==null ? formatCurrency(currentCourse?.discount) : 'Chưa xác định'}
+                    {currentCourse?.discount !== null
+                      ? formatCurrency(currentCourse?.discount)
+                      : "Chưa xác định"}
                   </p>
                 </>
               ) : (
