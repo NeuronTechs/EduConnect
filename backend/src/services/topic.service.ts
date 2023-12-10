@@ -57,6 +57,7 @@ interface ICourse {
   teacher?: ITeacher;
   user?: IUser;
   topic?: ITopic;
+  isBuy?: boolean;
 }
 interface IUser {
   username: string;
@@ -83,6 +84,13 @@ interface ICourseResult {
     total_review: number;
     score_review: number;
   };
+  order_items?: {
+    order_items_id: string;
+    student_id: string;
+    course_id: string;
+    price: number;
+    createdAt: string;
+  };
 }
 // Transform the nested results into the desired format
 const formatCourse = (courses: ICourseResult[]) => {
@@ -95,28 +103,35 @@ const formatCourse = (courses: ICourseResult[]) => {
       total_student: result.transactions?.total_student,
       total_review: result.review?.total_review,
       ranking: result.review?.score_review,
+      isBuy: result.order_items?.student_id ? true : false,
     };
   });
 };
 
 // get courses recommend for user
-const getCoursesRecommend = async () => {
+const getCoursesRecommend = async (limit: number, userId: string) => {
   try {
-    const queryCheckExistCourse = `SELECT course.*, teacher.*, user.*, topic.* , total_student, total_review, score_review
-      FROM course JOIN teacher ON course.teacher_id = teacher.teacher_id 
-      JOIN user ON teacher.username = user.username 
-      JOIN topic ON course.topic_id = topic.topic_id 
-      LEFT JOIN (SELECT course_id, COUNT(student_id) as total_student 
-      FROM transactions GROUP BY course_id) as transactions ON transactions.course_id = course.course_id
-      LEFT JOIN (SELECT course_id, AVG(rating) as score_review, COUNT(review_id) as total_review 
-      FROM review GROUP BY course_id) as review ON review.course_id = course.course_id
-      WHERE course.status = 2
-      LIMIT 10;`;
+    const queryCheckExistCourse = `SELECT course.*, teacher.*, user.*, topic.*, order_items.*, total_student, total_review, score_review
+    FROM course JOIN teacher ON course.teacher_id = teacher.teacher_id 
+    JOIN user ON teacher.username = user.username  
+    JOIN topic ON course.topic_id = topic.topic_id 
+    LEFT JOIN (SELECT course_id, COUNT(student_id) as total_student 
+    FROM transactions GROUP BY course_id) as transactions ON transactions.course_id = course.course_id
+    LEFT JOIN (SELECT course_id, AVG(rating) as score_review, COUNT(review_id) as total_review 
+    FROM review GROUP BY course_id) as review ON review.course_id = course.course_id
+    LEFT JOIN order_items ON order_items.course_id = course.course_id AND order_items.student_id = ?
+    WHERE course.status = 2 
+    ORDER BY score_review DESC
+    LIMIT ?`;
+
     return new Promise<dataListResponse<ICourse>>((resolve, reject) => {
       db.connectionDB.query(
-        { sql: queryCheckExistCourse, nestTables: true },
-
-        (error: string, results: ICourseResult[]) => {
+        {
+          sql: queryCheckExistCourse,
+          values: [userId, limit ? limit : 10],
+          nestTables: true,
+        },
+        (error: QueryError, results: ICourseResult[]) => {
           if (error) {
             reject({
               status: 500,
@@ -128,7 +143,7 @@ const getCoursesRecommend = async () => {
           resolve({
             status: 200,
             data: formatCourse(results) as ICourse[],
-            message: "Get courses successfully 1",
+            message: "Get courses successfully",
           });
         }
       );
@@ -140,9 +155,9 @@ const getCoursesRecommend = async () => {
 
 // get courses by topic
 
-const getTopicCourses = async (id: string, limit: number) => {
+const getTopicCourses = async (id: string, limit: number, userId: string) => {
   try {
-    const queryCheckExistCourse = `SELECT course.*, teacher.*, user.*, topic.* , total_student, total_review, score_review
+    const queryCheckExistCourse = `SELECT course.*, teacher.*, user.*, topic.* , order_items.*, total_student, total_review, score_review
     FROM course 
     JOIN teacher ON course.teacher_id = teacher.teacher_id 
     JOIN topic ON course.topic_id = topic.topic_id 
@@ -151,12 +166,17 @@ const getTopicCourses = async (id: string, limit: number) => {
     FROM transactions GROUP BY course_id) as transactions ON transactions.course_id = course.course_id
     LEFT JOIN (SELECT course_id, AVG(rating) as score_review, COUNT(review_id) as total_review 
     FROM review GROUP BY course_id) as review ON review.course_id = course.course_id
-    WHERE topic.topic_id = ${id} AND course.status = 2 
-    LIMIT ${limit ? limit : 10}`;
+    LEFT JOIN order_items ON order_items.course_id = course.course_id AND order_items.student_id = ?
+    WHERE topic.topic_id = ? AND course.status = 2
+    LIMIT ?`;
     return new Promise<dataListResponse<ICourse>>((resolve, reject) => {
       db.connectionDB.query(
-        { sql: queryCheckExistCourse, nestTables: true },
-        (error: QueryError, results: ICourseResult[], fields) => {
+        {
+          sql: queryCheckExistCourse,
+          values: [userId, id, limit ? limit : 10],
+          nestTables: true,
+        },
+        (error: QueryError, results: ICourseResult[]) => {
           if (error) {
             reject({
               status: 500,
@@ -186,24 +206,28 @@ const getTopicCategory = async (limit?: number) => {
       FROM topic 
       LEFT JOIN course ON course.topic_id = topic.topic_id AND course.status = 2
       GROUP BY topic.topic_id, topic.title
-      LIMIT ${limit ? limit : 8}
+      ORDER BY course_count DESC
+      LIMIT ?
     `;
     return new Promise<dataListResponse<ITopic>>((resolve, reject) => {
-      db.connectionDB.query(query, (error, course, fields) => {
-        if (error) {
-          reject({
-            status: 500,
-            data: [],
-            message: error,
+      db.connectionDB.query(
+        { sql: query, values: [limit ? limit : 8] },
+        (error, course) => {
+          if (error) {
+            reject({
+              status: 500,
+              data: [],
+              message: error,
+            });
+            return;
+          }
+          resolve({
+            status: 200,
+            data: course as ITopic[],
+            message: "Get topic successfully",
           });
-          return;
         }
-        resolve({
-          status: 200,
-          data: course as ITopic[],
-          message: "Get topic successfully",
-        });
-      });
+      );
     });
   } catch (error) {
     throw error;
@@ -214,7 +238,8 @@ const getAllTopic = async () => {
     const query = `
       SELECT topic.topic_id, topic.title, topic.description , COUNT(course.topic_id) as course_count FROM topic 
       LEFT JOIN course ON course.topic_id = topic.topic_id AND course.status = 2
-      GROUP BY topic.topic_id, topic.title;
+      GROUP BY topic.topic_id, topic.title
+      ORDER BY course_count DESC;
     `;
     return new Promise<dataListResponse<ITopic>>((resolve, reject) => {
       db.connectionDB.query(query, (error, course, fields) => {

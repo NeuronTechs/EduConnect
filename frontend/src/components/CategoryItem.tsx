@@ -4,11 +4,16 @@ import { Link } from "react-router-dom";
 import { configRouter } from "@/configs/router";
 interface props {
   data: ITopic;
+  active?: boolean;
 }
 const CategoryItem = (props: props): React.ReactElement => {
   return (
     <Link to={configRouter.categoryTopic.slice(0, -3) + props.data.topic_id}>
-      <div className="bg-white rounded-md shadow-sm px-3 flex gap-2 justify-between items-center min-h-[100px]">
+      <div
+        className={`${
+          props.active ? "bg-blue-200" : "bg-white"
+        } rounded-md shadow-sm px-3 flex gap-2 justify-between items-center min-h-[100px]`}
+      >
         <div className="flex flex-col space-y-2 justify-start p-2.5">
           <h5 className="text-base font-medium">{props.data.title}</h5>
           <p className="text-xs font-light text-gray-600">

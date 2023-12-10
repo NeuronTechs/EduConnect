@@ -3,7 +3,7 @@ import axios from "axios";
 import { AxiosRequestHeaders } from "axios";
 const instance = axios.create({
   baseURL: BASE_URL,
-  withCredentials: false,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },

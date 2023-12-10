@@ -446,6 +446,10 @@ const PriceCreateCourseTeacher = (): React.ReactElement => {
       toast.error("Giá hoặc giá bán không hợp lệ");
       return;
     }
+    if (parseInt(data.price.toString()) < parseInt(data.discount.toString())) {
+      toast.error("Giá bán không được lớn hơn giá gốc");
+      return;
+    }
     try {
       setIsLoading(true);
       await teacherApi.updateCourseTeacher(data);

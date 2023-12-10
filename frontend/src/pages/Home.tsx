@@ -72,12 +72,12 @@ const Home = () => {
   }, []);
   return (
     <div className="flex flex-col w-full  gap-5">
-      <TabHome />
+      {/* <TabHome /> */}
       <Banner isLoading={isLoading} />
       <ListCourse
         isLoading={isLoading}
         data={dataCourse}
-        title={"Khoá Học Nỗi Bật"}
+        title={"Khoá Học Nổi Bật"}
       />
       <ListCategory
         isLoading={isLoading}
@@ -87,7 +87,7 @@ const Home = () => {
       <ListTeacher
         isLoading={isLoading}
         data={dataTeacher}
-        title={"Giáo Viên Nỗi Bật"}
+        title={"Giáo Viên Nổi Bật"}
       />
     </div>
   );
