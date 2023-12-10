@@ -1,6 +1,5 @@
 import {
   ArrowRight,
-  FolderPlus,
   PencilSimple,
   SealCheck,
   UsersThree,
@@ -38,7 +37,7 @@ const CourseTeacher = (props: IProps): React.ReactElement => {
             {parseInt(`${props.data.status}`) === 0 && "Bảng nháp"}
             {parseInt(`${props.data.status}`) === 1 && "Đang duyệt"}
             {parseInt(`${props.data.status}`) === 2 && "Công khai"}
-            {parseInt(`${props.data.status}`) === 3 && "bị từ chối"}
+            {parseInt(`${props.data.status}`) === 3 && "Bị ẩn"}
           </div>
         </div>
         <div className="w-full flex justify-between">
@@ -82,25 +81,25 @@ const CourseTeacher = (props: IProps): React.ReactElement => {
             <p className="text-xs font-medium">{}</p>
           </div>
           <div className="flex flex-col">
-            <p className="text-xs text-black font-extralight">
+            <p className="text-xs text-gray-500 font-extralight line-through">
               {`${props.data.price ? props.data.price : 0} VND`}
             </p>
-            <p className="text-xs text-gray-500 font-extralight line-through">
+            <p className="text-xs text-black font-extralight">
               {`${props.data.discount ? props.data.discount : 0} VND`}
             </p>
           </div>
         </div>
         <div className="w-full">
           {/* number detail */}
-          <div className="flex gap-1 justify-between">
-            <div className="flex items-center gap-1 p-1 ">
+          <div className="flex gap-1 justify-between px-2 py-2">
+            {/* <div className="flex items-center gap-1 p-1 ">
               <div>
                 <FolderPlus size={15} />
               </div>
               <p className="text-xs font-bold leading-3">
                 {props.data.total_lecture ? props.data.total_lecture : 0}
               </p>
-            </div>
+            </div> */}
             <div className="flex items-center gap-1 p-1 ">
               <div>
                 <SealCheck size={15} />

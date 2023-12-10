@@ -12,8 +12,8 @@ export default function TextEditor({
 }) {
   const [editorData, setEditorData] = React.useState("");
   React.useEffect(() => {
-    if (value !== editorData) setEditorData(value);
-  }, [value, editorData]);
+    setEditorData(value);
+  }, [value]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleEditorChange = (_event: any, editor: any) => {
     const data = editor.getData();

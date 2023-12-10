@@ -135,18 +135,26 @@ const MenuStatus = (): React.ReactElement => {
             type="button"
             className="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-1.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none "
           >
+            {!status && status !== 0 && "Chế độ riêng tư"}
             {status === 0 && "Chế độ riêng tư"}
-            {status === 1 && "Chế độ công khai"}
+            {status === 1 && "Chế độ duyệt"}
+            {status === 2 && "Chế độ công khai"}
             {status === 3 && "khoá học bị ẩn"}
           </button>
         </MenuHandler>
-        {status !== 3 && (
-          <MenuList>
-            <MenuItem onClick={() => handClick(1)}>Chế độ công khai</MenuItem>
-            <MenuItem onClick={() => handClick(0)}>Chế độ riêng tư</MenuItem>
-            <MenuItem onClick={() => handClick(3)}>Xoá Khoá Học</MenuItem>
-          </MenuList>
-        )}
+        {status !== 3 &&
+          (status === 2 ? (
+            <MenuList>
+              <MenuItem onClick={() => handClick(3)}>Xoá Khoá Học</MenuItem>
+            </MenuList>
+          ) : (
+            <MenuList>
+              <MenuItem onClick={() => handClick(1)}>Chế độ công khai</MenuItem>
+              <MenuItem onClick={() => handClick(0)}>Chế độ riêng tư</MenuItem>
+              <MenuItem onClick={() => handClick(3)}>Xoá Khoá Học</MenuItem>
+            </MenuList>
+          ))}
+        {}
       </Menu>
     </div>
   );
