@@ -37,8 +37,16 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
         id: comment.comment_id,
         paging: page,
       });
+      console.log(res);
+
       if (res.length) {
-        setReply([...reply, ...res]);
+        const newReply = res.filter((replyComment) => {
+          return !reply.find(
+            (existingReply) =>
+              existingReply.comment_id === replyComment.comment_id
+          );
+        });
+        setReply([...reply, ...newReply]);
       }
 
       setPage(page + 1);
@@ -176,12 +184,14 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
                   onClick={() => setPositive(false)}
                 />
               )}
-              <p
-                className="underline cursor-pointer"
-                onClick={() => setIsReply(!isReply)}
-              >
-                Trả lời
-              </p>
+              {comment.isReply && comment.isReply !== "" && (
+                <p
+                  className="underline cursor-pointer"
+                  onClick={() => setIsReply(!isReply)}
+                >
+                  Trả lời
+                </p>
+              )}
             </div>
           </div>
           <div className="w-[100vh] mx-5 p-2 py-0">
@@ -220,7 +230,7 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
             {comment.isReply === "false" &&
               showReply === true &&
               comment.reply_count &&
-              comment.reply_count / 3 + 1.5 >= page && (
+              comment.reply_count / 3 + 1 > page && (
                 <p
                   className="ml-[100px] text-blue-500 text-base font-light cursor-pointer"
                   onClick={loadReplyCommentHandler}
@@ -230,7 +240,7 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
               )}
           </div>
 
-          {comment.isReply === "false" && showReply === false && (
+          {showReply === false && (
             <p
               className="underline cursor-pointer"
               onClick={loadReplyCommentHandler}

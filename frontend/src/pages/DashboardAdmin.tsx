@@ -64,14 +64,22 @@ const DashboardAdmin = () => {
       <div className="my-3 lg:mt-0 group relative flex items-center gap-2.5 rounded-md font-medium text-bodydark2 duration-300 ease-in-out px-5">
         <div className="w-full h-auto grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
           <CardTwo
-            dataRevenue={dataRevenue
-              .map((item: { name: string; uv: string }) => item.uv)
-              .reduce((a, b) => a + parseInt(b), 0)}
+            dataRevenue={
+              dataRevenue.length > 0
+                ? dataRevenue
+                    .map((item: { name: string; uv: string }) => item.uv)
+                    .reduce((a, b) => a + parseInt(b), 0)
+                : 0
+            }
           />
           <CardFour
-            dataStudent={dataStudent
-              .map((item: { name: string; uv: number }) => item.uv)
-              .reduce((a, b) => a + b, 0)}
+            dataStudent={
+              dataStudent.length > 0
+                ? dataStudent
+                    .map((item: { name: string; uv: number }) => item.uv)
+                    .reduce((a, b) => a + b, 0)
+                : 0
+            }
           />
         </div>
       </div>
