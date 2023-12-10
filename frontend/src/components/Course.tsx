@@ -1,7 +1,7 @@
 import React from "react";
 import {
   ArrowRight,
-  FolderPlus,
+  // FolderPlus,
   SealCheck,
   UsersThree,
 } from "@phosphor-icons/react";
@@ -66,24 +66,24 @@ const Course = (props: props): React.ReactElement => {
               />
             </div>
             <div className="flex flex-col">
-              <p className="text-xs text-black font-extralight">
+              <p className="text-xs text-gray-500 font-extralight line-through">
                 {`${props.data.price ? props.data.price : 0} VND`}
               </p>
-              <p className="text-xs text-gray-500 font-extralight line-through">
+              <p className="text-xs text-black font-extralight">
                 {`${props.data.discount ? props.data.discount : 0} VND`}
               </p>
             </div>
           </div>
           {/* number detail */}
-          <div className="flex gap-1 justify-between">
-            <div className="flex items-center gap-1 p-1 ">
+          <div className="flex gap-1 justify-between px-2 py-2">
+            {/* <div className="flex items-center gap-1 p-1 ">
               <div>
                 <FolderPlus size={15} />
               </div>
               <p className="text-xs font-bold leading-3">
                 {props.data?.total_lecture || 0}
               </p>
-            </div>
+            </div> */}
             <div className="flex items-center gap-1 p-1 ">
               <div>
                 <SealCheck size={15} />
@@ -104,9 +104,17 @@ const Course = (props: props): React.ReactElement => {
             </div>
           </div>
           {/* button */}
-          <div className="flex w-full justify-end ">
+          <div className="flex w-full justify-end items-center ">
+            {props.data.isBuy ? (
+              <div className="rounded-md bg-light-blue-500">
+                <p className="text">Đã</p>
+              </div>
+            ) : (
+              <></>
+            )}
+
             <Link to={`/course/${props.data.course_id}`}>
-              <div className="flex gap-1 bg-blue-300 rounded-3xl items-center justify-center px-4 py-2 text-white">
+              <div className="flex gap-1 bg-blue-300 rounded-3xl items-center justify-center px-4 py-2 text-white hover:bg-blue-500">
                 <p className="text-base">Xem</p>
                 <ArrowRight size={20} />
               </div>

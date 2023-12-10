@@ -14,7 +14,7 @@ const ListCourse = (props: props): React.ReactElement => {
   return (
     <div className="flex flex-col gap-2 px-2 w-full overflow-hidden">
       <div className="w-full flex items-center justify-between px-1">
-        <h5 className="text-xl font-bold">{props.title}</h5>
+        <h5 className="text-lg font-bold uppercase">{props.title}</h5>
         {props.showMore && (
           <Link to={configRouter.categoryCourse}>
             <p className="text-sm font-light text-blue-600">Xem thêm {">>"}</p>

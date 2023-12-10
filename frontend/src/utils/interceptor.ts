@@ -6,6 +6,7 @@ import { logoutThunk, refetchTokenStore } from "@/features/auth/authSlice";
 import { User } from "@/type";
 import { AppDispatch } from "@/redux/store";
 import { redirect } from "react-router-dom";
+import { toast } from "react-toastify";
 
 interface IAccessToken {
   exp: number;
@@ -127,19 +128,16 @@ export const setupInterceptor = (store: Store, dispatch: AppDispatch): void => {
   httpRequest.default.interceptors.response.use(
     (response) => response,
     async (error: AxiosError) => {
-      const { config, status } = error;
-      const originalRequest = config;
       // logout system
+
       if (
-        status === 401 &&
-        originalRequest?.url?.includes("user/refreshToken")
+        error.response?.status === 401 &&
+        error.config?.url?.includes("user/refreshToken")
       ) {
-        if (!isRefreshing) {
-          isRefreshing = true;
-          await dispatch(logoutThunk());
-          redirect("/login");
-        }
-        isRefreshing = false;
+        console.log("test");
+        await dispatch(logoutThunk());
+        redirect("/login");
+        toast.error("Phiên đăng nhập đã hết hạn");
       }
       return Promise.reject(error);
     }

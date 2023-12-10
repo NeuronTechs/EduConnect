@@ -12,16 +12,38 @@ interface IFormInput {
   level: string;
 }
 const CreateCourse = () => {
-  const { register, setValue, handleSubmit } = useForm<IFormInput>();
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    formState: { errors },
+    clearErrors,
+    trigger,
+  } = useForm<IFormInput>();
   const [stepperIndex, setStepperIndex] = React.useState<number>(0);
 
-  const handlerStepperNext = () => {
+  const handlerStepperNext = async () => {
+    await trigger();
+    await clearErrors();
+    if (stepperIndex === 0) {
+      await trigger(["typeCourse"]);
+    }
+    if (stepperIndex === 1) {
+      await trigger(["title", "level"]);
+    }
+    if (stepperIndex === 2) {
+      await trigger(["topic"]);
+    }
+    if (errors.title || errors.topic || errors.level) {
+      return;
+    }
     if (stepperIndex < 2) {
       setStepperIndex((prev) => prev + 1);
     }
   };
   const handlerStepperPrev = () => {
     if (stepperIndex > 0) {
+      clearErrors();
       setStepperIndex((prev) => prev - 1);
     }
   };
@@ -30,6 +52,8 @@ const CreateCourse = () => {
       <CreateCourseTitle
         register={register}
         setValue={setValue}
+        trigger={trigger}
+        error={errors}
         stepperIndex={stepperIndex}
         handlerStepperNext={handlerStepperNext}
         handlerStepperPrev={handlerStepperPrev}

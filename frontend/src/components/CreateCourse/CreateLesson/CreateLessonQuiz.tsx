@@ -145,36 +145,21 @@ export default CreateLessonQuiz;
 const SettingQuiz = (): React.ReactElement => {
   const { dataQuiz, setDataQuiz } = React.useContext(CreateQuizContext);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const { register, handleSubmit, setValue } = useForm<IQuizInfo>({
-    defaultValues: dataQuiz,
-  });
+  const { register, handleSubmit, setValue, reset, watch } = useForm<IQuizInfo>(
+    {
+      defaultValues: dataQuiz,
+    }
+  );
   React.useEffect(() => {
-    setValue("content", dataQuiz.content);
-    setValue("duration", dataQuiz.duration);
-    setValue("durationUnit", dataQuiz.durationUnit);
-    setValue("isRandom", dataQuiz.isRandom);
-    setValue("isShowAnswer", dataQuiz.isShowAnswer);
-    setValue("passPercent", dataQuiz.passPercent);
-    setValue("retakePercent", dataQuiz.retakePercent);
-    setValue("description", dataQuiz.description);
-    setValue("quiz_id", dataQuiz.quiz_id);
-    setValue("lecture_id", dataQuiz.lecture_id);
-    setValue("timeout", dataQuiz.timeout);
-    setValue("type", dataQuiz.type);
-    setValue("created_at", dataQuiz.created_at);
-    setValue("updated_at", dataQuiz.updated_at);
-  }, [dataQuiz, setValue]);
+    reset(dataQuiz);
+  }, [dataQuiz, reset]);
 
   const handleUpdateInfoQuiz = async (data: IQuizInfo) => {
     try {
       if (dataQuiz.lecture_id) {
-        console.log(data);
         setIsLoading(true);
         const res = await quizApi.updateQuiz(data);
-        console.log(res);
         toast.success("Cập nhật thành công");
-        const data1 = { ...dataQuiz, ...res };
-        console.log(data1);
         setDataQuiz({ ...dataQuiz, ...res });
         setIsLoading(false);
       }
@@ -282,7 +267,7 @@ const SettingQuiz = (): React.ReactElement => {
       <div className="space-y-2">
         <p className="text-xs font-bold text-black">Nội dung bài học</p>
         <TextEditor
-          value={dataQuiz.description ? dataQuiz.description : ""}
+          value={watch("description") ? watch("description") : ""}
           onEditorChange={(data) => {
             setValue("description", data);
           }}

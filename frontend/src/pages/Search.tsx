@@ -41,17 +41,17 @@ const Search = (): React.ReactElement => {
       </div>
       <ListCourse
         isLoading={isLoading}
-        title="khoá học nổi bật"
+        title="Khoá Học Nổi Bật"
         data={data?.courses ? data.courses : []}
       />
       <ListTeacher
         isLoading={isLoading}
-        title="giáo viên nổi bật"
+        title="Giáo Viên Nổi Bật"
         data={data?.teachers ? data.teachers : []}
       />
       <ListCategory
         isLoading={isLoading}
-        title="chủ đề nổi bật"
+        title="Chủ Đề Nổi Bật"
         data={data?.topics ? data.topics : []}
       />
     </div>
