@@ -170,7 +170,7 @@ const getTransactionEachCourseByTeacher = async (
   LEFT JOIN 
     transactions t ON c.course_id = t.course_id 
   WHERE 
-    c.teacher_id = "te_giaovien01" AND t.status = 'Thành Công'
+    c.teacher_id = ? AND t.status = 'Thành Công'
   GROUP BY 
     c.course_id
     `;

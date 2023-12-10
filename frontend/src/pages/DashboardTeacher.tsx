@@ -185,10 +185,13 @@ const DashboardTeacher = () => {
                 Doanh thu
               </h1>
               <p className="text-[#159F46] font-semibold text-[32px] mb-4">
-                {dataProfit.length > 0 &&
-                  dataProfit
-                    .map((item: { name: string; uv: number }) => item.uv)
-                    .reduce((a, b) => a + b) + " VNĐ"}
+                {formatCurrency(
+                  dataProfit.length > 0
+                    ? dataProfit
+                        .map((item: { name: string; uv: string }) => item.uv)
+                        .reduce((a, b) => a + parseInt(b), 0)
+                    : 0
+                )}
               </p>
               <p className="text-[14px] text-[#303030] tracking-wider">
                 Thu nhập trong tháng này
@@ -199,10 +202,11 @@ const DashboardTeacher = () => {
                 Học viên
               </h1>
               <p className="text-[#1D9CFD] font-semibold text-[32px] mb-4">
-                {dataStudent.length > 0 &&
-                  dataStudent
-                    .map((item: { name: string; uv: number }) => item.uv)
-                    .reduce((a, b) => a + b)}
+                {dataStudent.length > 0
+                  ? dataStudent
+                      .map((item: { name: string; uv: number }) => item.uv)
+                      .reduce((a, b) => a + b)
+                  : 0}
               </p>
               <p className="text-[14px] text-[#303030] tracking-wider">
                 Mới trong tháng này
