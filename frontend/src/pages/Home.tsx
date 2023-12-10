@@ -56,7 +56,7 @@ const Home = () => {
         const promises = [
           topicApi.getRecommendCourse({ limit: "5" }),
           topicApi.getTopicCategory({ limit: "8" }),
-          teacherApi.teacherRecommendationsApi({ limit: "5" }),
+          teacherApi.teacherRecommendationsApi({ limit: "4" }),
         ];
         const [courses, categories, teachers] = await Promise.all(promises);
         setDataCourse(courses);
