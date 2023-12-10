@@ -104,13 +104,13 @@ const Course = (props: props): React.ReactElement => {
             </div>
           </div>
           {/* button */}
-          <div className="flex w-full justify-end items-center ">
+          <div className="flex w-full justify-between items-center ">
             {props.data.isBuy ? (
-              <div className="rounded-md bg-light-blue-500">
-                <p className="text">Đã</p>
+              <div className="rounded-md bg-light-blue-500 px-4 py-1.5">
+                <p className="text-white">Đã mua</p>
               </div>
             ) : (
-              <></>
+              <div></div>
             )}
 
             <Link to={`/course/${props.data.course_id}`}>
