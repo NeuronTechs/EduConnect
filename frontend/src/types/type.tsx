@@ -56,6 +56,7 @@ export interface ICourseDetail {
   topic?: ITopic;
   created_at?: string;
   updated_at?: string;
+  isBuy?: boolean;
 }
 export interface IUser {
   username: string;

@@ -39,7 +39,12 @@ const CategoryTopic = (): React.ReactElement => {
         />
       </div>
       <div className="w-full h-[100px] rounded-md  backdrop-blur-0 flex items-center justify-start px-4">
-        <h1 className="text-xl font-bold">Khóa học theo danh mục</h1>
+        <h1 className="text-xl font-bold uppercase">
+          Khóa học theo danh mục{" "}
+          {topicData
+            .find((value) => value.topic_id === param.id)
+            ?.title.toString()}
+        </h1>
       </div>
       {loading ? (
         <ListCourseLoading numberShow={5} />
@@ -48,7 +53,7 @@ const CategoryTopic = (): React.ReactElement => {
           <p className="text-base font-semibold">Không có khóa học nào</p>
         </div>
       ) : (
-        <div className="grid grid-cols-4 gap-4 w-full">
+        <div className="grid grid-cols-5 gap-4 w-full">
           {data.map((item) => {
             return <Course data={item} key={item.course_id} />;
           })}

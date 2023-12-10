@@ -1,10 +1,16 @@
 import { Request, Response } from "express";
 import topicService from "../services/topic.service";
+import { getTokenUserId } from "../utils/utils";
 
 const getRecommendCourse = async (req: Request, res: Response) => {
-  console.log("call");
+  const { limit } = req.query;
+
   try {
-    const result = await topicService.getCoursesRecommend();
+    const userId = await getTokenUserId(req);
+    const result = await topicService.getCoursesRecommend(
+      parseInt(limit as string),
+      ("st_" + userId) as string
+    );
     if (result?.status) {
       res.status(200).json({
         status: 200,
@@ -27,13 +33,17 @@ const getRecommendCourse = async (req: Request, res: Response) => {
     });
   }
 };
+
 const getTopicCourse = async (req: Request, res: Response) => {
   const { limit } = req.query;
   const { topicId } = req.params;
+
   try {
+    const userId = await getTokenUserId(req);
     const result = await topicService.getTopicCourses(
       topicId as string,
-      parseInt(limit as string)
+      parseInt(limit as string),
+      ("st_" + userId) as string
     );
     if (result?.status) {
       res.status(200).json({

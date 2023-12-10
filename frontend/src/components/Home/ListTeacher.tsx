@@ -13,7 +13,7 @@ const ListTeacher = (props: props): React.ReactElement => {
   return (
     <div className="flex flex-col gap-2 px-2 w-full overflow-hidden">
       <div className="w-full flex items-center justify-between px-1">
-        <h5 className="text-xl font-bold">{props.title}</h5>
+        <h5 className="text-lg font-bold uppercase">{props.title}</h5>
         {props.showMore ? (
           <Link to={""}>
             <p className="text-sm font-light text-blue-600">Xem thêm {">>"}</p>
@@ -28,7 +28,7 @@ const ListTeacher = (props: props): React.ReactElement => {
             <ListTeacherLoading numberShow={6} />
           </>
         ) : (
-          <div className="grid grid-cols-6 gap-3 w-full">
+          <div className="grid grid-cols-4 gap-3 w-full">
             {props.data.length === 0 && (
               <div className="flex items-center justify-center w-full py-15 col-span-6">
                 <p className="text-center text-lg font-semibold">

@@ -1,11 +1,13 @@
-import { AddressBook, Note } from "@phosphor-icons/react";
+import { AddressBook } from "@phosphor-icons/react";
 import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
+  FieldErrors,
   UseFormHandleSubmit,
   UseFormRegister,
   UseFormSetValue,
+  UseFormTrigger,
 } from "react-hook-form";
 import courseApi from "@/api/courseApi";
 import { useSelector } from "react-redux";
@@ -23,7 +25,9 @@ interface IFormInput {
 }
 const CreateCourseTitle = (props: {
   register: UseFormRegister<IFormInput>;
+  error: FieldErrors<IFormInput>;
   setValue: UseFormSetValue<IFormInput>;
+  trigger: UseFormTrigger<IFormInput>;
   stepperIndex: number;
   handlerStepperNext: () => void;
   handlerStepperPrev: () => void;
@@ -37,13 +41,17 @@ export default CreateCourseTitle;
 const StepperCreateCourse = ({
   register,
   setValue,
+  error,
+  trigger,
   stepperIndex,
   handlerStepperNext,
   handlerStepperPrev,
   handleSubmit,
 }: {
   register: UseFormRegister<IFormInput>;
+  error: FieldErrors<IFormInput>;
   setValue: UseFormSetValue<IFormInput>;
+  trigger: UseFormTrigger<IFormInput>;
   stepperIndex: number;
   handlerStepperNext: () => void;
   handlerStepperPrev: () => void;
@@ -146,7 +154,7 @@ const StepperCreateCourse = ({
               <span
                 className={`hidden sm:inline-flex sm:ml-2 whitespace-nowrap text-sm `}
               >
-                Tiêu đề nội dung
+                Tiêu Đề Nội Dung
               </span>
             </span>
           </li>
@@ -169,7 +177,7 @@ const StepperCreateCourse = ({
               <span className="mr-2">3</span>
             )}
             <span className="hidden sm:inline-flex sm:ml-2 whitespace-nowrap text-sm">
-              Thể loại
+              Thể Loại
             </span>
           </li>
         </ol>
@@ -177,8 +185,10 @@ const StepperCreateCourse = ({
       <div className="bg-white rounded-md flex-1">
         <ContentStepperCreateCourse
           stepperIndex={stepperIndex}
+          trigger={trigger}
           register={register}
           setValue={setValue}
+          error={error}
         />
       </div>
       <div className="p-2 w-full flex justify-between bg-white rounded-md">
@@ -245,16 +255,18 @@ const StepperCreateCourse = ({
 // content data course overview
 const ContentStepperCreateCourse = (props: {
   stepperIndex: number;
+  error?: FieldErrors<IFormInput>;
+  trigger: UseFormTrigger<IFormInput>;
   register: UseFormRegister<IFormInput>;
   setValue: UseFormSetValue<IFormInput>;
 }) => {
-  const [value, setValue] = React.useState("");
-  const [selected, setSelected] = React.useState("Chọn một thể loại");
+  // const [value, setValue] = React.useState("");
+  const [selected, setSelected] = React.useState("lesson");
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = event.target.value.slice(0, 60);
-    setValue(newValue);
-  };
+  // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const newValue = event.target.value.slice(0, 60);
+  //   setValue(newValue);
+  // };
 
   const [dataTypes, setDataTypes] = React.useState<ITopic[]>([]);
   useEffect(() => {
@@ -289,7 +301,7 @@ const ContentStepperCreateCourse = (props: {
               bạn tạo nên trải nghiệm học tập phong phú.
             </p>
           </div>
-          <div
+          {/* <div
             className={
               "h-full w-[200px] flex flex-col items-center justify-start p-2 pt-10 shadow-md text-gray-500 gap-2 border border-blue-400 hover:bg-blue-100 cursor-pointer" +
               (selected === "test" ? " bg-blue-100" : "")
@@ -308,7 +320,7 @@ const ContentStepperCreateCourse = (props: {
             <p className="text-center">
               chức năng sẽ được phát triển trong tương lai
             </p>
-          </div>
+          </div> */}
         </div>
       )}
       {props.stepperIndex === 1 && (
@@ -321,35 +333,45 @@ const ContentStepperCreateCourse = (props: {
             có thể thay đổi sau.
           </p>
           <input
-            {...props.register("title")}
+            {...props.register("title", { required: true })}
             type="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Ví dụ: Học react từ cơ bản"
             required
-            onChange={handleChange}
+            // onChange={handleChange}
             maxLength={60}
+            // onBlur={() => props.trigger("title")}
           />
-          <p className="text-sm text-gray-500">
+          {props.error?.title && (
+            <p className="text-sm text-red-500">Tiêu đề không được để trống</p>
+          )}
+          {/* <p className="text-sm text-gray-500">
             {value.length}/{60}
-          </p>
+          </p> */}
 
           <div className="w-full flex flex-col items-center justify-center gap-3">
             <h5 className="text-2xl font-bold">
               Vậy khoá học hướng người trình độ nào?
             </h5>
+
             <p className="text-sm font-medium text-gray-600">
               Đừng lo nếu bạn không nghĩ ra được một tiêu đề hay ngay bây giờ.
               Bạn có thể thay đổi sau.
             </p>
             <select
-              {...props.register("level")}
+              {...props.register("level", { required: true })}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             >
-              <option value="Chọn một trình độ">Chọn một trình độ</option>
+              <option value={""}>Chọn một trình độ</option>
               <option value="Cơ bản">Cơ bản</option>
               <option value="Trung bình">Trung bình</option>
               <option value="Nâng cao">Nâng cao</option>
             </select>
+            {props.error?.level && (
+              <p className="text-sm text-red-500">
+                Trình độ không được để trống
+              </p>
+            )}
           </div>
         </div>
       )}
@@ -364,7 +386,7 @@ const ContentStepperCreateCourse = (props: {
 
           <select
             id="countries"
-            {...props.register("topic")}
+            {...props.register("topic", { required: true })}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             // value="Chọn một thể loại" // set default value to "it"
           >
@@ -376,6 +398,9 @@ const ContentStepperCreateCourse = (props: {
               );
             })}
           </select>
+          {props.error?.topic && (
+            <p className="text-sm text-red-500">Thể loại không được để trống</p>
+          )}
         </div>
       )}
     </div>
