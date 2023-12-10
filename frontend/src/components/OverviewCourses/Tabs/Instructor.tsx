@@ -5,6 +5,7 @@ import * as courseApi from "../../../api/courseApi/courseApi";
 import { formatBirthDay } from "@/utils/const";
 import { useSelector } from "react-redux";
 import { SliceState } from "@/types/type";
+import assets from "@/assets";
 
 const Instructor = () => {
   const currentCourse = useSelector(
@@ -27,7 +28,11 @@ const Instructor = () => {
         <Avatar
           loading="lazy"
           className="w-[80px] h-[80px]"
-          src={teacher?.avatar}
+          src={
+            teacher?.avatar !== "null"
+              ? teacher?.avatar
+              : assets?.images?.noAvatar
+          }
           alt="avatar"
         />
         <div className="lg:p-[10px] p-[5px]">

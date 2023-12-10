@@ -73,7 +73,7 @@ const SignUp = () => {
           <div className="text-sm">
             {/* email  */}
             <div className="mb-3">
-              <h6>Tên người dùng</h6>
+              <h6>Tên tài khoản người dùng</h6>
               <input
                 type="text"
                 value={username}
