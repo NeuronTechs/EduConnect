@@ -419,11 +419,11 @@ const updateInformation = async (req: Request, res: Response) => {
       });
     }
 
-    if (!req.body.course) {
+    if (!req.body.description) {
       return res.status(400).json({
         status: 400,
         data: {},
-        message: "Course is required",
+        message: "Description is required",
       });
     }
 
@@ -454,7 +454,7 @@ const updateInformation = async (req: Request, res: Response) => {
       birthday,
       educational_level,
       major,
-      course,
+      description,
       school,
       address_school,
     } = req.body;
@@ -478,7 +478,7 @@ const updateInformation = async (req: Request, res: Response) => {
       birthday,
       educational_level,
       major,
-      course,
+      description,
       school,
       address_school,
     });
@@ -497,7 +497,7 @@ const updateInformation = async (req: Request, res: Response) => {
           birthday,
           educational_level,
           major,
-          course,
+          description,
           school,
           address_school,
         },

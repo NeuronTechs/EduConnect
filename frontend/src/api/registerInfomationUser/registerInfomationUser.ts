@@ -18,7 +18,7 @@ interface dataInformationUser {
   role: string;
   educational_level: string;
   major: string;
-  course: string;
+  description: string;
   school: string;
   address_school: string;
 }
@@ -39,7 +39,7 @@ export const addInformationUser = async (data: dataInformationUser) => {
   fromData.append("role", data.role);
   fromData.append("educational_level", data.educational_level);
   fromData.append("major", data.major);
-  fromData.append("course", data.course);
+  fromData.append("description", data.description);
   fromData.append("school", data.school);
   fromData.append("address_school", data.address_school);
   fromData.append("username", data.username);

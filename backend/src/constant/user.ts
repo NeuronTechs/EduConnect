@@ -27,7 +27,7 @@ export interface informationDataUpdate {
   birthday: string;
   educational_level: string | null;
   major: string | null;
-  course: string | null;
+  description: string | null;
   school: string | null;
   address_school: string | null;
 }
