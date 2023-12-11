@@ -50,7 +50,7 @@ export const CreateCourseContext = React.createContext<ICreateCourseContext>({
 
 // add handleAddNewLesson property
 
-const CreateCourseProvider = (props: { children: React.ReactNode }) => {
+export const CreateCourseProvider = (props: { children: React.ReactNode }) => {
   const [dataDescription, setDataDescription] = React.useState<ICourseDetail>();
   const [dataSection, setDataSection] = React.useState<ISectionInfo[]>(
     dataCurriculum.sections
@@ -126,10 +126,10 @@ const CreateCourseProvider = (props: { children: React.ReactNode }) => {
   };
   const handleEditSection = async (id: string, section: ISectionInfo) => {
     try {
-      await courseManageApi.updateSectionCourse(id, section);
       setDataSection((cur) =>
         cur.map((item) => (item.session_id === id ? section : item))
       );
+      await courseManageApi.updateSectionCourse(id, section);
     } catch (error) {
       toast.error("Cập nhật phần mới thất bại");
     }
@@ -285,5 +285,3 @@ const CreateCourseProvider = (props: { children: React.ReactNode }) => {
     </CreateCourseContext.Provider>
   );
 };
-
-export default CreateCourseProvider;

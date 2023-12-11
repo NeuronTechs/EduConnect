@@ -4,9 +4,16 @@ import {
 } from "@/context/CreateCourseContext";
 import { Video } from "@phosphor-icons/react";
 import React from "react";
-import { UseFormRegister, useForm } from "react-hook-form";
+import {
+  UseFormRegister,
+  UseFormSetValue,
+  UseFormWatch,
+  useForm,
+} from "react-hook-form";
 import TextEditor from "./TextEditor/TextEditor";
 import { ILessonInfo } from "@/types/type";
+import YouTube, { YouTubeEvent } from "react-youtube";
+import axios from "axios";
 
 const CreateLessonVideo = () => {
   const { selectLesson, handleEditLesson } =
@@ -83,19 +90,16 @@ const CreateLessonVideo = () => {
             onChange={(e) => setSelectTypeVideo(e.target.value)}
             value={selectTypeVideo}
           >
-            {/* <option defaultValue={"default"} value={"default"}>
-              HTML (MP4)
-            </option> */}
             <option defaultValue={"youtube"} value="youtube">
               youtube
             </option>
-            {/* <option value="Vimeo">Vimeo</option>
-            <option value="Embed">Embed</option> */}
           </select>
         </div>
         <UploadVideoType
           selectTypeVideo={selectTypeVideo}
           register={register}
+          watch={watch}
+          setValue={setValue}
         />
         <div className="w-full">
           <label
@@ -111,17 +115,6 @@ const CreateLessonVideo = () => {
             placeholder="Thời lượng bài học"
           />
         </div>
-
-        {/* <div className="w-full">
-          <label className="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" value="" className="sr-only peer" />
-            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-            <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-              xem trước khoá học
-            </span>
-          </label>
-        </div> */}
-
         <div className="w-full">
           <label
             form="message"
@@ -136,46 +129,6 @@ const CreateLessonVideo = () => {
             }}
           />
         </div>
-        {/* <div className="w-full">
-          <label
-            form="message"
-            className="block mb-2 text-xs font-bold text-gray-700 dark:text-white"
-          >
-            Tài liệu bài giảng
-          </label>
-          <div className="flex items-center justify-center w-full">
-            <label
-              htmlFor="dropzone-file"
-              className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
-            >
-              <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                <svg
-                  className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 20 16"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                  />
-                </svg>
-                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                  <span className="font-semibold">Bấm để tải lên</span> hoặc kéo
-                  và thả
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  MP4 (MAX. 1G)
-                </p>
-              </div>
-              <input type="file" className="hidden" />
-            </label>
-          </div>
-        </div> */}
       </div>
       <div className="h-50px] w-full relative">
         <div className="sticky bottom-0 left-0 w-full flex justify-end">
@@ -193,76 +146,103 @@ const CreateLessonVideo = () => {
 };
 
 export default CreateLessonVideo;
+// check video link url
+const validateYoutubeId = async (youtubeId?: string) => {
+  try {
+    const response = await axios.get(
+      `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${youtubeId}&key=AIzaSyBzSWAb7dLcdSJh7dHX-lhI9SsSUeG4_UU`
+    );
+    const items = response.data.items;
+    if (items.length === 0) {
+      return false; // Video not found
+    }
+    return true; // Video found
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+// check video link show content
+const CheckVideoLink = (props: {
+  videoUrl: string;
+  setValue: UseFormSetValue<ILessonInfo>;
+}) => {
+  const [isValid, setIsValid] = React.useState<boolean>(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const playerRef = React.useRef<any>(null);
 
+  const url = new URL(props.videoUrl);
+  const youtubeId = url.searchParams.get("v");
+  const onReady = (event: YouTubeEvent) => {
+    playerRef.current = event.target;
+  };
+  React.useEffect(() => {
+    const validateLink = async () => {
+      const isValidId = await validateYoutubeId(youtubeId || "");
+      setIsValid(isValidId);
+    };
+    validateLink();
+  }, [youtubeId, props.videoUrl]);
+
+  React.useEffect(() => {
+    if (isValid && playerRef.current) {
+      const duration = playerRef.current.getDuration();
+      if (duration) props.setValue("duration", duration);
+    }
+  }, [isValid, props]);
+
+  return (
+    <div className="w-full flex items-center justify-center">
+      {isValid ? (
+        <div className="w-[60%] aspect-video">
+          <YouTube videoId={youtubeId || ""} onReady={onReady} />
+        </div>
+      ) : (
+        <div className="w-[60%] aspect-video flex items-center justify-center bg-gray-200 rounded-md">
+          <h4 className="text">Liên kết không khả dụng</h4>
+        </div>
+      )}
+    </div>
+  );
+};
+// preview video
+
+const PreviewVideo = (props: {
+  register: UseFormRegister<ILessonInfo>;
+  watch?: UseFormWatch<ILessonInfo>;
+  setValue: UseFormSetValue<ILessonInfo>;
+}) => {
+  return (
+    <div className="w-full flex flex-col gap-3 ">
+      <label
+        form="message"
+        className="block mb-2 text-xs font-bold text-gray-700 dark:text-white"
+      >
+        Video URL
+      </label>
+      <input
+        {...props.register("source")}
+        className="block p-2.5 w-full text-xs text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        placeholder="video URL..."
+      ></input>
+      {/* preview */}
+      <CheckVideoLink
+        videoUrl={`${props.watch?.("source")}` || ""}
+        setValue={props.setValue}
+      />
+    </div>
+  );
+};
+// upload video
 const UploadVideoType = (props: {
   selectTypeVideo: string;
   register: UseFormRegister<ILessonInfo>;
+  watch?: UseFormWatch<ILessonInfo>;
+  setValue: UseFormSetValue<ILessonInfo>;
 }): React.ReactElement => {
   return (
     <div className="w-full">
-      {/* {props.selectTypeVideo === "default" && (
-        <>
-          <label
-            form="message"
-            className="block mb-2 text-xs font-bold text-gray-700 dark:text-white"
-          >
-            Video File
-          </label>
-          <div className="flex items-center justify-center w-full">
-            <label
-              htmlFor="dropzone-file"
-              className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
-            >
-              <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                <svg
-                  className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 20 16"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                  />
-                </svg>
-                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                  <span className="font-semibold">Bấm để tải lên</span> hoặc kéo
-                  và thả
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  MP4 (MAX. 1G)
-                </p>
-              </div>
-              <input
-                id="dropzone-file"
-                type="file"
-                className="hidden"
-                {...props.register("source")}
-              />
-            </label>
-          </div>
-        </>
-      )} */}
-      {props.selectTypeVideo === "youtube" && (
-        <>
-          <label
-            form="message"
-            className="block mb-2 text-xs font-bold text-gray-700 dark:text-white"
-          >
-            Video URL
-          </label>
-          <textarea
-            {...props.register("source")}
-            rows={4}
-            className="block p-2.5 w-full text-xs text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="video URL..."
-          ></textarea>
-        </>
-      )}
+      {props.selectTypeVideo === "youtube" && <PreviewVideo {...props} />}
       {props.selectTypeVideo === "Vimeo" && (
         <>
           <label

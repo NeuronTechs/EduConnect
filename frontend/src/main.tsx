@@ -6,7 +6,7 @@ import { ThemeProvider } from "@material-tailwind/react";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
 import { BrowserRouter } from "react-router-dom";
-import CreateCourseProvider from "./context/CreateCourseContext";
+import { CreateCourseProvider } from "./context/CreateCourseContext";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 ReactDOM.createRoot(document.getElementById("root")!).render(
