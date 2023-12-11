@@ -145,7 +145,7 @@ JOIN
 LEFT JOIN 
     student_progress sp ON c.course_id = sp.course_id AND sp.student_id = ?
 WHERE 
-    c.course_id IN (SELECT course_id FROM order_items WHERE student_id = ?)
+    c.course_id IN (SELECT course_id FROM order_items WHERE student_id = ?) and c.status = "2"
 GROUP BY 
     c.course_id;`;
   return new Promise<dataListResponse<ICourse>>((resolve, reject) => {

@@ -5,7 +5,6 @@ import { convertTimeToTemplate } from "@/utils/const";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { CheckCircle, MinusCircle } from "@phosphor-icons/react";
 
 const Overviews = () => {
   const { id } = useParams();
@@ -13,6 +12,10 @@ const Overviews = () => {
   const currentCourse = useSelector(
     (state: SliceState) => state.courseOverviewSlice.courseCurrent
   );
+  const currentLecture = useSelector(
+    (state: SliceState) => state.courseSlice.currentLecture
+  );
+  console.log(currentLecture);
 
   useEffect(() => {
     if (id) dispatch(getCourseOverview(id));
@@ -35,66 +38,10 @@ const Overviews = () => {
           </span>
         </p>
       </div>
-      <div>
-        <div className="p-[10px]">
-          <h3 className="font-semibold">Bạn sẽ học được gì?</h3>
-          <ul className="flex flex-col lg:flex-row flex-wrap p-[5px_10px]">
-            <li className="flex items-baseline justify-start basis-1/2">
-              <CheckCircle size={16} className="mr-3" />
-              {currentCourse?.study?.study1}
-            </li>
-            <li className="flex items-baseline justify-start basis-1/2">
-              <CheckCircle size={16} className="mr-3" />
-              {currentCourse?.study?.study2}
-            </li>
-            <li className="flex items-baseline justify-start basis-1/2">
-              <CheckCircle size={16} className="mr-3" />
-              {currentCourse?.study?.study3}
-            </li>
-            <li className="flex items-baseline justify-start basis-1/2">
-              <CheckCircle size={16} className="mr-3" />
-              {currentCourse?.study?.study4}
-            </li>
-            <li className="flex items-baseline justify-start basis-1/2">
-              <CheckCircle size={16} className="mr-3" />
-              {currentCourse?.study?.study5}
-            </li>
-            <li className="flex items-baseline justify-start basis-1/2">
-              <CheckCircle size={16} className="mr-3" />
-              {currentCourse?.study?.study6}
-            </li>
-          </ul>
-        </div>
-        {/* Yêu cầu */}
-        <div className="p-[10px] gap-2">
-          <h3 className="font-semibold">Yêu cầu</h3>
-          <ul className="p-[5px_10px] flex flex-col lg:flex-row flex-wrap">
-            <li className="flex items-baseline justify-start basis-1/2">
-              <MinusCircle weight="fill" size={16} className="mr-3" />
-              {currentCourse?.requirement?.require1}
-            </li>
-            <li className="flex items-baseline justify-start basis-1/2">
-              <MinusCircle weight="fill" size={16} className="mr-3" />
-              {currentCourse?.requirement?.require2}
-            </li>
-            <li className="flex items-baseline justify-start basis-1/2">
-              <MinusCircle weight="fill" size={16} className="mr-3" />
-              {currentCourse?.requirement?.require3}
-            </li>
-            <li className="flex items-baseline justify-start basis-1/2">
-              <MinusCircle weight="fill" size={16} className="mr-3" />
-              {currentCourse?.requirement?.require4}
-            </li>
-            <li className="flex items-baseline justify-start basis-1/2">
-              <MinusCircle weight="fill" size={16} className="mr-3" />
-              {currentCourse?.requirement?.require5}
-            </li>
-            <li className="flex items-baseline justify-start basis-1/2">
-              <MinusCircle weight="fill" size={16} className="mr-3" />
-              {currentCourse?.requirement?.require6}
-            </li>
-          </ul>
-        </div>
+      <div className="p-5 border-b-2 border-gray-300">
+        <h2 className="m-2">Mô tả Bài giảng </h2>
+
+        <p className="p-5">{currentLecture?.description}</p>
       </div>
     </div>
   );
