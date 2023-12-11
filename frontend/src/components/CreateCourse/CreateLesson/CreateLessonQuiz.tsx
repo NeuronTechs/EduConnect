@@ -227,7 +227,7 @@ const SettingQuiz = (): React.ReactElement => {
           </select>
         </div>
       </div>
-      <div className="flex items-center justify-start gap-2">
+      {/* <div className="flex items-center justify-start gap-2">
         <label className="relative inline-flex items-center mb-4 cursor-pointer">
           <input
             type="checkbox"
@@ -252,7 +252,7 @@ const SettingQuiz = (): React.ReactElement => {
             Hiển thị câu trả lời đúng
           </span>
         </label>
-      </div>
+      </div> */}
       <div className="flex gap-2">
         <div className="space-y-2">
           <p className="text-xs font-bold text-black">Đạt điểm (%)</p>
