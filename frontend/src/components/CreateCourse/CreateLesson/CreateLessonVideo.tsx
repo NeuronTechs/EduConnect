@@ -12,11 +12,12 @@ const CreateLessonVideo = () => {
   const { selectLesson, handleEditLesson } =
     React.useContext<ICreateCourseContext>(CreateCourseContext);
 
-  const { register, handleSubmit, setValue, reset } = useForm<ILessonInfo>({
-    defaultValues: {
-      ...selectLesson,
-    },
-  });
+  const { register, handleSubmit, setValue, reset, watch } =
+    useForm<ILessonInfo>({
+      defaultValues: {
+        ...selectLesson,
+      },
+    });
   React.useEffect(() => {
     reset(selectLesson);
   }, [reset, selectLesson, setValue]);
@@ -129,7 +130,7 @@ const CreateLessonVideo = () => {
             Mô tả về bài giảng
           </label>
           <TextEditor
-            value={selectLesson?.description ? selectLesson?.description : ""}
+            value={watch("description") ? watch("description") : ""}
             onEditorChange={(data) => {
               setValue("description", data);
             }}
