@@ -9,6 +9,7 @@ import FullQuiz from "./FullQuiz";
 import { useSelector } from "react-redux";
 import QuizCompleted from "./QuizComplete";
 import QuizList from "./QuizList";
+import QuizStart from "./QuizStart";
 
 interface QuizProps {
   currentLecture: ILecture | null;
@@ -27,14 +28,7 @@ interface IQuizResult {
 }
 const Quiz = ({ currentLecture }: QuizProps) => {
   const currentUser = useSelector((state: SliceState) => state.authSlice);
-  const hour = 0;
-  const minutes = 10;
-  const seconds = 0;
-  const [time, setTime] = React.useState({
-    hour,
-    minutes,
-    seconds,
-  });
+  const [time, setTime] = React.useState(0);
   const [quiz, setQuiz] = React.useState<IQuiz>(); // quiz data
   const [currentQuestionIndex, setCurrentQuestionIndex] = React.useState(0); // current question index
   const [currentQuestion, setCurrentQuestion] = React.useState<IQuestion>();
@@ -42,38 +36,16 @@ const Quiz = ({ currentLecture }: QuizProps) => {
   const [openQuizList, setOpenQuizList] = React.useState(false);
   const [answerList, setAnswerList] = React.useState<answer[]>([]);
   const [isFullQuiz, setIsFullQuiz] = React.useState(false);
+  const [startQuiz, setStartQuiz] = React.useState(false); // quiz start or not
   const [error, setError] = React.useState("");
   const [scoreQuiz, setScore] = React.useState(0);
   const [review, setReview] = React.useState(false);
   const countdown = () => {
-    if (time.seconds > 0) {
-      setTime({
-        ...time,
-        seconds: time.seconds - 1,
-      });
-    }
-    if (time.seconds === 0) {
-      if (time.minutes === 0) {
-        if (time.hour === 0) {
-          return;
-        } else {
-          setTime({
-            hour: time.hour - 1,
-            minutes: 59,
-            seconds: 59,
-          });
-        }
-      } else {
-        setTime({
-          ...time,
-          minutes: time.minutes - 1,
-          seconds: 59,
-        });
-      }
-    }
+    if (time === 0) handleComplete();
+    if (time > 0) setTime(time - 1);
   };
   React.useEffect(() => {
-    if (QuizComplete === false && review === false) {
+    if (QuizComplete === false && review === false && startQuiz) {
       const timer = setTimeout(() => {
         countdown();
       }, 1000);
@@ -85,6 +57,7 @@ const Quiz = ({ currentLecture }: QuizProps) => {
     if (currentLecture && currentUser.currentUser) {
       const res: IQuiz = await getQuiz(currentLecture?.lecture_id);
       if (res) {
+        setTime(res.duration);
         setQuiz(res);
         const res1: IQuizResult = await getResults(
           currentUser.currentUser.user_id,
@@ -119,7 +92,6 @@ const Quiz = ({ currentLecture }: QuizProps) => {
   useEffect(() => {
     if (currentLecture?.type === "quiz") {
       getData();
-      // setTime({ hour: 0, minutes: 10, seconds: 0 });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentLecture]);
@@ -181,10 +153,22 @@ const Quiz = ({ currentLecture }: QuizProps) => {
     }
     // setQuizComplete(true);
   };
+  function formatTime(totalSeconds: number) {
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds - hours * 3600) / 60);
+    const seconds = totalSeconds - hours * 3600 - minutes * 60;
 
+    const formattedHours = hours < 10 ? "0" + hours : hours;
+    const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
+    const formattedSeconds = seconds < 10 ? "0" + seconds : seconds;
+
+    return `${formattedHours} : ${formattedMinutes} : ${formattedSeconds}`;
+  }
   return (
-    <div className="bg-gray-500 h-[75vh] py-5 flex justify-center  ">
-      {isFullQuiz && quiz ? (
+    <div className="bg-gray-500 h-[75vh]  flex justify-center  ">
+      {startQuiz === false && quiz ? (
+        <QuizStart setStartQuiz={setStartQuiz} quiz={quiz} />
+      ) : isFullQuiz && quiz ? (
         <FullQuiz
           currentQuiz={quiz}
           answerList={answerList}
@@ -225,11 +209,7 @@ const Quiz = ({ currentLecture }: QuizProps) => {
               <div className="flex">
                 <div className=" h-10  flex text-center font-bold text-sm  border-gray-300">
                   <div className="w-29 h-full border-2 p-2 rounded-full border-gray-300">
-                    <p>
-                      {time.hour < 10 ? "0" + time.hour : time.hour} :{" "}
-                      {time.minutes < 10 ? "0" + time.minutes : time.minutes} :{" "}
-                      {time.seconds < 10 ? "0" + time.seconds : time.seconds}
-                    </p>
+                    <p>{formatTime(time)}</p>
                   </div>
                 </div>
               </div>

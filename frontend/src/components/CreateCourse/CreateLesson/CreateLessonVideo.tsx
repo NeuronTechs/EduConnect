@@ -14,6 +14,7 @@ import TextEditor from "./TextEditor/TextEditor";
 import { ILessonInfo } from "@/types/type";
 import YouTube, { YouTubeEvent } from "react-youtube";
 import axios from "axios";
+import { isUrl } from "@/utils/utils";
 
 const CreateLessonVideo = () => {
   const { selectLesson, handleEditLesson } =
@@ -28,6 +29,7 @@ const CreateLessonVideo = () => {
   React.useEffect(() => {
     reset(selectLesson);
   }, [reset, selectLesson, setValue]);
+
   const onSubmitTitle = (data: ILessonInfo) => {
     const lesson = selectLesson;
     lesson!.name = data.name;
@@ -113,6 +115,7 @@ const CreateLessonVideo = () => {
             type="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Thời lượng bài học"
+            readOnly={true}
           />
         </div>
         <div className="w-full">
@@ -168,13 +171,14 @@ const CheckVideoLink = (props: {
   setValue: UseFormSetValue<ILessonInfo>;
 }) => {
   const [isValid, setIsValid] = React.useState<boolean>(false);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const playerRef = React.useRef<any>(null);
 
   const url = new URL(props.videoUrl);
   const youtubeId = url.searchParams.get("v");
   const onReady = (event: YouTubeEvent) => {
-    playerRef.current = event.target;
+    // playerRef.current = event.target;
+
+    const duration = event.target.getDuration();
+    props.setValue("duration", duration);
   };
   React.useEffect(() => {
     const validateLink = async () => {
@@ -183,13 +187,6 @@ const CheckVideoLink = (props: {
     };
     validateLink();
   }, [youtubeId, props.videoUrl]);
-
-  React.useEffect(() => {
-    if (isValid && playerRef.current) {
-      const duration = playerRef.current.getDuration();
-      if (duration) props.setValue("duration", duration);
-    }
-  }, [isValid, props]);
 
   return (
     <div className="w-full flex items-center justify-center">
@@ -209,7 +206,7 @@ const CheckVideoLink = (props: {
 
 const PreviewVideo = (props: {
   register: UseFormRegister<ILessonInfo>;
-  watch?: UseFormWatch<ILessonInfo>;
+  watch: UseFormWatch<ILessonInfo>;
   setValue: UseFormSetValue<ILessonInfo>;
 }) => {
   return (
@@ -226,10 +223,12 @@ const PreviewVideo = (props: {
         placeholder="video URL..."
       ></input>
       {/* preview */}
-      <CheckVideoLink
-        videoUrl={`${props.watch?.("source")}` || ""}
-        setValue={props.setValue}
-      />
+      {props.watch("source") && isUrl(props.watch("source").toString()) && (
+        <CheckVideoLink
+          videoUrl={props.watch("source").toString()}
+          setValue={props.setValue}
+        />
+      )}
     </div>
   );
 };
@@ -237,7 +236,7 @@ const PreviewVideo = (props: {
 const UploadVideoType = (props: {
   selectTypeVideo: string;
   register: UseFormRegister<ILessonInfo>;
-  watch?: UseFormWatch<ILessonInfo>;
+  watch: UseFormWatch<ILessonInfo>;
   setValue: UseFormSetValue<ILessonInfo>;
 }): React.ReactElement => {
   return (

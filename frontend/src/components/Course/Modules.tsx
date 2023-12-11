@@ -149,7 +149,10 @@ const Modules = ({ currentCourse }: Props) => {
       <h1 className="text-xl font-bold">Nội dung khóa học</h1>
       <p className="text-xs text-gray-500">
         {" Số lượng bài học ( " + currentCourseOverview?.totalLecture + " )"} /
-        Tổng thời gian ({currentCourseOverview?.totalTime + " phút"})
+        Tổng thời gian (
+        {currentCourseOverview?.totalTime &&
+          currentCourseOverview?.totalTime / 60 + " phút"}
+        )
       </p>
       <div className="mt-5">
         {currentCourse?.sessions?.map((session) => {

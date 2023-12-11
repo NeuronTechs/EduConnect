@@ -298,7 +298,7 @@ const createCourseSectionLesson = async (lecture: ILecture) => {
           lecture_id: lecture.lecture_id,
           timeout: new Date().toISOString().slice(0, 19).replace("T", " "),
           duration: 0,
-          durationUnit: 0,
+          durationUnit: "m",
           isRandom: false,
           isShowAnswer: false,
           type: "",

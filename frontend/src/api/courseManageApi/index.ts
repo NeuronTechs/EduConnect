@@ -22,7 +22,9 @@ const updateSectionCourse = async (_idCourse: string, data: ISectionInfo) => {
   try {
     const res = await httpRequest.put(`/courses/sections`, {
       ...data,
-      lessons: JSON.stringify(data.lessons.map((item) => item.lecture_id)),
+      lessons: JSON.stringify(
+        data.lessons ? data.lessons.map((item) => item.lecture_id) : []
+      ),
     });
     return res.data;
   } catch (error) {
