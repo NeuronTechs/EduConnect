@@ -182,7 +182,7 @@ const updateInformation = async (
       if (update.status) {
         const student_id = "st_" + data?.username;
         const newQuery =
-          "INSERT INTO `student` (`student_id`,`username`, `educational_level`, `major`, `course`, `school`, `address_school`) VALUES (?,?,?,?,?,?,?);";
+          "INSERT INTO `student` (`student_id`,`username`, `educational_level`, `major`, `description`, `school`, `address_school`) VALUES (?,?,?,?,?,?,?);";
         return new Promise((resolve, reject) => {
           db.connectionDB.query(
             newQuery,
@@ -191,7 +191,7 @@ const updateInformation = async (
               data?.username,
               data?.educational_level,
               data?.major,
-              data?.course,
+              data?.description,
               data?.school,
               data?.address_school,
             ],
@@ -228,7 +228,7 @@ const updateInformation = async (
       if (update.status) {
         const teacher_id = "te_" + data?.username;
         const newQuery =
-          "INSERT INTO `teacher` (`teacher_id`,`username`, `educational_level`, `major`, `course`, `school`, `address_school`) VALUES (?,?,?,?,?,?,?);";
+          "INSERT INTO `teacher` (`teacher_id`,`username`, `educational_level`, `major`, `description`, `school`, `address_school`) VALUES (?,?,?,?,?,?,?);";
         return new Promise((resolve, reject) => {
           db.connectionDB.query(
             newQuery,
@@ -237,7 +237,7 @@ const updateInformation = async (
               data?.username,
               data?.educational_level,
               data?.major,
-              data?.course,
+              data?.description,
               data?.school,
               data?.address_school,
             ],

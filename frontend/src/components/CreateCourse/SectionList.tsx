@@ -12,15 +12,17 @@ import {
   ICreateCourseContext,
 } from "@/context/CreateCourseContext";
 import InputEditTitle from "./CreateLesson/Quiz/InputEditTitle";
+import * as teacherApi from "@/api/teacherApi/teacherApi";
 
 // fake data generator
 const SectionList = (props: {
   setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
   setIdSectionCreate: React.Dispatch<React.SetStateAction<string>>;
 }): React.ReactElement => {
-  const { dataSection, setDataSection, handleAddNewSection } =
-    React.useContext(CreateCourseContext);
+  const { dataSection, setDataSection, handleAddNewSection, dataDescription } =
+    React.useContext<ICreateCourseContext>(CreateCourseContext);
 
+  // event drag sort item section in list of course
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
     if (over && dataSection.length > 0) {
       const overIndex = dataSection.findIndex(
@@ -29,9 +31,21 @@ const SectionList = (props: {
       const activeIndex = dataSection.findIndex(
         (section: ISectionInfo) => section.session_id === active.id?.toString()
       );
-      console.log(activeIndex, overIndex);
       const newList = insertArrayElements(dataSection, activeIndex, overIndex);
       setDataSection(newList);
+      updateSectionCourse(newList);
+    }
+  };
+  // update section course
+  const updateSectionCourse = async (data: ISectionInfo[]) => {
+    try {
+      await teacherApi.updateSectionCourse(
+        dataDescription?.teacher_id ? dataDescription.teacher_id : "",
+        dataDescription?.course_id ? dataDescription.course_id : "",
+        data.map((item) => item.session_id)
+      );
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -80,7 +94,6 @@ export default SectionList;
 const ItemSection = (props: {
   setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
   setIdSectionCreate: React.Dispatch<React.SetStateAction<string>>;
-
   data: ISectionInfo;
 }): React.ReactElement => {
   const [isHovered, setIsHovered] = React.useState(false);

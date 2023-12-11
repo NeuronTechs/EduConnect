@@ -253,6 +253,32 @@ const getCourseByTeacher = async (req: Request, res: Response) => {
     });
   }
 };
+const updateSectionOfCourse = async (req: Request, res: Response) => {
+  const { body } = req;
+  const { courseId } = req.params;
+  try {
+    const result = await teacherService.updateSectionOfCourse(courseId, {
+      ...body,
+    });
+    if (result.status) {
+      res.status(200).json({
+        status: 200,
+        data: result?.data,
+        message: result?.message,
+      });
+    } else {
+      res.status(400).json({
+        status: 400,
+        data: result?.data,
+        message: result?.message,
+      });
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Internal server error", data: [], message: error });
+  }
+};
 export default {
   getTeacherRecommendations,
   getTeacherDetail,
@@ -262,4 +288,5 @@ export default {
   getCourseTeacherById,
   getStudentByTeacher,
   getCourseByTeacher,
+  updateSectionOfCourse,
 };

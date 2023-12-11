@@ -3,6 +3,7 @@ import React from "react";
 import {
   FieldErrors,
   UseFormRegister,
+  UseFormSetValue,
   UseFormTrigger,
   useForm,
 } from "react-hook-form";
@@ -35,6 +36,7 @@ interface IFormInput {
   course: string;
   school: string;
   address_school: string;
+  description: string;
 }
 
 const StepperContainer = (): React.ReactElement => {
@@ -81,9 +83,9 @@ const StepperContainer = (): React.ReactElement => {
         "role",
         "educational_level",
         "major",
-        "course",
         "school",
         "address_school",
+        "description",
       ]);
     }
     if (
@@ -97,7 +99,8 @@ const StepperContainer = (): React.ReactElement => {
       errors.major ||
       errors.course ||
       errors.school ||
-      errors.address_school
+      errors.address_school ||
+      errors.description
     ) {
       return;
     }
@@ -131,7 +134,7 @@ const StepperContainer = (): React.ReactElement => {
         role: data.role,
         educational_level: data.educational_level,
         major: data.major,
-        course: data.course,
+        description: data.description,
         school: data.school,
         address_school: data.address_school,
       });
@@ -243,6 +246,7 @@ export default StepperContainer;
 type propsContentStepper = {
   activeStep: number;
   register: UseFormRegister<IFormInput>;
+  setValue?: UseFormSetValue<IFormInput>;
   urlAvatar: FileList | string | undefined;
   errors: FieldErrors<IFormInput>;
   trigger: UseFormTrigger<IFormInput>;
@@ -532,25 +536,6 @@ const ContentStepper = (props: propsContentStepper): React.ReactElement => {
 
               <div className="col-span-2 flex flex-col items-start justify-start">
                 <Typography variant="h6" className="text-sm">
-                  Khoá Học
-                </Typography>
-                <div className="flex items-center justify-start gap-3"></div>
-                <input
-                  {...props.register("course", { required: true })}
-                  type="date"
-                  name="course"
-                  className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-400 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
-                  placeholder="robert.langster@gmail.com"
-                  onBlur={() => props.trigger("course")}
-                />
-                {props.errors.course && (
-                  <span className="text-red-500">
-                    Khoá học không được để trống
-                  </span>
-                )}
-              </div>
-              <div className="col-span-2 flex flex-col items-start justify-start">
-                <Typography variant="h6" className="text-sm">
                   Địa Chỉ Trường
                 </Typography>
                 <div className="flex items-center justify-start gap-3"></div>
@@ -565,6 +550,26 @@ const ContentStepper = (props: propsContentStepper): React.ReactElement => {
                 {props.errors.address_school && (
                   <span className="text-red-500">
                     Địa chỉ không được để trống
+                  </span>
+                )}
+              </div>
+              <div className="col-span-2 flex flex-col items-start justify-start">
+                <Typography variant="h6" className="text-sm">
+                  Mô tả
+                </Typography>
+                <div className="flex items-center justify-start gap-3"></div>
+
+                <textarea
+                  {...props.register("description", { required: true })}
+                  rows={5}
+                  name="description"
+                  className="mt-1 px-3 py-3 bg-white border shadow-sm border-gray-400 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
+                  placeholder="Mô tả"
+                  onBlur={() => props.trigger("description")}
+                />
+                {props.errors.course && (
+                  <span className="text-red-500">
+                    Mô tả không được để trống
                   </span>
                 )}
               </div>

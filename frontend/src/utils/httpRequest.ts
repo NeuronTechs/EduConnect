@@ -56,4 +56,12 @@ export const deleted = async (path: string, options = {}) => {
     return Promise.reject(error);
   }
 };
+export const patch = async (path: string, options = {}) => {
+  try {
+    const response = await instance.patch(path, options);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
 export default instance;

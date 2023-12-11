@@ -39,5 +39,11 @@ router
     uploadCloud.single("image"),
     teacherController.updateCourseTeacher
   );
+router
+  .route("/:teacherId/courses/:courseId")
+  .patch(
+    middlewareController.verifyToken,
+    teacherController.updateSectionOfCourse
+  );
 
 export default router;

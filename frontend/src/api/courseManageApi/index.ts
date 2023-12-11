@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ILessonInfo } from "@/types/type";
+import { ILessonInfo, ISectionInfo } from "@/types/type";
 import * as httpRequest from "@/utils/httpRequest";
 
 const getSectionCourse = async (idCourse: string) => {
@@ -18,11 +18,11 @@ const createSectionCourse = async (idCourse: string, data: any) => {
     return Promise.reject(error);
   }
 };
-const updateSectionCourse = async (idCourse: string, data: any) => {
+const updateSectionCourse = async (_idCourse: string, data: ISectionInfo) => {
   try {
     const res = await httpRequest.put(`/courses/sections`, {
-      session_id: idCourse,
       ...data,
+      lessons: JSON.stringify(data.lessons.map((item) => item.lecture_id)),
     });
     return res.data;
   } catch (error) {

@@ -307,7 +307,6 @@ const getCourseTeacher = async (id: string, limit: number) => {
 const updateCourseTeacher = async (id: string, data: ICourse) => {
   data.update_at = new Date().toISOString().slice(0, 19).replace("T", " ");
   data.create_at = new Date().toISOString().slice(0, 19).replace("T", " ");
-
   try {
     const query = `UPDATE course SET ? WHERE course_id = ?;`;
     return new Promise<dataResponse<ICourse>>((resolve, reject) => {
@@ -337,6 +336,7 @@ const updateCourseTeacher = async (id: string, data: ICourse) => {
       );
     });
   } catch (error) {
+    console.log(error);
     throw error;
   }
 };
@@ -528,6 +528,39 @@ const getCourseByTeacher2 = (
     throw error;
   }
 };
+const updateSectionOfCourse = async (id: string, data: ICourse) => {
+  data.update_at = new Date().toISOString().slice(0, 19).replace("T", " ");
+  try {
+    const query = `UPDATE course SET ? WHERE course_id = ?;`;
+    return new Promise<dataResponse<ICourse>>((resolve, reject) => {
+      db.connectionDB.query(
+        { sql: query, values: [{ ...data }, id] },
+
+        (error: QueryError, course: ICourse) => {
+          const dataTmp = {
+            ...data,
+            course_id: id,
+          };
+          if (error) {
+            reject({
+              status: 500,
+              data: [],
+              message: error,
+            });
+            return;
+          }
+          resolve({
+            status: 201,
+            data: dataTmp as unknown as ICourse,
+            message: "update course successfully",
+          });
+        }
+      );
+    });
+  } catch (error) {
+    throw error;
+  }
+};
 
 export default {
   getTeacherRecommendations,
@@ -538,4 +571,5 @@ export default {
   updateCourseTeacher,
   getStudentByTeacher,
   getCourseByTeacher2,
+  updateSectionOfCourse,
 };
