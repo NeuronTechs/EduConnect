@@ -1,4 +1,4 @@
-import { Avatar, Rating } from "@material-tailwind/react";
+import { Avatar } from "@material-tailwind/react";
 import {
   Tabs,
   TabsHeader,
@@ -97,22 +97,42 @@ const DetailCourse = () => {
               </div> */}
             </div>
             <div className="hidden lg:block text-blue-300">
-              {currentCourse?.discount ? (
+              {/* {currentCourse?.discount ? (
                 <>
                   <p className="line-through">
                     {currentCourse?.price !== null
-                      ? formatCurrency(currentCourse?.price)
+                      ? formatCurrency(
+                          currentCourse?.price ? currentCourse?.price : 0
+                        )
                       : "Chưa xác định"}
                   </p>
                   <p className="font-semibold text-blue-500">
                     {currentCourse?.discount !== null
-                      ? formatCurrency(currentCourse?.discount)
+                      ? formatCurrency(
+                          currentCourse?.discount ? currentCourse?.discount : 0
+                        )
                       : "Chưa xác định"}
                   </p>
                 </>
               ) : (
                 <p>{currentCourse?.price}VND</p>
-              )}
+              )} */}
+              <>
+                <p className="line-through">
+                  {currentCourse?.price !== null
+                    ? formatCurrency(
+                        currentCourse?.price ? currentCourse?.price : 0
+                      )
+                    : "Chưa xác định"}
+                </p>
+                <p className="font-semibold text-blue-500">
+                  {currentCourse?.discount !== null
+                    ? formatCurrency(
+                        currentCourse?.discount ? currentCourse?.discount : 0
+                      )
+                    : "Chưa xác định"}
+                </p>
+              </>
             </div>
           </div>
           {/* Overview */}

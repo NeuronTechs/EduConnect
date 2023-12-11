@@ -44,6 +44,7 @@ export interface ICourseOverview {
   avatar: string;
   student_id: string;
   sessions: ISession[];
+  list_session?: string[];
 }
 
 export interface IComplaint {

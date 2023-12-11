@@ -40,6 +40,8 @@ export const formatTimeStamp = (utcTimestamp: string): string => {
 
 export const formatBirthDay = (utcTimestamp: string): string => {
   const date = new Date(utcTimestamp);
-  const localDateString = date.toLocaleString().split(" ")[1].toString();
-  return localDateString;
+  const localDateString = date.toLocaleString("en-US", {
+    timeZone: "Asia/Ho_Chi_Minh",
+  });
+  return localDateString.split(",")[0];
 };
