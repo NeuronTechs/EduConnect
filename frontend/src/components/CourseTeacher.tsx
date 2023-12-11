@@ -12,6 +12,7 @@ import ImageWithError from "./ImageWithError";
 import assets from "@/assets";
 import { CreateCourseContext } from "@/context/CreateCourseContext";
 import Start from "./Start";
+import { formatCurrency } from "@/utils/const";
 interface IProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: ICourseDetail;
@@ -82,10 +83,12 @@ const CourseTeacher = (props: IProps): React.ReactElement => {
           </div>
           <div className="flex flex-col">
             <p className="text-xs text-gray-500 font-extralight line-through">
-              {`${props.data.price ? props.data.price : 0} VND`}
+              {`${formatCurrency(props.data.price ? props.data.price : 0)}`}
             </p>
             <p className="text-xs text-black font-extralight">
-              {`${props.data.discount ? props.data.discount : 0} VND`}
+              {`${formatCurrency(
+                props.data.discount ? props.data.discount : 0
+              )}`}
             </p>
           </div>
         </div>

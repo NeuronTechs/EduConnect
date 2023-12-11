@@ -6,7 +6,7 @@ import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import {
   DotsSixVertical,
-  Image,
+  // Image,
   List,
   Plus,
   Trash,
@@ -86,13 +86,14 @@ const ContentQuestionSingleChoice = (props: {
               }`}
               onClick={() => setTypeAnswer("answer")}
             />
-            <Image
+            {/* ====================================================update later======================================= */}
+            {/* <Image
               size={15}
               className={`${
                 typeAnswer === "image" ? "text-blue-500" : "hover:text-blue-400"
               }`}
               onClick={() => setTypeAnswer("image")}
-            />
+            /> */}
           </div>
         </div>
         {props.data.answers.length === 0 ? (
