@@ -147,18 +147,40 @@ const SettingQuiz = (): React.ReactElement => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const { register, handleSubmit, setValue, reset, watch } = useForm<IQuizInfo>(
     {
-      defaultValues: dataQuiz,
+      defaultValues: {
+        ...dataQuiz,
+        duration:
+          dataQuiz.durationUnit === "m"
+            ? dataQuiz.duration / 60
+            : dataQuiz.duration / (60 * 60),
+        durationUnit:
+          dataQuiz.durationUnit !== "m" ? dataQuiz.durationUnit : "m",
+      },
     }
   );
   React.useEffect(() => {
-    reset(dataQuiz);
+    reset({
+      ...dataQuiz,
+      duration:
+        dataQuiz.durationUnit === "m"
+          ? dataQuiz.duration / 60
+          : dataQuiz.duration / (60 * 60),
+      durationUnit: dataQuiz.durationUnit !== "" ? dataQuiz.durationUnit : "m",
+    });
   }, [dataQuiz, reset]);
 
   const handleUpdateInfoQuiz = async (data: IQuizInfo) => {
     try {
       if (dataQuiz.lecture_id) {
         setIsLoading(true);
-        const res = await quizApi.updateQuiz(data);
+        const dataTmp = {
+          ...data,
+          duration:
+            data.durationUnit === "m"
+              ? data.duration * 60
+              : data.duration * 60 * 60,
+        };
+        const res = await quizApi.updateQuiz(dataTmp);
         toast.success("Cập nhật thành công");
         setDataQuiz({ ...dataQuiz, ...res });
         setIsLoading(false);
@@ -184,11 +206,12 @@ const SettingQuiz = (): React.ReactElement => {
       <div className="flex gap-2">
         <div className="space-y-2">
           <p className="text-xs font-bold text-black">
-            Thời lượng bài kiểm tra
+            Thời lượng Làm bài kiểm tra
           </p>
           <input
             {...register("duration")}
             type="text"
+            name="duration"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
         </div>
@@ -196,27 +219,14 @@ const SettingQuiz = (): React.ReactElement => {
           <p className="text-xs font-bold text-black">Đơn vị thời gian</p>
           <select
             {...register("durationUnit")}
-            id="countries"
+            name="durationUnit"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
             <option value={"m"}>phút</option>
-            <option value={"d"}>ngày</option>
-            <option value={"w"}>tuần</option>
+            <option value={"h"}>Giờ</option>
           </select>
         </div>
       </div>
-      {/* <div className="space-y-2">
-        <p className="text-xs font-bold text-black">Loại bài Kiểm Tra</p>
-        <select
-          id="countries"
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        >
-          <option value={"Default"}>Mặc định</option>
-          <option value={"global"}>toàn cầu</option>
-          <option value={"Pagination"}>Phân trang</option>
-        </select>
-      </div> */}
-
       <div className="flex items-center justify-start gap-2">
         <label className="relative inline-flex items-center mb-4 cursor-pointer">
           <input

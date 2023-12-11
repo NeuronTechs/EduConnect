@@ -2,12 +2,14 @@ import React from "react";
 import "./LoadingPage.css";
 const LoadingPage = (): React.ReactElement => {
   return (
-    <div className="w-full h-full flex items-center justify-center">
-      <div className="tetrominos">
-        <div className="tetromino box1"></div>
-        <div className="tetromino box2"></div>
-        <div className="tetromino box3"></div>
-        <div className="tetromino box4"></div>
+    <div className="wrapper">
+      <div className="box-wrap">
+        <div className="box one"></div>
+        <div className="box two"></div>
+        <div className="box three"></div>
+        <div className="box four"></div>
+        <div className="box five"></div>
+        <div className="box six"></div>
       </div>
     </div>
   );
