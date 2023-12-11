@@ -21,7 +21,6 @@ const LessonInformation = (props: {
 
   const handlerAddNewLesson = (type: string) => {
     if (idSectionCreate === "") return;
-    console.log(idSectionCreate, type);
     handleAddNewLesson(idSectionCreate, type);
     props.setIsOpenModal(false);
   };

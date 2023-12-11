@@ -164,3 +164,20 @@ export const getTransactionEachCourseByTeacher = async (teacher_id: string) => {
     return Promise.reject(error);
   }
 };
+
+export const updateSectionCourse = async (
+  teacher_id: string,
+  course_id: string,
+  sections: string[]
+) => {
+  console.log(sections);
+  try {
+    const res = await httpRequest.patch(
+      `/teachers/${teacher_id}/courses/${course_id}`,
+      { sessions: JSON.stringify(sections) }
+    );
+    return res;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};

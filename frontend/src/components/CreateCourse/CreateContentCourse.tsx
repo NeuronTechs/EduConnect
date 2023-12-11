@@ -9,6 +9,7 @@ import {
 } from "@/context/CreateCourseContext";
 import LessonInformation from "./LessonInfomation";
 import courseManageApi from "@/api/courseManageApi";
+import { ISectionInfo } from "@/types/type";
 
 const CreateContentCourse = (props: {
   isOpenModal: boolean;
@@ -28,8 +29,13 @@ const CreateContentCourse = (props: {
           const res = await courseManageApi.getSectionCourse(
             dataDescription.course_id
           );
+          const data = res?.sort(
+            (a: ISectionInfo, b: ISectionInfo) =>
+              (dataDescription?.sessions?.indexOf(a.session_id) || 0) -
+              (dataDescription?.sessions?.indexOf(b.session_id) || 0)
+          );
           if (res) {
-            setDataSection(res);
+            setDataSection(data);
           }
           setIsLoading(false);
         } catch (error) {
@@ -39,7 +45,7 @@ const CreateContentCourse = (props: {
       }
     };
     requestApi();
-  }, [dataDescription?.course_id, setDataSection]);
+  }, [dataDescription, setDataSection]);
 
   return (
     <>

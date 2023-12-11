@@ -2,6 +2,7 @@ import courseManageApi from "@/api/courseManageApi";
 import { ICourseDetail, ILessonInfo, ISectionInfo } from "@/types/type";
 import React from "react";
 import { toast } from "react-toastify";
+import * as teacherApi from "@/api/teacherApi/teacherApi";
 
 interface ICurriculum {
   lessons: ILessonInfo[];
@@ -62,7 +63,19 @@ const CreateCourseProvider = (props: { children: React.ReactNode }) => {
   const handleSetDataDescription = (data: ICourseDetail) => {
     setDataDescription(data);
   };
-
+  // update section in course sort
+  const updateSectionCourse = async (data: ISectionInfo[]) => {
+    try {
+      const res = await teacherApi.updateSectionCourse(
+        dataDescription?.teacher_id ? dataDescription.teacher_id : "",
+        dataDescription?.course_id ? dataDescription.course_id : "",
+        data.map((item) => item.session_id)
+      );
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   // curriculums
   const handleAddNewSection = async () => {
     const newSection = {
@@ -78,6 +91,8 @@ const CreateCourseProvider = (props: { children: React.ReactNode }) => {
       );
 
       setDataSection((cur) => [...cur, res as ISectionInfo]);
+      // update sort section in course
+      updateSectionCourse([...dataSection, res as ISectionInfo]);
       setIsLoading(false);
       toast.success("Thêm phần mới thành công");
     } catch (error) {
@@ -86,15 +101,21 @@ const CreateCourseProvider = (props: { children: React.ReactNode }) => {
       toast.error("Thêm phần mới thất bại");
     }
   };
+
   const handleEditTitleSection = async (id: string, title: string) => {
+    const newSection = dataSection.filter(
+      (section) => section.session_id === id
+    );
     try {
       const res = await courseManageApi.updateSectionCourse(id, {
+        ...newSection[0],
+        session_id: id,
         name: title,
       });
       if (res) {
         setDataSection((cur) =>
           cur.map((section) =>
-            section.session_id === id ? { ...section, title: title } : section
+            section.session_id === id ? { ...section, name: title } : section
           )
         );
         toast.success("Cập nhật phần thành công");
@@ -103,10 +124,15 @@ const CreateCourseProvider = (props: { children: React.ReactNode }) => {
       console.log(error);
     }
   };
-  const handleEditSection = (id: string, section: ISectionInfo) => {
-    setDataSection((cur) =>
-      cur.map((item) => (item.session_id === id ? section : item))
-    );
+  const handleEditSection = async (id: string, section: ISectionInfo) => {
+    try {
+      await courseManageApi.updateSectionCourse(id, section);
+      setDataSection((cur) =>
+        cur.map((item) => (item.session_id === id ? section : item))
+      );
+    } catch (error) {
+      toast.error("Cập nhật phần mới thất bại");
+    }
   };
 
   const handleDeleteSection = async (sectionId: string) => {
@@ -115,6 +141,9 @@ const CreateCourseProvider = (props: { children: React.ReactNode }) => {
       if (res) {
         setDataSection((cur) =>
           cur.filter((section) => section.session_id !== sectionId)
+        );
+        updateSectionCourse(
+          dataSection.filter((item) => item.session_id !== sectionId)
         );
         toast.success("Xóa phần thành công");
       }
@@ -148,7 +177,16 @@ const CreateCourseProvider = (props: { children: React.ReactNode }) => {
               : section
           );
         });
+        // update lesson in section sort
+        const sectionTmp = dataSection.find(
+          (item) => item.session_id === id
+        ) as ISectionInfo;
+        await courseManageApi.updateSectionCourse(id, {
+          ...sectionTmp,
+          lessons: sectionTmp.lessons ? [...sectionTmp.lessons, res] : [res],
+        });
       }
+
       setIsLoading(false);
       toast.success("Thêm bài học mới thành công");
     } catch (error) {
@@ -175,6 +213,16 @@ const CreateCourseProvider = (props: { children: React.ReactNode }) => {
               : section
           )
         );
+        // delete lesson in section sort
+        const sectionTmp = dataSection.find(
+          (item) => item.session_id === idSection
+        ) as ISectionInfo;
+        await courseManageApi.updateSectionCourse(idSection, {
+          ...sectionTmp,
+          lessons: sectionTmp.lessons.filter(
+            (lesson) => lesson.lecture_id !== idLesson
+          ),
+        });
       }
       setIsLoading(false);
       toast.success("Xóa bài học thành công");

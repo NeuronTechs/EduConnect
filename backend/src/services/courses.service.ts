@@ -115,18 +115,18 @@ interface ISection {
   session_id: string;
   name: string;
   course_id: string;
-  lessons: ILecture[];
+  lessons: ILecture[] | string[];
   createdAt?: string;
   updatedAt?: string;
 }
 
 interface ILecture {
   lecture_id: string;
-  title: string;
+  name: string;
   description: string;
   content: string;
   type: string;
-  section_id: string;
+  session_id: string;
   created_at?: string;
   updated_at?: string;
 }
@@ -155,11 +155,15 @@ const getSectionOfCourse = async (course_id: string) => {
           }
           const data = result[0].map((session: any) => {
             const lecture = result[1].filter(
-              (lecture: any) => lecture.session_id === session.session_id
+              (lecture: ILecture) => lecture.session_id === session.session_id
             );
             return {
               ...session,
-              lessons: lecture,
+              lessons: lecture.sort(
+                (a: ILecture, b: ILecture) =>
+                  session?.lessons?.indexOf(a.lecture_id) -
+                  session?.lessons?.indexOf(b.lecture_id)
+              ),
             };
           });
 
@@ -215,6 +219,10 @@ const createCourseSection = async (section: ISection) => {
   });
 };
 const updateSectionOfCourse = async (section: ISection) => {
+  section.createdAt = section.createdAt
+    ? section.createdAt.slice(0, 19).replace("T", " ")
+    : new Date().toISOString().slice(0, 19).replace("T", " ");
+  section.updatedAt = new Date().toISOString().slice(0, 19).replace("T", " ");
   const query = `UPDATE session SET ? WHERE session_id = ?`;
   return new Promise<dataResponse<ISection>>((resolve, rejects) => {
     try {
@@ -285,7 +293,6 @@ const createCourseSectionLesson = async (lecture: ILecture) => {
   return new Promise<dataResponse<ILecture>>((resolve, rejects) => {
     try {
       if (lecture.type === "quiz") {
-        console.log("test");
         const data = {
           quiz_id: uuidv4(),
           lecture_id: lecture.lecture_id,

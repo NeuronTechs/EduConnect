@@ -20,7 +20,7 @@ db.connectionDB.connect((err) => {
   app.use(
     cors({
       origin: environment.BASE_URL,
-      methods: "GET,POST,PUT,DELETE",
+      methods: "GET,POST,PUT,DELETE, PATCH",
       credentials: true,
     })
   );

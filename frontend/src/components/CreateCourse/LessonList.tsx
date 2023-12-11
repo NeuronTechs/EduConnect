@@ -40,6 +40,7 @@ const LessonList = ({ data }: ILessonList): React.ReactElement => {
       const sectionNew = { ...data, lessons: newList };
       handleEditSection(data.session_id, sectionNew);
       // setDataSection(newSectionList);
+      handleEditSection;
     }
     //
   };

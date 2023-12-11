@@ -12,13 +12,14 @@ import {
   ICreateCourseContext,
 } from "@/context/CreateCourseContext";
 import InputEditTitle from "./CreateLesson/Quiz/InputEditTitle";
+import * as teacherApi from "@/api/teacherApi/teacherApi";
 
 // fake data generator
 const SectionList = (props: {
   setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
   setIdSectionCreate: React.Dispatch<React.SetStateAction<string>>;
 }): React.ReactElement => {
-  const { dataSection, setDataSection, handleAddNewSection } =
+  const { dataSection, setDataSection, handleAddNewSection, dataDescription } =
     React.useContext(CreateCourseContext);
 
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
@@ -31,7 +32,22 @@ const SectionList = (props: {
       );
       console.log(activeIndex, overIndex);
       const newList = insertArrayElements(dataSection, activeIndex, overIndex);
+
       setDataSection(newList);
+      updateSectionCourse(newList);
+    }
+  };
+
+  const updateSectionCourse = async (data: ISectionInfo[]) => {
+    try {
+      const res = await teacherApi.updateSectionCourse(
+        dataDescription?.teacher_id ? dataDescription.teacher_id : "",
+        dataDescription?.course_id ? dataDescription.course_id : "",
+        data.map((item) => item.session_id)
+      );
+      console.log(res);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -80,7 +96,6 @@ export default SectionList;
 const ItemSection = (props: {
   setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
   setIdSectionCreate: React.Dispatch<React.SetStateAction<string>>;
-
   data: ISectionInfo;
 }): React.ReactElement => {
   const [isHovered, setIsHovered] = React.useState(false);

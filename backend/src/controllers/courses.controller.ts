@@ -111,7 +111,7 @@ interface StudentOfCourse {
 
 interface ISection {
   section_id: string;
-  title: string;
+  name: string;
   description: string;
   course_id: string;
   lecture: ILecture[];
@@ -121,7 +121,7 @@ interface ISection {
 
 interface ILecture {
   lecture_id: string;
-  title: string;
+  name: string;
   description: string;
   content: string;
   section_id: string;
