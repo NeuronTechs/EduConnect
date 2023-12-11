@@ -172,7 +172,9 @@ const getTransactionEachCourseByTeacher = async (
   WHERE 
     c.teacher_id = ? AND t.status = 'Thành Công'
   GROUP BY 
-    c.course_id
+    c.course_id Order by
+    total_revenue DESC
+    limit 3
     `;
     return new Promise((resolve, reject) => {
       db.connectionDB.query(

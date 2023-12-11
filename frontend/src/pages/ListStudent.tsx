@@ -4,6 +4,7 @@ import { List, MapPin, SquaresFour } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import * as teacherApi from "../api/teacherApi/teacherApi";
 import { useSelector } from "react-redux";
+import assets from "@/assets";
 
 const TABLE_HEAD = ["Hình ảnh", "Họ tên", "Địa chỉ", "Tham gia", "Khóa học"];
 
@@ -121,7 +122,11 @@ const ListStudent = () => {
                     >
                       <img
                         className="w-[120px] h-[120px] object-cover"
-                        src={student?.avatar}
+                        src={
+                          student?.avatar === "null"
+                            ? assets?.images?.noAvatar
+                            : student?.avatar
+                        }
                         alt="student1"
                       />
                       <Typography variant="h4" className="my-2">
@@ -159,7 +164,11 @@ const ListStudent = () => {
                         >
                           <img
                             className="w-[120px] h-[120px] object-cover"
-                            src={student?.avatar}
+                            src={
+                              student?.avatar === "null"
+                                ? assets?.images?.noAvatar
+                                : student?.avatar
+                            }
                             alt="student1"
                           />
                           <Typography variant="h4" className="my-2">
@@ -229,7 +238,11 @@ const ListStudent = () => {
                               <td className={classes}>
                                 <div className="flex items-center">
                                   <img
-                                    src={student?.avatar}
+                                    src={
+                                      student?.avatar === "null"
+                                        ? assets?.images?.noAvatar
+                                        : student?.avatar
+                                    }
                                     alt="image"
                                     className="w-[120px] h-[120px] object-cover"
                                   />
@@ -293,7 +306,11 @@ const ListStudent = () => {
                                   <td className={classes}>
                                     <div className="flex items-center">
                                       <img
-                                        src={student?.avatar}
+                                        src={
+                                          student?.avatar === "null"
+                                            ? assets?.images?.noAvatar
+                                            : student?.avatar
+                                        }
                                         alt="image"
                                         className="w-[120px] h-[120px] object-cover"
                                       />

@@ -13,6 +13,7 @@ import {
 import { PencilSimple } from "@phosphor-icons/react";
 import { ChangeEvent, useEffect, useState } from "react";
 import * as adminApi from "../../api/adminApi/adminApi";
+import assets from "@/assets";
 
 const TABLE_HEAD = [
   "Username",
@@ -213,7 +214,11 @@ const StudentList = () => {
                       <td className={classes}>
                         <img
                           className="w-[80px] h-[80px] object-cover"
-                          src={u?.avatar}
+                          src={
+                            u?.avatar === "null"
+                              ? assets.images.noAvatar
+                              : u?.avatar
+                          }
                           alt="student1"
                         />
                       </td>

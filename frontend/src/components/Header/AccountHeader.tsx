@@ -32,9 +32,23 @@ const AccountHeader = () => {
     await dispatch(clearState());
     nav(configRouter.login);
   };
+
+  const handleRedirectMyCourse = () => {
+    if (currentUser?.role === "1") {
+      nav(configRouter.courseMyTeacher);
+    } else {
+      nav(configRouter.myCourse);
+    }
+  };
+
   const handleRedirectTeacher = () => {
     nav(configRouter.dashboardTeacher);
   };
+
+  const handleRedirectInfo = () => {
+    nav(configRouter.profile);
+  };
+
   return (
     <div>
       <div className="flex items-center justify-center px-3 py-2 gap-3">
@@ -64,10 +78,24 @@ const AccountHeader = () => {
             </div>
           </MenuHandler>
           <MenuList>
-            <MenuItem>Khoá học của tôi</MenuItem>
-            <MenuItem>Thông tin cá nhân</MenuItem>
-            <MenuItem onClick={handleRedirectTeacher}>Trang giáo viên</MenuItem>
-            <hr className="my-3" />
+            {(currentUser?.role === "1" || currentUser?.role === "0") && (
+              <MenuItem onClick={handleRedirectMyCourse}>
+                Khoá học của tôi
+              </MenuItem>
+            )}
+            {(currentUser?.role === "1" || currentUser?.role === "0") && (
+              <MenuItem onClick={handleRedirectInfo}>
+                Thông tin cá nhân
+              </MenuItem>
+            )}
+            {currentUser?.role === "1" && (
+              <MenuItem onClick={handleRedirectTeacher}>
+                Trang giáo viên
+              </MenuItem>
+            )}
+            {(currentUser?.role === "1" || currentUser?.role === "0") && (
+              <hr className="my-3" />
+            )}
             <MenuItem onClick={handleLogOut}>Đăng xuất</MenuItem>
           </MenuList>
         </Menu>
