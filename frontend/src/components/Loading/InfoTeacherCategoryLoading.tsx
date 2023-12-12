@@ -2,7 +2,7 @@ import React from "react";
 
 const InfoTeacherCategoryLoading = (): React.ReactElement => {
   return (
-    <div className="w-full flex items-center justify-center min-h-[500px]">
+    <div className="w-full flex items-center justify-center min-h-[500px] bg-white rounded-md">
       <div role="status">
         <svg
           aria-hidden="true"
