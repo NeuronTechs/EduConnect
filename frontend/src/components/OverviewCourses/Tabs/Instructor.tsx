@@ -58,7 +58,8 @@ const Instructor = () => {
         <span className="italic">{teacher?.major}. </span> Hiện tại mình đang
         sinh sống tại {teacher?.address}. <br></br>
         Các khóa học của mình phù hợp với tất vả mọi sinh viên, người đi làm
-        trong lĩnh vực công nghệ thông tin.
+        trong lĩnh vực công nghệ thông tin.<br></br>
+        {teacher?.description}
       </div>
     </div>
   );

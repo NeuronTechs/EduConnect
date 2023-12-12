@@ -313,11 +313,11 @@ const BuyCourse = () => {
             </div>
           </div>
           {/* Khóa học đề xuất */}
-          <div className="p-[10px]">
+          {/* <div className="p-[10px]">
             <h2 className="border-b border-b-solid border-b-orange-200 font-semibold pb-1">
               Khóa học đề xuất
             </h2>
-          </div>
+          </div> */}
         </>
       )}
     </div>

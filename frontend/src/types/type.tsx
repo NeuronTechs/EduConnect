@@ -331,6 +331,8 @@ export interface ICourseOverview {
   teacher_id: string;
   fullName: string;
   educational_level: string;
+  major?: string;
+  teacher_description?: string;
   avatar: string;
   student_id: string;
   sessions: ISessionOverview[];

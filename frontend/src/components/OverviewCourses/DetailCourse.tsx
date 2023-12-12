@@ -82,7 +82,9 @@ const DetailCourse = () => {
               />
               <div className="mx-3">
                 <p className="font-semibold">{currentCourse?.fullName}</p>
-                <p>{currentCourse?.educational_level}</p>
+                <p>
+                  {currentCourse?.educational_level} - {currentCourse?.major}
+                </p>
               </div>
               {/* <div className="flex items-center">
                 <Rating
