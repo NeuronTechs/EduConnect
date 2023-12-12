@@ -112,6 +112,8 @@ const Session = (props: LectureProps) => {
 
     return hours > 0 ? `${hours} giờ ${minutes} phút` : `${minutes} phút`;
   };
+  console.log(props.lectures);
+
   return (
     <div className="  rounded-sm ">
       <Accordion open={open === true} icon={<Icon open={open} />}>

@@ -8,22 +8,24 @@ import { useDispatch, useSelector } from "react-redux";
 import { ICourse, SliceState } from "@/types/type";
 import { getCourseByStudentId } from "@/features/course/courseSlice";
 import { getCourseLastRecentByStudentId } from "@/api/courseApi/courseApi";
-
+import { Spinner } from "@material-tailwind/react";
 const MyCourse = (): React.ReactElement => {
   const [courseLastRecent, setCourseLastRecent] = React.useState<ICourse[]>([]);
   const dispatch = useDispatch<AppDispatch>();
   const { currentUser } = useSelector((state: SliceState) => state.authSlice);
+  const [loading, setLoading] = React.useState<boolean>(false);
   const dataCourse: ICourse[] | null = useSelector(
     (state: SliceState) => state.courseSlice.courses
   );
-  console.log(dataCourse);
   const getData = async () => {
+    setLoading(true);
     if (currentUser) {
       const res = await getCourseLastRecentByStudentId(currentUser?.user_id);
       if (res.length > 0) {
         setCourseLastRecent(res);
       }
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -44,15 +46,26 @@ const MyCourse = (): React.ReactElement => {
           />
           <div>
             <strong> Các khóa học gần đây</strong>
-            {dataCourse !== null && (
+            {loading ? (
+              <Spinner />
+            ) : courseLastRecent !== null && courseLastRecent.length > 0 ? (
               <ListCourse isLoading={false} data={courseLastRecent} />
+            ) : (
+              //thông báo không có khóa học nào
+              <div className="flex justify-center items-center h-[200px]">
+                <p>Không có khóa học nào</p>
+              </div>
             )}
           </div>
           <div>
             <div className="mb-5">
               <strong> Các khóa học của bạn</strong>
-              {dataCourse !== null && (
+              {dataCourse !== null && dataCourse.length > 0 ? (
                 <ListCourse isLoading={false} data={dataCourse} />
+              ) : (
+                <div className="flex justify-center items-center h-[200px]">
+                  <p>Không có khóa học nào</p>
+                </div>
               )}
             </div>
           </div>
