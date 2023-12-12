@@ -345,7 +345,7 @@ const getOverviewCourse = async (
   course_id: string
 ): Promise<dataResponse<any>> => {
   try {
-    const sql = `SELECT c.course_id ,c.title as course_name,c.description as course_description,s.session_id, s.name AS session_name, l.lecture_id, l.name AS lecture_name, l.description, l.source, l.type, l.duration, c.price, c.discount, c.study, c.requirement, c.level, c.language, c.image, tc.teacher_id, us.full_name, tc.educational_level, us.avatar, c.sessions as list_session, s.lessons as list_lecture, GROUP_CONCAT(DISTINCT ot.student_id) as student_id
+    const sql = `SELECT c.course_id ,c.title as course_name,c.description as course_description,s.session_id, s.name AS session_name, l.lecture_id, l.name AS lecture_name, l.description, l.source, l.type, l.duration, c.price, c.discount, c.study, c.requirement, c.level, c.language, c.image, tc.teacher_id, us.full_name, tc.educational_level , tc.major, tc.description as teacher_description, us.avatar, c.sessions as list_session, s.lessons as list_lecture, GROUP_CONCAT(DISTINCT ot.student_id) as student_id
     FROM educonnectdb.session s
     JOIN educonnectdb.lecture l ON s.session_id = l.session_id
     JOIN educonnectdb.course c ON s.course_id = c.course_id
@@ -399,6 +399,8 @@ const getOverviewCourse = async (
               teacher_id: result[0].teacher_id,
               fullName: result[0].full_name,
               educational_level: result[0].educational_level,
+              major: result[0].major,
+              teacher_description: result[0].teacher_description,
               avatar: result[0].avatar,
               student_id: result[0].student_id,
               sessions: [],
