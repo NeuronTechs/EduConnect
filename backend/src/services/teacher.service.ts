@@ -264,7 +264,10 @@ const createCourseTeacher = async (data: ICourseTeacher) => {
 
 const getCourseTeacher = async (id: string, limit: number) => {
   try {
-    const query = `SELECT course.*, teacher.*, user.*, topic.* FROM course JOIN teacher ON course.teacher_id = teacher.teacher_id JOIN user ON teacher.username = user.username JOIN topic ON course.topic_id = topic.topic_id WHERE teacher.teacher_id = ?  AND course.status =  2 LIMIT ?`;
+    const query = `SELECT course.*, teacher.*, user.*, topic.* 
+    FROM course JOIN teacher ON course.teacher_id = teacher.teacher_id 
+    JOIN user ON teacher.username = user.username 
+    JOIN topic ON course.topic_id = topic.topic_id WHERE teacher.teacher_id = ?  AND course.status =  2 LIMIT ?`;
     return new Promise<dataListResponse<ICourse>>((resolve, reject) => {
       db.connectionDB.query(
         {

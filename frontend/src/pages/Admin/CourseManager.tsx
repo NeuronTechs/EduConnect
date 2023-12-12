@@ -85,6 +85,7 @@ const CourseManager = () => {
 
   useEffect(() => {
     getAllUser();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, txtSearch, selectStatus]);
 
   const handleOpen = () => setOpen(!open);
