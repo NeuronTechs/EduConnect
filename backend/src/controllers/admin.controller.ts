@@ -15,6 +15,7 @@ const getAllUser = async (req: Request, res: Response) => {
         status: 200,
         data: result?.data,
         totalPage: result?.totalPage,
+        total: result?.total,
         message: result?.message,
       });
     } else {
