@@ -82,7 +82,7 @@ const SectionList = (props: {
           onClick={handleAddNewSection}
           className="px-2 py-1 flex items-center justify-center gap text-sm font-bold text-white bg-blue-400 hover:bg-blue-500 rounded-md"
         >
-          <PlusCircle size={32} /> Thêm phần khoá học
+          <PlusCircle size={30} /> Thêm Chương Khoá Học
         </button>
       </div>
     </div>

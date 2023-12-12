@@ -1,12 +1,15 @@
 import { Request, Response } from "express";
 import searchService from "../services/search.service";
+import { getTokenUserId } from "../utils/utils";
 
 const search = async (req: Request, res: Response) => {
   const { keyword, limit } = req.query;
+  const userId = await getTokenUserId(req);
   try {
     const result = await searchService.search(
       keyword as string,
-      parseInt(limit as string)
+      parseInt(limit as string),
+      ("st_" + userId) as string
     );
     if (result?.status) {
       res.status(200).json({

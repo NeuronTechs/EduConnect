@@ -78,21 +78,29 @@ interface IResultSearch {
       total_review: number;
       score_review: number;
     };
+    order_items?: {
+      order_items_id: string;
+      student_id: string;
+      course_id: string;
+      price: number;
+      createdAt: string;
+    };
   }[];
   [1]: { teacher: ITeacher; user: IUser }[];
   [2]: { topic: ITopic; "": { course_count: number } }[];
 }
 
-const search = async (keyword: string, limit: number) => {
+const search = async (keyword: string, limit: number, userId: string) => {
   try {
-    const query1 = `SELECT course.*, teacher.*, user.*, topic.* , total_student, total_review, score_review
+    const query1 = `SELECT course.*, teacher.*, user.*, topic.*, order_items.* , total_student, total_review, score_review
     FROM course JOIN teacher ON course.teacher_id = teacher.teacher_id 
     JOIN user ON teacher.username = user.username 
     JOIN topic ON course.topic_id = topic.topic_id 
     LEFT JOIN (SELECT course_id, COUNT(student_id) as total_student 
     FROM transactions GROUP BY course_id) as transactions ON transactions.course_id = course.course_id
-    LEFT JOIN (SELECT course_id, AVG(rating) as score_review, COUNT(review_id) as total_review 
+    LEFT JOIN (SELECT course_id, AVG(rating) as score_review, COUNT(review_id) as total_review
     FROM review GROUP BY course_id) as review ON review.course_id = course.course_id
+    LEFT JOIN order_items ON order_items.course_id = course.course_id AND order_items.student_id = ? 
     WHERE course.title LIKE ? AND course.status = 2 LIMIT ${limit ? limit : 10};
     SELECT * 
     FROM teacher JOIN user ON teacher.username = user.username 
@@ -109,6 +117,7 @@ const search = async (keyword: string, limit: number) => {
         {
           sql: query1,
           values: [
+            userId,
             `%${keyword}%`,
             `%${keyword}%`,
             `%${keyword}%`,
@@ -137,6 +146,7 @@ const search = async (keyword: string, limit: number) => {
               total_student: item.transactions?.total_student,
               total_review: item.review?.total_review,
               ranking: item.review?.score_review,
+              isBuy: item.order_items?.student_id ? true : false,
             };
           });
           const teachers = results[1].map((item) => {
