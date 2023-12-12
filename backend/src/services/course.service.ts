@@ -218,7 +218,7 @@ LEFT JOIN
 WHERE 
  (s.course_id = ? and  c.course_id IN (SELECT course_id FROM order_items WHERE student_id = ?)) or (s.course_id = ? and c.teacher_id = ?) or (? = 2 and s.course_id = ?)
 ORDER BY 
-  s.createdAt,s.session_id, l.lecture_id;`;
+  s.createdAt, s.session_id, l.lecture_id;`;
 
   // Execute the SQL query and return a Promise that resolves to the course details
   return new Promise<dataResponse<ICourseDetail>>((resolve, reject) => {
@@ -315,7 +315,7 @@ const getOverviewCourse = async (
   course_id: string
 ): Promise<dataResponse<any>> => {
   try {
-    const sql = `SELECT c.course_id ,c.title as course_name,c.description as course_description,s.session_id, s.name AS session_name, l.lecture_id, l.name AS lecture_name, l.description, l.source, l.type, l.duration, c.price, c.discount, c.study, c.requirement, c.level, c.language, c.image, tc.teacher_id, us.full_name, tc.educational_level, us.avatar, GROUP_CONCAT(DISTINCT ot.student_id) as student_id
+    const sql = `SELECT c.course_id ,c.title as course_name,c.description as course_description,s.session_id, s.name AS session_name, l.lecture_id, l.name AS lecture_name, l.description, l.source, l.type, l.duration, c.price, c.discount, c.study, c.requirement, c.level, c.language, c.image, tc.teacher_id, us.full_name, tc.educational_level, us.avatar, c.sessions as list_session, s.lessons as list_lecture, GROUP_CONCAT(DISTINCT ot.student_id) as student_id
     FROM educonnectdb.session s
     JOIN educonnectdb.lecture l ON s.session_id = l.session_id
     JOIN educonnectdb.course c ON s.course_id = c.course_id
@@ -325,7 +325,8 @@ const getOverviewCourse = async (
     WHERE s.course_id = ?
     GROUP BY
     c.course_id, c.title, c.description, s.session_id, s.name, l.lecture_id, l.name, l.description, l.source, l.type, l.duration, c.price, c.discount,c.study,c.requirement,c.level,c.language,c.image,tc.teacher_id,us.full_name,tc.educational_level,us.avatar
-    ORDER BY s.session_id, l.lecture_id;`;
+    ORDER BY 
+    s.createdAt,s.session_id, l.lecture_id;`;
 
     return new Promise<any>((resolve, reject) => {
       db.connectionDB.query(
@@ -371,11 +372,13 @@ const getOverviewCourse = async (
               avatar: result[0].avatar,
               student_id: result[0].student_id,
               sessions: [],
+              list_session: result[0].list_session,
             };
 
             let sample = {
               session_id: result[0].session_id,
               session_name: result[0].session_name,
+              list_lecture: result[0].list_lecture,
             };
             let lectures: any[] = [];
             for (const item of result) {
@@ -389,11 +392,12 @@ const getOverviewCourse = async (
                   time: item.duration,
                 });
               } else {
-                const { session_id, session_name } = sample;
+                const { session_id, session_name, list_lecture } = sample;
                 const temp: ISession = {
                   session_id,
                   name: session_name,
                   lectures,
+                  list_lecture: list_lecture,
                 };
                 resultData.sessions.push(temp);
                 lectures = [];

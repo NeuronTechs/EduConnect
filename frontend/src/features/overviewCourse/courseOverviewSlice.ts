@@ -40,6 +40,19 @@ export const courseOverviewSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(getCourseOverview.fulfilled, (state, action) => {
+      // let data = action.payload?.sessions;
+      action.payload?.sessions?.sort(
+        (a, b) =>
+          (action.payload.list_session?.indexOf(a?.session_id) || 0) -
+          (action.payload.list_session?.indexOf(b?.session_id) || 0)
+      );
+      action.payload?.sessions.forEach((session) =>
+        session.lectures.sort(
+          (a, b) =>
+            (session?.list_lecture?.indexOf(a?.lecture_id) || 0) -
+            (session?.list_lecture?.indexOf(b?.lecture_id) || 0)
+        )
+      );
       state.loading = false;
       state.courseCurrent = action.payload;
       state.error = undefined;

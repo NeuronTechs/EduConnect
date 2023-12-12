@@ -334,12 +334,14 @@ export interface ICourseOverview {
   avatar: string;
   student_id: string;
   sessions: ISessionOverview[];
+  list_session?: string[];
 }
 
 export interface ISessionOverview {
   session_id: string;
   name: string;
   lectures: ILectureOverview[];
+  list_lecture?: string[];
 }
 
 export interface ILectureOverview {

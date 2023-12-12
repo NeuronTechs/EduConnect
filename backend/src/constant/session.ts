@@ -5,4 +5,5 @@ export interface ISession {
   course_id?: string;
   name: string;
   lectures: ILecture[] | null;
+  list_lecture?: string[];
 }
