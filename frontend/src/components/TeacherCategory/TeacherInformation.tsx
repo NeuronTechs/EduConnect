@@ -21,24 +21,24 @@ const TeacherInformation = (props: IProps) => {
           </button> */}
         </div>
 
-        <h5 className="text-base font-normal">{props.data.user?.full_name}</h5>
+        <h5 className="text-xl font-bold">{props.data.user?.full_name}</h5>
         {/* position */}
         <h5 className="text-sm font-bold">
           Từng học ở trường: {props.data.school}
         </h5>
-        <h5 className="text-sm font-bold">{props.data.major}</h5>
+        <h5 className="text-sm font-bold">Công việc: {props.data.major}</h5>
         {/*  */}
         <div className="flex items-center space-x-14">
           <div className="space-x-4 flex">
             <Books size={20} weight="fill" />
-            <p className="text-sm font-light">{`${
+            <p className="text-sm font-bold">{`${
               props.data.totalCourse ? props.data.totalCourse : 0
             } khoá học`}</p>
           </div>
           {/* total student */}
           <div className="space-x-4 flex">
             <UsersThree size={20} weight="fill" />
-            <p className="text-sm font-light">
+            <p className="text-sm font-bold">
               {props.data.totalStudent ? props.data.totalStudent : 0} học sinh
             </p>
           </div>
@@ -54,7 +54,7 @@ const TeacherInformation = (props: IProps) => {
       </div>
       {/* social */}
       <div className="w-[25%] flex flex-col items-center justify-center space-y-4">
-        <div className="h-[200px] w-[200px] bg-gray-400 rounded-full">
+        <div className="h-[200px] w-[200px] bg-gray-400 rounded-full overflow-hidden">
           <ImageWithError
             src={props.data.user?.avatar}
             alt={props.data.user?.full_name}
