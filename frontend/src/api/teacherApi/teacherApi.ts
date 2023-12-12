@@ -28,10 +28,11 @@ export const getCourseTeacherApi = async (params: {
 }) => {
   try {
     const res = await httpRequest.get(`/teachers/${params.teacherId}/courses`, {
-      params: params.limit,
+      params: { limit: params.limit ? params.limit : 5 },
     });
     return res;
   } catch (error) {
+    console.log(error);
     return Promise.reject(error);
   }
 };
@@ -44,7 +45,7 @@ export const getCourseByTeacher = async (params: {
     const res = await httpRequest.get(
       `/teachers/${params.teacherId}/courses/all`,
       {
-        params: { limit: params.limit },
+        params: { limit: params.limit ? params.limit : 5 },
       }
     );
     return res.data;
