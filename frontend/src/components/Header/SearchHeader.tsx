@@ -70,7 +70,10 @@ const SearchHeader = (): React.ReactElement => {
           Search
         </label>
         <div className="relative w-[300px]">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <div
+            className="absolute inset-y-0 left-0 flex items-center pl-3  cursor-pointer z-999999"
+            onClick={handleSubmit(onSubmit)}
+          >
             <svg
               className="w-4 h-4 text-gray-500 dark:text-gray-400"
               aria-hidden="true"
