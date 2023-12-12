@@ -12,6 +12,16 @@ export const getCourseByStudentId = async (params: string) => {
     return Promise.reject(error);
   }
 };
+export const getCourseLastRecentByStudentId = async (params: string) => {
+  try {
+    const res = await httpRequest.get(
+      `/course/get-course-last-recent/${params}`
+    );
+    return res?.data.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
 
 export const getCourseDetails = async (params: {
   id: string;

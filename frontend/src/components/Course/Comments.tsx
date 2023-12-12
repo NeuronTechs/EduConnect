@@ -125,33 +125,41 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
           {comment.resource !== null && comment?.resource !== undefined && (
             <div className="w-[80wh]">
               <div className="flex items-center gap-4">
-                {Array.isArray(comment?.resource) &&
-                  comment?.resource.length > 0 &&
-                  comment?.resource?.map((res) => {
-                    if (res.mimetype?.includes("image")) {
-                      return (
-                        <div className="flex items-center gap-2">
-                          <img
-                            src={res.path}
-                            alt=""
-                            className="w-[200px] h-[100px] rounded-lg"
-                          />
-                        </div>
-                      );
-                    } else {
-                      return (
-                        <div className="flex items-center gap-2">
-                          <a
-                            href={res.path}
-                            target="_blank"
-                            className="text-blue-500 underline"
-                          >
-                            {res.originalname}
-                          </a>
-                        </div>
-                      );
-                    }
-                  })}
+                {(() => {
+                  const resource =
+                    typeof comment?.resource === "string"
+                      ? JSON.parse(comment?.resource)
+                      : comment?.resource;
+                  return (
+                    Array.isArray(resource) &&
+                    resource.length > 0 &&
+                    resource.map((res) => {
+                      if (res.mimetype?.includes("image")) {
+                        return (
+                          <div className="flex items-center gap-2">
+                            <img
+                              src={res.path}
+                              alt=""
+                              className="w-[200px] h-[100px] rounded-lg"
+                            />
+                          </div>
+                        );
+                      } else {
+                        return (
+                          <div className="flex items-center gap-2">
+                            <a
+                              href={res.path}
+                              target="_blank"
+                              className="text-blue-500 underline"
+                            >
+                              {res.originalname}
+                            </a>
+                          </div>
+                        );
+                      }
+                    })
+                  );
+                })()}
               </div>
             </div>
           )}
@@ -271,6 +279,8 @@ const Comments = ({ setCurrentTime, currentTime }: Props) => {
         id: currentCourse?.currentLecture?.lecture_id,
         paging: 1,
       });
+      console.log(res);
+
       if (res.length > 0) setComments(res);
       setLoading(false);
     }
@@ -286,7 +296,17 @@ const Comments = ({ setCurrentTime, currentTime }: Props) => {
         id: currentCourse?.currentLecture?.lecture_id,
         paging: paging + 1,
       });
-      if (res.length > 0) setComments([...comments, ...res]);
+
+      if (res.length) {
+        const newComment = res.filter((comment) => {
+          return !comments.find(
+            (existingComment) =>
+              existingComment.comment_id === comment.comment_id
+          );
+        });
+        setComments([...comments, ...newComment]);
+      }
+
       setPaging(paging + 1);
     }
     setLoading(false);
@@ -301,8 +321,14 @@ const Comments = ({ setCurrentTime, currentTime }: Props) => {
           <h1 className="font-semibold text-xl">Phản hồi của học sinh</h1>
         </div>
         <div className="my-3 w-full flex flex-col gap-4">
-          <WYSIWYGEditor currentTime={currentTime} setComments={setComments} />
-
+          <WYSIWYGEditor
+            currentTime={currentTime}
+            setComments={setComments}
+            setLoading={setLoading}
+          />
+          <div className="flex items-center justify-center">
+            {loading && <Spinner color="blue" />}
+          </div>
           {comments?.map((comment, index) => {
             return (
               <Comment
@@ -313,9 +339,7 @@ const Comments = ({ setCurrentTime, currentTime }: Props) => {
               />
             );
           })}
-          <div className="flex items-center justify-center">
-            {loading && <Spinner color="blue" />}
-          </div>
+
           <div className="flex items-center justify-center">
             {currentCourse.currentLecture &&
               currentCourse.currentLecture.comment_pages &&
