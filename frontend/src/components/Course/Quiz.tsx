@@ -166,10 +166,11 @@ const Quiz = ({ currentLecture }: QuizProps) => {
   }
   return (
     <div className="bg-gray-500 h-[75vh]  flex justify-center  ">
-      {startQuiz === false && quiz ? (
+      {startQuiz === false && review === false && quiz ? (
         <QuizStart setStartQuiz={setStartQuiz} quiz={quiz} />
       ) : isFullQuiz && quiz ? (
         <FullQuiz
+          review={review}
           currentQuiz={quiz}
           answerList={answerList}
           setAnswerList={setAnswerList}

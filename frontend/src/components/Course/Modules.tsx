@@ -106,7 +106,11 @@ const Session = (props: LectureProps) => {
       if (lecture.duration !== undefined && lecture.duration !== null)
         total += parseInt(lecture.duration);
     });
-    return (total / 60).toFixed(2);
+    const totalMinutes = total / 60;
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = Math.floor(totalMinutes % 60);
+
+    return hours > 0 ? `${hours} giờ ${minutes} phút` : `${minutes} phút`;
   };
   return (
     <div className="  rounded-sm ">
@@ -118,9 +122,9 @@ const Session = (props: LectureProps) => {
             </div>
             <div className="flex items-center text-[10px] space-x-3">
               <BookOpenText size={20} />
-              <p>{props.lectures?.length + "bài"}</p>
+              <p>{props.lectures?.length + " bài"}</p>
               <Clock size={20} />
-              <p>{getTotalTime() + " phút"}</p>
+              <p>{getTotalTime()}</p>
             </div>
           </div>
         </AccordionHeader>
@@ -151,7 +155,7 @@ const Modules = ({ currentCourse }: Props) => {
         {" Số lượng bài học ( " + currentCourseOverview?.totalLecture + " )"} /
         Tổng thời gian (
         {currentCourseOverview?.totalTime &&
-          currentCourseOverview?.totalTime / 60 + " phút"}
+          (currentCourseOverview?.totalTime / 60).toFixed(2) + " phút"}
         )
       </p>
       <div className="mt-5">

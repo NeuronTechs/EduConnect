@@ -8,7 +8,7 @@ interface ITopTeacher {
   major: string;
   courses_sold: number;
   total_page: number;
-  profit: number;
+  profit: string;
 }
 const TableStatisticTopTeacher = () => {
   const [data, setData] = useState<ITopTeacher[]>([]);
@@ -79,7 +79,7 @@ const TableStatisticTopTeacher = () => {
           </div>
           <div className="col-span-1 flex items-center">
             <p className="text-sm text-meta-3">
-              {formatCurrency(teacher.profit) + " VNĐ"}
+              {teacher.profit && formatCurrency(parseInt(teacher.profit))}
             </p>
           </div>
         </div>
