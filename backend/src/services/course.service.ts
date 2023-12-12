@@ -159,6 +159,36 @@ GROUP BY
   });
 };
 
+const getCourseLastRecentByStudentId = async (
+  student_id: string
+): Promise<dataListResponse<ICourse>> => {
+  const sql = `SELECT c.*, o.student_id, MAX(sp.updated_at) AS latest_updated_at,t.teacher_id as teacher_id, 
+  t.username as teacher_name, 
+  s.avatar as teacher_avatar,
+  COUNT(DISTINCT sp.lecture_id) as completed_lectures,
+  (SELECT COUNT(*) FROM lecture l JOIN session ss ON l.session_id = ss.session_id WHERE ss.course_id = c.course_id) as total_lectures
+  FROM order_items o
+  JOIN course c ON o.course_id = c.course_id
+  JOIN 
+    teacher t ON c.teacher_id = t.teacher_id 
+    JOIN 
+    user s ON t.username = s.username
+  JOIN student_progress sp ON o.course_id = sp.course_id
+  WHERE o.student_id = ? and sp.updated_at is not null
+  GROUP BY c.course_id, o.student_id
+  ORDER BY latest_updated_at DESC
+  LIMIT 3`;
+  return new Promise<dataListResponse<ICourse>>((resolve, reject) => {
+    db.connectionDB.query(sql, [student_id], (err, result) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve({ status: 200, data: result as ICourse[], message: "Success" });
+    });
+  });
+};
+
 // const getCourseByTopicId = async (
 //   category_id: string
 // ): Promise<dataListResponse<ICourse>> => {
@@ -727,6 +757,7 @@ export default {
   deleteById,
   getCourseByTeacherId,
   getCourseByStudentId,
+  getCourseLastRecentByStudentId,
   getCourseDetails,
   getOverviewCourse,
   addTransactionInCourse,

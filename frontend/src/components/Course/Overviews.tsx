@@ -15,7 +15,6 @@ const Overviews = () => {
   const currentLecture = useSelector(
     (state: SliceState) => state.courseSlice.currentLecture
   );
-  console.log(currentLecture);
 
   useEffect(() => {
     if (id) dispatch(getCourseOverview(id));
@@ -40,8 +39,12 @@ const Overviews = () => {
       </div>
       <div className="p-5 border-b-2 border-gray-300">
         <h2 className="m-2">Mô tả Bài giảng </h2>
-
-        <p className="p-5">{currentLecture?.description}</p>
+        <div
+          dangerouslySetInnerHTML={{
+            __html: currentLecture?.description || "",
+          }}
+          className="p-5"
+        />
       </div>
     </div>
   );

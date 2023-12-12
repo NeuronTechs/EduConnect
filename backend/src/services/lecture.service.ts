@@ -103,6 +103,8 @@ const getByLectureId = async (id: string): Promise<dataResponse<ILecture>> => {
 const createStudentProgress = async (
   data: IStudentProgress
 ): Promise<dataResponse<IStudentProgress>> => {
+  data.updated_at = new Date();
+
   const sql = `INSERT INTO student_progress SET ?`;
   return new Promise<dataResponse<IStudentProgress>>((resolve, reject) => {
     db.connectionDB.query(sql, data, (err, result) => {
@@ -122,6 +124,7 @@ const createStudentProgress = async (
 const updateStudentProgress = async (
   data: IStudentProgress
 ): Promise<updateResponse> => {
+  data.updated_at = new Date();
   const sql = `UPDATE student_progress SET ? WHERE lecture_id = ? and student_id = ?`;
   return new Promise<updateResponse>((resolve, reject) => {
     db.connectionDB.query(
