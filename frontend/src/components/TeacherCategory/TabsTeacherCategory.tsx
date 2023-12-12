@@ -116,7 +116,7 @@ const TabsContentFirst = (): React.ReactElement => {
         setLoading(true);
         const res = await teacherApi.getCourseTeacherApi({
           teacherId: param.id ? param.id : "",
-          limit: 10,
+          limit: 5,
         });
         setDataCourse(res.data);
       } catch (error) {
