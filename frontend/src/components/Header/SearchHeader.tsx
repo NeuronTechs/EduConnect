@@ -56,7 +56,7 @@ const SearchHeader = (): React.ReactElement => {
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     if (!data) return;
     // inputRef.current?.blur();
-    navigate(`/search?query=${encodeURIComponent(debouncedValue)}`);
+    navigate(`/search?query=${encodeURIComponent(data.dataInput)}`);
     // inputRef.current.blur();
     setIsFocus(false);
   };

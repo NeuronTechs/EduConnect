@@ -5,4 +5,5 @@ export interface IStudentProgress {
   student_id: string;
   progress: number;
   createdAt: string;
+  updated_at: Date;
 }

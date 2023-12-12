@@ -10,11 +10,13 @@ const WYSIWYGEditor = ({
   Reply,
   setReply,
   setComments,
+  setLoading,
 }: {
   currentTime: number;
   Reply?: { comment_id: string | null | undefined };
   setComments?: React.Dispatch<React.SetStateAction<IComment[]>>;
   setReply?: React.Dispatch<React.SetStateAction<IComment[]>>;
+  setLoading?: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { currentUser } = useSelector((state: SliceState) => state.authSlice);
   const { currentLecture } = useSelector(
@@ -31,6 +33,7 @@ const WYSIWYGEditor = ({
   const { getRootProps, isDragActive } = useDropzone({ onDrop });
   const submitHandler = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
+    if (setLoading) setLoading(true);
     if (currentUser != null && currentLecture != null) {
       const formData = new FormData();
       formData.append("content", content);
@@ -51,6 +54,8 @@ const WYSIWYGEditor = ({
         setReply((prev: IComment[]) => [res as IComment, ...prev]);
       } else {
         if (setComments && res) {
+          console.log(res);
+
           setComments((prev: IComment[]) => [res as IComment, ...prev]);
         }
       }
@@ -58,6 +63,7 @@ const WYSIWYGEditor = ({
       setContent("");
       setFiles([]);
     }
+    if (setLoading) setLoading(false);
   };
 
   return (

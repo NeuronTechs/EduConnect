@@ -260,7 +260,15 @@ const resolveComplaintCourse = async (req: Request, res: Response) => {
     }
   }
 };
-
+const getCourseLastRecentByStudentId = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const courses = await CourseService.getCourseLastRecentByStudentId(id);
+    res.status(courses.status).json({ data: courses });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+};
 export default {
   create,
   getAll,
@@ -269,6 +277,7 @@ export default {
   deleteById,
   getCourseByTeacherId,
   getCourseByStudentId,
+  getCourseLastRecentByStudentId,
   getCourseDetails,
   getOverviewCourse,
 

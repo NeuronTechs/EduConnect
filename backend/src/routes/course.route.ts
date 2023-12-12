@@ -48,4 +48,8 @@ router
     middlewareController.verifyToken,
     courseController.resolveComplaintCourse
   );
+
+router
+  .route("/get-course-last-recent/:id")
+  .get(courseController.getCourseLastRecentByStudentId);
 module.exports = router;

@@ -6,4 +6,5 @@ export interface ILecture {
   session_id: string;
   type: string;
   duration: number;
+  updated_at: Date;
 }
