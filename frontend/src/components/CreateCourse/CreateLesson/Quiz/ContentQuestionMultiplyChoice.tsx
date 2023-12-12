@@ -6,7 +6,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { useForm } from "react-hook-form";
 import {
   DotsSixVertical,
-  Image,
+  // Image,
   List,
   Pencil,
   Plus,
@@ -47,13 +47,14 @@ const ContentQuestionMultiplyChoice = (props: { data: IQuestionInfo }) => {
             }`}
             onClick={() => setTypeAnswer("answer")}
           />
-          <Image
+          {/* ===========================================================update laster =========================================== */}
+          {/* <Image
             size={15}
             className={`${
               typeAnswer === "image" ? "text-blue-500" : "hover:text-blue-400"
             }`}
             onClick={() => setTypeAnswer("image")}
-          />
+          /> */}
         </div>
       </div>
       {props.data.answers.length === 0 ? (

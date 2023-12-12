@@ -30,7 +30,7 @@ const QuizCompleted = ({
         </div>
         <div className="w-[100%] h-14 rounded-md bg-red-800/60 flex justify-between items-center p-5">
           <X size={20} color="red" />
-          <p>{quiz.questions.length}</p>
+          <p>{quiz.questions.length - scoreQuiz}</p>
         </div>
       </div>
 

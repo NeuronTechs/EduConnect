@@ -64,6 +64,7 @@ const getAllUser = (
                   status: true,
                   data: result,
                   totalPage: totalPage,
+                  total: total[0].total,
                   message: "Get all user success",
                 });
               }

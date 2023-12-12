@@ -72,15 +72,7 @@ const DashboardAdmin = () => {
                 : 0
             )}
           />
-          <CardFour
-            dataStudent={
-              dataStudent.length > 0
-                ? dataStudent
-                    .map((item: { name: string; uv: number }) => item.uv)
-                    .reduce((a, b) => a + b, 0)
-                : 0
-            }
-          />
+          <CardFour />
         </div>
       </div>
       {/* chart */}

@@ -6,6 +6,7 @@ import QuizMutiChoice from "./QuizMutiChoice";
 import { answer } from "./Quiz";
 
 interface quizProps {
+  review?: boolean;
   currentQuestion: IQuestion;
   currentQuestionIndex: number;
   answerList: answer[];
@@ -13,6 +14,7 @@ interface quizProps {
 }
 
 const Quiz = ({
+  review,
   currentQuestion,
   currentQuestionIndex,
   answerList,
@@ -35,6 +37,7 @@ const Quiz = ({
       <div className="border-[0.5px] rounded-md m-5 text-sm font-medium border-gray-300  ">
         {currentQuestion && currentQuestion.type === "fill" ? (
           <QuizFill
+            review={review}
             currentQuestion={currentQuestion}
             currentQuestionIndex={currentQuestionIndex}
             answerList={answerList}
@@ -44,6 +47,7 @@ const Quiz = ({
           <div className="border-[0.5px] rounded-md m-5 text-sm font-medium border-gray-300  ">
             {currentQuestion && currentQuestion.type === "single_choice" ? (
               <QuizSingleChoice
+                review={review}
                 currentQuestion={currentQuestion}
                 currentQuestionIndex={currentQuestionIndex}
                 answerList={answerList}
@@ -53,6 +57,7 @@ const Quiz = ({
               currentQuestion &&
               currentQuestion.type === "multiple_choice" && (
                 <QuizMutiChoice
+                  review={review}
                   currentQuestion={currentQuestion}
                   currentQuestionIndex={currentQuestionIndex}
                   answerList={answerList}
@@ -67,6 +72,7 @@ const Quiz = ({
   );
 };
 interface QuizProps {
+  review?: boolean;
   currentQuiz: IQuiz;
   answerList: answer[];
   setAnswerList: React.Dispatch<React.SetStateAction<answer[]>>;
@@ -75,6 +81,7 @@ interface QuizProps {
   error: string;
 }
 const FullQuiz = ({
+  review,
   currentQuiz,
   answerList,
   setAnswerList,
@@ -98,6 +105,7 @@ const FullQuiz = ({
         {currentQuiz.questions.map((question, index) => {
           return (
             <Quiz
+              review={review}
               currentQuestion={question}
               currentQuestionIndex={index}
               answerList={answerList}

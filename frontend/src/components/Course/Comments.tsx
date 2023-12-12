@@ -78,8 +78,8 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
   }, [reply.length]);
 
   return (
-    <div className="flex flex-col w-full justify-center items-start  gap-4 my-5">
-      <div className="flex items-start w-full ml-5  my-3 space-x-5">
+    <div className="flex flex-col w-full justify-center items-start">
+      <div className="flex items-start w-full ml-5  my-2 space-x-5">
         <div className=" flex justify-center items-center">
           <Avatar
             loading="lazy"
@@ -300,7 +300,7 @@ const Comments = ({ setCurrentTime, currentTime }: Props) => {
         <div className="mt-3">
           <h1 className="font-semibold text-xl">Phản hồi của học sinh</h1>
         </div>
-        <div className="my-3 w-full">
+        <div className="my-3 w-full flex flex-col gap-4">
           <WYSIWYGEditor currentTime={currentTime} setComments={setComments} />
 
           {comments?.map((comment, index) => {
