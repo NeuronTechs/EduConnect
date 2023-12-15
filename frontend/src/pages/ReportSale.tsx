@@ -14,24 +14,30 @@ import {
 import { useEffect, useState } from "react";
 import { ITransactionReport, SliceState } from "@/types/type";
 import { useSelector } from "react-redux";
-// const data = [
-//   { name: "Apr", uv: parseInt(formatCurrency(50)) },
-//   { name: "Feb", uv: parseInt(formatCurrency(100)) },
-//   { name: "Mar", uv: parseInt(formatCurrency(150)) },
-//   { name: "Apr", uv: parseInt(formatCurrency(200)) },
-//   { name: "May", uv: parseInt(formatCurrency(550)) },
-//   { name: "Jun", uv: parseInt(formatCurrency(300)) },
-//   { name: "Jul", uv: parseInt(formatCurrency(350)) },
-//   { name: "Aug", uv: parseInt(formatCurrency(400)) },
-//   { name: "Sep", uv: parseInt(formatCurrency(350)) },
-// ];
+import { getTeachersSellDetail } from "@/api/adminApi/adminApi";
+
 const headers = [
   { label: "name", key: "name" },
   { label: "giá trị", key: "uv" },
 ];
+const headerDowload = [
+  { label: "teacher_id", key: "teacher_id" },
+  { label: "username", key: "username" },
+  { label: "Họ và tên", key: "full_name" },
+
+  { label: "Số lượng khóa bán được", key: "courses_sold" },
+  { label: "Giá trị", key: "profit" },
+];
 const ReportSale = () => {
   const report = useSelector((state: SliceState) => state.adminSlice.report);
   const [data, setData] = useState<{ name: string; uv: number }[]>([]);
+  const [dataDownload, setDataDownload] = useState([]);
+  const getData = async () => {
+    const res = await getTeachersSellDetail();
+    if (res.status === 200) {
+      setDataDownload(res.data);
+    }
+  };
   useEffect(() => {
     if (Array.isArray(report)) {
       const array = report?.map((item: ITransactionReport) => {
@@ -40,7 +46,7 @@ const ReportSale = () => {
           uv: parseInt(formatCurrency(item.revenue)),
         };
       });
-
+      getData();
       setData(array.reverse());
     }
   }, []);
@@ -55,8 +61,8 @@ const ReportSale = () => {
         </div>
         <div className="flex w-full shrink-0 gap-2 md:w-max">
           <CSVLink
-            data={data}
-            headers={headers}
+            data={dataDownload}
+            headers={headerDowload}
             filename={"report_sales.csv"}
             className="flex items-center gap-3 bg-gray-800 text-white px-3 py-2 rounded-md"
             target="_blank"

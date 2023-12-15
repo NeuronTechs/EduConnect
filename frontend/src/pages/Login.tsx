@@ -35,11 +35,24 @@ const Login = () => {
       theme: "dark",
     });
   };
+  const notifySuccess = (message: string) => {
+    toast.success(message, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
+  };
   const loginHandler = async () => {
     const auth: Auth = { username: username, password: password };
     const loginSuccess = await dispatch(login(auth));
 
     if (loginSuccess.type === "auth/login/fulfilled") {
+      notifySuccess("Đăng nhập thành công");
       if ((loginSuccess.payload as IUser)?.role === "0") navigate("/");
       else if ((loginSuccess.payload as IUser)?.role === "1")
         navigate(configRouter.dashboardTeacher);
