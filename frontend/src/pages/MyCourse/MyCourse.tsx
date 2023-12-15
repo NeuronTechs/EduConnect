@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ICourse, SliceState } from "@/types/type";
 import { getCourseByStudentId } from "@/features/course/courseSlice";
 import { getCourseLastRecentByStudentId } from "@/api/courseApi/courseApi";
-import { Spinner } from "@material-tailwind/react";
+import LoadingPage from "@/components/LoadingPage/LoadingPage";
 const MyCourse = (): React.ReactElement => {
   const [courseLastRecent, setCourseLastRecent] = React.useState<ICourse[]>([]);
   const dispatch = useDispatch<AppDispatch>();
@@ -36,46 +36,50 @@ const MyCourse = (): React.ReactElement => {
   }, []);
 
   return (
-    <div className="flex flex-col w-full px-2 py-2 gap-5">
-      <div className="flex">
-        <div className="flex flex-col w-full  xl:w-[80%] gap-10 font-bold">
-          <img
-            src={assets.images.backgroundLogin}
-            alt=""
-            className="w-[99%] h-[200px] object-fill "
-          />
-          <div>
-            <strong> Các khóa học gần đây</strong>
-            {loading ? (
-              <Spinner />
-            ) : courseLastRecent !== null && courseLastRecent.length > 0 ? (
-              <ListCourse isLoading={false} data={courseLastRecent} />
-            ) : (
-              //thông báo không có khóa học nào
-              <div className="flex justify-center items-center h-[200px]">
-                <p>Không có khóa học nào</p>
+    <>
+      {loading ? (
+        <LoadingPage />
+      ) : (
+        <div className="flex flex-col w-full px-2 py-2 gap-5">
+          <div className="flex">
+            <div className="flex flex-col w-full  xl:w-[80%] gap-10 font-bold">
+              <img
+                src={assets.images.backgroundLogin}
+                alt=""
+                className="w-[99%] h-[200px] object-fill "
+              />
+              <div>
+                <strong> Các khóa học gần đây</strong>
+                {courseLastRecent !== null && courseLastRecent.length > 0 ? (
+                  <ListCourse isLoading={false} data={courseLastRecent} />
+                ) : (
+                  //thông báo không có khóa học nào
+                  <div className="flex justify-center items-center h-[200px]">
+                    <p>Không có khóa học nào</p>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-          <div>
-            <div className="mb-5">
-              <strong> Các khóa học của bạn</strong>
-              {dataCourse !== null && dataCourse.length > 0 ? (
-                <ListCourse isLoading={false} data={dataCourse} />
-              ) : (
-                <div className="flex justify-center items-center h-[200px]">
-                  <p>Không có khóa học nào</p>
+              <div>
+                <div className="mb-5">
+                  <strong> Các khóa học của bạn</strong>
+                  {dataCourse !== null && dataCourse.length > 0 ? (
+                    <ListCourse isLoading={false} data={dataCourse} />
+                  ) : (
+                    <div className="flex justify-center items-center h-[200px]">
+                      <p>Không có khóa học nào</p>
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
+            </div>
+            <div className="w-[20%] hidden xl:block ">
+              <Calendar />
+              <Task />
             </div>
           </div>
         </div>
-        <div className="w-[20%] hidden xl:block ">
-          <Calendar />
-          <Task />
-        </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

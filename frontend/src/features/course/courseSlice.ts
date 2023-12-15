@@ -152,9 +152,6 @@ export const courseSlice = createSlice({
       state.error = action.error.message;
       state.isError = true;
     });
-    builder.addCase(createStudentProgress.pending, (state) => {
-      state.loading = true;
-    });
     builder.addCase(createStudentProgress.fulfilled, (state, action) => {
       state.loading = false;
       state.error = undefined;
@@ -165,9 +162,6 @@ export const courseSlice = createSlice({
       state.loading = false;
       state.error = action.error.message;
       state.isError = true;
-    });
-    builder.addCase(updateStudentProgress.pending, (state) => {
-      state.loading = true;
     });
     builder.addCase(updateStudentProgress.fulfilled, (state, action) => {
       state.loading = false;

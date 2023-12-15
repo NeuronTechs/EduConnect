@@ -9,6 +9,7 @@ import { AppDispatch } from "@/redux/store";
 import { SliceState } from "@/types/type";
 import Quiz from "@/components/Course/Quiz";
 import Header from "@/components/Course/Header/Header";
+import LoadingPage from "@/components/LoadingPage/LoadingPage";
 const Course = () => {
   const { id, quiz } = useParams();
 
@@ -48,45 +49,39 @@ const Course = () => {
 
   return (
     <div>
-      {/* {loading ? (
-        <div className="flex items-center justify-center min-h-screen p-5 bg-gray-100 min-w-screen">
-          <div className="flex space-x-2 animate-pulse">
-            <div className="w-3 h-3 bg-gray-500 rounded-full" />
-            <div className="w-3 h-3 bg-gray-500 rounded-full" />
-            <div className="w-3 h-3 bg-gray-500 rounded-full" />
-          </div>
-        </div>
-      ) : ( */}
-      <div>
-        <Header currentCourse={currentCourse.currentCourse} />
-        <div className="flex flex-col w-full  gap-5 overflow-y-hidden">
-          <div className=" grid grid-cols-4 space-x-2 overflow-y-hidden relative">
-            <div className="col-span-4 lg:col-span-3 w-full h-auto lg:h-[100vh] lg:overflow-y-auto scrollbar-hide ">
-              {currentCourse.currentLecture?.type === "video" &&
-                currentCourse.currentCourse && (
-                  <Video
-                    currentLecture={currentCourse.currentLecture}
-                    currentTime={currentTime}
-                    setCurrentTime={setCurrentTime}
-                    currentCourse={currentCourse.currentCourse}
-                  />
-                )}
-              {currentCourse.currentLecture?.type === "quiz" &&
-                currentCourse.currentCourse && (
-                  <Quiz currentLecture={currentCourse.currentLecture} />
-                )}
+      {currentCourse.loading ? (
+        <LoadingPage />
+      ) : (
+        <div>
+          <Header currentCourse={currentCourse.currentCourse} />
+          <div className="flex flex-col w-full  gap-5 overflow-y-hidden">
+            <div className=" grid grid-cols-4 space-x-2 overflow-y-hidden relative">
+              <div className="col-span-4 lg:col-span-3 w-full h-auto lg:h-[100vh] lg:overflow-y-auto scrollbar-hide ">
+                {currentCourse.currentLecture?.type === "video" &&
+                  currentCourse.currentCourse && (
+                    <Video
+                      currentLecture={currentCourse.currentLecture}
+                      currentTime={currentTime}
+                      setCurrentTime={setCurrentTime}
+                      currentCourse={currentCourse.currentCourse}
+                    />
+                  )}
+                {currentCourse.currentLecture?.type === "quiz" &&
+                  currentCourse.currentCourse && (
+                    <Quiz currentLecture={currentCourse.currentLecture} />
+                  )}
 
-              <TabsInfo
-                currentLecture={currentCourse.currentLecture}
-                setCurrentTime={setCurrentTime}
-                currentTime={currentTime}
-              />
+                <TabsInfo
+                  currentLecture={currentCourse.currentLecture}
+                  setCurrentTime={setCurrentTime}
+                  currentTime={currentTime}
+                />
+              </div>
+              <Modules currentCourse={currentCourse.currentCourse} />
             </div>
-            <Modules currentCourse={currentCourse.currentCourse} />
           </div>
         </div>
-      </div>
-      {/* )} */}
+      )}
     </div>
   );
 };
