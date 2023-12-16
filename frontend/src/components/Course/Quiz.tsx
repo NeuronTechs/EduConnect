@@ -40,6 +40,7 @@ const Quiz = ({ currentLecture }: QuizProps) => {
   const [error, setError] = React.useState("");
   const [scoreQuiz, setScore] = React.useState(0);
   const [review, setReview] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const countdown = () => {
     if (time === 0) handleComplete();
     if (time > 0) setTime(time - 1);
@@ -54,6 +55,9 @@ const Quiz = ({ currentLecture }: QuizProps) => {
   });
 
   const getData = async () => {
+    setLoading(true);
+    setReview(false);
+    setQuizComplete(false);
     if (currentLecture && currentUser.currentUser) {
       const res: IQuiz = await getQuiz(currentLecture?.lecture_id);
       if (res) {
@@ -88,6 +92,7 @@ const Quiz = ({ currentLecture }: QuizProps) => {
         }
       }
     }
+    setLoading(false);
   };
   useEffect(() => {
     if (currentLecture?.type === "quiz") {
@@ -164,75 +169,72 @@ const Quiz = ({ currentLecture }: QuizProps) => {
 
     return `${formattedHours} : ${formattedMinutes} : ${formattedSeconds}`;
   }
+
   return (
-    <div className="bg-gray-500 h-[75vh]  flex justify-center  ">
-      {startQuiz === false && review === false && quiz ? (
-        <QuizStart setStartQuiz={setStartQuiz} quiz={quiz} />
-      ) : isFullQuiz && quiz ? (
-        <FullQuiz
-          review={review}
-          currentQuiz={quiz}
-          answerList={answerList}
-          setAnswerList={setAnswerList}
-          handleComplete={handleComplete}
-          setIsFullQuiz={setIsFullQuiz}
-          error={error}
-        />
+    <>
+      {loading ? (
+        <div className="bg-gray-500 h-[75vh]  flex justify-center items-center  ">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+        </div>
       ) : (
-        !QuizComplete && (
-          <div className="h-11/12 w-11/12 bg-white p-5 ">
-            <div className="flex justify-between ">
-              <div className="flex cursor-pointer h-10 relative items-center gap-2 text-sm rounded-lg bg-gray-50 p-3 border-2 border-gray-300">
-                <Info
-                  onClick={() => {
-                    setOpenQuizList(!openQuizList);
-                  }}
-                  size={20}
-                />
-                <p
-                  onClick={() => {
-                    setOpenQuizList(!openQuizList);
-                  }}
-                >
-                  Câu hỏi thứ {currentQuestionIndex + 1} /{" "}
-                  {quiz?.questions.length}
-                </p>
-                {openQuizList && quiz && (
-                  <QuizList
-                    quiz={quiz}
-                    setCurrentQuestionIndex={setCurrentQuestionIndex}
-                    setCurrentQuestion={setCurrentQuestion}
-                    setOpenQuizList={setOpenQuizList}
-                    answerList={answerList}
-                  />
-                )}
-              </div>
-              <div className="flex">
-                <div className=" h-10  flex text-center font-bold text-sm  border-gray-300">
-                  <div className="w-29 h-full border-2 p-2 rounded-full border-gray-300">
-                    <p>{formatTime(time)}</p>
+        <div className="bg-gray-500 h-[75vh]  flex justify-center  ">
+          {startQuiz === false && review === false && quiz ? (
+            <QuizStart setStartQuiz={setStartQuiz} quiz={quiz} />
+          ) : isFullQuiz && quiz ? (
+            <FullQuiz
+              review={review}
+              currentQuiz={quiz}
+              answerList={answerList}
+              setAnswerList={setAnswerList}
+              handleComplete={handleComplete}
+              setIsFullQuiz={setIsFullQuiz}
+              error={error}
+            />
+          ) : (
+            !QuizComplete && (
+              <div className="h-11/12 w-11/12 bg-white p-5 ">
+                <div className="flex justify-between ">
+                  <div className="flex cursor-pointer h-10 relative items-center gap-2 text-sm rounded-lg bg-gray-50 p-3 border-2 border-gray-300">
+                    <Info
+                      onClick={() => {
+                        setOpenQuizList(!openQuizList);
+                      }}
+                      size={20}
+                    />
+                    <p
+                      onClick={() => {
+                        setOpenQuizList(!openQuizList);
+                      }}
+                    >
+                      Câu hỏi thứ {currentQuestionIndex + 1} /{" "}
+                      {quiz?.questions.length}
+                    </p>
+                    {openQuizList && quiz && (
+                      <QuizList
+                        quiz={quiz}
+                        setCurrentQuestionIndex={setCurrentQuestionIndex}
+                        setCurrentQuestion={setCurrentQuestion}
+                        setOpenQuizList={setOpenQuizList}
+                        answerList={answerList}
+                      />
+                    )}
+                  </div>
+                  <div className="flex">
+                    <div className=" h-10  flex text-center font-bold text-sm  border-gray-300">
+                      <div className="w-29 h-full border-2 p-2 rounded-full border-gray-300">
+                        <p>{formatTime(time)}</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div className="shadow-sm my-5 shadow-gray-700 w-full border-y-2 justify-between border-gray-300 h-10 p-3 flex items-center">
-              <h3 className="text-base font-bold">
-                {currentQuestion?.question}
-              </h3>
-              <h3 className="text-base font-bold text-red-500">{error}</h3>
-            </div>
-            {currentQuestion && currentQuestion.type === "fill" ? (
-              <QuizFill
-                review={review}
-                currentQuestion={currentQuestion}
-                currentQuestionIndex={currentQuestionIndex}
-                answerList={answerList}
-                setAnswerList={setAnswerList}
-              />
-            ) : (
-              <div className="border-[0.5px] rounded-md m-5 text-sm font-medium border-gray-300  ">
-                {currentQuestion && currentQuestion.type === "single_choice" ? (
-                  <QuizSingleChoice
+                <div className="shadow-sm my-5 shadow-gray-700 w-full border-y-2 justify-between border-gray-300 h-10 p-3 flex items-center">
+                  <h3 className="text-base font-bold">
+                    {currentQuestion?.question}
+                  </h3>
+                  <h3 className="text-base font-bold text-red-500">{error}</h3>
+                </div>
+                {currentQuestion && currentQuestion.type === "fill" ? (
+                  <QuizFill
                     review={review}
                     currentQuestion={currentQuestion}
                     currentQuestionIndex={currentQuestionIndex}
@@ -240,80 +242,93 @@ const Quiz = ({ currentLecture }: QuizProps) => {
                     setAnswerList={setAnswerList}
                   />
                 ) : (
-                  currentQuestion &&
-                  currentQuestion.type === "multiple_choice" && (
-                    <QuizMutiChoice
-                      review={review}
-                      currentQuestion={currentQuestion}
-                      currentQuestionIndex={currentQuestionIndex}
-                      answerList={answerList}
-                      setAnswerList={setAnswerList}
-                    />
-                  )
+                  <div className="border-[0.5px] rounded-md m-5 text-sm font-medium border-gray-300  ">
+                    {currentQuestion &&
+                    currentQuestion.type === "single_choice" ? (
+                      <QuizSingleChoice
+                        review={review}
+                        currentQuestion={currentQuestion}
+                        currentQuestionIndex={currentQuestionIndex}
+                        answerList={answerList}
+                        setAnswerList={setAnswerList}
+                      />
+                    ) : (
+                      currentQuestion &&
+                      currentQuestion.type === "multiple_choice" && (
+                        <QuizMutiChoice
+                          review={review}
+                          currentQuestion={currentQuestion}
+                          currentQuestionIndex={currentQuestionIndex}
+                          answerList={answerList}
+                          setAnswerList={setAnswerList}
+                        />
+                      )
+                    )}
+                  </div>
                 )}
-              </div>
-            )}
 
-            <div className="flex justify-between">
-              <p
-                className="p-4 text-sm cursor-pointer text-gray-600"
-                onClick={() => {
-                  setIsFullQuiz(true);
-                }}
-              >
-                Hiển thị toàn bộ
-              </p>
-              <div className="flex gap-4">
-                {quiz &&
-                  currentQuestionIndex !== quiz?.questions.length - 1 && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (
-                          quiz &&
-                          currentQuestionIndex < quiz.questions.length - 1
-                        ) {
-                          setCurrentQuestionIndex(currentQuestionIndex + 1);
-                          setCurrentQuestion(
-                            quiz.questions[currentQuestionIndex + 1]
-                          );
-                        }
-                        // if (currentQuestion.id == data.length) setQuizComplete(true);
-                        // else setCurrentQuestion(data[currentQuestion.id]);
-                      }}
-                      className="text-white flex gap-2 items-center bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-4 py-2.5 text-center  mb-2"
-                    >
-                      Next
-                      <CaretRight size={16} />
-                    </button>
-                  )}
-                {quiz &&
-                  currentQuestionIndex === quiz?.questions.length - 1 &&
-                  QuizComplete === false && (
-                    <button
-                      onClick={() => {
-                        if (review) setQuizComplete(true);
-                        else handleComplete();
-                      }}
-                      className="text-white flex gap-2 items-center bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-4 py-2.5 text-center  mb-2"
-                    >
-                      Finish
-                      <CaretRight size={16} />
-                    </button>
-                  )}
+                <div className="flex justify-between">
+                  <p
+                    className="p-4 text-sm cursor-pointer text-gray-600"
+                    onClick={() => {
+                      setIsFullQuiz(true);
+                    }}
+                  >
+                    Hiển thị toàn bộ
+                  </p>
+                  <div className="flex gap-4">
+                    {quiz &&
+                      currentQuestionIndex !== quiz?.questions.length - 1 && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (
+                              quiz &&
+                              currentQuestionIndex < quiz.questions.length - 1
+                            ) {
+                              setCurrentQuestionIndex(currentQuestionIndex + 1);
+                              setCurrentQuestion(
+                                quiz.questions[currentQuestionIndex + 1]
+                              );
+                            }
+                            // if (currentQuestion.id == data.length) setQuizComplete(true);
+                            // else setCurrentQuestion(data[currentQuestion.id]);
+                          }}
+                          className="text-white flex gap-2 items-center bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-4 py-2.5 text-center  mb-2"
+                        >
+                          Next
+                          <CaretRight size={16} />
+                        </button>
+                      )}
+                    {quiz &&
+                      currentQuestionIndex === quiz?.questions.length - 1 &&
+                      QuizComplete === false && (
+                        <button
+                          onClick={() => {
+                            if (review) setQuizComplete(true);
+                            else handleComplete();
+                          }}
+                          className="text-white flex gap-2 items-center bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-4 py-2.5 text-center  mb-2"
+                        >
+                          Finish
+                          <CaretRight size={16} />
+                        </button>
+                      )}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        )
+            )
+          )}
+          {QuizComplete && quiz && (
+            <QuizCompleted
+              scoreQuiz={scoreQuiz}
+              quiz={quiz}
+              setQuizComplete={setQuizComplete}
+            />
+          )}
+        </div>
       )}
-      {QuizComplete && quiz && (
-        <QuizCompleted
-          scoreQuiz={scoreQuiz}
-          quiz={quiz}
-          setQuizComplete={setQuizComplete}
-        />
-      )}
-    </div>
+    </>
   );
 };
 
