@@ -210,7 +210,9 @@ JOIN
   user u on u.username = tc.username
 GROUP BY 
   tc.teacher_id
-LIMIT ?, ?`;
+ORDER BY 
+  profit DESC
+  limit 3 `;
   const offset = (page - 1) * pageSize;
   return new Promise<dataListResponse<any>>((resolve, reject) => {
     db.connectionDB.query(
@@ -231,10 +233,42 @@ LIMIT ?, ?`;
   });
 };
 
+const getTeachersSellDetail = async () => {
+  const query = `SELECT 
+  tc.*, u.avatar,u.full_name,
+  COUNT(t.transaction_id) AS courses_sold,
+  SUM(t.amount) AS profit
+FROM
+  transactions t
+JOIN
+  course c ON c.course_id = t.course_id
+JOIN
+  teacher tc ON tc.teacher_id = c.teacher_id
+JOIN
+  user u on u.username = tc.username
+GROUP BY
+  tc.teacher_id
+ORDER BY
+  profit DESC`;
+  return new Promise<dataListResponse<any>>((resolve, reject) => {
+    db.connectionDB.query(query, (err, result: RowDataPacket[]) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve({
+        status: 200,
+        data: result as any[],
+        message: "Success",
+      });
+    });
+  });
+};
 export default {
   getAllUser,
   setStatusUser,
   getAllCourseWithTeacherData,
   setStatusCourse,
   teacherSellReport,
+  getTeachersSellDetail,
 };

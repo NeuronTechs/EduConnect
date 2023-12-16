@@ -507,7 +507,7 @@ const getQuizNotExpired = async (student_id: string) => {
   JOIN session ON course.course_id = session.course_id
   JOIN lecture ON session.session_id = lecture.session_id
   JOIN lecture_quiz ON lecture.lecture_id = lecture_quiz.lecture_id
-  WHERE (select count(*) from quiz_result qr where qr.student_id= ? and qr.quiz_id = lecture_quiz.quiz_id)=0 AND lecture_quiz.timeout >= DATE_SUB(CURDATE(), INTERVAL 0 month)
+  WHERE (select count(*) from quiz_result qr where qr.student_id= ? and qr.quiz_id = lecture_quiz.quiz_id)=0 
   AND order_items.student_id = ? `;
   return new Promise<dataListResponse<IQuiz>>((resolve, rejects) => {
     try {
