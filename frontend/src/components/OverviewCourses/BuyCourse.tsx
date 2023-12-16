@@ -24,6 +24,7 @@ import * as courseApi from "../../api/courseApi/courseApi";
 import { resetStoreCourseOverview } from "@/features/overviewCourse/courseOverviewSlice";
 import { useState } from "react";
 import { Spinner } from "@material-tailwind/react";
+import { toast } from "react-toastify";
 
 const BuyCourse = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -48,55 +49,67 @@ const BuyCourse = () => {
   );
 
   const handleAddToCart = async () => {
-    await dispatch(
-      addToCart({
-        student_id: currentUser?.user_id as string,
-        course_id: id as string,
-      })
-    );
-    await dispatch(getCarts(currentUser?.user_id as string));
+    if (currentUser?.username) {
+      await dispatch(
+        addToCart({
+          student_id: currentUser?.user_id as string,
+          course_id: id as string,
+        })
+      );
+      await dispatch(getCarts(currentUser?.user_id as string));
+    } else {
+      navigate("/login");
+      toast.warn("Hãy đăng nhập để sử dụng dịch vụ");
+    }
   };
 
   const handleRedirectCheckoutPage = async () => {
-    if (currentCourse?.discount === 0) {
-      try {
-        const addTransactionInCourse = await courseApi.addTransactionInCourse({
-          student_id: currentUser?.user_id,
-          course_id: currentCourse?.course_id,
-          amount: currentCourse?.discount,
-          status: "Thành công",
-          transaction_id: generateRandomString(),
-          full_name: currentUser?.full_name,
-          email: currentUser?.email,
-          course_name: currentCourse?.title,
-        });
-        if (addTransactionInCourse.status === 200) {
+    if (currentUser?.username) {
+      if (currentCourse?.discount === 0) {
+        try {
+          const addTransactionInCourse = await courseApi.addTransactionInCourse(
+            {
+              student_id: currentUser?.user_id,
+              course_id: currentCourse?.course_id,
+              amount: currentCourse?.discount,
+              status: "Thành công",
+              transaction_id: generateRandomString(),
+              full_name: currentUser?.full_name,
+              email: currentUser?.email,
+              course_name: currentCourse?.title,
+            }
+          );
+          if (addTransactionInCourse.status === 200) {
+            setLoadingCheckout(false);
+            dispatch(resetCheckOutCart());
+            dispatch(resetStoreCourseOverview());
+            alert("Thanh toán thành công");
+            navigate(`/course/learn/${currentCourse?.course_id}`);
+          } else {
+            setLoadingCheckout(false);
+            alert(addTransactionInCourse.message);
+          }
+        } catch (err: any) {
+          console.log(err);
           setLoadingCheckout(false);
-          dispatch(resetCheckOutCart());
-          dispatch(resetStoreCourseOverview());
-          alert("Thanh toán thành công");
-          navigate(`/course/learn/${currentCourse?.course_id}`);
-        } else {
-          setLoadingCheckout(false);
-          alert(addTransactionInCourse.message);
+          alert(err.message);
         }
-      } catch (err: any) {
-        console.log(err);
-        setLoadingCheckout(false);
-        alert(err.message);
+      } else {
+        const courseCurrent: CourseCheckout = {
+          course_id: currentCourse?.course_id,
+          teacher_id: currentCourse?.teacher_id,
+          full_name: currentCourse?.fullName,
+          discount: currentCourse?.discount,
+          price: currentCourse?.price,
+          title: currentCourse?.title,
+          image: currentCourse?.image,
+        };
+        await dispatch(getCoureCheckout([courseCurrent]));
+        navigate(configRouter.checkout);
       }
     } else {
-      const courseCurrent: CourseCheckout = {
-        course_id: currentCourse?.course_id,
-        teacher_id: currentCourse?.teacher_id,
-        full_name: currentCourse?.fullName,
-        discount: currentCourse?.discount,
-        price: currentCourse?.price,
-        title: currentCourse?.title,
-        image: currentCourse?.image,
-      };
-      await dispatch(getCoureCheckout([courseCurrent]));
-      navigate(configRouter.checkout);
+      navigate("/login");
+      toast.warn("Hãy đăng nhập để sử dụng dịch vụ");
     }
   };
 
@@ -312,12 +325,6 @@ const BuyCourse = () => {
               )}
             </div>
           </div>
-          {/* Khóa học đề xuất */}
-          {/* <div className="p-[10px]">
-            <h2 className="border-b border-b-solid border-b-orange-200 font-semibold pb-1">
-              Khóa học đề xuất
-            </h2>
-          </div> */}
         </>
       )}
     </div>

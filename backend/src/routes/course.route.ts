@@ -26,7 +26,7 @@ router
   .get(middlewareController.verifyToken, courseController.getCourseDetails);
 router
   .route("/overview-course/:id")
-  .get(middlewareController.verifyToken, courseController.getOverviewCourse);
+  .get(courseController.getOverviewCourse);
 router
   .route("/add-transaction-course")
   .post(
