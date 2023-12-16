@@ -169,6 +169,7 @@ const Quiz = ({ currentLecture }: QuizProps) => {
 
     return `${formattedHours} : ${formattedMinutes} : ${formattedSeconds}`;
   }
+
   return (
     <>
       {loading ? (
