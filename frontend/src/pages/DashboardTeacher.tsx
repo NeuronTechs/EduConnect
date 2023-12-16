@@ -179,7 +179,7 @@ const DashboardTeacher = () => {
         </div>
       ) : (
         <div>
-          <div className="sm:flex sm:items-center sm:justify-between md:mx-5 text-center">
+          <div className="sm:flex sm:items-center sm:justify-around md:mx-5 text-center">
             <div className="p-5 w-[30%] bg-white">
               <h1 className="font-semibold text-[14px] text-[#685F78] mb-4 uppercase">
                 Doanh thu
@@ -210,17 +210,6 @@ const DashboardTeacher = () => {
               </p>
               <p className="text-[14px] text-[#303030] tracking-wider">
                 Mới trong tháng này
-              </p>
-            </div>
-            <div className="p-5 w-[30%] bg-white">
-              <h1 className="font-semibold text-[14px] text-[#685F78] mb-4 uppercase">
-                Đánh giá khóa học
-              </h1>
-              <p className="text-[#FFB54A] font-semibold text-[32px] mb-4">
-                4.8
-              </p>
-              <p className="text-[14px] text-[#303030] tracking-wider">
-                Xếp hạng tháng này
               </p>
             </div>
           </div>

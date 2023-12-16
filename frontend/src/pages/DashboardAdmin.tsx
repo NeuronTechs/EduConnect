@@ -61,8 +61,8 @@ const DashboardAdmin = () => {
   return (
     <div className="w-full h-full">
       {/* statistic */}
-      <div className="my-3 lg:mt-0 group relative flex items-center gap-2.5 rounded-md font-medium text-bodydark2 duration-300 ease-in-out px-5">
-        <div className="w-full h-auto grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
+      <div className="my-3 lg:mt-0 group relative flex justify-center items-center gap-2.5 rounded-md font-medium text-bodydark2 duration-300 ease-in-out px-5">
+        <div className="w-full h-auto grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-2">
           <CardTwo
             dataRevenue={formatCurrency(
               dataRevenue.length > 0

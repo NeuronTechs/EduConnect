@@ -21,7 +21,7 @@ router
   );
 router
   .route("/information-teacher/:teacher_id")
-  .get(middlewareController.verifyToken, AuthController.getInforTeacher);
+  .get(AuthController.getInforTeacher);
 router
   .route("/process-course/:student_id")
   .get(
