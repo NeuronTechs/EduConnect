@@ -86,7 +86,7 @@ const CourseManager = () => {
 
   useEffect(() => {
     getAllUser();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, txtSearch, selectStatus]);
 
   const handleOpen = () => setOpen(!open);
@@ -258,7 +258,7 @@ const CourseManager = () => {
                         <Typography
                           variant="small"
                           color="blue-gray"
-                          className="font-normal"
+                          className="font-normal w-[200px] whitespace-nowrap overflow-hidden overflow-ellipsis"
                         >
                           {u?.description}
                         </Typography>
@@ -405,7 +405,6 @@ const CourseManager = () => {
           {status === "1" || status === "0" || status === "3"
             ? "'Xác nhận' duyệt khóa học"
             : "'Xác nhận' chặn khóa học"}{" "}
-          thì người dùng sẽ{" "}
           {status !== "1"
             ? "Khóa học sẽ hiển thị trên hệ thống"
             : "Khóa học sẽ bị chặn trên hệ thống"}
