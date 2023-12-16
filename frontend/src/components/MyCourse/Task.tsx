@@ -47,30 +47,34 @@ const Task = () => {
       <div className="flex justify-between text-sm">
         <strong> Bài tập tới hạn</strong>
       </div>
-      {quiz.map((item) => {
-        return (
-          <div className="mt-6 flex text-sm space-x-4 mb-6 ">
-            <div className="avatar-account ">
-              <img
-                src={assets.images.task}
-                alt="avatar"
-                className="rounded-full h-[40px] w-[40px]"
-              />
+      {quiz.length > 0 ? (
+        quiz.map((item) => {
+          return (
+            <div className="mt-6 flex text-sm space-x-4 mb-6 ">
+              <div className="avatar-account ">
+                <img
+                  src={assets.images.task}
+                  alt="avatar"
+                  className="rounded-full h-[40px] w-[40px]"
+                />
+              </div>
+              <div>
+                <p
+                  className="cursor-pointer "
+                  onClick={() => {
+                    navigateToCourse(item);
+                  }}
+                >
+                  {item.name}
+                </p>
+                <div className="text-gray-600">{convertTime(item.timeout)}</div>
+              </div>
             </div>
-            <div>
-              <p
-                className="cursor-pointer "
-                onClick={() => {
-                  navigateToCourse(item);
-                }}
-              >
-                {item.name}
-              </p>
-              <div className="text-gray-600">{convertTime(item.timeout)}</div>
-            </div>
-          </div>
-        );
-      })}
+          );
+        })
+      ) : (
+        <p className="text-gray-400 p-5 text-base"> Chưa có bài tập nào</p>
+      )}
     </div>
   );
 };
