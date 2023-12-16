@@ -16,22 +16,26 @@ import { ITransactionReport, SliceState } from "@/types/type";
 import { useSelector } from "react-redux";
 import { getTeachersSellDetail } from "@/api/adminApi/adminApi";
 
-const headers = [
-  { label: "name", key: "name" },
-  { label: "giá trị", key: "uv" },
-];
-const headerDowload = [
+const headerDownload = [
   { label: "teacher_id", key: "teacher_id" },
   { label: "username", key: "username" },
   { label: "Họ và tên", key: "full_name" },
 
   { label: "Số lượng khóa bán được", key: "courses_sold" },
-  { label: "Giá trị", key: "profit" },
+  { label: "Tổng doanh thu", key: "profit" },
 ];
 const ReportSale = () => {
   const report = useSelector((state: SliceState) => state.adminSlice.report);
   const [data, setData] = useState<{ name: string; uv: number }[]>([]);
-  const [dataDownload, setDataDownload] = useState([]);
+  const [dataDownload, setDataDownload] = useState<
+    {
+      teacher_id: string;
+      username: string;
+      full_name: string;
+      courses_sold: string;
+      profit: string;
+    }[]
+  >([]);
   const getData = async () => {
     const res = await getTeachersSellDetail();
     if (res.status === 200) {
@@ -62,7 +66,7 @@ const ReportSale = () => {
         <div className="flex w-full shrink-0 gap-2 md:w-max">
           <CSVLink
             data={dataDownload}
-            headers={headerDowload}
+            headers={headerDownload}
             filename={"report_sales.csv"}
             className="flex items-center gap-3 bg-gray-800 text-white px-3 py-2 rounded-md"
             target="_blank"
@@ -97,7 +101,7 @@ const ReportSale = () => {
           <table className="w-full min-w-max table-auto text-left">
             <thead>
               <tr>
-                {headers.map((head) => (
+                {headerDownload.map((head) => (
                   <th
                     key={head.label}
                     className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
@@ -114,20 +118,20 @@ const ReportSale = () => {
               </tr>
             </thead>
             <tbody>
-              {data.map((item, index) => {
+              {dataDownload.map((item, index) => {
                 const isLast = index === data.length - 1;
                 const classes = isLast
                   ? "p-4"
                   : "p-4 border-b border-blue-gray-50";
                 return (
-                  <tr key={item.name}>
+                  <tr key={item.teacher_id}>
                     <td className={classes}>
                       <Typography
                         variant="small"
                         color="blue-gray"
                         className="font-normal"
                       >
-                        {item.name}
+                        {item.teacher_id}
                       </Typography>
                     </td>
                     <td className={classes}>
@@ -136,7 +140,34 @@ const ReportSale = () => {
                         color="blue-gray"
                         className="font-normal"
                       >
-                        {item.uv + " VNĐ"}
+                        {item.username}
+                      </Typography>
+                    </td>
+                    <td className={classes}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {item.full_name}
+                      </Typography>
+                    </td>
+                    <td className={classes}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {item.courses_sold}
+                      </Typography>
+                    </td>
+                    <td className={classes}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {formatCurrency(parseInt(item.profit))}
                       </Typography>
                     </td>
                   </tr>

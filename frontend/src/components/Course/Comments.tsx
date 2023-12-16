@@ -80,10 +80,10 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
   return (
     <div className="flex flex-col w-full justify-center items-start">
       <div className="flex items-start w-full ml-5  my-2 space-x-5">
-        <div className=" flex justify-center items-center">
+        <div className=" flex justify-center items-center ">
           <Avatar
             loading="lazy"
-            className="w-[40px] h-[40px]"
+            className="w-[40px] h-[40px] "
             src={
               typeof comment?.avatar === "string"
                 ? comment?.avatar
@@ -192,7 +192,7 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
                   onClick={() => setPositive(false)}
                 />
               )}
-              {comment.isReply && comment.isReply !== "" && (
+              {comment.isReply && comment.isReply !== "true" && (
                 <p
                   className="underline cursor-pointer"
                   onClick={() => setIsReply(!isReply)}
