@@ -7,6 +7,8 @@ import React from "react";
 import CourseCart from "./CourseCart";
 import { useSelector } from "react-redux";
 import { SliceState } from "@/types/type";
+import { Link } from "react-router-dom";
+import { configRouter } from "@/configs/router";
 interface propsHeader {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -26,11 +28,36 @@ const Header = (props: propsHeader): React.ReactElement => {
         </div>
         <SearchHeader />
       </div>
+
       <div className="right flex gap-3 items-center">
         {/* <NotificationHeader /> */}
         {/* <MessageHeader /> */}
-        {currentUser?.role === "0" && <CourseCart />}
-        <AccountHeader />
+        {!currentUser ? (
+          <>
+            <Link to={configRouter.login}>
+              <button
+                type="button"
+                className=" w-[100px] flex items-center justify-center text-blue-500 bg-gray-100 hover:bg-gray-200 border border-blue-500 focus:outline-none font-medium rounded-full text-sm py-2.5 dark:bg-gray-800 dark:hover:bg-gray-700 dark:border-blue-600"
+              >
+                Đăng Nhập
+              </button>
+            </Link>
+
+            <Link to={configRouter.signUp}>
+              <button
+                type="button"
+                className="w-[100px] flex items-center justify-center text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                Đăng Kí
+              </button>
+            </Link>
+          </>
+        ) : (
+          <>
+            {currentUser?.role === "0" && <CourseCart />}
+            {currentUser && <AccountHeader />}
+          </>
+        )}
       </div>
     </div>
   );

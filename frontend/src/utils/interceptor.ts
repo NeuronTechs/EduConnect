@@ -101,20 +101,6 @@ export const setupInterceptor = (store: Store, dispatch: AppDispatch): void => {
           }
         }
         config.headers.Authorization = "Bearer " + user.accessToken;
-      } else {
-        if (!isRefreshing) {
-          isRefreshing = true;
-          if (!refreshPromise) {
-            refreshPromise = refetchToken();
-          }
-          const data = await refreshPromise;
-          const dataTemplate: User = {
-            ...user,
-            accessToken: data.accessToken,
-          };
-          store.dispatch(refetchTokenStore(dataTemplate));
-          config.headers.Authorization = "Bearer " + data.accessToken;
-        }
       }
 
       isRefreshing = false;

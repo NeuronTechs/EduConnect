@@ -46,7 +46,49 @@ const publicRoutes: IRouter[] = [
     path: configRouter.registerInformation,
     component: lazy(() => import("../pages/RegisterInformation")),
     layout: BlankLayout,
-    role: "null",
+    role: null,
+  },
+  {
+    path: configRouter.course,
+    component: lazy(() => import("../pages/OverviewCourse")),
+    layout: DefaultLayout,
+    role: null,
+  },
+  {
+    path: configRouter.home,
+    component: lazy(() => import("../pages/Home")),
+    layout: DefaultLayout,
+    role: null,
+  },
+  {
+    path: configRouter.categoryFilter,
+    component: lazy(() => import("../pages/CategoryFilter")),
+    layout: DefaultLayout,
+    role: null,
+  },
+  {
+    path: configRouter.teacherCategory,
+    component: lazy(() => import("@/pages/TeacherCategory")),
+    layout: DefaultLayout,
+    role: null,
+  },
+  {
+    path: configRouter.search,
+    component: lazy(() => import("../pages/Search")),
+    layout: DefaultLayout,
+    role: null,
+  },
+  {
+    path: configRouter.categoryCourse,
+    component: lazy(() => import("../pages/Category/CategoryCourse")),
+    layout: DefaultLayout,
+    role: null,
+  },
+  {
+    path: configRouter.categoryTopic,
+    component: lazy(() => import("../pages/Category/CategoryTopic")),
+    layout: DefaultLayout,
+    role: null,
   },
   // user
   {
@@ -67,41 +109,9 @@ const publicRoutes: IRouter[] = [
     layout: BlankLayout,
     role: "0",
   },
-
-  {
-    path: configRouter.home,
-    component: lazy(() => import("../pages/Home")),
-    layout: DefaultLayout,
-    role: "0",
-  },
-  {
-    path: configRouter.categoryFilter,
-    component: lazy(() => import("../pages/CategoryFilter")),
-    layout: DefaultLayout,
-    role: "0",
-  },
-  {
-    path: configRouter.teacherCategory,
-    component: lazy(() => import("@/pages/TeacherCategory")),
-    layout: DefaultLayout,
-    role: "0",
-  },
-  {
-    path: configRouter.search,
-    component: lazy(() => import("../pages/Search")),
-    layout: DefaultLayout,
-    role: "0",
-  },
   {
     path: configRouter.chat,
     component: lazy(() => import("@/pages/Chat")),
-    layout: DefaultLayout,
-    role: "0",
-  },
-
-  {
-    path: configRouter.course,
-    component: lazy(() => import("../pages/OverviewCourse")),
     layout: DefaultLayout,
     role: "0",
   },
@@ -141,18 +151,7 @@ const publicRoutes: IRouter[] = [
     layout: BlankLayout,
     role: "0",
   },
-  {
-    path: configRouter.categoryCourse,
-    component: lazy(() => import("../pages/Category/CategoryCourse")),
-    layout: DefaultLayout,
-    role: "0",
-  },
-  {
-    path: configRouter.categoryTopic,
-    component: lazy(() => import("../pages/Category/CategoryTopic")),
-    layout: DefaultLayout,
-    role: "0",
-  },
+
   // user
 
   {

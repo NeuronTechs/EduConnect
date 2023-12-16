@@ -8,30 +8,21 @@ import middlewareController from "../middlewares/middlewareController";
 router
   .route("/recommendations")
   .get(teacherController.getTeacherRecommendations);
-router
-  .route("/:teacherId")
-  .get(middlewareController.verifyToken, teacherController.getTeacherDetail);
+router.route("/:teacherId").get(teacherController.getTeacherDetail);
+// create course
 router
   .route("/courses")
   .post(
     middlewareController.verifyToken,
     teacherController.createCourseTeacher
   );
-router
-  .route("/:id/courses/all")
-  .get(middlewareController.verifyToken, teacherController.getCourseByTeacher);
+
+router.route("/:id/courses/all").get(teacherController.getCourseByTeacher);
 router
   .route("/:teacherId/courses/:courseId")
-  .get(
-    middlewareController.verifyToken,
-    teacherController.getCourseTeacherById
-  );
-router
-  .route("/:teacherId/courses")
-  .get(middlewareController.verifyToken, teacherController.getCourseTeacher);
-router
-  .route("/list-student/:id")
-  .get(middlewareController.verifyToken, teacherController.getStudentByTeacher);
+  .get(teacherController.getCourseTeacherById);
+router.route("/:teacherId/courses").get(teacherController.getCourseTeacher);
+router.route("/list-student/:id").get(teacherController.getStudentByTeacher);
 router
   .route("/:teacherId/courses/:courseId")
   .put(

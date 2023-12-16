@@ -67,9 +67,11 @@ const AccountHeader = () => {
             <div className="avatar-account cursor-pointer">
               <ImageWithError
                 src={
-                  currentUser.avatar instanceof FileList
-                    ? URL.createObjectURL(currentUser.avatar[0])
-                    : currentUser.avatar[0]
+                  currentUser.avatar
+                    ? currentUser.avatar instanceof FileList
+                      ? URL.createObjectURL(currentUser.avatar[0])
+                      : currentUser.avatar[0]
+                    : assets.images.noAvatar
                 }
                 fallbackSrc={assets.images.noAvatar}
                 alt="avatar"
