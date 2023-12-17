@@ -65,7 +65,7 @@ const ListStudent = () => {
               </div>
               <div className="w-72">
                 <select
-                  className="rounded-md"
+                  className="rounded-md w-full"
                   onChange={(e) => setCourseSelect(e.target.value)}
                 >
                   <option className="p-3" value="">
