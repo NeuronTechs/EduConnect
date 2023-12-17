@@ -144,7 +144,8 @@ export const createQuizResult = async (
   student_id: string,
   quiz_id: string,
   answer: answer[],
-  score: string
+  score: string,
+  isPass: boolean
 ) => {
   try {
     const response = await httpRequests.post(`/quiz-result/create`, {
@@ -152,6 +153,7 @@ export const createQuizResult = async (
       quiz_id,
       answer,
       score,
+      isPass,
     });
     return response.data;
   } catch (error) {
