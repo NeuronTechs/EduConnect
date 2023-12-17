@@ -46,9 +46,7 @@ const ProfileInfo = () => {
             <div className="rounded-full bg-gray-200 p-2 xl:hidden flex transition-all delay-200"></div>
           </div>
         </div>
-        <h1 className="text-sm">
-          <strong>{currentUser?.full_name}</strong>
-        </h1>
+        <h1 className="text-sm">{currentUser?.full_name}</h1>
       </div>
       {loading ? (
         <div className="flex justify-center">
