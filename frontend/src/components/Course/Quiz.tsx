@@ -25,6 +25,7 @@ interface IQuizResult {
   quiz_id: string;
   answer: answer[];
   score: string;
+  isPass: boolean;
 }
 const Quiz = ({ currentLecture }: QuizProps) => {
   const currentUser = useSelector((state: SliceState) => state.authSlice);
@@ -73,7 +74,18 @@ const Quiz = ({ currentLecture }: QuizProps) => {
           setScore(parseInt(res1.score));
           setAnswerList(res1.answer);
           setCurrentQuestion(res.questions[0]);
-          setReview(true);
+          if (res1.isPass === true) setReview(true);
+          else {
+            const array: answer[] = [];
+            for (let index = 0; index < res.questions.length; index++) {
+              array.push({
+                type: res.questions[index].type,
+                index: index,
+                answer: [],
+              });
+            }
+            setAnswerList(array);
+          }
         } else {
           setCurrentQuestion(res.questions[0]);
           if (res) {
@@ -141,11 +153,16 @@ const Quiz = ({ currentLecture }: QuizProps) => {
         }
       }
       if (currentUser.currentUser && quiz) {
+        const pass =
+          (score / quiz.questions.length) * 100 >= quiz.passPercent
+            ? true
+            : false;
         const result = await createQuizResult(
           currentUser.currentUser?.user_id,
           quiz.quiz_id,
           answerList,
-          score.toString()
+          score.toString(),
+          pass
         );
         if (result && !result.response) {
           setQuizComplete(true);
@@ -169,6 +186,7 @@ const Quiz = ({ currentLecture }: QuizProps) => {
 
     return `${formattedHours} : ${formattedMinutes} : ${formattedSeconds}`;
   }
+  console.log(quiz);
 
   return (
     <>
@@ -178,7 +196,10 @@ const Quiz = ({ currentLecture }: QuizProps) => {
         </div>
       ) : (
         <div className="bg-gray-500 h-[75vh]  flex justify-center  ">
-          {startQuiz === false && review === false && quiz ? (
+          {startQuiz === false &&
+          review === false &&
+          QuizComplete === false &&
+          quiz ? (
             <QuizStart setStartQuiz={setStartQuiz} quiz={quiz} />
           ) : isFullQuiz && quiz ? (
             <FullQuiz
@@ -324,6 +345,7 @@ const Quiz = ({ currentLecture }: QuizProps) => {
               scoreQuiz={scoreQuiz}
               quiz={quiz}
               setQuizComplete={setQuizComplete}
+              review={review}
             />
           )}
         </div>

@@ -6,13 +6,15 @@ const QuizCompleted = ({
   scoreQuiz,
   quiz,
   setQuizComplete,
+  review,
 }: {
   scoreQuiz: number;
   quiz: IQuiz;
   setQuizComplete: Dispatch<SetStateAction<boolean>>;
+  review: boolean;
 }) => {
   return (
-    <div className="text-center flex bg-[#151c3b] w-full items-center justify-center flex-col gap-1 h-[500px]">
+    <div className="text-center flex bg-[#151c3b] w-full items-center justify-center flex-col gap-1 h-full">
       <h1 className=" text-white">Quiz Scorecard</h1>
       <div className="w-[55%] h-40 rounded-md bg-[#111730] flex flex-col items-center justify-center gap-3">
         <h1 className="text-5xl text-green-400 font-extrabold ">
@@ -40,7 +42,7 @@ const QuizCompleted = ({
         }}
         className="w-[55%] bg-[#151c39] rounded-sm text-white text-sm border-[2px] border-gray-100 p-1 mt-10"
       >
-        Xem lại bài làm
+        {review ? " Xem lại bài làm" : "Làm lại bài làm"}
       </button>
     </div>
   );

@@ -12,14 +12,14 @@ interface IQuizResult {
   quiz_id: string;
   answer: string;
   score: string;
-  createdAt: string;
+  isPass: string;
 }
 
 const createQuiz = async (quiz: IQuizResult) => {
   const data = quiz.answer;
   const json = JSON.stringify(data);
   quiz.answer = json;
-  const query = `INSERT INTO quiz_result SET ?`;
+  const query = `INSERT INTO quiz_result SET ? ON DUPLICATE KEY UPDATE answer = VALUES(answer), score = VALUES(score), isPass = VALUES(isPass)`;
   return new Promise<dataResponse<IQuizResult>>((resolve, rejects) => {
     try {
       connectDB.connectionDB.query(
@@ -36,7 +36,7 @@ const createQuiz = async (quiz: IQuizResult) => {
           resolve({
             status: 200,
             data: quiz as IQuizResult,
-            message: "Created successfully",
+            message: "Created or updated successfully",
           });
         }
       );
