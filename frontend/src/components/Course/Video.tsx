@@ -115,7 +115,13 @@ const Video = ({
       {currentLecture?.source.includes("youtube") ? (
         <YouTube
           videoId={getEmbedUrl(currentLecture?.source)}
-          opts={{ height: "100%", width: "100%" }}
+          opts={{
+            height: "100%",
+            width: "100%",
+            playerVars: {
+              autoplay: 1,
+            },
+          }}
           className="w-[90%] aspect-video"
           onReady={onReady}
           onPause={onPause}
