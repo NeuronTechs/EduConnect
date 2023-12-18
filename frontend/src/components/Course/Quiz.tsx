@@ -25,7 +25,7 @@ interface IQuizResult {
   quiz_id: string;
   answer: answer[];
   score: string;
-  isPass: boolean;
+  IsPass: string;
 }
 const Quiz = ({ currentLecture }: QuizProps) => {
   const currentUser = useSelector((state: SliceState) => state.authSlice);
@@ -74,7 +74,8 @@ const Quiz = ({ currentLecture }: QuizProps) => {
           setScore(parseInt(res1.score));
           setAnswerList(res1.answer);
           setCurrentQuestion(res.questions[0]);
-          if (res1.isPass === true) setReview(true);
+
+          if (parseInt(res1.IsPass) === 1) setReview(true);
           else {
             const array: answer[] = [];
             for (let index = 0; index < res.questions.length; index++) {
