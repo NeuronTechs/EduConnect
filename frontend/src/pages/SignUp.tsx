@@ -54,7 +54,7 @@ const SignUp = () => {
       };
       const signupStatus = await dispatch(signup(signupValue));
       if (signupStatus.type === "auth/signup/fulfilled") {
-        navigate("/");
+        navigate("/login");
       } else if (signupStatus.type === "auth/signup/rejected") {
         notify("Username này đã tồn tại");
       }
