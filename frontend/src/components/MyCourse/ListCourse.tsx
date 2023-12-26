@@ -7,8 +7,6 @@ interface props {
   isLoading: boolean;
 }
 const ListCourse = (props: props): React.ReactElement => {
-  console.log(props.data);
-
   return (
     <>
       {props.isLoading ? (

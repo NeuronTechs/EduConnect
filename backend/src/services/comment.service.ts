@@ -117,7 +117,7 @@ const getByLectureId = async (
 ): Promise<dataListResponse<IComment>> => {
   const offset = (page - 1) * pageSize;
   const sql = `
-SELECT 
+  SELECT 
   c.comment_id,
   c.username,
   c.lecture_id,
@@ -138,8 +138,8 @@ WHERE
   c.lecture_id = ? 
   AND c.isReply="false" 
 ORDER BY 
-  c.createdAt 
-LIMIT ?, ?`;
+  c.createdAt Desc
+LIMIT ?, ?;`;
   return new Promise<dataListResponse<IComment>>((resolve, reject) => {
     db.connectionDB.query(
       sql,

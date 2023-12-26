@@ -254,7 +254,13 @@ const Comment = ({ comment, setCurrentTime, currentTime }: commentProps) => {
               onClick={loadReplyCommentHandler}
             >
               {comment.reply_count && comment.reply_count > 0
-                ? `Xem ${comment.reply_count} phản hồi`
+                ? `Xem ${
+                    comment.reply_count < reply.length
+                      ? reply.length
+                      : comment.reply_count
+                  } phản hồi`
+                : reply.length > 0
+                ? `Xem ${reply.length} phản hồi`
                 : ""}
             </p>
           )}
