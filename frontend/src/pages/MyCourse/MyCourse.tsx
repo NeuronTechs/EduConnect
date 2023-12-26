@@ -20,6 +20,7 @@ const MyCourse = (): React.ReactElement => {
   const getData = async () => {
     setLoading(true);
     if (currentUser) {
+      dispatch(getCourseByStudentId(currentUser?.user_id));
       const res = await getCourseLastRecentByStudentId(currentUser?.user_id);
       if (res.length > 0) {
         setCourseLastRecent(res);
@@ -30,7 +31,6 @@ const MyCourse = (): React.ReactElement => {
 
   useEffect(() => {
     if (currentUser) {
-      dispatch(getCourseByStudentId(currentUser?.user_id));
       getData();
     }
   }, []);

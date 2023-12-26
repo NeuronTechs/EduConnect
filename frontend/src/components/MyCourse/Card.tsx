@@ -38,7 +38,13 @@ const Card = (props: props) => {
           <div>
             <img
               className="rounded-full h-[35px] w-[35px]"
-              src={props.data.teacher_avatar}
+              src={
+                props.data.teacher_avatar &&
+                typeof props.data.teacher_avatar === "string" &&
+                props.data.teacher_avatar !== "null"
+                  ? props.data.teacher_avatar
+                  : "https://png.pngtree.com/png-clipart/20200224/original/pngtree-cartoon-color-simple-male-avatar-png-image_5230557.jpg"
+              }
               alt=""
             />
           </div>

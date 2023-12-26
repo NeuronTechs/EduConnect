@@ -158,6 +158,7 @@ const Quiz = ({ currentLecture }: QuizProps) => {
           (score / quiz.questions.length) * 100 >= quiz.passPercent
             ? true
             : false;
+
         const result = await createQuizResult(
           currentUser.currentUser?.user_id,
           quiz.quiz_id,
@@ -169,12 +170,11 @@ const Quiz = ({ currentLecture }: QuizProps) => {
           setQuizComplete(true);
           setScore(score);
           setCurrentQuestionIndex(0);
-          setReview(true);
+          if (pass) setReview(true);
         }
         setError("");
       }
     }
-    // setQuizComplete(true);
   };
   function formatTime(totalSeconds: number) {
     const hours = Math.floor(totalSeconds / 3600);
