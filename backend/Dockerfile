@@ -1,5 +1,6 @@
 
 
+# if you're doing anything beyond your local machine, please pin this to a specific version at https://hub.docker.com/_/node/
 FROM node:lts-buster-slim AS development
 
 # Create app directory
@@ -8,13 +9,13 @@ WORKDIR /usr/src/app
 COPY package.json /usr/src/app/package.json
 COPY package-lock.json /usr/src/app/package-lock.json
 RUN npm i
+RUN npm cache clean --force
 
 COPY . /usr/src/app
 
 EXPOSE 3000
 
 CMD [ "npm", "run", "dev" ]
-
 # FROM development as dev-envs
 # RUN <<EOF
 # apt-get update
@@ -26,8 +27,6 @@ CMD [ "npm", "run", "dev" ]
 # groupadd docker
 # usermod -aG docker vscode
 # EOF
-# install Docker tools (cli, buildx, compose)
-COPY --from=gloursdocker/docker / /
-CMD [ "npm", "run", "dev" ]
-
+# # install Docker tools (cli, buildx, compose)
+# COPY --from=gloursdocker/docker / /
 
